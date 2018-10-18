@@ -93,7 +93,7 @@ split_segments.Corpus <- function(corpus, segment_size = 40, segment_size_window
   if (!inherits(corpus, "Corpus")) stop("corpus must be of class Corpus")
   
   corpus <- quanteda::corpus(corpus)
-  split_segements(corpus)
+  split_segments(corpus)
   
 }
 
