@@ -1,0 +1,5 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^example_.*\.R
+resources
+^\.travis\.yml$

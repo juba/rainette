@@ -1,0 +1,10 @@
+# Sample .travis.yml for R projects
+
+language: r
+warnings_are_errors: true
+sudo: required
+cache: package
+r_binary_packages: 
+  - ggplot2
+  - quanteda
+
