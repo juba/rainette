@@ -15,8 +15,11 @@ Encoding: UTF-8
 Imports: 
     dplyr (>= 0.7.3),
     tidyr,
+    purrr,
+    tibble,
     ggplot2,
-    quanteda (>= 0.99)
+    progress,
+    quanteda (>= 1.0)
 Suggests: 
     testthat,
     knitr,
