@@ -3,6 +3,7 @@
 S3method(split_segments,Corpus)
 S3method(split_segments,character)
 S3method(split_segments,corpus)
+export(compute_partition)
 export(split_segments)
 import(dplyr)
 import(progress)
