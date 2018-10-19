@@ -15,10 +15,12 @@ reinert_cluster <- function(dtm, k = 10) {
 }
 
 
+##' @export
 
-compute_partition <- function(dtm, min_members = 5) {
+compute_partition <- function(dtm, min_members = 5, cc_test = 0.3) {
   
   ## First step : CA partition
+  
   cat("First step : clustering along first CA factor\n")
   
   ## Compute first factor of CA on DTM
@@ -35,7 +37,7 @@ compute_partition <- function(dtm, min_members = 5) {
     select(-document) %>% 
     t %>% 
     as.data.frame
-  ## Precompute rows sumet total
+  ## Precompute rows sum et total
   row_sum <- rowSums(tab)
   total <- sum(tab)
 
@@ -61,6 +63,7 @@ compute_partition <- function(dtm, min_members = 5) {
   }
   
   ## Second step : switching points
+  
   cat("Second step : points switching\n")
   
   ## Group indices and tabs  
@@ -106,6 +109,48 @@ compute_partition <- function(dtm, min_members = 5) {
     }
     
     cat(paste0("  Iteration ", iteration, " : ", switched," switched, chisq=", chisq, "\n"))
+  }
+  
+  ## Third step : features elimination
+  
+  cat("Third step : features elimination\n")
+
+  ## Total number of features in each group
+  nfeat_group1 <- sum(tab1)
+  nfeat_group2 <- sum(tab2)
+  ## Observed frequency of features
+  observed <- cbind(tab1, tab2)
+  ## Expected frequency of features
+  expected_prop <- (tab1 + tab2) / sum(tab1 + tab2)
+  expected <- cbind(expected_prop * nfeat_group1, expected_prop * nfeat_group2)
+  ## Chi2 and contingency coefficients for each feature
+  feat_chisq <- rowSums((observed - expected)^2 / expected)
+  feat_cc <- sqrt(feat_chisq / (feat_chisq + rowSums(observed)))
+  
+  ## Features selection
+  cols1 <- character()
+  cols2 <- character()
+  
+  for (i in seq_along(feat_cc)) {
+    cc <- feat_cc[i]
+    name <- names(feat_cc)[i]
+    ## Keep feature if cc <= cc_test and frequency > 0
+    if (cc <= cc_test && tab1[i] > 0) {
+      cols1 <- c(cols1, name)
+    }
+    if (cc <= cc_test && tab2[i] > 0) {
+      cols2 <- c(cols2, name)
+    }
+    ## If cc > cc_test, only keep feature in the group
+    ## where observed frequency > expected frequency
+    if (cc > cc_test) {
+      if (tab1[i] > expected[i, 1]) {
+        cols1 <- c(cols1, name)
+      }
+      if (tab2[i] > expected[i, 2]) {
+        cols2 <- c(cols2, name)
+      }
+    }
   }
   
   return(list(group1 = group1, group2 = group2))
