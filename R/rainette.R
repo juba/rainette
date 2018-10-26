@@ -8,7 +8,7 @@ fchisq_val <- function(tab1, tab2, row_sum, n) {
 
 ##' @export
 
-rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, ...) {
+rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, tsj = 3,...) {
   
   if (any(dtm > 1)) {
     dtm <- dfm_weight(dtm, scheme = "boolean")
@@ -28,8 +28,11 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, ...) {
 
     ## Split the biggest group
     biggest_group <- which.max(purrr::map(res[[i]]$tabs, nrow))
+    if (nrow(res[[i]]$tabs[[biggest_group]]) < min_members) {
+      stop("No more group bigger than min_members after iteration ", i)
+    }
     tab <- res[[i]]$tabs[[biggest_group]]
-    clusters <- split_tab(tab, min_members = min_members, cc_test = cc_test, ...)
+    clusters <- split_tab(tab, min_members = min_members, cc_test = cc_test, tsj = tsj,...)
     
     ## Populate results
     res[[i + 1]] <- list()
@@ -42,11 +45,10 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, ...) {
                                   clusters$groups,
                                   after = biggest_group - 1)
     pb$tick(1)
-    
   }
-
   
   res <- res[-1]
+  
   ## Compute the merge element of resulting hclust result
   groups <- 1:k
   merge <- matrix(nrow = 0, ncol = 2)
@@ -81,7 +83,7 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, ...) {
 
 ##' @export
 
-split_tab <- function(dtm, min_members = 5, cc_test = 0.3, ...) {
+split_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   
   ## First step : CA partition
 
@@ -145,8 +147,8 @@ split_tab <- function(dtm, min_members = 5, cc_test = 0.3, ...) {
   switched <- 1
   iteration <- 0
 
-  ## Run while points are switched, and groups size is ok
-  while(switched > 0 && length(group1) >= min_members && length(group2) >= min_members) {
+  ## Run while points are switched
+  while(switched > 0) {
     
     switched <- 0
     iteration <- iteration + 1
@@ -202,19 +204,19 @@ split_tab <- function(dtm, min_members = 5, cc_test = 0.3, ...) {
     cc <- feat_cc[i]
     name <- names(feat_cc)[i]
     ## Keep feature if cc <= cc_test and frequency > 0
-    if (cc <= cc_test && tab1[i] > 0) {
+    if (cc <= cc_test && tab1[i] > tsj) {
       cols1 <- c(cols1, name)
     }
-    if (cc <= cc_test && tab2[i] > 0) {
+    if (cc <= cc_test && tab2[i] > tsj) {
       cols2 <- c(cols2, name)
     }
     ## If cc > cc_test, only keep feature in the group
     ## where observed frequency > expected frequency
     if (cc > cc_test) {
-      if (tab1[i] > expected[i, 1]) {
+      if (tab1[i] > expected[i, 1] && tab1[i] > tsj) {
         cols1 <- c(cols1, name)
       }
-      if (tab2[i] > expected[i, 2]) {
+      if (tab2[i] > expected[i, 2] && tab2[i] > tsj) {
         cols2 <- c(cols2, name)
       }
     }
