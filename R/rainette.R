@@ -50,20 +50,29 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3) {
   ## Compute the merge element of resulting hclust result
   groups <- 1:k
   merge <- matrix(nrow = 0, ncol = 2)
-  for (i in rev(seq_along(res))) {
+  for (i in (k-1):1) {
     split <- res[[i]]$splitted
     merge <- rbind(merge, -groups[split])
     groups <- groups[-split[2]]
-    groups[split[1]] <- -(i-1)
+    groups[split[1]] <- -(k-i)
   }
   
+  ## Compute the group element of resulting hclust result
+  group <- integer(ndoc(dtm))
+  indices <- res[[k-1]]$groups
+  for (i in seq_along(indices)) {
+    group[indices[[i]]] <- i
+  }
+
   ## Compute and return hclust-class result
   hres <- list(method = "reinert",
               call = match.call(),
               height = rev(purrr::map_dbl(res, ~.x$height)),
               order = 1:k,
-              labels = paste("Group", 1:k),
-              merge = merge)
+              labels = as.character(1:k),
+              merge = merge,
+              group = group,
+              res = res)
   
   class(hres) <- c("hclust", "rainette")
   hres
