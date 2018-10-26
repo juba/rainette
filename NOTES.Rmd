@@ -1,0 +1,18 @@
+---
+title: "Notes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# TODO
+
+- ajouter test pour quand un corpus contient le mot "document"
+- taille minimale des groupes
+- équivalent de cutree ?
+
+
+
