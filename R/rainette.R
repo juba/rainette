@@ -8,7 +8,7 @@ fchisq_val <- function(tab1, tab2, row_sum, n) {
 
 ##' @export
 
-rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3) {
+rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, ...) {
   
   if (any(dtm > 1)) {
     dtm <- dfm_weight(dtm, scheme = "boolean")
@@ -29,7 +29,7 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3) {
     ## Split the biggest group
     biggest_group <- which.max(purrr::map(res[[i]]$tabs, nrow))
     tab <- res[[i]]$tabs[[biggest_group]]
-    clusters <- split_tab(tab, min_members = min_members, cc_test = cc_test)
+    clusters <- split_tab(tab, min_members = min_members, cc_test = cc_test, ...)
     
     ## Populate results
     res[[i + 1]] <- list()
@@ -81,12 +81,12 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3) {
 
 ##' @export
 
-split_tab <- function(dtm, min_members = 5, cc_test = 0.3) {
+split_tab <- function(dtm, min_members = 5, cc_test = 0.3, ...) {
   
   ## First step : CA partition
   
   ## Compute first factor of CA on DTM
-  afc <- quanteda::textmodel_ca(dtm, nd = 1)
+  afc <- quanteda::textmodel_ca(dtm, nd = 1, ...)
   ## Order documents by their first factor coordinates
   indices <- afc$rowcoord %>% 
     as.data.frame %>% 
@@ -95,10 +95,17 @@ split_tab <- function(dtm, min_members = 5, cc_test = 0.3) {
     pull(index)
   ## Transpose and convert DTM to ease computations
   tab <- dtm %>% 
-    convert(to = "data.frame") %>% 
-    select(-document) %>% 
-    t %>% 
-    as.data.frame
+    convert(to = "data.frame")
+  if (sum(colnames(tmp) == 'document') == 1) {
+    tab <- tab %>% 
+      select(-document) %>% 
+      t %>% 
+      as.data.frame
+  } else {
+    tab <- tab[, -1] %>% 
+      t %>% 
+      as.data.frame
+  }
   ## Precompute rows sum et total
   row_sum <- rowSums(tab)
   total <- sum(tab)
@@ -107,7 +114,7 @@ split_tab <- function(dtm, min_members = 5, cc_test = 0.3) {
   ## Compute first aggregate table
   tab1 <- rowSums(tab[,indices[1], drop = FALSE])
   tab2 <- rowSums(tab[,indices[-1]])
-  ## Initialize chisquaredand index
+  ## Initialize chisquared and index
   max_chisq <- fchisq_val(tab1, tab2, row_sum, total)
   max_index <- indices[1]
   
@@ -129,8 +136,8 @@ split_tab <- function(dtm, min_members = 5, cc_test = 0.3) {
   ## Group indices and tabs  
   group1 <- indices[1:which(indices == max_index)]
   group2 <- indices[(which(indices == max_index) + 1):length(indices)]
-  tab1 <- rowSums(tab[,group1])
-  tab2 <- rowSums(tab[,group2])
+  tab1 <- rowSums(tab[,group1, drop = FALSE])
+  tab2 <- rowSums(tab[,group2, drop = FALSE])
   switched <- 1
   iteration <- 0
 
