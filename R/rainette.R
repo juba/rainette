@@ -6,22 +6,75 @@ fchisq_val <- function(tab1, tab2, row_sum, n) {
   sum((tmp - E)^2 / E)
 }
 
-# TODO
-reinert_cluster <- function(dtm, k = 10) {
-  dtm <- dfm_weight(dtm, scheme = "boolean")
-  for (i in 1:k) {
-    compute_partition(dtm)
+##' @export
+
+rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3) {
+  
+  if (any(dtm > 1)) {
+    dtm <- dfm_weight(dtm, scheme = "boolean")
   }
+  
+  ## Add id to documents
+  docvars(dtm)$rainette_id <- 1:nrow(dtm)
+  ## Initialize results list with first dtm
+  res <- list(list(tabs = list(dtm)))
+  
+  pb <- progress::progress_bar$new(total = k - 1,
+                                   format = "  Clustering [:bar] :percent in :elapsed",
+                                   clear = FALSE)
+  pb$tick(0)
+  
+  for (i in 1:(k - 1)) {
+
+    ## Split the biggest group
+    biggest_group <- which.max(purrr::map(res[[i]]$tabs, nrow))
+    tab <- res[[i]]$tabs[[biggest_group]]
+    clusters <- split_tab(tab, min_members = min_members, cc_test = cc_test)
+    
+    ## Populate results
+    res[[i + 1]] <- list()
+    res[[i + 1]]$height <- clusters$height
+    res[[i + 1]]$splitted <- c(biggest_group, biggest_group + 1)
+    res[[i + 1]]$tabs <- append(res[[i]]$tabs[-biggest_group], 
+                                clusters$tabs,
+                                after = biggest_group - 1)
+    res[[i + 1]]$groups <- append(res[[i]]$groups[-biggest_group], 
+                                  clusters$groups,
+                                  after = biggest_group - 1)
+    pb$tick(1)
+    
+  }
+
+  
+  res <- res[-1]
+  ## Compute the merge element of resulting hclust result
+  groups <- 1:k
+  merge <- matrix(nrow = 0, ncol = 2)
+  for (i in rev(seq_along(res))) {
+    split <- res[[i]]$splitted
+    merge <- rbind(merge, -groups[split])
+    groups <- groups[-split[2]]
+    groups[split[1]] <- -(i-1)
+  }
+  
+  ## Compute and return hclust-class result
+  hres <- list(method = "reinert",
+              call = match.call(),
+              height = rev(purrr::map_dbl(res, ~.x$height)),
+              order = 1:k,
+              labels = paste("Group", 1:k),
+              merge = merge)
+  
+  class(hres) <- c("hclust", "rainette")
+  hres
 }
 
 
 ##' @export
 
-compute_partition <- function(dtm, min_members = 5, cc_test = 0.3) {
+split_tab <- function(dtm, min_members = 5, cc_test = 0.3) {
   
   ## First step : CA partition
-  
-  cat("First step : clustering along first CA factor\n")
   
   ## Compute first factor of CA on DTM
   afc <- quanteda::textmodel_ca(dtm, nd = 1)
@@ -64,8 +117,6 @@ compute_partition <- function(dtm, min_members = 5, cc_test = 0.3) {
   
   ## Second step : switching points
   
-  cat("Second step : points switching\n")
-  
   ## Group indices and tabs  
   group1 <- indices[1:which(indices == max_index)]
   group2 <- indices[(which(indices == max_index) + 1):length(indices)]
@@ -107,14 +158,10 @@ compute_partition <- function(dtm, min_members = 5, cc_test = 0.3) {
         switched <- switched + 1
       }
     }
-    
-    cat(paste0("  Iteration ", iteration, " : ", switched," switched, chisq=", chisq, "\n"))
   }
   
   ## Third step : features elimination
   
-  cat("Third step : features elimination\n")
-
   ## Total number of features in each group
   nfeat_group1 <- sum(tab1)
   nfeat_group2 <- sum(tab2)
@@ -153,5 +200,9 @@ compute_partition <- function(dtm, min_members = 5, cc_test = 0.3) {
     }
   }
   
-  return(list(group1 = group1, group2 = group2))
+  return(list(groups = list(docvars(dtm)$rainette_id[group1],
+                            docvars(dtm)$rainette_id[group2]), 
+              tabs = list(dtm[group1, cols1], 
+                          dtm[group2, cols2]), 
+              height = chisq))
 }
