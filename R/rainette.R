@@ -58,7 +58,7 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, ...) {
   }
   
   ## Compute the group element of resulting hclust result
-  group <- integer(ndoc(dtm))
+  group <- rep(NA, ndoc(dtm))
   indices <- res[[k-1]]$groups
   for (i in seq_along(indices)) {
     group[indices[[i]]] <- i
@@ -84,7 +84,11 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, ...) {
 split_tab <- function(dtm, min_members = 5, cc_test = 0.3, ...) {
   
   ## First step : CA partition
-  
+
+  ## Remove documents with zero terms
+  rs <- rowSums(dtm) > 0
+  dtm <- dtm[rs,]
+    
   ## Compute first factor of CA on DTM
   afc <- quanteda::textmodel_ca(dtm, nd = 1, ...)
   ## Order documents by their first factor coordinates
@@ -96,7 +100,7 @@ split_tab <- function(dtm, min_members = 5, cc_test = 0.3, ...) {
   ## Transpose and convert DTM to ease computations
   tab <- dtm %>% 
     convert(to = "data.frame")
-  if (sum(colnames(tmp) == 'document') == 1) {
+  if (sum(colnames(tab) == 'document') == 1) {
     tab <- tab %>% 
       select(-document) %>% 
       t %>% 
