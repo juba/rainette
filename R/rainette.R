@@ -10,6 +10,11 @@ fchisq_val <- function(tab1, tab2, row_sum, n) {
 
 rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, tsj = 3,...) {
   
+  pb <- progress::progress_bar$new(total = k - 1,
+                                   format = "  Clustering [:bar] :percent in :elapsed",
+                                   clear = FALSE, show_after = 0)
+  invisible(pb$tick(0))
+
   if (any(dtm > 1)) {
     dtm <- dfm_weight(dtm, scheme = "boolean")
   }
@@ -19,11 +24,6 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, tsj = 3,...) {
   ## Initialize results list with first dtm
   res <- list(list(tabs = list(dtm)))
   
-  pb <- progress::progress_bar$new(total = k - 1,
-                                   format = "  Clustering [:bar] :percent in :elapsed",
-                                   clear = FALSE)
-  pb$tick(0)
-  
   for (i in 1:(k - 1)) {
 
     ## Split the biggest group
@@ -32,7 +32,7 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, tsj = 3,...) {
       stop("No more group bigger than min_members after iteration ", i)
     }
     tab <- res[[i]]$tabs[[biggest_group]]
-    clusters <- split_tab(tab, min_members = min_members, cc_test = cc_test, tsj = tsj,...)
+    clusters <- split_tab(tab, cc_test = cc_test, tsj = tsj,...)
     
     ## Populate results
     res[[i + 1]] <- list()

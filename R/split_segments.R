@@ -120,8 +120,8 @@ split_segments.corpus <- function(corpus, segment_size = 40, segment_size_window
   if (interactive()) {
     pb <- progress::progress_bar$new(total = ndoc(corpus),
                                      format = "  Splitting [:bar] :percent in :elapsed",
-                                     clear = FALSE)
-    pb$tick(0)
+                                     clear = FALSE, show_after = 0)
+    invisible(pb$tick(0))
     corpus$documents$texts <- purrr::map(corpus$documents$texts, 
                                          function(text) {
                                            pb$tick()
