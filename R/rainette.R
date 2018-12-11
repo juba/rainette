@@ -76,10 +76,16 @@ rainette <- function(dtm, k = 10, min_members = 5, cc_test = 0.3, tsj = 3,...) {
               group = group,
               res = res)
   
-  class(hres) <- c("hclust", "rainette")
+  class(hres) <- c("rainette", "hclust")
   hres
 }
 
+##' @export
+
+cutree.rainette <- function(hres, k = NULL, h = NULL) {
+  cut <- stats::cutree(hres, k, h)
+  unname(cut[as.character(hres$group)])
+}
 
 ##' @export
 
