@@ -11,9 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # TODO
 
 - ajouter test pour quand un corpus contient le mot "document"
-- équivalent de cutree -> bonne idée ?
 - double CDH
-- assurer un nombre minimal de termes par uce pour former les uc
 
 
 # Notes
