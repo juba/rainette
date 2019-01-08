@@ -1,45 +1,4 @@
 
-fchisq_val <- function(tab1, tab2, row_sum, n) {
-  tmp <- cbind(tab1, tab2)
-  col_sum <- colSums(tmp)
-  E <- outer(row_sum, col_sum, "*") / n
-  sum((tmp - E)^2 / E)
-}
-
-
-## uce merging into uc based on minimum uc size
-## this function just returns the original dtm with a new
-## `rainette_uc_index` docvar
-
-compute_uc <- function(dtm, min_uc_size = 10) {
-  ## Size of each uce
-  terms_by_uce <- rowSums(dtm)
-  if (any(terms_by_uce < min_uc_size)) {
-    index <- 1
-    uc_id <- docvars(dtm)$rainette_uce_id
-    while (index < length(terms_by_uce)) {
-      current_size <- terms_by_uce[index]
-      grouping_index <- index
-      ## While current uc size is smaller than min, regroup with following uce
-      while(current_size < min_uc_size) {
-        grouping_index <- grouping_index + 1
-        if (grouping_index > length(terms_by_uce)) {
-          stop("can't compute uc with respect to min_uc_size")
-        }
-        current_size <- current_size + terms_by_uce[grouping_index]
-        uc_id[grouping_index] <- index
-      }
-      index <- grouping_index + 1
-    }
-    ## Add computed uc ids to docvars
-    docvars(dtm)$rainette_uc_id <- uc_id
-  }
-  
-  return(dtm)
-}
-
-
-
 ##' @export
 
 rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0.3, tsj = 3,...) {
@@ -85,7 +44,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
       k <- i
       break
     }
-    clusters <- split_tab(tab, cc_test = cc_test, tsj = tsj,...)
+    clusters <- cluster_tab(tab, cc_test = cc_test, tsj = tsj,...)
     
     ## Populate results
     res[[i + 1]] <- list()
@@ -145,59 +104,43 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
 }
 
 
-##' @export
+#' return documents indices ordered by CA first axis coordinates
+#'
+#' @param dtm dmt on which to compute the CA and order documents
+#' @param ... arguments passed to `quanteda::textmodel_ca`
+#' 
+#' @return ordered list of document indices
 
-cutree <- function(tree, ...) {
-  if (inherits(tree, "rainette")) {
-    return(cutree.rainette(tree, ...))
-  }
-  stats::cutree(tree, ...)
-}
-
-##' @export
-
-cutree.rainette <- function(hres, k = NULL, h = NULL) {
-  if (!is.null(h)) {
-    stop("cutree.rainette only works with k argument")
-  }
-  hres$uce_groups[[k-1]]
-}
-
-##' @export
-
-split_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
+docs_order_by_ca <- function(dtm, ...) {
   
-  ## First step : CA partition
-
-  ## Remove documents with zero terms
-  rs <- rowSums(dtm) > 0
-  dtm <- dtm[rs,]
-    
   ## Compute first factor of CA on DTM
   afc <- quanteda::textmodel_ca(dtm, nd = 1, ...)
+  
   ## Order documents by their first factor coordinates
   indices <- afc$rowcoord %>% 
     as.data.frame %>% 
     mutate(index = 1:n()) %>% 
     arrange(Dim1) %>% 
     pull(index)
-  ## Transpose and convert DTM to ease computations
-  tab <- dtm %>% 
-    convert(to = "data.frame")
-  if (sum(colnames(tab) == 'document') == 1) {
-    tab <- tab %>% 
-      select(-document) %>% 
-      t %>% 
-      as.data.frame
-  } else {
-    tab <- tab[, -1] %>% 
-      t %>% 
-      as.data.frame
-  }
-  ## Precompute rows sum et total
+  
+  return(indices)
+}
+
+
+#' Split a dtm in two according to the chi-square value between the two aggregated tables
+#'
+#' @param tab dtm to be split
+#' @param indices documents indices ordered by CA first axis coordinate
+#'
+#' @return a list with the index of the document where the split generates a maximum chi-square,
+#' and the corresponding max chi-square value
+
+split_tab_by_chisq <- function(tab, indices) {
+  
+  ## Precompute row sums et total
   row_sum <- rowSums(tab)
   total <- sum(tab)
-
+  
   ## First iteration
   ## Compute first aggregate table
   tab1 <- rowSums(tab[,indices[1], drop = FALSE])
@@ -219,26 +162,44 @@ split_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
     }
   }
   
-  ## Second step : switching points
-  
+  return(list(max_index = max_index,
+              max_chisq = max_chisq))
+}
+
+
+
+#' Switch documents between two groups to maximize chi-square value
+#'
+#' @param tab original dtm
+#' @param indices documents indices orderes by first CA axis coordinates
+#' @param max_index document index where the split is maximum, computed with `split_tab_by_chisq`
+#'
+#' @return a list of two vectors `indices1` and `indices2`, which contain 
+#' the documents indices of each group after documents switching, and a `chisq` value,
+#' the new corresponding chi-square value after switching
+
+switch_docs_by_chisq <- function(tab, indices, max_index, max_chisq) {
+
   ## Group indices and tabs  
   group1 <- indices[1:which(indices == max_index)]
   group2 <- indices[(which(indices == max_index) + 1):length(indices)]
   tab1 <- rowSums(tab[,group1, drop = FALSE])
   tab2 <- rowSums(tab[,group2, drop = FALSE])
+  row_sum <- rowSums(tab)
+  total <- sum(tab)
+  chisq <- max_chisq
   switched <- 1
-  iteration <- 0
 
   ## Run while points are switched
   while(switched > 0) {
     
     switched <- 0
-    iteration <- iteration + 1
-    
+
     ## For each point
     for (index in indices) {
+      index_1 <- index %in% group1
       ## Switch current element
-      if (index %in% group1) {
+      if (index_1) {
         tab1_new <- tab1 - tab[,index]
         tab2_new <- tab2 + tab[,index]
       } else {
@@ -250,7 +211,7 @@ split_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
       ## Compare
       ## chisq_new can be NaN if one of tab1 or tab2 is only zeros
       if (!is.nan(chisq_new) && chisq_new > chisq) {
-        if (index %in% group1) {
+        if (index_1) {
           group1 <- group1[-which(group1 == index)] 
           group2 <- c(group2, index)
         } else {
@@ -265,8 +226,28 @@ split_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
     }
   }
   
-  ## Third step : features elimination
+  return(list(indices1 = group1, 
+    indices2 = group2, 
+    chisq = chisq))
+}
+
+
+#' Remove features from dtm of each group base don cc_test and tsj
+#'
+#' @param tab global dtm
+#' @param indices1 indices of documents of group 1
+#' @param indices2 indices of documents of group 2
+#' @param cc_test cc_test value
+#' @param tsj tsj value
+#'
+#' @return a list of two character vectors : `cols1` is the name of features to 
+#' keep in group 1, `cols2` the name of features to keep in group 2
+
+features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) {
   
+  ## features count for each group
+  tab1 <- rowSums(tab[, indices1, drop = FALSE])
+  tab2 <- rowSums(tab[, indices2, drop = FALSE])
   ## Total number of features in each group
   nfeat_group1 <- sum(tab1)
   nfeat_group2 <- sum(tab2)
@@ -305,9 +286,49 @@ split_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
     }
   }
   
-  return(list(groups = list(docvars(dtm)$rainette_uc_id[group1],
-                            docvars(dtm)$rainette_uc_id[group2]), 
-              tabs = list(dtm[group1, cols1], 
-                          dtm[group2, cols2]), 
+  return(list(cols1 = cols1, 
+              cols2 = cols2))
+}
+
+##' split a dtm into two clusters with reinert algorithm
+
+cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
+  
+  ## First step : CA partition
+
+  ## Remove documents with zero terms
+  rs <- rowSums(dtm) > 0
+  dtm <- dtm[rs,]
+    
+  indices <- docs_order_by_ca(dtm)
+  
+  ## Transpose and convert DTM to ease computations
+  tab <- dtm %>% 
+    convert(to = "data.frame")
+  tab <- tab[, -1] %>% 
+      t %>% 
+      as.data.frame
+ 
+  res <- split_tab_by_chisq(tab, indices)
+  max_index <- res$max_index
+  max_chisq <- res$max_chisq
+    
+  ## Second step : switching docs
+  
+  res <- switch_docs_by_chisq(tab, indices, max_index, max_chisq)
+  indices1 <- res$indices1
+  indices2 <- res$indices2
+  chisq <- res$chisq
+  
+  ## Third step : features elimination
+  
+  res <- features_selection(tab, indices1, indices2, cc_test, tsj)
+  cols1 <- res$cols1
+  cols2 <- res$cols2
+  
+  return(list(groups = list(docvars(dtm)$rainette_uc_id[indices1],
+                            docvars(dtm)$rainette_uc_id[indices2]), 
+              tabs = list(dtm[indices1, cols1], 
+                          dtm[indices2, cols2]), 
               height = chisq))
 }
