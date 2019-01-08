@@ -17,7 +17,7 @@ mini_dfm <- as.dfm(m)
 docvars(mini_dfm)$rainette_uce_id <- 1:nrow(mini_dfm)
 
 test_that("computed uc are ok", {
-  dfm_uc <- compute_uc(mini_dfm, min_uc_size = 3)
+  dfm_uc <- rainette:::compute_uc(mini_dfm, min_uc_size = 3)
   expect_equal(docvars(dfm_uc)$rainette_uc_id, c(1,2,2,4,5,6,6))
 })
 
@@ -59,8 +59,15 @@ test_that("groups correspondance is ok", {
   expect_equal(sum(tab > 0), 5)
 })
 
+test_that("generic cutree still works", {
+  hc <- hclust(dist(USArrests))
+  expect_length(cutree(hc, h = 250), 50)
+})
+
 test_that("h argument generates error in cutree.rainette", {
   expect_error(cutree(res, h = 200))
 })
+
+
 
 
