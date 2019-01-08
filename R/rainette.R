@@ -237,8 +237,9 @@ switch_docs_by_chisq <- function(tab, indices, max_index, max_chisq) {
 #' @param tab global dtm
 #' @param indices1 indices of documents of group 1
 #' @param indices2 indices of documents of group 2
-#' @param cc_test cc_test value
-#' @param tsj tsj value
+#' @param cc_test maximum contingency coefficient value for the 
+#' feature to be kept in both groups. 
+#' @param tsj minimum feature frequency in the dtm
 #'
 #' @return a list of two character vectors : `cols1` is the name of features to 
 #' keep in group 1, `cols2` the name of features to keep in group 2
@@ -320,7 +321,7 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   indices2 <- res$indices2
   chisq <- res$chisq
   
-  ## Third step : features elimination
+  ## Third step : features selection
   
   res <- features_selection(tab, indices1, indices2, cc_test, tsj)
   cols1 <- res$cols1
