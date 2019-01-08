@@ -4,7 +4,7 @@
 \alias{features_selection}
 \title{Remove features from dtm of each group base don cc_test and tsj}
 \usage{
-features_selection(tab, indices1, indices2, cc_test, tsj)
+features_selection(tab, indices1, indices2, cc_test = 0.3, tsj = 3)
 }
 \arguments{
 \item{tab}{global dtm}
@@ -13,9 +13,10 @@ features_selection(tab, indices1, indices2, cc_test, tsj)
 
 \item{indices2}{indices of documents of group 2}
 
-\item{cc_test}{cc_test value}
+\item{cc_test}{maximum contingency coefficient value for the 
+feature to be kept in both groups.}
 
-\item{tsj}{tsj value}
+\item{tsj}{minimum feature frequency in the dtm}
 }
 \value{
 a list of two character vectors : `cols1` is the name of features to 
