@@ -11,8 +11,29 @@ knitr::opts_chunk$set(echo = TRUE)
 # TODO
 
 - ajouter test pour quand un corpus contient le mot "document"
-- taille minimale des groupes
-- équivalent de cutree ?
+- équivalent de cutree -> bonne idée ?
+- double CDH
+- assurer un nombre minimal de termes par uce pour former les uc
 
 
+# Notes
 
+D'après `PrintRScript.py` et `chemins.py`, les scripts suivants seraient appelés :
+
+- `Rchdtxt` : CHD, chdtxt, anacor, Rgraph
+- `Rchdquest` : CHD, chdquest, anacor, Rgraph
+- `RPamTxt` : pamtxt, Rgraph
+
+`Rchdtxt` est appelée depuis `textreinert.py`, qui correspond à l'entrée *Méthode Reinert* du menu *Analyse de texte*.
+`Rchdquest` est appelée depuis `tabchdalc.py`, qui correspond à l'entrée *Méthode Reinert* du menu *Analyse de matrice*.
+`RPamTxt` est appelée depuis `textdist.py` -> a priori pas active, entrée de menu `ID_TEXTPAM` commentée dans `iramutq.py`.
+
+Pour la double classification, on doit donc s'inspirer de `chdtxt`.
+
+Valeurs de `classif_mode` : 
+
+- 0 : double sur RST
+- 1 : simple sur segments de texte
+- 2 : simple sur texte
+
+Description de la double classification : p. 40 de *Alceste, une méthodologie d'analyse des données textuelles et une application (1990)*.
