@@ -59,5 +59,8 @@ test_that("groups correspondance is ok", {
   expect_equal(sum(tab > 0), 5)
 })
 
+test_that("h argument generates error in cutree.rainette", {
+  expect_error(cutree(res, h = 200))
+})
 
 

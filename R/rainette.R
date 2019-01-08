@@ -144,15 +144,23 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
   hres
 }
 
+
+##' @export
+
+cutree <- function(tree, ...) {
+  if (inherits(tree, "rainette")) {
+    return(cutree.rainette(tree, ...))
+  }
+  stats::cutree(tree, ...)
+}
+
 ##' @export
 
 cutree.rainette <- function(hres, k = NULL, h = NULL) {
   if (!is.null(h)) {
     stop("cutree.rainette only works with k argument")
   }
-  # TODO
-  cut <- stats::cutree(hres, k, h)
-  unname(cut[as.character(hres$group)])
+  hres$uce_groups[[k-1]]
 }
 
 ##' @export
