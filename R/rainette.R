@@ -1,3 +1,8 @@
+if (getRversion() >= "2.15.1")  
+  utils::globalVariables(c("Dim1", "distance", "index", "segment", "segment_source", "weight"))
+
+
+
 #' Performs a corpus clustering based on the Reinert method
 #'
 #' @param dtm dtm of documents to cluster
@@ -141,6 +146,9 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
 #' @param dtm dmt on which to compute the CA and order documents
 #' @param ... arguments passed to `quanteda::textmodel_ca`
 #' 
+#' @details
+#' Internal function, not to be used directly
+#' 
 #' @return ordered list of document indices
 
 docs_order_by_ca <- function(dtm, ...) {
@@ -163,6 +171,9 @@ docs_order_by_ca <- function(dtm, ...) {
 #'
 #' @param tab dtm to be split
 #' @param indices documents indices ordered by CA first axis coordinate
+#' 
+#' @details
+#' Internal function, not to be used directly
 #'
 #' @return a list with the index of the document where the split generates a maximum chi-square,
 #' and the corresponding max chi-square value
@@ -205,6 +216,10 @@ split_tab_by_chisq <- function(tab, indices) {
 #' @param tab original dtm
 #' @param indices documents indices orderes by first CA axis coordinates
 #' @param max_index document index where the split is maximum, computed with `split_tab_by_chisq`
+#' @param max_chisq maximum chi-square value computed by `split_tab_by_chisq`
+#' 
+#' @details
+#' Internal function, not to be used directly
 #'
 #' @return a list of two vectors `indices1` and `indices2`, which contain 
 #' the documents indices of each group after documents switching, and a `chisq` value,
@@ -272,6 +287,9 @@ switch_docs_by_chisq <- function(tab, indices, max_index, max_chisq) {
 #' @param cc_test maximum contingency coefficient value for the 
 #' feature to be kept in both groups. 
 #' @param tsj minimum feature frequency in the dtm
+#' 
+#' @details
+#' Internal function, not to be used directly
 #'
 #' @return a list of two character vectors : `cols1` is the name of features to 
 #' keep in group 1, `cols2` the name of features to keep in group 2
@@ -323,7 +341,8 @@ features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) 
               cols2 = cols2))
 }
 
-##' split a dtm into two clusters with reinert algorithm
+
+# split a dtm into two clusters with reinert algorithm
 
 cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   

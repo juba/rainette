@@ -1,4 +1,4 @@
-#' Fast chi-square value computation
+# Fast chi-square value computation
 
 fchisq_val <- function(tab1, tab2, row_sum, n) {
   tmp <- cbind(tab1, tab2)
@@ -13,9 +13,12 @@ fchisq_val <- function(tab1, tab2, row_sum, n) {
 #' 
 #' `rainette_uc_index` docvar
 #' 
-#' @param dtm dtm of uces
+#' @param dtm dtm of uces, with a `rainette_uce_id` docvar
 #' @param min_uc_size minimum number of forms by uc
-#' 
+#'
+#' @details
+#' Internal function, not to be used directly
+#'
 #' @return the original dtm with a new `rainette_uc_id` docvar.
 
 compute_uc <- function(dtm, min_uc_size = 10) {

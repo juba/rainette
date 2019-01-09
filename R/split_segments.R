@@ -1,6 +1,7 @@
+
 ##' Split a character string or corpus into segments, taking into account punctuation where possible
 ##'
-##' @param obj character string or corpus object
+##' @param obj character string, quanteda or tm corpus object
 ##' @param ... arguments passed to other methods
 ##'
 ##' @return
@@ -20,12 +21,10 @@ split_segments <- function(obj, ...) {
 
 
 ##' @rdname split_segments
-##' @param text character string
+##' @aliases split_segments.character
+##' 
 ##' @param segment_size segment size (in words)
 ##' @param segment_size_window window around segment size to look for best splitting point
-##' @return
-##' A tibble with the computed segments
-##' @aliases split_segments.character
 ##' @export
 ##' @import dplyr
 ##' @import quanteda
@@ -33,8 +32,10 @@ split_segments <- function(obj, ...) {
 ##' @import purrr
 
 
-split_segments.character <- function(text, segment_size = 40, segment_size_window = 15, ...) {
+split_segments.character <- function(obj, segment_size = 40, segment_size_window = 15, ...) {
 
+  text <- obj
+  
   if (!(inherits(text, "character") && length(text) == 1)) stop("text must be a character vector of size 1")
 
   ## Tokenize into words
@@ -43,7 +44,7 @@ split_segments.character <- function(text, segment_size = 40, segment_size_windo
   ## Compute "weight" for each word
   words_tbl <- tibble(word = words) %>%
     mutate(weight = case_when(
-      word %in% c(".", "?", "!", "…") ~ 6,
+      word %in% c(".", "?", "!", "\u2026") ~ 6,
       word == ":" ~ 5,
       word == ";" ~ 4,
       word == "," ~ 1,
@@ -72,8 +73,8 @@ split_segments.character <- function(text, segment_size = 40, segment_size_windo
   split_indices <- cumsum(split_indices)
 
   ## Recompute segments by splitting and pasting
-  segments <- purrr::map2_dfr(head(split_indices, -1),
-                              head(lead(split_indices), -1) - 1,
+  segments <- purrr::map2_dfr(utils::head(split_indices, -1),
+                              utils::head(lead(split_indices), -1) - 1,
                               ~ tibble(segment = paste0(words[.x:.y], collapse = " ")))
 
   return(segments)
@@ -81,14 +82,13 @@ split_segments.character <- function(text, segment_size = 40, segment_size_windo
 
 
 ##' @rdname split_segments
-##' @param corpus a tm corpus object
-##' @param segment_size segment size (in words)
-##' @param segment_size_window window around segment size to look for best splitting point
-##' @aliases explor.Corpus
+##' @aliases split_segments.Corpus
 ##' @export
 
 
-split_segments.Corpus <- function(corpus, segment_size = 40, segment_size_window = 15, ...) {
+split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 15, ...) {
+  
+  corpus <- obj
   
   if (!inherits(corpus, "Corpus")) stop("corpus must be of class Corpus")
   
@@ -99,19 +99,13 @@ split_segments.Corpus <- function(corpus, segment_size = 40, segment_size_window
 
 
 ##' @rdname split_segments
-##' @param corpus a quanteda corpus object
-##' @param segment_size segment size (in words)
-##' @param segment_size_window window around segment size to look for best splitting point
-##' @aliases explor.corpus
+##' @aliases split_segments.corpus
 ##' @export
-##' @import purrr
-##' @import dplyr
-##' @import tidyr
-##' @import tibble
-##' @import progress
 
 
-split_segments.corpus <- function(corpus, segment_size = 40, segment_size_window = 15, ...) {
+split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 15, ...) {
+  
+  corpus <- obj
   
   if (!inherits(corpus, "corpus")) stop("corpus must be of class corpus")
   
