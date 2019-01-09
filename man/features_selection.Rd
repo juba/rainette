@@ -25,3 +25,6 @@ keep in group 1, `cols2` the name of features to keep in group 2
 \description{
 Remove features from dtm of each group base don cc_test and tsj
 }
+\details{
+Internal function, not to be used directly
+}

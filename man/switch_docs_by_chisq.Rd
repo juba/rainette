@@ -12,6 +12,8 @@ switch_docs_by_chisq(tab, indices, max_index, max_chisq)
 \item{indices}{documents indices orderes by first CA axis coordinates}
 
 \item{max_index}{document index where the split is maximum, computed with `split_tab_by_chisq`}
+
+\item{max_chisq}{maximum chi-square value computed by `split_tab_by_chisq`}
 }
 \value{
 a list of two vectors `indices1` and `indices2`, which contain 
@@ -20,4 +22,7 @@ the new corresponding chi-square value after switching
 }
 \description{
 Switch documents between two groups to maximize chi-square value
+}
+\details{
+Internal function, not to be used directly
 }

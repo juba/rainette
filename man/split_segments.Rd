@@ -4,40 +4,24 @@
 \alias{split_segments}
 \alias{split_segments.character}
 \alias{split_segments.Corpus}
-\alias{explor.Corpus}
 \alias{split_segments.corpus}
-\alias{explor.corpus}
 \title{Split a character string or corpus into segments, taking into account punctuation where possible}
 \usage{
 split_segments(obj, ...)
 
-\method{split_segments}{character}(text, segment_size = 40,
+\method{split_segments}{character}(obj, segment_size = 40,
   segment_size_window = 15, ...)
 
-\method{split_segments}{Corpus}(corpus, segment_size = 40,
+\method{split_segments}{Corpus}(obj, segment_size = 40,
   segment_size_window = 15, ...)
 
-\method{split_segments}{corpus}(corpus, segment_size = 40,
+\method{split_segments}{corpus}(obj, segment_size = 40,
   segment_size_window = 15, ...)
 }
 \arguments{
-\item{obj}{character string or corpus object}
+\item{obj}{character string, quanteda or tm corpus object}
 
 \item{...}{arguments passed to other methods}
-
-\item{text}{character string}
-
-\item{segment_size}{segment size (in words)}
-
-\item{segment_size_window}{window around segment size to look for best splitting point}
-
-\item{corpus}{a tm corpus object}
-
-\item{segment_size}{segment size (in words)}
-
-\item{segment_size_window}{window around segment size to look for best splitting point}
-
-\item{corpus}{a quanteda corpus object}
 
 \item{segment_size}{segment size (in words)}
 
@@ -46,8 +30,6 @@ split_segments(obj, ...)
 \value{
 If obj is a tm or quanteda corpus object, the result is a quanteda corpus.
 If obj is a character string, the result is a tibble.
-
-A tibble with the computed segments
 }
 \description{
 Split a character string or corpus into segments, taking into account punctuation where possible

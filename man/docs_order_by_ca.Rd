@@ -17,3 +17,6 @@ ordered list of document indices
 \description{
 return documents indices ordered by CA first axis coordinates
 }
+\details{
+Internal function, not to be used directly
+}

@@ -32,7 +32,7 @@ Performs a corpus clustering based on the Reinert method
 TODO : compléter
 }
 \examples{
-\\notrun{
+\dontrun{
 library(quanteda)
 corpus <- data_corpus_inaugural
 corpus <- head(corpus, n = 10)

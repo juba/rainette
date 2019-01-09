@@ -18,3 +18,6 @@ and the corresponding max chi-square value
 \description{
 Split a dtm in two according to the chi-square value between the two aggregated tables
 }
+\details{
+Internal function, not to be used directly
+}

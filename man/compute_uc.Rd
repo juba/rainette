@@ -7,7 +7,7 @@
 compute_uc(dtm, min_uc_size = 10)
 }
 \arguments{
-\item{dtm}{dtm of uces}
+\item{dtm}{dtm of uces, with a `rainette_uce_id` docvar}
 
 \item{min_uc_size}{minimum number of forms by uc}
 }
@@ -16,4 +16,7 @@ the original dtm with a new `rainette_uc_id` docvar.
 }
 \description{
 `rainette_uc_index` docvar
+}
+\details{
+Internal function, not to be used directly
 }
