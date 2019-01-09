@@ -342,7 +342,20 @@ features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) 
 }
 
 
-# split a dtm into two clusters with reinert algorithm
+#' Split a dtm into two clusters with reinert algorithm
+#' 
+#' @param dtm to be split, passed by `rainette`
+#' @param cc_test maximum contingency coefficient value for the 
+#' feature to be kept in both groups. 
+#' @param tsj minimum feature frequency in the dtm
+#' @param ... arguments passed to other methods
+#' 
+#' @details
+#' Internal function, not to be used directly
+#' 
+#' @return
+#' An object of class `hclust` and `rainette`
+
 
 cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   
