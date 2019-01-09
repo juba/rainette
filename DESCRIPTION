@@ -24,5 +24,6 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    covr
+    covr,
+    tm
 RoxygenNote: 6.1.1
