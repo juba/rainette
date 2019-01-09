@@ -3,3 +3,7 @@
 ^example_.*\.R
 resources
 ^\.travis\.yml$
+essai.R
+essai/
+Rscript_iramuteq/
+NOTES.Rmd
