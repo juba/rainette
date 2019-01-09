@@ -1,10 +1,24 @@
-# Sample .travis.yml for R projects
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-language: r
-warnings_are_errors: true
-sudo: required
-cache: package
-r_binary_packages: 
-  - ggplot2
-  - quanteda
+language: R
+sudo: false
+cache: packages
 
+matrix: # don't test osx + r-devel
+  include:
+  - os: linux
+    r: release
+    dist: bionic
+  - os: linux
+    r: devel
+    dist: bionic
+  - os: osx
+    r: release
+  - os: osx
+    r: oldrel
+
+r_github_packages:
+- jimhester/covr
+
+after_success:
+    - Rscript -e 'covr::codecov()'
