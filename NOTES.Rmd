@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
-- ajouter test pour quand un corpus contient le mot "document"
+- enlever verbose s'il n'est pas nécessaire pour la double CDH
 - double CDH
 
 
