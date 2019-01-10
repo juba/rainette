@@ -11,6 +11,7 @@ if (getRversion() >= "2.15.1")
 #' @param min_members don't try to split groups with fewer members
 #' @param cc_test contingency coefficient value for feature selection
 #' @param tsj minimum frequency value for feature selection
+#' @param verbose if TRUE, add intermediate computing elements to results object
 #' @param ... parameters passed to `quanteda::textmodel_ca`
 #'
 #' @details
@@ -38,7 +39,7 @@ if (getRversion() >= "2.15.1")
 #' 
 #' @export
 
-rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0.3, tsj = 3,...) {
+rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0.3, tsj = 3, verbose = FALSE,...) {
   
   if (any(dtm@x > 1)) {
     ## We don't use dfm_weight here because of https://github.com/quanteda/quanteda/issues/1545
@@ -131,11 +132,13 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
               labels = as.character(1:k),
               merge = merge,
               group = group,
-              uce_groups = uce_groups,
-              # TODO remove or clean up results below
-              corresp_uce_uc = corresp_uce_uc,
-              res = res)
-  
+              uce_groups = uce_groups)
+  ## Add intermediate results if verbose
+  if (verbose) {
+    hres[["corresp_uce_uc"]] <- corresp_uce_uc
+    hres[["res"]] <- res
+  }
+
   class(hres) <- c("rainette", "hclust")
   hres
 }

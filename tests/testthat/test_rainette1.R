@@ -85,6 +85,12 @@ test_that("rainette on mini_dfm is ok", {
   expect_equal(res$height, res_split$max_chisq)
 })
 
+test_that("rainette on mini_dfm with verbose is ok", {
+  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_members = 1, verbose = TRUE)
+  expect_equal(dim(res$corresp_uce_uc), c(7, 2))
+  expect_is(res$res, "list")
+})
+
 mini_corpus <- head(data_corpus_inaugural, n = 2)
 mini_corpus <- split_segments(mini_corpus)
 dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
