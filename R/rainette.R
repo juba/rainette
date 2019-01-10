@@ -309,8 +309,9 @@ features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) 
   expected <- cbind(expected_prop * nfeat_group1, expected_prop * nfeat_group2)
   ## Chi2 and contingency coefficients for each feature
   feat_chisq <- rowSums((observed - expected)^2 / expected)
+  ## C contingency coefficient, sqrt(khi2 / (khi2 + N))
   feat_cc <- sqrt(feat_chisq / (feat_chisq + rowSums(observed)))
-  
+
   ## Features selection
   cols1 <- character()
   cols2 <- character()
@@ -319,19 +320,19 @@ features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) 
     cc <- feat_cc[i]
     name <- names(feat_cc)[i]
     ## Keep feature if cc <= cc_test and frequency > 0
-    if (cc <= cc_test && tab1[i] > tsj) {
+    if (cc <= cc_test && tab1[i] >= tsj) {
       cols1 <- c(cols1, name)
     }
-    if (cc <= cc_test && tab2[i] > tsj) {
+    if (cc <= cc_test && tab2[i] >= tsj) {
       cols2 <- c(cols2, name)
     }
     ## If cc > cc_test, only keep feature in the group
     ## where observed frequency > expected frequency
     if (cc > cc_test) {
-      if (tab1[i] > expected[i, 1] && tab1[i] > tsj) {
+      if (tab1[i] > expected[i, 1] && tab1[i] >= tsj) {
         cols1 <- c(cols1, name)
       }
-      if (tab2[i] > expected[i, 2] && tab2[i] > tsj) {
+      if (tab2[i] > expected[i, 2] && tab2[i] >= tsj) {
         cols2 <- c(cols2, name)
       }
     }
@@ -377,7 +378,7 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   res <- split_tab_by_chisq(tab, indices)
   max_index <- res$max_index
   max_chisq <- res$max_chisq
-    
+
   ## Second step : switching docs
   
   res <- switch_docs_by_chisq(tab, indices, max_index, max_chisq)
