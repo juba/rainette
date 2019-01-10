@@ -111,20 +111,18 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
   
   corpus$documents$segment_source <- rownames(docvars(corpus))
   
-  if (interactive()) {
-    pb <- progress::progress_bar$new(total = ndoc(corpus),
-                                     format = "  Splitting [:bar] :percent in :elapsed",
-                                     clear = FALSE, show_after = 0)
-    invisible(pb$tick(0))
-    corpus$documents$texts <- purrr::map(corpus$documents$texts, 
-                                         function(text) {
-                                           pb$tick()
-                                           split_segments(text)
-                                         })
-  } else {
-    corpus$documents$texts <- purrr::map(corpus$documents$texts, split_segments)
-  }
+  pb <- progress::progress_bar$new(total = ndoc(corpus),
+    format = "  Splitting [:bar] :percent in :elapsed",
+    clear = FALSE, show_after = 0)
+  invisible(pb$tick(0))
   
+  corpus$documents$texts <- purrr::map(
+    corpus$documents$texts, 
+    function(text) {
+       pb$tick(1)
+       split_segments(text)
+    }
+  )
   
   corpus$documents <- corpus$documents %>%
     tidyr::unnest(texts) %>%
