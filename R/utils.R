@@ -22,6 +22,12 @@ fchisq_val <- function(tab1, tab2, row_sum, n) {
 #' @return the original dtm with a new `rainette_uc_id` docvar.
 
 compute_uc <- function(dtm, min_uc_size = 10) {
+  
+  if (min_uc_size <= 1) {
+    docvars(dtm)$rainette_uc_id <- docvars(dtm)$rainette_uce_id
+    return(dtm)
+  }
+  
   ## Size of each uce
   terms_by_uce <- rowSums(dtm)
   if (any(terms_by_uce < min_uc_size)) {
