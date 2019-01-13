@@ -1,4 +1,5 @@
-
+##' Split a character string or corpus into segments
+##' 
 ##' Split a character string or corpus into segments, taking into account punctuation where possible
 ##'
 ##' @param obj character string, quanteda or tm corpus object
