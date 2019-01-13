@@ -14,7 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 - double CDH
 
 
-# Notes
+# Notes Iramuteq
+
+## Organisation
 
 D'après `PrintRScript.py` et `chemins.py`, les scripts suivants seraient appelés :
 
@@ -34,4 +36,163 @@ Valeurs de `classif_mode` :
 - 1 : simple sur segments de texte
 - 2 : simple sur texte
 
+## Déroulement d'une classification double
+
+### Données en entrée
+
+On lance la fonction CHD deux fois.
+
+Résultats de la fonction : 
+
+- `n1` est le tableau des groupes d'appartenance à chaque étape.
+
+```
+> head(dout)
+     newcol newcol newcol newcol newcol newcol newcol newcol newcol
+[1,]      3      5      7      9     11     12     12     12     12
+[2,]      3      5      6      6      6      6     15     15     15
+[3,]      3      5      7      9     11     12     12     12     12
+[4,]      3      5      6      6      6      6     14     17     19
+[5,]      3      5      6      6      6      6     14     17     18
+[6,]      3      5      6      6      6      6     14     17     19
+```
+
+- `listmere` indique la mère de chaque classe
+
+```
+> head(listmere)
+[[1]]
+NULL
+
+[[2]]
+[1] 1
+
+[[3]]
+[1] 1
+
+[[4]]
+[1] 3
+
+[[5]]
+[1] 3
+
+[[6]]
+[1] 5
+```
+
+- `list_fille` indique les filles de chaque classe
+
+```
+> head(list_fille)
+[[1]]
+[1] 2 3
+
+[[2]]
+NULL
+
+[[3]]
+[1] 4 5
+
+[[4]]
+NULL
+
+[[5]]
+[1] 6 7
+
+[[6]]
+[1] 14 15
+```
+
+Deux fichiers générés précédemment sont également utilisés : `listeUCE1.csv` et `listeUCE2.csv` qui contiennent les correspondances uce <-> uc.
+
+```
+uce;uc
+0;0
+1;1
+2;2
+3;3
+4;4
+... (snip) ...
+50;50
+51;51
+52;52
+53;53
+54;53
+55;54
+56;55
+57;55
+```
+
+À noter que dans `dout`, les points non affectés à l'étape `k` récupèrent la classe d'appartenance de l'étape `k-1`.
+
+### Paramètres de la fonction `Rchdtxt`
+
+- `uceout` : nom du fichier de sortie des résultats
+- `chd1`, `chd2` : résultats des deux CHD
+- `mincl` : nombre minimal de membres par classe. Si on laisse en automatique (valeur 0), `min_cl` vaut nombre de documents / (nombre de classes terminales + 1)
+- `classif_mode` : type de classification. 0 = double
+- `nbt` : nombre de classes terminales initial souhaité. 
+
+
+### Initialisation
+
+`tcl` : nombre total de groupes dans l'arbre (terminaux ou non)
+`AssignClasseToUce` : assigne les classes calculées sur les uc aux uce à partir de la correspondance uc<->uce.
+`poids1`, `poids2` : calcul des effectifs de chaque groupe (terminal ou non)
+
+### Croisement des classes
+
+`croise` : effectif de chaque croisement de deux classes des deux CHD
+
+`chicroise` : pour chaque croisement :
+- si l'effectif vaut 0 -> 0
+- si l'effectif est inférieur à `mincl` -> 0
+- sinon on calcule le Khi2 du tableau du croisement d'appartenance aux deux groupes. On attribue la valeur du Khi2 si les effectifs croisés observés sont supérieurs aux attendus, l'opposé de la valeur du Khi2 sinon.
+
+À partir de ce tableau, on ne garde que les couples de classes pour lesquelle la valeur du Khi2 précédente est supérieure à 3.84 (quantile à 95% d'une loi du Khi2 à 1 degré de liberté).
+
+`addallfille` : ajoute les éléments terminaux à la liste des filles (avec fille = 0)
+
+
+
+
+
+## Déroulement d'une classification simple
+
+!!! Rchdtxt n'est pas appelé dans le cas d'une classification simple !
+
+Voilà le code utilisé pour générer les classes (depuis `PrintRScript.py`) :
+
+```
+#chd.result <- Rchdtxt(uceout, chd1, chd2 = chd1, mincl = mincl,classif_mode = classif_mode, nbt = nbt)
+tree.tot1 <- make_tree_tot(chd1)
+terminales <- find.terminales(chd1$n1, chd1$list_mere, chd1$list_fille, mincl)
+tree.cut1 <- make.classes(terminales, chd1$n1, tree.tot1$tree.cl, chd1$list_fille)
+write.csv2(tree.cut1$n1, uceout)
+chd.result <- tree.cut1
+```
+
+### find.terminales
+
+On extrait les classes **terminales** dont l'effectif est >= mincl dans `terminales`. On place dans `tocheck` toutes les classes **terminales**, avec un effectif < mincl.
+
+Pour toutes les classes dans `tocheck` : 
+
+- si leur mère est la racine, on les vire de `tocheck` -> non classés
+- `ln.mere` contient l'effectif de la classe mère. 
+- `filles.mere` contient la liste des classes filles de la mère de la classe actuelle (sans la classe actuelle), récurisevement.
+- si l'effectif de la mère est >= mincl, et que `filles.mere` ne contient pas de classes dans `terminales` et pas de classes dans `tocheck`, on ajoute la mère à `terminales`, et on enlève toutes les filles, la classe actuelle et la mère de `tocheck`.
+- si l'effectif de la mère est >= mincl, et que `filles.mere` ne contient pas de classes dans `terminales` mais qu'elle contient une classe dans `tocheck`, on ajoute la mère à `tocheck` et on en enlève la classe actuelle.
+- dans les autres cas, on enlève la classe actuelle de `tocheck`.
+
+Cette procédure permet de regrouper les classes avec effectif < mincl entre elles. Si on remonte jusqu'à la racine sans trouver de parent avec effectif >= mincl, les éléments ne sont pas classés.
+
+Bugs possibles dans certains cas particuliers : voir `tests_iramuteq.R`
+
+
+
+
+# Références
+
 Description de la double classification : p. 40 de *Alceste, une méthodologie d'analyse des données textuelles et une application (1990)*.
+
