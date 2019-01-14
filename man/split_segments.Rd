@@ -5,7 +5,7 @@
 \alias{split_segments.character}
 \alias{split_segments.Corpus}
 \alias{split_segments.corpus}
-\title{Split a character string or corpus into segments, taking into account punctuation where possible}
+\title{Split a character string or corpus into segments}
 \usage{
 split_segments(obj, ...)
 
