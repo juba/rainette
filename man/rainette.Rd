@@ -5,7 +5,7 @@
 \title{Performs a corpus clustering based on the Reinert method}
 \usage{
 rainette(dtm, k = 10, min_uc_size = 10, min_members = 5,
-  cc_test = 0.3, tsj = 3, ...)
+  cc_test = 0.3, tsj = 3, verbose = FALSE, ...)
 }
 \arguments{
 \item{dtm}{dtm of documents to cluster}
@@ -19,6 +19,8 @@ rainette(dtm, k = 10, min_uc_size = 10, min_members = 5,
 \item{cc_test}{contingency coefficient value for feature selection}
 
 \item{tsj}{minimum frequency value for feature selection}
+
+\item{verbose}{if TRUE, add intermediate computing elements to results object}
 
 \item{...}{parameters passed to `quanteda::textmodel_ca`}
 }
