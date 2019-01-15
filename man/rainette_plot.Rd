@@ -12,6 +12,8 @@ rainette_plot(res, dtm, k = NULL, n_terms = 15, free_x = FALSE,
 
 \item{dtm}{the dfm object used to compute the clustering}
 
+\item{k}{number of groups. If NULL, use the biggest number possible.}
+
 \item{n_terms}{number of terms to display in keyness plots}
 
 \item{free_x}{if TRUE, all the keyness plots will have the same x axis}

@@ -20,7 +20,7 @@ Imports:
     ggplot2,
     stringr,
     quanteda (>= 1.0),
-    ggdendro,
+    dendextend,
     gridExtra,
     progress,
     rlang,

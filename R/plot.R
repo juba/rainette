@@ -60,6 +60,7 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
 #' }
 #' 
 #' @import ggplot2
+#' @import dendextend
 
 rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, measure = c("chi2", "lr")) {
   
@@ -72,6 +73,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, meas
   
   if (is.null(k)) {
     groups <- res$group
+    k <- max(groups)
   } else {
     groups <- cutree.rainette(res, k)
   }
@@ -96,29 +98,35 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, meas
   ## Frequency and proportion of each cluster
   clust_n <- table(groups)
   clust_prop <- round(clust_n / sum(clust_n) * 100, 1)
-  ## Number of groups
-  nclass <- max(groups)
   ## Graph layout
-  lay <- matrix(c(rep(1, nclass), rep(2:(nclass+1), 2)), nrow = 3, ncol = nclass, byrow = TRUE)
+  lay <- matrix(c(rep(1, k), rep(2:(k+1), 2)), nrow = 3, ncol = k, byrow = TRUE)
   plots <- list()
   
-  ## Add dendrogrma
-  g <- suppressMessages(suppressWarnings(ggdendro::ggdendrogram(res) + scale_y_continuous(breaks = NULL) +
-      theme(plot.margin = grid::unit(c(0,.08,0,.08), "npc"))))
+  ## Groups colors
+  if (k <=9) {
+    groups_colors <- RColorBrewer::brewer.pal(k, "Set1")
+  } else if (k <= 12) {
+    groups_colors <- RColorBrewer::brewer.pal(k, "Paired")
+  } else {
+    groups_colors <- rep("firebrick3", k)
+  }
+  
+  ## Add dendrogram
+  dend <- as.dendrogram(res)
+  labels_colors(dend) <- groups_colors
+  dend <- dend %>% 
+    color_branches(k = k, col = groups_colors) %>% 
+    set("branches_lwd", 0.5)
+  dend <- as.ggdend(dend)
+  g <- ggplot(dend) + scale_y_continuous(breaks = NULL) +
+      theme(plot.margin = grid::unit(c(0.01,0.05,0.01,0.05), "npc"))
   plots[[1]] <- g
   
   ## Add terms plots
-  if (nclass <=9) {
-    title_colors <- RColorBrewer::brewer.pal(9, "Set1")
-  } else if (nclass <= 12) {
-    title_colors <- RColorBrewer::brewer.pal(12, "Paired")
-  } else {
-    title_colors <- rep("firebrick3", nclass)
-  }
-  for (i in 1:nclass) {
+  for (i in 1:k) {
     title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
     plots[[i+1]] <- terms_plot(tabs[[i]], xlim, 
-      title = title, title_color = title_colors[i], stat_col = stat_col)
+      title = title, title_color = groups_colors[i], stat_col = stat_col)
   }
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
