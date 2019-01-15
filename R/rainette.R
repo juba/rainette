@@ -127,7 +127,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
   ## Compute and return hclust-class result
   hres <- list(method = "reinert",
               call = match.call(),
-              height = rev(purrr::map_dbl(res, ~.x$height)),
+              height = cumsum(rev(purrr::map_dbl(res, ~.x$height))),
               order = 1:k,
               labels = as.character(1:k),
               merge = merge,
