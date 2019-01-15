@@ -18,10 +18,13 @@ Imports:
     purrr,
     tibble,
     ggplot2,
-    progress,
     stringr,
+    quanteda (>= 1.0),
+    ggdendro,
+    gridExtra,
+    progress,
     rlang,
-    quanteda (>= 1.0)
+    RColorBrewer    
 Suggests: 
     testthat,
     knitr,
