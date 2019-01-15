@@ -1,5 +1,5 @@
 if (getRversion() >= "2.15.1")  
-  utils::globalVariables(c("Dim1", "distance", "index", "segment", "segment_source", "weight"))
+  utils::globalVariables(c("Dim1", "distance", "index", "segment", "segment_source", "weight", "p", "feature"))
 
 
 
