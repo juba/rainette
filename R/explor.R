@@ -6,7 +6,15 @@ rainette_explor_css <- function() {
 #side {
   background-color: #EEEEEE;
   padding: 2em 3em;
-}"
+}
+
+/* Syntax highlighting */
+span.hl.str { color: #d14;}
+span.hl.kwa { color: #099;}
+span.hl.num { color: #099;}
+span.hl.kwd { color: #333; font-weight: bold;}
+span.hl.com { color: #888; font-style: italic;}
+"
 }
 
 
@@ -19,10 +27,13 @@ rainette_explor_css <- function() {
 
 rainette_explor <- function(res, dtm) {
   
+  res_name <- deparse(substitute(res))
+  dtm_name <- deparse(substitute(dtm))
   max_n_groups <- max(res$group)
   
+  
   ui <- miniPage(
-    #gadgetTitleBar("Clustering exploration"),
+    gadgetTitleBar("Clustering exploration", left = NULL),
     tags$head(tags$style(rainette_explor_css())),
     fillRow(
       flex = c(1,3),
@@ -40,10 +51,10 @@ rainette_explor <- function(res, dtm) {
         sliderInput("font_size", label = "Font size", 
           value = 13, min = 6, max = 20, step = 1)
         ),
-        div(id = "rcode",
-          "R code"
-          
-        )
+        actionButton("get_r_code",
+          class = "btn-success",
+          icon = icon("code"),
+          label = gettext("Get R code"))
       ),
       fillCol(id = "main",
         plotOutput("rainette_plot", height = "100%")
@@ -52,12 +63,61 @@ rainette_explor <- function(res, dtm) {
   )
   
   server <- function(input, output, session) {
+    
+    plot_code <- reactive({
+      paste0("rainette_plot(", res_name, ",", dtm_name,", k = ", input$k, 
+        ", n_terms = ", input$n_terms, 
+        ", free_x = ", input$free_x, 
+        ", measure = \"", input$measure, "\"",
+        ", font_size = ", input$font_size, ")")
+    })
+    
+    cutree_code <- reactive({
+      paste0("cutree.rainette(", res_name, 
+        ", k = ", input$k, ")")
+    })
+    
+    generate_code <- reactive({
+      code <- "## Clustering description plot\n"
+      code <- paste0(code, plot_code())
+      code <- paste0(code, "\n## Groups\n")
+      code <- paste0(code, cutree_code())
+      code <- formatR::tidy_source(text = code, 
+        width.cutoff = 75, 
+        output = FALSE)$text.tidy
+      code
+    })
+    
     output$rainette_plot <- renderPlot({
-      rainette_plot(res, dtm, k = input$k, 
-        n_terms = input$n_terms, 
-        free_x = input$free_x, 
-        measure = input$measure, 
-        font_size = input$font_size)
+      eval(parse(text = plot_code()))
+      # rainette_plot(res, dtm, k = input$k, 
+      #   n_terms = input$n_terms, 
+      #   free_x = input$free_x, 
+      #   measure = input$measure, 
+      #   font_size = input$font_size)
+    })
+    
+    ## Code export modal dialog
+    observeEvent(input$get_r_code, {
+      code <- generate_code()
+      showModal(modalDialog(
+        title = gettext("Export R code"), size = "l", 
+        HTML(paste0("Code to generate the current plot and compute groups :",
+          "<pre><code>",
+          paste(highr::hi_html(code), collapse = "\n"),
+          "</code></pre>")),
+        easyClose = TRUE))
+    })
+    
+    # Handle the Done button being pressed.
+    observeEvent(input$done, {
+      ## Generate code
+      code <- generate_code()
+      out <- paste0("\n-------- Start exported code --------\n\n",
+                    paste(code, collapse = "\n"),
+                    "\n\n--------- End exported code ---------\n")
+      cat(out)
+      stopApp()
     })
   }
   
