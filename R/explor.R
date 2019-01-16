@@ -37,7 +37,9 @@ rainette_explor <- function(res, dtm) {
     tags$head(tags$style(rainette_explor_css())),
     fillRow(
       flex = c(1,3),
-      fillCol(id = "side", 
+      fillCol(
+        flex = c(10, 1),
+        id = "side", 
         div(
         sliderInput("k", label = "Number of clusters", 
           value = max_n_groups,
