@@ -1,6 +1,7 @@
 ## Generate a "terms plot", ie terms keyness for a group
 
-terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3", stat_col = "chi2") {
+terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3", 
+                       stat_col = "chi2", font_size = 10) {
   
   ## Column with statistic values
   stat_col <- rlang::sym(stat_col)
@@ -13,9 +14,10 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
       values = c("positive" = "#377eb8", "negative" = "#e41a1c")) +
     labs(title = title, x = "") +
     theme_minimal() + 
-    theme(plot.title = element_text(size = 9, face = "bold", hjust = 0.5, colour = title_color),
-      axis.title.x = element_text(size = 7),
-      axis.text.x = element_text(size = 7),
+    theme(
+      plot.title = element_text(size = font_size * 1.1, face = "bold", hjust = 0.5, colour = title_color),
+      axis.title.x = element_text(size = font_size * 0.8),
+      axis.text.y = element_text(size = font_size),
       plot.margin = grid::unit(c(0,0.05,0,0), "npc"),
       panel.grid.major.x = element_blank(),
       panel.grid.minor.x = element_blank(),
@@ -56,7 +58,7 @@ groups_colors <- function(k, i = NULL) {
 
 ## Generate a list of terms plots from a list of keyness statistic tables
 
-terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2") {
+terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2", font_size) {
   
   ## Frequency and proportion of each cluster
   clust_n <- table(groups)
@@ -65,7 +67,8 @@ terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2") {
   
   purrr::map(1:k, function(i) {
     title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
-    terms_plot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), stat_col = stat_col)
+    terms_plot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
+               stat_col = stat_col, font_size = font_size)
   })
 }
 
@@ -78,6 +81,7 @@ terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2") {
 #' @param n_terms number of terms to display in keyness plots
 #' @param free_x if TRUE, all the keyness plots will have the same x axis
 #' @param measure statistics to compute
+#' @param font_size font size for terms plots
 #'
 #' @seealso `quanteda::textstat_keyness`
 #'
@@ -97,11 +101,9 @@ terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2") {
 #' @import ggplot2
 #' @import dendextend
 
-rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, measure = c("chi2", "lr")) {
-  
-  ## Maximum number of clusters
-  max_k <- max(res$group)
-  if (k < 2 || k > max_k) stop ("k must be between 2 and ", max_k)
+rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, 
+                          free_x = FALSE, measure = c("chi2", "lr"),
+                          font_size = 10) {
   
   measure <- match.arg(measure)
   stat_col <- switch(measure,
@@ -110,11 +112,15 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, meas
   )
   stat_col <- rlang::sym(stat_col)
   
+  ## Maximum number of clusters
+  max_k <- max(res$group)
+  
   ## Get groups
   if (is.null(k)) {
     groups <- res$group
     k <- max_k
   } else {
+    if (k < 2 || k > max_k) stop ("k must be between 2 and ", max_k)
     groups <- cutree.rainette(res, k)
   }
   
@@ -162,7 +168,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, meas
   
   
   ## Add terms plots
-  plots <- c(plots, terms_plots(tabs, groups, xlim, stat_col))
+  plots <- c(plots, terms_plots(tabs, groups, xlim, stat_col, font_size))
   
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
