@@ -21,9 +21,11 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
       panel.grid.minor.x = element_blank(),
       panel.background = element_rect(fill = grDevices::rgb(.9,.9,.9,.3), 
         colour = "transparent"))
-  ## Fix x limits if necessary
+  ## Fix x limits if necessary and remove horizontal axis values
   if (!is.null(xlim)) {
-    g <- g + scale_y_continuous(limits = xlim)
+    g <- g + scale_y_continuous(limits = xlim, breaks = NULL)
+  } else {
+    g <- g + scale_y_continuous(breaks = NULL)
   }
   
   ## Align title element to the left to center it with hjust
@@ -33,6 +35,39 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
 }
 
 
+## Returns a color palette or an individual group color depending on the number of groups
+
+groups_colors <- function(k, i = NULL) {
+  ## Groups colors
+  if (k <=9) {
+    col <- RColorBrewer::brewer.pal(9, "Set1")[1:k]
+  } else if (k <= 12) {
+    col <- RColorBrewer::brewer.pal(12, "Paired")[1:k]
+  } else {
+    col <- rep("firebrick3", k)
+  }
+  
+  if (!is.null(i)) {
+    return(col[i])
+  }
+  col
+}
+
+
+## Generate a list of terms plots from a list of keyness statistic tables
+
+terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2") {
+  
+  ## Frequency and proportion of each cluster
+  clust_n <- table(groups)
+  clust_prop <- round(clust_n / sum(clust_n) * 100, 1)
+  k <- length(tabs)
+  
+  purrr::map(1:k, function(i) {
+    title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
+    terms_plot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), stat_col = stat_col)
+  })
+}
 
 
 #' Generate a clustering description plot from a rainette result
@@ -64,6 +99,10 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
 
 rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, measure = c("chi2", "lr")) {
   
+  ## Maximum number of clusters
+  max_k <- max(res$group)
+  if (k < 2 || k > max_k) stop ("k must be between 2 and ", max_k)
+  
   measure <- match.arg(measure)
   stat_col <- switch(measure,
     "chi2" = "chi2",
@@ -71,9 +110,10 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, meas
   )
   stat_col <- rlang::sym(stat_col)
   
+  ## Get groups
   if (is.null(k)) {
     groups <- res$group
-    k <- max(groups)
+    k <- max_k
   } else {
     groups <- cutree.rainette(res, k)
   }
@@ -95,39 +135,35 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, free_x = FALSE, meas
     max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
     xlim <- c(min_stat, max_stat)
   }
-  ## Frequency and proportion of each cluster
-  clust_n <- table(groups)
-  clust_prop <- round(clust_n / sum(clust_n) * 100, 1)
   ## Graph layout
   lay <- matrix(c(rep(1, k), rep(2:(k+1), 2)), nrow = 3, ncol = k, byrow = TRUE)
   plots <- list()
   
-  ## Groups colors
-  if (k <=9) {
-    groups_colors <- RColorBrewer::brewer.pal(k, "Set1")
-  } else if (k <= 12) {
-    groups_colors <- RColorBrewer::brewer.pal(k, "Paired")
-  } else {
-    groups_colors <- rep("firebrick3", k)
-  }
-  
-  ## Add dendrogram
+  ## Dendrogram
   dend <- as.dendrogram(res)
-  labels_colors(dend) <- groups_colors
+  ## Prune the dendrogram if necessary
+  if( k < max(res$group)) {
+    for (i in nrow(res$merge):(k)) {
+      dend <- dend %>% prune(as.character(i))
+    }
+    labels(dend) <- 1:k
+  }
+  ## Style labels and branches
+  labels_colors(dend) <- groups_colors(k)
   dend <- dend %>% 
-    color_branches(k = k, col = groups_colors) %>% 
-    set("branches_lwd", 0.5)
+    color_branches(k = k, col = groups_colors(k)) %>% 
+    set("branches_lwd", 0.4)
+  ## Generate plot
   dend <- as.ggdend(dend)
-  g <- ggplot(dend) + scale_y_continuous(breaks = NULL) +
-      theme(plot.margin = grid::unit(c(0.01,0.05,0.01,0.05), "npc"))
+  margin <- ifelse(k>=7, 0, 0.175 - k * 0.025)
+  g <- ggplot(dend, nodes = FALSE) + scale_y_continuous(breaks = NULL) +
+      theme(plot.margin = grid::unit(c(0.01,margin,0,margin), "npc"))
   plots[[1]] <- g
   
+  
   ## Add terms plots
-  for (i in 1:k) {
-    title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
-    plots[[i+1]] <- terms_plot(tabs[[i]], xlim, 
-      title = title, title_color = groups_colors[i], stat_col = stat_col)
-  }
+  plots <- c(plots, terms_plots(tabs, groups, xlim, stat_col))
+  
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
   
