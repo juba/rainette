@@ -163,7 +163,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15,
   dend <- as.ggdend(dend)
   margin <- ifelse(k>=7, 0, 0.175 - k * 0.025)
   g <- ggplot(dend, nodes = FALSE) + scale_y_continuous(breaks = NULL) +
-      theme(plot.margin = grid::unit(c(0.01,margin,0,margin), "npc"))
+      theme(plot.margin = grid::unit(c(0.05,margin,0,margin), "npc"))
   plots[[1]] <- g
   
   

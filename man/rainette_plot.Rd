@@ -5,7 +5,7 @@
 \title{Generate a clustering description plot from a rainette result}
 \usage{
 rainette_plot(res, dtm, k = NULL, n_terms = 15, free_x = FALSE,
-  measure = c("chi2", "lr"))
+  measure = c("chi2", "lr"), font_size = 10)
 }
 \arguments{
 \item{res}{result object of a `rainette` clustering}
@@ -19,6 +19,8 @@ rainette_plot(res, dtm, k = NULL, n_terms = 15, free_x = FALSE,
 \item{free_x}{if TRUE, all the keyness plots will have the same x axis}
 
 \item{measure}{statistics to compute}
+
+\item{font_size}{font size for terms plots}
 }
 \description{
 Generate a clustering description plot from a rainette result
