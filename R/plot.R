@@ -1,17 +1,19 @@
-## Generate a "terms plot", ie terms keyness for a group
+## Generate a "terms bar plot", based on terms keyness for a group
 
-terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3", 
+terms_barplot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3", 
                        stat_col = "chi2", n_terms = NULL, font_size = 10) {
   
   ## Column with statistic values
   stat_col_tidy <- rlang::sym(stat_col)
+  stat_max <- max(xlim)
   ## Plot
-  g <- ggplot(data = tab, aes(x = stats::reorder(feature, !!stat_col_tidy), y = !!stat_col_tidy, fill = sign)) + 
-    geom_col(width = .7) + 
-    geom_hline(yintercept = 0, color = "grey70") +
+  g <- ggplot(data = tab, aes(x = stats::reorder(feature, !!stat_col_tidy), y = !!stat_col_tidy)) + 
+    #geom_hline(yintercept = 0, color = "grey70") +
+    geom_col(aes(fill = sign), color = "white", width = 1) + 
+    geom_text(y = stat_max / 10, aes(label = stats::reorder(feature, !!stat_col_tidy)), hjust = 0, size = font_size / 2.5) +
     coord_flip() + 
     scale_fill_manual("", guide = FALSE, 
-      values = c("positive" = "#377eb8", "negative" = "#e41a1c")) +
+      values = c("positive" = "#87ceFF", "negative" = "#f42a2c")) +
     labs(title = title, x = "") +
     theme_minimal() + 
     theme(
@@ -21,7 +23,7 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
       plot.margin = grid::unit(c(0,0.05,0,0), "npc"),
       panel.grid.major.x = element_blank(),
       panel.grid.minor.x = element_blank(),
-      panel.background = element_rect(fill = grDevices::rgb(.9,.9,.9,.3), 
+      panel.background = element_rect(fill = grDevices::rgb(.9,.9,.9,.2), 
         colour = "transparent"))
   ## Fix x limits if necessary and remove horizontal axis values
   if (!is.null(xlim)) {
@@ -33,7 +35,9 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
   if (nrow(tab) < n_terms) {
     limits <- as.character(stats::reorder(tab$feature, tab[[stat_col]]))
     limits <- rev(c(limits, rep("", n_terms - length(limits))))
-    g <- g + scale_x_discrete(limits = limits)
+    g <- g + scale_x_discrete(limits = limits, breaks = NULL)
+  } else {
+    g <- g + scale_x_discrete(breaks = NULL)
   }
   
   ## Align title element to the left to center it with hjust
@@ -41,6 +45,43 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
   g$layout$l[g$layout$name == "title"] <- 1
   g
 }
+
+
+## Generate a "terms wordcloud plot", based on terms keyness for a group
+
+#' @import ggwordcloud
+
+terms_wordcloudplot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3", 
+  stat_col = "chi2", n_terms = NULL, font_size = 15) {
+  
+  ## Column with statistic values
+  stat_col_tidy <- rlang::sym(stat_col)
+  ## Plot
+  g <- ggplot(data = tab) + 
+    #geom_hline(yintercept = 0, color = "grey70") +
+    ggwordcloud::geom_text_wordcloud(aes(label = feature, size = !!stat_col_tidy), color = title_color) +
+    labs(title = title) +
+    theme_minimal() + 
+    theme(
+      plot.title = element_text(size = font_size * 1.1, face = "bold", hjust = 0.5, colour = title_color),
+      plot.margin = grid::unit(c(0,0.05,0,0), "npc"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.background = element_rect(fill = grDevices::rgb(.9,.9,.9,.3), 
+        colour = "transparent"))
+  ## Fix x limits if necessary and remove horizontal axis values
+  if (!is.null(xlim)) {
+    g <- g + scale_size_area(limits = xlim, max_size = font_size)
+  } else {
+    g <- g + scale_size_area(max_size = font_size)
+  }
+
+  ## Align title element to the left to center it with hjust
+  g <- ggplotGrob(g)
+  g$layout$l[g$layout$name == "title"] <- 1
+  g
+}
+
 
 
 ## Returns a color palette or an individual group color depending on the number of groups
@@ -64,7 +105,8 @@ groups_colors <- function(k, i = NULL) {
 
 ## Generate a list of terms plots from a list of keyness statistic tables
 
-terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2", n_terms, font_size) {
+terms_plots <- function(tabs, groups, type = "bar", 
+  xlim = NULL, stat_col = "chi2", n_terms, font_size) {
   
   ## Frequency and proportion of each cluster
   clust_n <- table(groups)
@@ -73,8 +115,13 @@ terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2", n_terms, f
   
   purrr::map(1:k, function(i) {
     title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
-    terms_plot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
+    if (type == "bar") {
+      terms_barplot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
                stat_col = stat_col, n_terms, font_size = font_size)
+    } else {
+      terms_wordcloudplot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
+        stat_col = stat_col, n_terms, font_size = font_size)
+    }
   })
 }
 
@@ -107,10 +154,12 @@ terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2", n_terms, f
 #' @import ggplot2
 #' @import dendextend
 
-rainette_plot <- function(res, dtm, k = NULL, n_terms = 15, 
+rainette_plot <- function(res, dtm, k = NULL, 
+                          type = c("bar", "wordcloud"), n_terms = 15, 
                           free_x = FALSE, measure = c("chi2", "lr"),
                           font_size = 10) {
   
+  type <- match.arg(type)
   measure <- match.arg(measure)
   stat_col <- switch(measure,
     "chi2" = "chi2",
@@ -177,7 +226,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15,
   
   
   ## Add terms plots
-  plots <- c(plots, terms_plots(tabs, groups, xlim, stat_col, n_terms, font_size))
+  plots <- c(plots, terms_plots(tabs, groups, type, xlim, stat_col, n_terms, font_size))
   
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)

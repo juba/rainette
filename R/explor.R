@@ -64,6 +64,9 @@ rainette_explor <- function(res, dtm) {
         selectInput("measure", "Statistics", 
           choices = c("Chi-squared" = "chi2",
                       "Likelihood ratio" = "lr")),
+        selectInput("type", "Plot type",
+          choices = c("Barplot" = "bar",
+                      "Word cloud" = "wordcloud")),
         numericInput("n_terms", label = "Max number of terms to display",
           value = 20, min = 5, max = 30, step = 1),
         checkboxInput("free_x", label = "Free x axis", value = FALSE),
@@ -84,7 +87,8 @@ rainette_explor <- function(res, dtm) {
   server <- function(input, output, session) {
     
     plot_code <- reactive({
-      paste0("rainette_plot(", res_name, ",", dtm_name,", k = ", input$k, 
+      paste0("rainette_plot(", res_name, ",", dtm_name,", k = ", input$k,
+        ", type = \"", input$type, "\"",
         ", n_terms = ", input$n_terms, 
         ", free_x = ", input$free_x, 
         ", measure = \"", input$measure, "\"",
