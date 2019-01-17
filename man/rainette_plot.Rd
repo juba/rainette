@@ -39,5 +39,5 @@ rainette_plot(dtm, res)
 
 }
 \seealso{
-`quanteda::textstat_keyness`
+`quanteda::textstat_keyness`, `rainette_explor`
 }

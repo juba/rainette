@@ -83,7 +83,7 @@ terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2", font_size)
 #' @param measure statistics to compute
 #' @param font_size font size for terms plots
 #'
-#' @seealso `quanteda::textstat_keyness`
+#' @seealso `quanteda::textstat_keyness`, `rainette_explor`
 #'
 #' @export
 #' @examples 

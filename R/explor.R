@@ -18,12 +18,29 @@ span.hl.com { color: #888; font-style: italic;}
 }
 
 
+#' Shiny gadget for rainette clustering exploration
+#' 
+#' @param res result object of a `rainette` clustering
+#' @param dtm the dfm object used to compute the clustering
 #'
+#' @seealso `rainette_plot`
+#'
+#' @examples 
+#' \dontrun{
+#' library(quanteda)
+#' corpus <- data_corpus_inaugural
+#' corpus <- head(corpus, n = 10)
+#' corpus <- split_segments(corpus)
+#' dtm <- dfm(corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
+#' dtm <- dfm_trim(dtm, min_termfreq = 3)
+#' res <- rainette(dtm, k = 3)
+#' rainette_explor(dtm, res)
+#' }
+#' 
 #' @export
 #' 
 #' @import shiny
 #' @import miniUI
-#' @import shinythemes
 
 rainette_explor <- function(res, dtm) {
   
