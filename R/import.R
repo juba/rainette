@@ -64,7 +64,9 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
   thematics <- match.arg(thematics)
 
   ## Open as a filename or a connection
+  close_con <- FALSE
   if (is.character(f)) {
+    close_con <- TRUE
     f <- file(f, ...)
   }
   if (!inherits(f, "connection")) {
@@ -73,6 +75,9 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
   
   ## Read text
   lines <- readLines(f)
+  if (close_con) {
+    close(f)
+  }
   lines <- lines[lines != ""]
   text <- paste(lines, collapse = "\n")
 
