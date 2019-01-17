@@ -41,7 +41,7 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
 
 groups_colors <- function(k, i = NULL) {
   ## Groups colors
-  if (k <=9) {
+  if (k <= 6) {
     col <- RColorBrewer::brewer.pal(9, "Set1")[1:k]
   } else if (k <= 12) {
     col <- RColorBrewer::brewer.pal(12, "Paired")[1:k]
@@ -113,7 +113,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15,
   stat_col <- rlang::sym(stat_col)
   
   ## Maximum number of clusters
-  max_k <- max(res$group)
+  max_k <- max(res$group, na.rm = TRUE)
   
   ## Get groups
   if (is.null(k)) {
@@ -125,8 +125,11 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15,
   }
   
   ## Compute and filter keyness statistics
-  tabs <- purrr::map(sort(unique(groups)), function(group) {
-    quanteda::textstat_keyness(dtm, groups == group, measure = measure) %>% 
+  groups_list <- sort(unique(groups))
+  groups_list <- groups_list[!is.na(groups_list)]
+  tabs <- purrr::map(groups_list, function(group) {
+    select <- (groups == group & !is.na(groups))
+    quanteda::textstat_keyness(dtm, select, measure = measure) %>% 
       arrange(desc(abs(!!stat_col))) %>% 
       filter(p < 0.05) %>% 
       slice(1:n_terms) %>% 
@@ -148,7 +151,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15,
   ## Dendrogram
   dend <- stats::as.dendrogram(res)
   ## Prune the dendrogram if necessary
-  if( k < max(res$group)) {
+  if( k < max(res$group, na.rm = TRUE)) {
     for (i in nrow(res$merge):(k)) {
       dend <- dend %>% prune(as.character(i))
     }
