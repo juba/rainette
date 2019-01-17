@@ -15,7 +15,7 @@ test_that("generic cutree still works", {
   expect_length(cutree(hc, h = 250), 50)
 })
 
-test_that("h argument generates error in cutree.rainette", {
+test_that("cutree_rainette is ok", {
   expect_error(cutree(res, h = 200))
   expect_equal(cutree(res, k = 3), c(3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 2L, 
     2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 3L, 3L, 3L, 3L, 1L, 1L, 1L, 

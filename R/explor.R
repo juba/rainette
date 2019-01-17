@@ -92,7 +92,7 @@ rainette_explor <- function(res, dtm) {
     })
     
     cutree_code <- reactive({
-      paste0("cutree.rainette(", res_name, 
+      paste0("cutree_rainette(", res_name, 
         ", k = ", input$k, ")")
     })
     

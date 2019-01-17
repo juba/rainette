@@ -121,7 +121,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15,
     k <- max_k
   } else {
     if (k < 2 || k > max_k) stop ("k must be between 2 and ", max_k)
-    groups <- cutree.rainette(res, k)
+    groups <- cutree_rainette(res, k)
   }
   
   ## Compute and filter keyness statistics
@@ -146,7 +146,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15,
   plots <- list()
   
   ## Dendrogram
-  dend <- as.dendrogram(res)
+  dend <- stats::as.dendrogram(res)
   ## Prune the dendrogram if necessary
   if( k < max(res$group)) {
     for (i in nrow(res$merge):(k)) {

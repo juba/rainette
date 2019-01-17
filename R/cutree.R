@@ -10,7 +10,7 @@
 
 cutree <- function(tree, ...) {
   if (inherits(tree, "rainette")) {
-    return(cutree.rainette(tree, ...))
+    return(cutree_rainette(tree, ...))
   }
   stats::cutree(tree, ...)
 }
@@ -21,10 +21,11 @@ cutree <- function(tree, ...) {
 #' @param hres the `rainette` result object to be cut
 #' @param k the desired number of groups
 #' @param h unsupported
+#' @param ... arguments passed to other methods
 #'
 #' @export
 
-cutree.rainette <- function(hres, k = NULL, h = NULL) {
+cutree_rainette <- function(hres, k = NULL, h = NULL,...) {
   if (!is.null(h)) {
     stop("cutree.rainette only works with k argument")
   }
