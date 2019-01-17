@@ -5,9 +5,13 @@ terms_barplot <- function(tab, xlim = NULL, title = "", title_color = "firebrick
   
   ## Column with statistic values
   stat_col_tidy <- rlang::sym(stat_col)
-  stat_max <- max(xlim)
+  if (!is.null(xlim)) {
+    stat_max <- max(xlim)
+  } else {
+    stat_max <- max(tab[[stat_col]], na.rm = TRUE)
+  }
   ## Plot
-  g <- ggplot(data = tab, aes(x = stats::reorder(feature, !!stat_col_tidy), y = !!stat_col_tidy)) + 
+  g <- ggplot(data = tab, aes(x = stats::reorder(feature, abs(!!stat_col_tidy)), y = !!stat_col_tidy)) + 
     #geom_hline(yintercept = 0, color = "grey70") +
     geom_col(aes(fill = sign), color = "white", width = 1) + 
     geom_text(y = stat_max / 10, aes(label = stats::reorder(feature, !!stat_col_tidy)), hjust = 0, size = font_size / 2.5) +
@@ -27,9 +31,9 @@ terms_barplot <- function(tab, xlim = NULL, title = "", title_color = "firebrick
         colour = "transparent"))
   ## Fix x limits if necessary and remove horizontal axis values
   if (!is.null(xlim)) {
-    g <- g + scale_y_continuous(limits = xlim, breaks = NULL)
+    g <- g + scale_y_continuous(stat_col, limits = xlim, breaks = NULL)
   } else {
-    g <- g + scale_y_continuous(breaks = NULL)
+    g <- g + scale_y_continuous(stat_col, breaks = NULL)
   }
   ## Adjust vertical scale if necessary
   if (nrow(tab) < n_terms) {
@@ -116,9 +120,11 @@ terms_plots <- function(tabs, groups, type = "bar",
   purrr::map(1:k, function(i) {
     title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
     if (type == "bar") {
+      if (is.null(font_size)) font_size <- 10
       terms_barplot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
                stat_col = stat_col, n_terms, font_size = font_size)
     } else {
+      if (is.null(font_size)) font_size <- 18
       terms_wordcloudplot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
         stat_col = stat_col, n_terms, font_size = font_size)
     }
@@ -157,7 +163,7 @@ terms_plots <- function(tabs, groups, type = "bar",
 rainette_plot <- function(res, dtm, k = NULL, 
                           type = c("bar", "wordcloud"), n_terms = 15, 
                           free_x = FALSE, measure = c("chi2", "lr"),
-                          font_size = 10) {
+                          font_size = NULL) {
   
   type <- match.arg(type)
   measure <- match.arg(measure)
@@ -175,7 +181,7 @@ rainette_plot <- function(res, dtm, k = NULL,
     groups <- res$group
     k <- max_k
   } else {
-    if (k < 2 || k > max_k) stop ("k must be between 2 and ", max_k)
+    if (k < 2 || k > max_k) stop("k must be between 2 and ", max_k)
     groups <- cutree_rainette(res, k)
   }
   
@@ -195,9 +201,8 @@ rainette_plot <- function(res, dtm, k = NULL,
   ## Min and max statistics to fix x axis in terms plots
   xlim <- NULL
   if (!free_x) {
-    min_stat <- min(purrr::map_dbl(tabs, ~ min(.x %>% pull(!!stat_col))))
     max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
-    xlim <- c(min_stat, max_stat)
+    xlim <- c(0, max_stat)
   }
   ## Graph layout
   lay <- matrix(c(rep(1, k), rep(2:(k+1), 2)), nrow = 3, ncol = k, byrow = TRUE)

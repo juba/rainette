@@ -6,7 +6,7 @@
 \usage{
 rainette_plot(res, dtm, k = NULL, type = c("bar", "wordcloud"),
   n_terms = 15, free_x = FALSE, measure = c("chi2", "lr"),
-  font_size = 10)
+  font_size = NULL)
 }
 \arguments{
 \item{res}{result object of a `rainette` clustering}
