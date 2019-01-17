@@ -34,5 +34,6 @@ Suggests:
     knitr,
     rmarkdown,
     covr,
+    vdiffr,
     tm
 RoxygenNote: 6.1.1
