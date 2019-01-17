@@ -69,8 +69,8 @@ rainette_explor <- function(res, dtm) {
                       "Word cloud" = "wordcloud")),
         numericInput("n_terms", label = "Max number of terms to display",
           value = 20, min = 5, max = 30, step = 1),
-        checkboxInput("free_x", label = "Free x axis", value = FALSE),
-        sliderInput("font_size", label = "Font size", 
+        checkboxInput("free_scales", label = "Free scales", value = FALSE),
+        sliderInput("text_size", label = "Text size", 
           value = 13, min = 6, max = 20, step = 1)
         ),
         actionButton("get_r_code",
@@ -90,9 +90,9 @@ rainette_explor <- function(res, dtm) {
       paste0("rainette_plot(", res_name, ",", dtm_name,", k = ", input$k,
         ", type = \"", input$type, "\"",
         ", n_terms = ", input$n_terms, 
-        ", free_x = ", input$free_x, 
+        ", free_scales = ", input$free_scales, 
         ", measure = \"", input$measure, "\"",
-        ", font_size = ", input$font_size, ")")
+        ", text_size = ", input$text_size, ")")
     })
     
     cutree_code <- reactive({

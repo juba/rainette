@@ -1,37 +1,35 @@
 ## Generate a "terms bar plot", based on terms keyness for a group
 
-terms_barplot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3", 
-                       stat_col = "chi2", n_terms = NULL, font_size = 10) {
+terms_barplot <- function(tab, range = NULL, title = "", title_color = "firebrick3", 
+                       stat_col = "chi2", n_terms = NULL, text_size = 10) {
   
   ## Column with statistic values
   stat_col_tidy <- rlang::sym(stat_col)
-  if (!is.null(xlim)) {
-    stat_max <- max(xlim)
+  if (!is.null(range)) {
+    stat_max <- max(range)
   } else {
     stat_max <- max(tab[[stat_col]], na.rm = TRUE)
   }
   ## Plot
-  g <- ggplot(data = tab, aes(x = stats::reorder(feature, abs(!!stat_col_tidy)), y = !!stat_col_tidy)) + 
-    #geom_hline(yintercept = 0, color = "grey70") +
+  g <- ggplot(data = tab, aes(x = stats::reorder(feature, !!stat_col_tidy), y = abs(!!stat_col_tidy))) + 
     geom_col(aes(fill = sign), color = "white", width = 1) + 
-    geom_text(y = stat_max / 10, aes(label = stats::reorder(feature, !!stat_col_tidy)), hjust = 0, size = font_size / 2.5) +
+    geom_text(y = stat_max / 10, aes(label = stats::reorder(feature, !!stat_col_tidy)), hjust = 0, size = text_size / 2.5) +
     coord_flip() + 
     scale_fill_manual("", guide = FALSE, 
       values = c("positive" = "#87ceFF", "negative" = "#f42a2c")) +
     labs(title = title, x = "") +
     theme_minimal() + 
     theme(
-      plot.title = element_text(size = font_size * 1.1, face = "bold", hjust = 0.5, colour = title_color),
-      axis.title.x = element_text(size = font_size * 0.8),
-      axis.text.y = element_text(size = font_size),
+      plot.title = element_text(size = 12, face = "bold", hjust = 0.5, colour = title_color),
+      axis.title.x = element_text(size = text_size * 0.8),
       plot.margin = grid::unit(c(0,0.05,0,0), "npc"),
       panel.grid.major.x = element_blank(),
       panel.grid.minor.x = element_blank(),
       panel.background = element_rect(fill = grDevices::rgb(.9,.9,.9,.2), 
         colour = "transparent"))
   ## Fix x limits if necessary and remove horizontal axis values
-  if (!is.null(xlim)) {
-    g <- g + scale_y_continuous(stat_col, limits = xlim, breaks = NULL)
+  if (!is.null(range)) {
+    g <- g + scale_y_continuous(stat_col, limits = range, breaks = NULL)
   } else {
     g <- g + scale_y_continuous(stat_col, breaks = NULL)
   }
@@ -55,8 +53,8 @@ terms_barplot <- function(tab, xlim = NULL, title = "", title_color = "firebrick
 
 #' @import ggwordcloud
 
-terms_wordcloudplot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3", 
-  stat_col = "chi2", n_terms = NULL, font_size = 15) {
+terms_wordcloudplot <- function(tab, range = NULL, title = "", title_color = "firebrick3", 
+  stat_col = "chi2", max_size = 15) {
   
   ## Column with statistic values
   stat_col_tidy <- rlang::sym(stat_col)
@@ -67,17 +65,17 @@ terms_wordcloudplot <- function(tab, xlim = NULL, title = "", title_color = "fir
     labs(title = title) +
     theme_minimal() + 
     theme(
-      plot.title = element_text(size = font_size * 1.1, face = "bold", hjust = 0.5, colour = title_color),
+      plot.title = element_text(size = 12, face = "bold", hjust = 0.5, colour = title_color),
       plot.margin = grid::unit(c(0,0.05,0,0), "npc"),
       panel.grid.major.x = element_blank(),
       panel.grid.minor.x = element_blank(),
       panel.background = element_rect(fill = grDevices::rgb(.9,.9,.9,.3), 
         colour = "transparent"))
   ## Fix x limits if necessary and remove horizontal axis values
-  if (!is.null(xlim)) {
-    g <- g + scale_size_area(limits = xlim, max_size = font_size)
+  if (!is.null(range)) {
+    g <- g + scale_size_area(limits = range, max_size = max_size)
   } else {
-    g <- g + scale_size_area(max_size = font_size)
+    g <- g + scale_size_area(max_size = max_size)
   }
 
   ## Align title element to the left to center it with hjust
@@ -110,7 +108,7 @@ groups_colors <- function(k, i = NULL) {
 ## Generate a list of terms plots from a list of keyness statistic tables
 
 terms_plots <- function(tabs, groups, type = "bar", 
-  xlim = NULL, stat_col = "chi2", n_terms, font_size) {
+  range = NULL, stat_col = "chi2", n_terms, text_size) {
   
   ## Frequency and proportion of each cluster
   clust_n <- table(groups)
@@ -120,13 +118,13 @@ terms_plots <- function(tabs, groups, type = "bar",
   purrr::map(1:k, function(i) {
     title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
     if (type == "bar") {
-      if (is.null(font_size)) font_size <- 10
-      terms_barplot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
-               stat_col = stat_col, n_terms, font_size = font_size)
+      if (is.null(text_size)) text_size <- 10
+      terms_barplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
+               stat_col = stat_col, n_terms, text_size = text_size)
     } else {
-      if (is.null(font_size)) font_size <- 18
-      terms_wordcloudplot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
-        stat_col = stat_col, n_terms, font_size = font_size)
+      if (is.null(text_size)) text_size <- 18
+      terms_wordcloudplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
+        stat_col = stat_col, max_size = text_size)
     }
   })
 }
@@ -136,11 +134,12 @@ terms_plots <- function(tabs, groups, type = "bar",
 #'
 #' @param res result object of a `rainette` clustering
 #' @param dtm the dfm object used to compute the clustering
-#' @param k number of groups. If NULL, use the biggest number possible.
+#' @param k number of groups. If NULL, use the biggest number possible
+#' @param type type of term plots : barplot or wordcloud
 #' @param n_terms number of terms to display in keyness plots
-#' @param free_x if TRUE, all the keyness plots will have the same x axis
+#' @param free_scales if TRUE, all the keyness plots will have the same scale
 #' @param measure statistics to compute
-#' @param font_size font size for terms plots
+#' @param text_size font size for barplots, max word size for wordclouds
 #'
 #' @seealso `quanteda::textstat_keyness`, `rainette_explor`
 #'
@@ -162,8 +161,8 @@ terms_plots <- function(tabs, groups, type = "bar",
 
 rainette_plot <- function(res, dtm, k = NULL, 
                           type = c("bar", "wordcloud"), n_terms = 15, 
-                          free_x = FALSE, measure = c("chi2", "lr"),
-                          font_size = NULL) {
+                          free_scales = FALSE, measure = c("chi2", "lr"),
+                          text_size = NULL) {
   
   type <- match.arg(type)
   measure <- match.arg(measure)
@@ -199,10 +198,11 @@ rainette_plot <- function(res, dtm, k = NULL,
   })
   
   ## Min and max statistics to fix x axis in terms plots
-  xlim <- NULL
-  if (!free_x) {
+  range <- NULL
+  if (!free_scales) {
+    #min_stat <- min(purrr::map_dbl(tabs, ~ min(.x %>% pull(!!stat_col))))
     max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
-    xlim <- c(0, max_stat)
+    range <- c(0, max_stat)
   }
   ## Graph layout
   lay <- matrix(c(rep(1, k), rep(2:(k+1), 2)), nrow = 3, ncol = k, byrow = TRUE)
@@ -231,7 +231,7 @@ rainette_plot <- function(res, dtm, k = NULL,
   
   
   ## Add terms plots
-  plots <- c(plots, terms_plots(tabs, groups, type, xlim, stat_col, n_terms, font_size))
+  plots <- c(plots, terms_plots(tabs, groups, type, range, stat_col, n_terms, text_size))
   
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
