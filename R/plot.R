@@ -1,12 +1,12 @@
 ## Generate a "terms plot", ie terms keyness for a group
 
 terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3", 
-                       stat_col = "chi2", font_size = 10) {
+                       stat_col = "chi2", n_terms = NULL, font_size = 10) {
   
   ## Column with statistic values
-  stat_col <- rlang::sym(stat_col)
+  stat_col_tidy <- rlang::sym(stat_col)
   ## Plot
-  g <- ggplot(data = tab, aes(x = stats::reorder(feature, !!stat_col), y = !!stat_col, fill = sign)) + 
+  g <- ggplot(data = tab, aes(x = stats::reorder(feature, !!stat_col_tidy), y = !!stat_col_tidy, fill = sign)) + 
     geom_col(width = .7) + 
     geom_hline(yintercept = 0, color = "grey70") +
     coord_flip() + 
@@ -28,6 +28,12 @@ terms_plot <- function(tab, xlim = NULL, title = "", title_color = "firebrick3",
     g <- g + scale_y_continuous(limits = xlim, breaks = NULL)
   } else {
     g <- g + scale_y_continuous(breaks = NULL)
+  }
+  ## Adjust vertical scale if necessary
+  if (nrow(tab) < n_terms) {
+    limits <- as.character(stats::reorder(tab$feature, tab[[stat_col]]))
+    limits <- rev(c(limits, rep("", n_terms - length(limits))))
+    g <- g + scale_x_discrete(limits = limits)
   }
   
   ## Align title element to the left to center it with hjust
@@ -58,7 +64,7 @@ groups_colors <- function(k, i = NULL) {
 
 ## Generate a list of terms plots from a list of keyness statistic tables
 
-terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2", font_size) {
+terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2", n_terms, font_size) {
   
   ## Frequency and proportion of each cluster
   clust_n <- table(groups)
@@ -68,7 +74,7 @@ terms_plots <- function(tabs, groups, xlim = NULL, stat_col = "chi2", font_size)
   purrr::map(1:k, function(i) {
     title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
     terms_plot(tabs[[i]], xlim, title = title, title_color = groups_colors(k, i), 
-               stat_col = stat_col, font_size = font_size)
+               stat_col = stat_col, n_terms, font_size = font_size)
   })
 }
 
@@ -171,7 +177,7 @@ rainette_plot <- function(res, dtm, k = NULL, n_terms = 15,
   
   
   ## Add terms plots
-  plots <- c(plots, terms_plots(tabs, groups, xlim, stat_col, font_size))
+  plots <- c(plots, terms_plots(tabs, groups, xlim, stat_col, n_terms, font_size))
   
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
