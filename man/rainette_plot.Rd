@@ -5,23 +5,25 @@
 \title{Generate a clustering description plot from a rainette result}
 \usage{
 rainette_plot(res, dtm, k = NULL, type = c("bar", "wordcloud"),
-  n_terms = 15, free_x = FALSE, measure = c("chi2", "lr"),
-  font_size = NULL)
+  n_terms = 15, free_scales = FALSE, measure = c("chi2", "lr"),
+  text_size = NULL)
 }
 \arguments{
 \item{res}{result object of a `rainette` clustering}
 
 \item{dtm}{the dfm object used to compute the clustering}
 
-\item{k}{number of groups. If NULL, use the biggest number possible.}
+\item{k}{number of groups. If NULL, use the biggest number possible}
+
+\item{type}{type of term plots : barplot or wordcloud}
 
 \item{n_terms}{number of terms to display in keyness plots}
 
-\item{free_x}{if TRUE, all the keyness plots will have the same x axis}
+\item{free_scales}{if TRUE, all the keyness plots will have the same scale}
 
 \item{measure}{statistics to compute}
 
-\item{font_size}{font size for terms plots}
+\item{text_size}{font size for barplots, max word size for wordclouds}
 }
 \description{
 Generate a clustering description plot from a rainette result

@@ -1,6 +1,6 @@
 ## Generate a "terms bar plot", based on terms keyness for a group
 
-terms_barplot <- function(tab, range = NULL, title = "", title_color = "firebrick3", 
+keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebrick3", 
                        stat_col = "chi2", n_terms = NULL, text_size = 10) {
   
   ## Column with statistic values
@@ -53,7 +53,7 @@ terms_barplot <- function(tab, range = NULL, title = "", title_color = "firebric
 
 #' @import ggwordcloud
 
-terms_wordcloudplot <- function(tab, range = NULL, title = "", title_color = "firebrick3", 
+keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "firebrick3", 
   stat_col = "chi2", max_size = 15) {
   
   ## Column with statistic values
@@ -107,7 +107,7 @@ groups_colors <- function(k, i = NULL) {
 
 ## Generate a list of terms plots from a list of keyness statistic tables
 
-terms_plots <- function(tabs, groups, type = "bar", 
+keyness_plots <- function(tabs, groups, type = "bar", 
   range = NULL, stat_col = "chi2", n_terms, text_size) {
   
   ## Frequency and proportion of each cluster
@@ -119,11 +119,11 @@ terms_plots <- function(tabs, groups, type = "bar",
     title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
     if (type == "bar") {
       if (is.null(text_size)) text_size <- 10
-      terms_barplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
+      keyness_barplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
                stat_col = stat_col, n_terms, text_size = text_size)
     } else {
       if (is.null(text_size)) text_size <- 18
-      terms_wordcloudplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
+      keyness_worcloud(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
         stat_col = stat_col, max_size = text_size)
     }
   })
@@ -231,7 +231,7 @@ rainette_plot <- function(res, dtm, k = NULL,
   
   
   ## Add terms plots
-  plots <- c(plots, terms_plots(tabs, groups, type, range, stat_col, n_terms, text_size))
+  plots <- c(plots, keyness_plots(tabs, groups, type, range, stat_col, n_terms, text_size))
   
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
