@@ -58,20 +58,27 @@ rainette_explor <- function(res, dtm) {
         flex = c(10, 1),
         id = "side", 
         div(
-        sliderInput("k", label = "Number of clusters", 
-          value = max_n_groups,
-          min = 2, max = max_n_groups, step = 1),
-        selectInput("measure", "Statistics", 
-          choices = c("Chi-squared" = "chi2",
-                      "Likelihood ratio" = "lr")),
-        selectInput("type", "Plot type",
-          choices = c("Barplot" = "bar",
-                      "Word cloud" = "wordcloud")),
-        numericInput("n_terms", label = "Max number of terms to display",
-          value = 20, min = 5, max = 30, step = 1),
-        checkboxInput("free_scales", label = "Free scales", value = FALSE),
-        sliderInput("text_size", label = "Text size", 
-          value = 13, min = 6, max = 20, step = 1)
+          sliderInput("k", label = "Number of clusters", 
+            value = max_n_groups,
+            min = 2, max = max_n_groups, step = 1),
+          selectInput("measure", "Statistics", 
+            choices = c("Chi-squared" = "chi2",
+                        "Likelihood ratio" = "lr")),
+          selectInput("type", "Plot type",
+            choices = c("Barplot" = "bar",
+                        "Word cloud" = "cloud")),
+          numericInput("n_terms", label = "Max number of terms to display",
+            value = 20, min = 5, max = 30, step = 1),
+          checkboxInput("same_scales", label = "Force same scales", value = TRUE),
+          conditionalPanel("input.type == 'bar'",
+            checkboxInput("show_negative", label = "Show negative values", value = TRUE),
+            sliderInput("text_size", label = "Text size", 
+              value = 13, min = 6, max = 20, step = 1)
+          ),
+          conditionalPanel("input.type == 'cloud'",
+            sliderInput("max_size", label = "Max text size", 
+              value = 15, min = 10, max = 25, step = 1)
+          )
         ),
         actionButton("get_r_code",
           class = "btn-success",
@@ -87,12 +94,24 @@ rainette_explor <- function(res, dtm) {
   server <- function(input, output, session) {
     
     plot_code <- reactive({
-      paste0("rainette_plot(", res_name, ",", dtm_name,", k = ", input$k,
-        ", type = \"", input$type, "\"",
-        ", n_terms = ", input$n_terms, 
-        ", free_scales = ", input$free_scales, 
-        ", measure = \"", input$measure, "\"",
-        ", text_size = ", input$text_size, ")")
+      if (input$type == "bar") {
+        code <- paste0("rainette_plot(", res_name, ",", dtm_name,", k = ", input$k,
+          ", type = \"bar\"",
+          ", n_terms = ", input$n_terms, 
+          ", free_scales = ", !input$same_scales, 
+          ", measure = \"", input$measure, "\"",
+          ", show_negative = \"", input$show_negative, "\"",
+          ", text_size = ", input$text_size, ")")
+      }
+      if (input$type == "cloud") {
+        code <- paste0("rainette_plot(", res_name, ",", dtm_name,", k = ", input$k,
+          ", type = \"cloud\"",
+          ", n_terms = ", input$n_terms, 
+          ", free_scales = ", !input$same_scales, 
+          ", measure = \"", input$measure, "\"",
+          ", text_size = ", input$max_size, ")")
+      }
+      code
     })
     
     cutree_code <- reactive({
@@ -113,11 +132,6 @@ rainette_explor <- function(res, dtm) {
     
     output$rainette_plot <- renderPlot({
       eval(parse(text = plot_code()))
-      # rainette_plot(res, dtm, k = input$k, 
-      #   n_terms = input$n_terms, 
-      #   free_x = input$free_x, 
-      #   measure = input$measure, 
-      #   font_size = input$font_size)
     })
     
     ## Code export modal dialog
@@ -144,5 +158,6 @@ rainette_explor <- function(res, dtm) {
     })
   }
   
-  runGadget(ui, server, viewer = dialogViewer("Clustering exploration", width = 1500, height = 1000))
+  runGadget(ui, server, viewer = dialogViewer("Clusters exploration", width = 1500, height = 1000))
+  #runGadget(ui, server, viewer = browserViewer())
 }
