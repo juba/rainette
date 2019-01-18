@@ -91,7 +91,7 @@ keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "fireb
 
 groups_colors <- function(k, i = NULL) {
   ## Groups colors
-  if (k <= 6) {
+  if (k <= 5) {
     col <- RColorBrewer::brewer.pal(9, "Set1")[1:k]
   } else if (k <= 12) {
     col <- RColorBrewer::brewer.pal(12, "Paired")[1:k]
