@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
+- ajouter le nombre de NA dans plot/explor ?
 - enlever verbose s'il n'est pas nécessaire pour la double CDH
 - double CDH
 
@@ -152,6 +153,7 @@ uce;uc
 À partir de ce tableau, on ne garde que les couples de classes pour lesquelle la valeur du Khi2 précédente est supérieure à 3.84 (quantile à 95% d'une loi du Khi2 à 1 degré de liberté).
 
 `addallfille` : ajoute les éléments terminaux à la liste des filles (avec fille = 0)
+
 
 
 
