@@ -77,7 +77,7 @@ rainette_explor <- function(res, dtm) {
           ),
           conditionalPanel("input.type == 'cloud'",
             sliderInput("max_size", label = "Max text size", 
-              value = 15, min = 10, max = 25, step = 1)
+              value = 15, min = 6, max = 30, step = 1)
           )
         ),
         actionButton("get_r_code",
