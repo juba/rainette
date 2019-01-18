@@ -50,6 +50,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
   docvars(dtm)$rainette_uce_id <- 1:nrow(dtm)
   
   ## Compute uc ids based on minimum size
+  message("  Computing ucs from segments...")
   dtm <- compute_uc(dtm, min_uc_size = min_uc_size)
   ## Correspondance table between uce and uc
   corresp_uce_uc <- data.frame(uce = docvars(dtm)$rainette_uce_id, uc = docvars(dtm)$rainette_uc_id)
@@ -99,6 +100,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
   
   res <- res[-1]
   
+  message("  Computing results...")
   ## Compute the merge element of resulting hclust result
   groups <- 1:k
   merge <- matrix(nrow = 0, ncol = 2)
