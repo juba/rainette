@@ -35,8 +35,8 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
   }
   ## Adjust vertical scale if necessary
   if (nrow(tab) < n_terms) {
-    limits <- as.character(stats::reorder(tab$feature, tab[[stat_col]]))
-    limits <- rev(c(limits, rep("", n_terms - length(limits))))
+    limits <- levels(stats::reorder(tab$feature, tab[[stat_col]]))
+    limits <- c(rep("", n_terms - length(limits)), limits)
     g <- g + scale_x_discrete(limits = limits, breaks = NULL)
   } else {
     g <- g + scale_x_discrete(breaks = NULL)
