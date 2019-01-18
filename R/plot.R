@@ -16,7 +16,7 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
     geom_text(y = stat_max / 10, aes(label = stats::reorder(feature, !!stat_col_tidy)), hjust = 0, size = text_size / 2.5) +
     coord_flip() + 
     scale_fill_manual("", guide = FALSE, 
-      values = c("positive" = "#87ceFF", "negative" = "#f42a2c")) +
+      values = c("positive" = "#a1d8ff", "negative" = "#ff7d7e")) +
     labs(title = title, x = "") +
     theme_minimal() + 
     theme(
@@ -63,6 +63,7 @@ keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "fireb
     #geom_hline(yintercept = 0, color = "grey70") +
     ggwordcloud::geom_text_wordcloud(aes(label = feature, size = !!stat_col_tidy), color = title_color) +
     labs(title = title) +
+    scale_x_continuous(stat_col) +
     theme_minimal() + 
     theme(
       plot.title = element_text(size = 12, face = "bold", hjust = 0.5, colour = title_color),
@@ -122,7 +123,7 @@ keyness_plots <- function(tabs, groups, type = "bar",
       keyness_barplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
                stat_col = stat_col, n_terms, text_size = text_size)
     } else {
-      if (is.null(text_size)) text_size <- 18
+      if (is.null(text_size)) text_size <- 15
       keyness_worcloud(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
         stat_col = stat_col, max_size = text_size)
     }
@@ -160,12 +161,16 @@ keyness_plots <- function(tabs, groups, type = "bar",
 #' @import dendextend
 
 rainette_plot <- function(res, dtm, k = NULL, 
-                          type = c("bar", "wordcloud"), n_terms = 15, 
+                          type = c("bar", "cloud"), n_terms = 15, 
                           free_scales = FALSE, measure = c("chi2", "lr"),
+                          show_negative = TRUE,
                           text_size = NULL) {
   
   type <- match.arg(type)
   measure <- match.arg(measure)
+  if (type == "cloud") {
+    show_negative <- FALSE
+  }
   stat_col <- switch(measure,
     "chi2" = "chi2",
     "lr" = "G2"
@@ -189,12 +194,20 @@ rainette_plot <- function(res, dtm, k = NULL,
   groups_list <- groups_list[!is.na(groups_list)]
   tabs <- purrr::map(groups_list, function(group) {
     select <- (groups == group & !is.na(groups))
-    quanteda::textstat_keyness(dtm, select, measure = measure) %>% 
+    tab <- quanteda::textstat_keyness(dtm, select, measure = measure) %>% 
       arrange(desc(abs(!!stat_col))) %>% 
-      filter(p < 0.05) %>% 
-      slice(1:n_terms) %>% 
-      mutate(sign = if_else(!!stat_col > 0, "positive", "negative"),
-             sign = factor(sign, levels = c("positive", "negative")))
+      filter(p < 0.05)
+    if (show_negative) {
+      tab %>% 
+        slice(1:n_terms) %>% 
+        mutate(sign = if_else(!!stat_col > 0, "positive", "negative"),
+               sign = factor(sign, levels = c("positive", "negative")))
+    } else {
+      tab %>% 
+        filter(!!stat_col > 0) %>% 
+        slice(1:n_terms) %>% 
+        mutate(sign = "positive")
+    }
   })
   
   ## Min and max statistics to fix x axis in terms plots
@@ -231,7 +244,8 @@ rainette_plot <- function(res, dtm, k = NULL,
   
   
   ## Add terms plots
-  plots <- c(plots, keyness_plots(tabs, groups, type, range, stat_col, n_terms, text_size))
+  plots <- c(plots, keyness_plots(tabs, groups, type, range, 
+    stat_col, n_terms, text_size))
   
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
