@@ -21,6 +21,7 @@ Imports:
     stringr,
     quanteda (>= 1.0),
     dendextend,
+    ggwordcloud,
     gridExtra,
     progress,
     rlang,
