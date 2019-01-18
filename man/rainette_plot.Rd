@@ -23,6 +23,8 @@ rainette_plot(res, dtm, k = NULL, type = c("bar", "cloud"),
 
 \item{measure}{statistics to compute}
 
+\item{show_negative}{if TRUE, show negative keyness features}
+
 \item{text_size}{font size for barplots, max word size for wordclouds}
 }
 \description{

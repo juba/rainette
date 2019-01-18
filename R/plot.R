@@ -20,7 +20,7 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
     labs(title = title, x = "") +
     theme_minimal() + 
     theme(
-      plot.title = element_text(size = 12, face = "bold", hjust = 0.5, colour = title_color),
+      plot.title = element_text(size = text_size, face = "bold", hjust = 0.5, colour = title_color),
       axis.title.x = element_text(size = text_size * 0.8),
       plot.margin = grid::unit(c(0,0.05,0,0), "npc"),
       panel.grid.major.x = element_blank(),
@@ -140,6 +140,7 @@ keyness_plots <- function(tabs, groups, type = "bar",
 #' @param n_terms number of terms to display in keyness plots
 #' @param free_scales if TRUE, all the keyness plots will have the same scale
 #' @param measure statistics to compute
+#' @param show_negative if TRUE, show negative keyness features
 #' @param text_size font size for barplots, max word size for wordclouds
 #'
 #' @seealso `quanteda::textstat_keyness`, `rainette_explor`
