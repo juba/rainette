@@ -159,5 +159,5 @@ rainette_explor <- function(res, dtm) {
   }
   
   runGadget(ui, server, viewer = dialogViewer("Clusters exploration", width = 1500, height = 1000))
-  #runGadget(ui, server, viewer = browserViewer())
+  
 }
