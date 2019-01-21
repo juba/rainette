@@ -190,6 +190,10 @@ rainette_plot <- function(res, dtm, k = NULL,
     groups <- cutree_rainette(res, k)
   }
   
+  ## Number of NA
+  na_n <- sum(is.na(groups))
+  na_prop <- round(na_n / length(groups) * 100, 1)
+  
   ## Compute and filter keyness statistics
   groups_list <- sort(unique(groups))
   groups_list <- groups_list[!is.na(groups_list)]
@@ -239,8 +243,11 @@ rainette_plot <- function(res, dtm, k = NULL,
   ## Generate plot
   dend <- as.ggdend(dend)
   margin <- ifelse(k>=7, 0, 0.175 - k * 0.025)
+  title_size <- ifelse(is.null(text_size), 10, text_size)
   g <- ggplot(dend, nodes = FALSE) + scale_y_continuous(breaks = NULL) +
-      theme(plot.margin = grid::unit(c(0.05,margin,0,margin), "npc"))
+      ggtitle(paste0("NA : ", na_n, " (", na_prop, "%)")) +
+      theme(plot.margin = grid::unit(c(0.05,margin,0,margin), "npc"),
+            plot.title = element_text(hjust = 0.5, size = title_size))
   plots[[1]] <- g
   
   

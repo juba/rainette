@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
-- ajouter le nombre de NA dans plot/explor ?
 - enlever verbose s'il n'est pas nécessaire pour la double CDH
 - double CDH
 
