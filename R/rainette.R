@@ -100,7 +100,6 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
   
   res <- res[-1]
   
-  message("  Computing results...")
   ## Compute the merge element of resulting hclust result
   groups <- 1:k
   merge <- matrix(nrow = 0, ncol = 2)
