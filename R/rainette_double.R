@@ -25,9 +25,9 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
     
   ## Compute data frame of groups at each k for both clusterings
   groups1 <- purrr::imap_dfc(x$uce_groups, ~ paste(.y, .x, sep="."))
-  colnames(groups1) <- 1:(max_k - 1)
+  colnames(groups1) <- 1:ncol(groups1)
   groups2 <- purrr::imap_dfc(y$uce_groups, ~ paste(.y, .x, sep="."))
-  colnames(groups2) <- 1:(max_k - 1)
+  colnames(groups2) <- 1:ncol(groups2)
   ## Total number of documents
   n_tot <- nrow(groups1)
 
@@ -63,7 +63,8 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
     filter(chi2 > 3.84, n_both > min_members) %>%
     select(g1, g2, level1, level2, n_both, chi2) %>% 
     mutate(interclass = paste(g1, g2, sep = "x"),
-           members = compute_members(level1, g1, level2, g2))
+           members = compute_members(level1, g1, level2, g2)) %>% 
+    filter(!duplicated(members))
   
   ## Matrix of sizes of intersection classes intersections
   cross_inter <- matrix(1, nrow = nrow(valid), ncol = nrow(valid),
@@ -114,19 +115,40 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
     if (is.null(partitions)) {
       return(NULL)
     }
-    res <- tibble(members = partitions, k = k)
-    res %>% 
+    tibble(clusters = partitions, k = k) %>% 
       rowwise %>% 
       ## Compute size and sum of Khi2 for each partition
-      mutate(chi2 = sum(valid$chi2[valid$interclass %in% members]),
-             n = sum(valid$n_both[valid$interclass %in% members])) %>% 
+      mutate(chi2 = sum(valid$chi2[valid$interclass %in% clusters]),
+             n = sum(valid$n_both[valid$interclass %in% clusters])) %>% 
       ungroup %>% 
+      ## Filter partitions with max size or max chi2 for each k
       group_by(k) %>% 
-      ## Filter partitions with max size or max Khi2 for each k
-      filter(n == max(n) | chi2 == max(chi2))
+      filter(n == max(n) | chi2 == max(chi2)) %>% 
+      group_by(k, n) %>% 
+      filter(chi2 == max(chi2)) %>% 
+      group_by(k, chi2) %>% 
+      filter(n == max(n))
   })
-  pb$terminate
   
+  ## Compute group memberships from a vector of clusters
+  compute_groups <- function(clusters) {
+    clusters <- unlist(clusters)
+    groups <- rep(NA, n_tot)
+    for (i in seq_along(clusters)) {
+      members <- unlist(valid$members[valid$interclass == clusters[i]])
+      groups[members] <- i
+    }
+    list(groups)
+  }
+  
+  ## Add group membership for each clustering
+  res <- res %>%
+    rowwise %>% 
+    mutate(groups = compute_groups(clusters))
+
+  pb$tick(max_k)
+  
+  class(res) <- c("rainette2", class(res))
   res
 }
 
