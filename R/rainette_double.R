@@ -23,6 +23,13 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
     y <- rainette(dtm, k = max_k, min_uc_size = uc_size2, ...)
   }
     
+  ## Progress bar
+  message("  Searching for best partitions")
+  pb <- progress::progress_bar$new(total = k + 4,
+    format = "  [:bar] :percent in :elapsed",
+    clear = FALSE, show_after = 0)
+  invisible(pb$tick(0))
+  
   ## Compute data frame of groups at each k for both clusterings
   groups1 <- purrr::imap_dfc(x$uce_groups, ~ paste(.y, .x, sep="."))
   colnames(groups1) <- 1:ncol(groups1)
@@ -74,13 +81,7 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
       cross_inter[i , j] <- length(intersect(valid$members[[i]], valid$members[[j]]))
     }
   }
-  
-  ## Progress bar
-  message("  Searching for best partitions")
-  pb <- progress::progress_bar$new(total = k,
-    format = "  [:bar] :percent in :elapsed",
-    clear = FALSE, show_after = 0)
-  invisible(pb$tick(0))
+  pb$tick(1)
   
   ## Compute 2-class partitions
   interclasses <- valid$interclass
@@ -144,9 +145,10 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
   ## Add group membership for each clustering
   res <- res %>%
     rowwise %>% 
-    mutate(groups = compute_groups(clusters))
+    mutate(groups = compute_groups(clusters)) %>% 
+    ungroup
 
-  pb$tick(max_k)
+  pb$tick(1)
   
   class(res) <- c("rainette2", class(res))
   res
