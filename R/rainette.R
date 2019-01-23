@@ -72,14 +72,16 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
     ## Split the biggest group
     biggest_group <- which.max(purrr::map(res[[i]]$tabs, nrow))
     if (nrow(res[[i]]$tabs[[biggest_group]]) < min_members) {
-      warning("\nNo more group bigger than min_members. Stopping after iteration ", i, ".")
+      pb$update(1)
+      message("! No more group bigger than min_members. Stopping after iteration ", i, ".")
       k <- i
       break
     }
     tab <- res[[i]]$tabs[[biggest_group]]
     ## textmodel_ca only works if nrow >= 3 and ncol >= 3
     if (nrow(tab) < 3 || ncol(tab) < 3) {
-      warning("\nTab to be splitted is not big enough. Stopping after iteration ", i, ".")
+      pb$update(1)
+      message("! Tab to be splitted is not big enough. Stopping after iteration ", i, ".")
       k <- i
       break
     }
