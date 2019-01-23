@@ -10,8 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
+- pourquoi dans le corpus de Karine avec thematics = "split", on a moins de docs après split_segments ?
 - enlever verbose s'il n'est pas nécessaire pour la double CDH
-- double CDH
+- tester double CDH
 
 
 # Notes Iramuteq
