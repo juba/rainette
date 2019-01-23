@@ -16,15 +16,22 @@ compute_chi2 <- function(n_both, n1, n2, n_tot) {
 
 rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_members = 10, ...) {
 
-  ## If passed a dfm, compute both clusterings
+  ## If passed a dfm, compute both clustering
   if (inherits(x, "dfm")) {
     dtm <- x
     message("  Computing first clustering with uc_size1 = ", uc_size1)
-    x <- rainette(dtm, k = max_k, min_uc_size = uc_size1, ...)
+    x <- rainette(dtm, k = max_k, min_uc_size = uc_size1, min_members = min_members,...)
     message("  Computing second clustering with uc_size2 = ", uc_size2)
-    y <- rainette(dtm, k = max_k, min_uc_size = uc_size2, ...)
+    y <- rainette(dtm, k = max_k, min_uc_size = uc_size2, min_members = min_members, ...)
   }
-    
+  
+  ## max_k should not be higher than the smallest k in both clustering
+  max_k_res <- min(max(x$group, na.rm = TRUE), max(y$group, na.rm = TRUE))
+  if (max_k_res < max_k) {
+    message("! Setting max_k from ", max_k, " to ", max_k_res)
+    max_k <- max_k_res
+  }
+  
   ## Progress bar
   message("  Searching for best partitions")
   pb_max <- max_k + 4
@@ -75,6 +82,10 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
     mutate(interclass = paste(g1, g2, sep = "x"),
            members = compute_members(level1, g1, level2, g2)) %>% 
     filter(!duplicated(members))
+  
+  if (nrow(valid) < 2) {
+    stop("Not enough valid classes to continue. You may try a lower min_members value.")
+  }
   
   ## Matrix of sizes of intersection classes intersections
   cross_inter <- matrix(1, nrow = nrow(valid), ncol = nrow(valid),
