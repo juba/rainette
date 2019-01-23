@@ -9,3 +9,4 @@ essai/
 Rscript_iramuteq/
 NOTES.Rmd
 tests_iramuteq.R
+*.udpipe
