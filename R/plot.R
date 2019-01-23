@@ -1,7 +1,7 @@
 ## Generate a "terms bar plot", based on terms keyness for a group
 
 keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebrick3", 
-                       stat_col = "chi2", n_terms = NULL, text_size = 10) {
+                       stat_col = "chi2", n_terms = NULL, text_size = 10, top_margin = 0) {
   
   ## Column with statistic values
   stat_col_tidy <- rlang::sym(stat_col)
@@ -22,7 +22,7 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
     theme(
       plot.title = element_text(size = text_size, face = "bold", hjust = 0.5, colour = title_color),
       axis.title.x = element_text(size = text_size * 0.8),
-      plot.margin = grid::unit(c(0,0.05,0,0), "npc"),
+      plot.margin = grid::unit(c(top_margin,0.05,0,0), "npc"),
       panel.grid.major.x = element_blank(),
       panel.grid.minor.x = element_blank(),
       panel.background = element_rect(fill = grDevices::rgb(.9,.9,.9,.2), 
@@ -54,7 +54,7 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
 #' @import ggwordcloud
 
 keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "firebrick3", 
-  stat_col = "chi2", max_size = 15) {
+  stat_col = "chi2", max_size = 15, top_margin = 0) {
   
   ## Column with statistic values
   stat_col_tidy <- rlang::sym(stat_col)
@@ -67,7 +67,7 @@ keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "fireb
     theme_minimal() + 
     theme(
       plot.title = element_text(size = 12, face = "bold", hjust = 0.5, colour = title_color),
-      plot.margin = grid::unit(c(0,0.05,0,0), "npc"),
+      plot.margin = grid::unit(c(top_margin,0.05,0,0), "npc"),
       panel.grid.major.x = element_blank(),
       panel.grid.minor.x = element_blank(),
       panel.background = element_rect(fill = grDevices::rgb(.9,.9,.9,.3), 
@@ -109,7 +109,7 @@ groups_colors <- function(k, i = NULL) {
 ## Generate a list of terms plots from a list of keyness statistic tables
 
 keyness_plots <- function(tabs, groups, type = "bar", 
-  range = NULL, stat_col = "chi2", n_terms, text_size) {
+  range = NULL, stat_col = "chi2", n_terms, text_size, top_margin = 0) {
   
   ## Frequency and proportion of each cluster
   clust_n <- table(groups)
@@ -121,15 +121,41 @@ keyness_plots <- function(tabs, groups, type = "bar",
     if (type == "bar") {
       if (is.null(text_size)) text_size <- 10
       keyness_barplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
-               stat_col = stat_col, n_terms, text_size = text_size)
+               stat_col = stat_col, n_terms, text_size = text_size, top_margin)
     } else {
       if (is.null(text_size)) text_size <- 15
       keyness_worcloud(tabs[[i]], range, title = title, title_color = groups_colors(k, i), 
-        stat_col = stat_col, max_size = text_size)
+        stat_col = stat_col, max_size = text_size, top_margin)
     }
   })
 }
 
+## Compute and filter keyness statistics table for each group
+
+keyness_stats <- function(groups, dtm, measure, stat_col, show_negative, n_terms) {
+  
+  groups_list <- sort(unique(groups))
+  groups_list <- groups_list[!is.na(groups_list)]
+  tabs <- purrr::map(groups_list, function(group) {
+    select <- (groups == group & !is.na(groups))
+    tab <- quanteda::textstat_keyness(dtm, select, measure = measure) %>% 
+      arrange(desc(abs(!!stat_col))) %>% 
+      filter(p < 0.05)
+    if (show_negative) {
+      tab %>% 
+        slice(1:n_terms) %>% 
+        mutate(sign = if_else(!!stat_col > 0, "positive", "negative"),
+          sign = factor(sign, levels = c("positive", "negative")))
+    } else {
+      tab %>% 
+        filter(!!stat_col > 0) %>% 
+        slice(1:n_terms) %>% 
+        mutate(sign = "positive")
+    }
+  })
+  
+  tabs
+}
 
 #' Generate a clustering description plot from a rainette result
 #'
@@ -194,31 +220,12 @@ rainette_plot <- function(res, dtm, k = NULL,
   na_n <- sum(is.na(groups))
   na_prop <- round(na_n / length(groups) * 100, 1)
   
-  ## Compute and filter keyness statistics
-  groups_list <- sort(unique(groups))
-  groups_list <- groups_list[!is.na(groups_list)]
-  tabs <- purrr::map(groups_list, function(group) {
-    select <- (groups == group & !is.na(groups))
-    tab <- quanteda::textstat_keyness(dtm, select, measure = measure) %>% 
-      arrange(desc(abs(!!stat_col))) %>% 
-      filter(p < 0.05)
-    if (show_negative) {
-      tab %>% 
-        slice(1:n_terms) %>% 
-        mutate(sign = if_else(!!stat_col > 0, "positive", "negative"),
-               sign = factor(sign, levels = c("positive", "negative")))
-    } else {
-      tab %>% 
-        filter(!!stat_col > 0) %>% 
-        slice(1:n_terms) %>% 
-        mutate(sign = "positive")
-    }
-  })
+  ## Keyness statistics
+  tabs <- keyness_stats(groups, dtm, measure, stat_col, show_negative, n_terms)
   
   ## Min and max statistics to fix x axis in terms plots
   range <- NULL
   if (!free_scales) {
-    #min_stat <- min(purrr::map_dbl(tabs, ~ min(.x %>% pull(!!stat_col))))
     max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
     range <- c(0, max_stat)
   }
@@ -259,3 +266,96 @@ rainette_plot <- function(res, dtm, k = NULL,
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
   
 }
+
+
+#' Generate a clustering description plot from a rainette2 result
+#'
+#' @param res result object of a `rainette2` clustering
+#' @param dtm the dfm object used to compute the clustering
+#' @param k number of groups. If NULL, use the biggest number possible
+#' @param criterion criterion to use to choose the best partition. `chi2` means 
+#'    the partition with the maximum sum of chi2, `n` the partition with the 
+#'    maximum size.
+#' @param type type of term plots : barplot or wordcloud
+#' @param n_terms number of terms to display in keyness plots
+#' @param free_scales if TRUE, all the keyness plots will have the same scale
+#' @param measure statistics to compute
+#' @param show_negative if TRUE, show negative keyness features
+#' @param text_size font size for barplots, max word size for wordclouds
+#'
+#' @seealso `quanteda::textstat_keyness`, `rainette2_explor`
+#'
+#' @export
+#' 
+#' @import ggplot2
+
+rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
+  type = c("bar", "cloud"), n_terms = 15, 
+  free_scales = FALSE, measure = c("chi2", "lr"),
+  show_negative = TRUE,
+  text_size = 10) {
+  
+  type <- match.arg(type)
+  measure <- match.arg(measure)
+  criterion <- match.arg(criterion)
+  if (type == "cloud") {
+    show_negative <- FALSE
+  }
+  stat_col <- switch(measure,
+    "chi2" = "chi2",
+    "lr" = "G2"
+  )
+  stat_col <- rlang::sym(stat_col)
+  
+  ## Maximum number of clusters
+  max_k <- max(res$k, na.rm = TRUE)
+  
+  if (k < 2 || k > max_k) stop("k must be between 2 and ", max_k)
+  groups <- cutree_rainette2(res, k, criterion)
+  
+  ## Keyness statistics
+  tabs <- keyness_stats(groups, dtm, measure, stat_col, show_negative, n_terms)
+  
+  ## Min and max statistics to fix x axis in terms plots
+  range <- NULL
+  if (!free_scales) {
+    max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
+    range <- c(0, max_stat)
+  }
+  ## Graph layout
+  if (k <= 5) {
+    lay <- matrix(1:(k+1), nrow = 1, byrow = TRUE)
+  } else {
+    index <- 1:(k+1)
+    if (k %% 2 == 0) {
+      index <- c(index, NA)
+    }
+    lay <- matrix(index, nrow = 2, byrow = TRUE)
+  }
+  plots <- list()
+  
+  ## Frequency barplot
+  freq <- data.frame(table(groups, exclude=NULL))
+  colnames(freq) <- c("Group", "n")
+  g <- ggplot(freq) +
+    geom_col(aes(x = Group, y = n, fill = Group)) +
+    scale_fill_manual(guide = FALSE, values = c(groups_colors(k)), na.value = "grey20") +
+    ggtitle("Clusters size") +
+    theme(
+      plot.title = element_text(size = text_size, face = "bold", hjust = 0.5),
+      plot.margin = grid::unit(c(0.05,0.05,0,0), "npc"),
+      axis.title.x = element_text(size = text_size * 0.8),
+      axis.title.y = element_text(size = text_size * 0.8))
+  plots[[1]] <- g
+  
+  ## Add terms plots
+  plots <- c(plots, keyness_plots(tabs, groups, type, range, 
+    stat_col, n_terms, text_size, top_margin = 0.05))
+  
+  ## Generate grid
+  gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
+  
+}
+
+
+
