@@ -121,7 +121,7 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
     corpus$documents$texts, 
     function(text) {
        pb$tick(1)
-       split_segments(text)
+       split_segments(text, segment_size, segment_size_window)
     }
   )
   
