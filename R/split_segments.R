@@ -33,14 +33,24 @@ split_segments <- function(obj, ...) {
 ##' @import purrr
 
 
-split_segments.character <- function(obj, segment_size = 40, segment_size_window = 15, ...) {
+split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL, ...) {
 
   text <- obj
   
   if (!(inherits(text, "character") && length(text) == 1)) stop("text must be a character vector of size 1")
 
+  ## Default segment_size_window
+  if (is.null(segment_size_window)) {
+    segment_size_window <- 0.4 * segment_size
+  }
+  
   ## Tokenize into words
   words <- as.character(quanteda::tokens(text, what = "word"))
+  
+  ## If string is shorter than segment_size, returns it
+  if (length(words) <= segment_size) {
+    return(tibble(segment = obj))
+  }
 
   ## Compute "weight" for each word
   words_tbl <- tibble(word = words) %>%
@@ -87,7 +97,7 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
 ##' @export
 
 
-split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 15, ...) {
+split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = NULL, ...) {
   
   corpus <- obj
   
@@ -104,7 +114,7 @@ split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 
 ##' @export
 
 
-split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 15, ...) {
+split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL, ...) {
   
   corpus <- obj
   
