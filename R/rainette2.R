@@ -12,6 +12,8 @@ compute_chi2 <- function(n_both, n1, n2, n_tot) {
 }
 
 
+#' @export
+
 rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_members = 10, ...) {
 
   ## If passed a dfm, compute both clusterings
@@ -25,7 +27,8 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
     
   ## Progress bar
   message("  Searching for best partitions")
-  pb <- progress::progress_bar$new(total = k + 4,
+  pb_max <- max_k + 4
+  pb <- progress::progress_bar$new(total = pb_max,
     format = "  [:bar] :percent in :elapsed",
     clear = FALSE, show_after = 0)
   invisible(pb$tick(0))
@@ -147,10 +150,10 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
     rowwise %>% 
     mutate(groups = compute_groups(clusters)) %>% 
     ungroup
-
-  pb$tick(1)
-  
   class(res) <- c("rainette2", class(res))
+
+  pb$update(1)
+
   res
 }
 
