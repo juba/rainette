@@ -46,9 +46,6 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
     dtm@x <- as.numeric(dtm@x > 0)
   }
   
-  ## Add id to documents
-  docvars(dtm)$rainette_uce_id <- 1:nrow(dtm)
-  
   ## Compute uc ids based on minimum size
   message("  Computing ucs from segments...")
   dtm <- compute_uc(dtm, min_uc_size = min_uc_size)
