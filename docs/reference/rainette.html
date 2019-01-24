@@ -118,8 +118,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dtm</th>
-      <td><p>quanteda dfm object of documents to cluster, usually the 
-result of `split_segments`</p></td>
+      <td><p>quanteda dfm object of documents to cluster, usually the
+result of <code><a href='split_segments.html'>split_segments()</a></code></p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -143,16 +143,18 @@ result of `split_segments`</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>parameters passed to `quanteda::textmodel_ca`</p></td>
+      <td><p>parameters passed to <a href='https://quanteda.io/reference/textmodel_ca.html'>quanteda::textmodel_ca</a></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The result is a list of both class `hclust` and `rainette`. Besides the elements 
-of an `hclust` object, two more results are available :</p>
-<p>- `uce_groups` give the group of each document for each k
-- `group` give the group of each document for the maximum value of k available</p>
+    <p>The result is a list of both class <code>hclust</code> and <code>rainette</code>. Besides the elements
+of an <code>hclust</code> object, two more results are available :</p><ul>
+<li><p><code>uce_groups</code> give the group of each document for each k</p></li>
+<li><p><code>group</code> give the group of each document for the maximum value of k available</p></li>
+</ul>
+
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -161,12 +163,14 @@ quite a bit, see the package vignettes for more details.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. [http://www.numdam.org/item/?id=CAD_1983__8_2_187_0](http://www.numdam.org/item/?id=CAD_1983__8_2_187_0)</p>
-<p>Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. [https://doi.org/10.1177/075910639002600103](https://doi.org/10.1177/075910639002600103)</p>
+    <ul>
+<li><p>Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <a href='http://www.numdam.org/item/?id=CAD_1983__8_2_187_0'>http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a></p></li>
+<li><p>Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <a href='https://doi.org/10.1177/075910639002600103'>https://doi.org/10.1177/075910639002600103</a></p></li>
+</ul>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>`split_segments`, `rainette2`, `cutree_rainette`, `rainette_plot`, `rainette_explor`</p></div>
+    <div class='dont-index'><p><code><a href='split_segments.html'>split_segments()</a></code>, <code><a href='rainette2.html'>rainette2()</a></code>, <code><a href='cutree_rainette.html'>cutree_rainette()</a></code>, <code><a href='rainette_plot.html'>rainette_plot()</a></code>, <code><a href='rainette_explor.html'>rainette_explor()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

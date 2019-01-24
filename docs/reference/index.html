@@ -110,8 +110,92 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-simple-clustering" class="hasAnchor"><a href="#section-simple-clustering" class="anchor"></a>Simple clustering</h2>
+          <p class="section-desc"><p>Simple clustering computation and visualisation</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="rainette.html">rainette()</a></code> </p>
+        </td>
+        <td><p>Corpus clustering based on the Reinert method - Simple clustering</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cutree_rainette.html">cutree_rainette()</a></code> </p>
+        </td>
+        <td><p>Cut a rainette result tree into groups of documents</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rainette_plot.html">rainette_plot()</a></code> </p>
+        </td>
+        <td><p>Generate a clustering description plot from a rainette result</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rainette_explor.html">rainette_explor()</a></code> </p>
+        </td>
+        <td><p>Shiny gadget for rainette clustering exploration</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-double-clustering" class="hasAnchor"><a href="#section-double-clustering" class="anchor"></a>Double clustering</h2>
+          <p class="section-desc"><p>Double clustering computation and visualisation</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="rainette2.html">rainette2()</a></code> </p>
+        </td>
+        <td><p>Corpus clustering based on the Reinert method - Double clustering</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cutree_rainette2.html">cutree_rainette2()</a></code> </p>
+        </td>
+        <td><p>Cut a rainette2 result object into groups of documents</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rainette2_plot.html">rainette2_plot()</a></code> </p>
+        </td>
+        <td><p>Generate a clustering description plot from a rainette2 result</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rainette2_explor.html">rainette2_explor()</a></code> </p>
+        </td>
+        <td><p>Shiny gadget for rainette2 clustering exploration</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-corpus-importation-and-segmentation" class="hasAnchor"><a href="#section-corpus-importation-and-segmentation" class="anchor"></a>Corpus importation and segmentation</h2>
+          <p class="section-desc"><p>Functions to import or segment a textual corpus</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="import_corpus_iramuteq.html">import_corpus_iramuteq()</a></code> </p>
+        </td>
+        <td><p>Import a corpus in Iramuteq format</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="split_segments.html">split_segments()</a></code> </p>
+        </td>
+        <td><p>Split a character string or corpus into segments</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-utility-functions" class="hasAnchor"><a href="#section-utility-functions" class="anchor"></a>Utility functions</h2>
+          <p class="section-desc"><p>Functions used internally for computation</p></p>
         </th>
       </tr>
       <tr>
@@ -135,18 +219,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="cutree_rainette.html">cutree_rainette()</a></code> </p>
-        </td>
-        <td><p>Cut a rainette result tree into groups of documents</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cutree_rainette2.html">cutree_rainette2()</a></code> </p>
-        </td>
-        <td><p>Cut a rainette2 result object into groups of documents</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="docs_order_by_ca.html">docs_order_by_ca()</a></code> </p>
         </td>
         <td><p>return documents indices ordered by CA first axis coordinates</p></td>
@@ -156,54 +228,6 @@
           <p><code><a href="features_selection.html">features_selection()</a></code> </p>
         </td>
         <td><p>Remove features from dtm of each group base don cc_test and tsj</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="import_corpus_iramuteq.html">import_corpus_iramuteq()</a></code> </p>
-        </td>
-        <td><p>Import a corpus in Iramuteq format</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rainette.html">rainette()</a></code> </p>
-        </td>
-        <td><p>Corpus clustering based on the Reinert method - Simple clustering</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rainette2.html">rainette2()</a></code> </p>
-        </td>
-        <td><p>Corpus clustering based on the Reinert method - Double clustering</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rainette2_explor.html">rainette2_explor()</a></code> </p>
-        </td>
-        <td><p>Shiny gadget for rainette2 clustering exploration</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rainette2_plot.html">rainette2_plot()</a></code> </p>
-        </td>
-        <td><p>Generate a clustering description plot from a rainette2 result</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rainette_explor.html">rainette_explor()</a></code> </p>
-        </td>
-        <td><p>Shiny gadget for rainette clustering exploration</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rainette_plot.html">rainette_plot()</a></code> </p>
-        </td>
-        <td><p>Generate a clustering description plot from a rainette result</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="split_segments.html">split_segments()</a></code> </p>
-        </td>
-        <td><p>Split a character string or corpus into segments</p></td>
       </tr><tr>
         
         <td>
@@ -224,7 +248,10 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-simple-clustering">Simple clustering</a></li>
+      <li><a href="#section-double-clustering">Double clustering</a></li>
+      <li><a href="#section-corpus-importation-and-segmentation">Corpus importation and segmentation</a></li>
+      <li><a href="#section-utility-functions">Utility functions</a></li>
     </ul>
   </div>
 </div>
