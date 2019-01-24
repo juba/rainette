@@ -4,7 +4,7 @@
 #' @param ... arguments passed to other methods
 #'
 #' @details
-#' If `tree` is of class `rainette`, invokes `cutree.rainette`. Otherwise, just run `stats::cutree`.
+#' If `tree` is of class `rainette`, invokes [cutree.rainette()]. Otherwise, just run [stats::cutree()].
 #'
 #' @export
 

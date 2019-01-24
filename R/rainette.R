@@ -1,13 +1,13 @@
 #' Corpus clustering based on the Reinert method - Simple clustering
 #'
 #' @param dtm quanteda dfm object of documents to cluster, usually the 
-#'   result of `split_segments`
+#'   result of [split_segments()]
 #' @param k maximum number of clusters to compute
 #' @param min_uc_size minimum number of forms by document
 #' @param min_members don't try to split groups with fewer members
 #' @param cc_test contingency coefficient value for feature selection
 #' @param tsj minimum frequency value for feature selection
-#' @param ... parameters passed to `quanteda::textmodel_ca`
+#' @param ... parameters passed to [quanteda::textmodel_ca]
 #'
 #' @details
 #' See the references for original articles on the method. Computations and results may differ
@@ -20,12 +20,12 @@
 #' - `uce_groups` give the group of each document for each k
 #' - `group` give the group of each document for the maximum value of k available
 #'
-#' @seealso `split_segments`, `rainette2`, `cutree_rainette`, `rainette_plot`, `rainette_explor`
+#' @seealso [split_segments()], [rainette2()], [cutree_rainette()], [rainette_plot()], [rainette_explor()]
 #'   
 #' @references 
-#' Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. [http://www.numdam.org/item/?id=CAD_1983__8_2_187_0](http://www.numdam.org/item/?id=CAD_1983__8_2_187_0)
 #' 
-#' Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. [https://doi.org/10.1177/075910639002600103](https://doi.org/10.1177/075910639002600103)
+#' - Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+#' - Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
 #'
 #' @examples
 #' \dontrun{
@@ -215,8 +215,8 @@ split_tab_by_chisq <- function(tab, indices) {
 #'
 #' @param tab original dtm
 #' @param indices documents indices orderes by first CA axis coordinates
-#' @param max_index document index where the split is maximum, computed with `split_tab_by_chisq`
-#' @param max_chisq maximum chi-square value computed by `split_tab_by_chisq`
+#' @param max_index document index where the split is maximum, computed with [split_tab_by_chisq()]
+#' @param max_chisq maximum chi-square value computed by [split_tab_by_chisq()]
 #' 
 #' @details
 #' Internal function, not to be used directly

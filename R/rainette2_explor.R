@@ -3,7 +3,7 @@
 #' @param res result object of a `rainette2` clustering
 #' @param dtm the dfm object used to compute the clustering
 #'
-#' @seealso `rainette2_plot`
+#' @seealso [rainette2_plot()]
 #'
 #' 
 #' @export

@@ -169,7 +169,7 @@ keyness_stats <- function(groups, dtm, measure, stat_col, show_negative, n_terms
 #' @param show_negative if TRUE, show negative keyness features
 #' @param text_size font size for barplots, max word size for wordclouds
 #'
-#' @seealso `quanteda::textstat_keyness`, `rainette_explor`
+#' @seealso [quanteda::textstat_keyness()], [rainette_explor()]
 #'
 #' @export
 #' @examples 
@@ -283,7 +283,7 @@ rainette_plot <- function(res, dtm, k = NULL,
 #' @param show_negative if TRUE, show negative keyness features
 #' @param text_size font size for barplots, max word size for wordclouds
 #'
-#' @seealso `quanteda::textstat_keyness`, `rainette2_explor`
+#' @seealso [quanteda::textstat_keyness()], [rainette2_explor()]
 #'
 #' @export
 #' 

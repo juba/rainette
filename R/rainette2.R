@@ -150,15 +150,15 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 
 #' Corpus clustering based on the Reinert method - Double clustering
 #'
-#' @param x either a quanteda dfm object or the result of `rainette`
-#' @param y if `x` is a `rainette` result, this must be another `rainette` from same dfm
+#' @param x either a quanteda dfm object or the result of [rainette()]
+#' @param y if `x` is a [rainette()] result, this must be another [rainette()] result from same dfm
 #'   but with different uc size.
 #' @param max_k maximum number of clusters to compute
 #' @param uc_size1 if `x` is a dfm, minimum uc size for first clustering
 #' @param uc_size2 if `x` is a dfm, minimum uc size for second clustering
 #' @param min_members minimum members of each cluster
 #' @param min_chi2 minimum chi2 for each cluster
-#' @param ... if `x` is a dfm object, parameters passed to `rainette` for both 
+#' @param ... if `x` is a dfm object, parameters passed to [rainette()] for both 
 #'   simple clusterings
 #'
 #' @details
@@ -181,12 +181,12 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 #' - `n` sum of the size of each cluster
 #' - `groups` group membership of each document for this partition (`NA` if not assigned)
 #'
-#' @seealso `rainette`, `cutree_rainette2`, `rainette2_plot`, `rainette2_explor`
+#' @seealso [rainette()], [cutree_rainette2()], [rainette2_plot()], [rainette2_explor()]
 #'
 #' @references 
-#' Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. [http://www.numdam.org/item/?id=CAD_1983__8_2_187_0](http://www.numdam.org/item/?id=CAD_1983__8_2_187_0)
 #' 
-#' Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. [https://doi.org/10.1177/075910639002600103](https://doi.org/10.1177/075910639002600103)
+#' - Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+#' - Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
 #'
 #' @export
 #' 
