@@ -3,10 +3,11 @@ if (getRversion() >= "2.15.1")
 
 
 
-#' Performs a corpus clustering based on the Reinert method
+#' Corpus clustering based on the Reinert method - Simple clustering
 #'
-#' @param dtm dtm of documents to cluster
-#' @param k number of clusters to compute
+#' @param dtm quanteda dfm object of documents to cluster, usually the 
+#'   result of `split_segments`
+#' @param k maximum number of clusters to compute
 #' @param min_uc_size minimum number of forms by document
 #' @param min_members don't try to split groups with fewer members
 #' @param cc_test contingency coefficient value for feature selection
@@ -14,11 +15,18 @@ if (getRversion() >= "2.15.1")
 #' @param ... parameters passed to `quanteda::textmodel_ca`
 #'
 #' @details
-#' TODO : compléter
+#' See the references for original articles on the method. Computations and results may differ
+#' quite a bit, see the package vignettes for more details.
 #'
 #' @return
-#' TODO : compléter
+#' The result is a list of both class `hclust` and `rainette`. Besides the elements 
+#' of an `hclust` object, two more results are available :
 #' 
+#' - `uce_groups` give the group of each document for each k
+#' - `group` give the group of each document for the maximum value of k available
+#'
+#' @seealso `split_segments`, `rainette2`, `cutree_rainette`, `rainette_plot`, `rainette_explor`
+#'   
 #' @references 
 #' Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. [http://www.numdam.org/item/?id=CAD_1983__8_2_187_0](http://www.numdam.org/item/?id=CAD_1983__8_2_187_0)
 #' 

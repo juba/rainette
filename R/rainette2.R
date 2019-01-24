@@ -11,8 +11,62 @@ compute_chi2 <- function(n_both, n1, n2, n_tot) {
   return(res)
 }
 
-
+#' Corpus clustering based on the Reinert method - Double clustering
+#'
+#' @param x either a quanteda dfm object or the result of `rainette`
+#' @param y if `x` is a `rainette` result, this must be another `rainette` from same dfm
+#'   but with different uc size.
+#' @param max_k maximum number of clusters to compute
+#' @param uc_size1 if `x` is a dfm, minimum uc size for first clustering
+#' @param uc_size2 if `x` is a dfm, minimum uc size for second clustering
+#' @param min_members minimum members of each cluster
+#' @param ... if `x` is a dfm object, parameters passed to `rainette` for both 
+#'   simple clusterings
+#'
+#' @details
+#' You can pass a quanteda dfm as `x` object, the function then performs two simple
+#' clustering with varying minimum uc size, and then proceed to find optimal partitions
+#' based on the results of both clusterings.
+#' 
+#' If both clusterings have already been computed, you can pass them as `x` and `y` arguments
+#' and the function will only look for optimal partitions.
+#' 
+#' For more details on optimal partitions search algorithm, please see package vignettes.
+#' 
+#' @return 
+#' A tibble with optimal partitions found for each available value of `k` as rows, and the following
+#' columns :
+#' 
+#' - `clusters` list of the crossed original clusters used in the partition
+#' - `k` the number of clusters
+#' - `chi2` sum of the chi2 value of each cluster
+#' - `n` sum of the size of each cluster
+#' - `groups` group membership of each document for this partition (`NA` if not assigned)
+#'
+#' @seealso `rainette`, `cutree_rainette2`, `rainette2_plot`, `rainette2_explor`
+#'
+#' @references 
+#' Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. [http://www.numdam.org/item/?id=CAD_1983__8_2_187_0](http://www.numdam.org/item/?id=CAD_1983__8_2_187_0)
+#' 
+#' Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. [https://doi.org/10.1177/075910639002600103](https://doi.org/10.1177/075910639002600103)
+#'
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#' mini_corpus <- head(data_corpus_inaugural, n = 2)
+#' mini_corpus <- split_segments(mini_corpus, 5)
+#' dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
+#' dtm <- dfm_wordstem(dtm, language = "english")
+#' dtm <- dfm_trim(dtm, min_termfreq = 3)
+#' 
+#' res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_members = 2)
+#' res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_members = 2)
+#' 
+#' res <- rainette2(res1, res2, min_members = 2)
+#' rainette2_explor(res, dtm)
+#' }
+
 
 rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_members = 10, ...) {
 
