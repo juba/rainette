@@ -90,12 +90,12 @@ test_that("next_partitions is ok", {
 })
 
 
-test_that("select_optimal_partitions is ok", {
+test_that("get_optimal_partitions is ok", {
   valid <- tibble(interclass = c("1x1", "2x2", "3x3", "4x4"),
                   n_both = c(3, 3, 2, 1),
                   chi2 = c(4, 5, 10, 4),
                   members = list(c(1,2,3), c(4,5,6), c(1,2), 7), stringsAsFactors = FALSE)
-  partitions <- list(NULL, 
+  partitions <- list(
     list(c("1x1", "2x2"), c("2x2", "3x3"), c("1x1", "4x4")),
     list(c("1x1", "2x2", "4x4")))
   n_tot <- 7
