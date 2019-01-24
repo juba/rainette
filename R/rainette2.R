@@ -3,13 +3,150 @@
 
 compute_chi2 <- function(n_both, n1, n2, n_tot) {
   tab <- matrix(c(n_both, n1 - n_both, n2 - n_both, n_tot - n1 - n2 + n_both), nrow = 2)
-  suppressWarnings(cs <- chisq.test(tab))
+  suppressWarnings(cs <- stats::chisq.test(tab))
   res <- cs$statistic
   if (cs$expected[1,1] > n_both) {
     res <- -res
   }
   return(res)
 }
+
+## Compute data frame of groups at each k for a clustering
+
+get_groups <- function(res) {
+  groups <- purrr::imap_dfc(res$uce_groups, ~ paste(.y, .x, sep="."))
+  colnames(groups) <- seq_along(groups)
+  return(groups)
+}
+
+## Compute size and chi2 for all combinations of two classes form two
+## clustering results
+
+classes_crosstab <- function(groups1, groups2, n_tot) {
+  purrr::imap_dfr(groups1, function(g1, i1) {
+    purrr::imap_dfr(groups2, function(g2, i2) {
+      df <- tibble(g1, g2)
+      df %>% 
+        count(g1, g2) %>% 
+        tidyr::complete(g1, g2, fill = list(n = 0)) %>% 
+        rename(n_both = n) %>% 
+        right_join(df %>% count(g1), by = "g1") %>% 
+        rename(n1 = n) %>%
+        right_join(df %>% count(g2), by = "g2") %>%
+        rename(n2 = n) %>%
+        rowwise() %>%
+        mutate(level1 = i1, level2 = i2,
+          chi2 = compute_chi2(n_both, n1, n2, n_tot)) %>%
+        ungroup()
+    })
+  })
+}
+
+## Filter intersection classes on size and Khi2 value, and 
+## add their members
+
+filter_crosstab <- function(tab, groups1, groups2, min_members, min_chi2) {
+  
+  ## Return members of an intersection class
+  compute_members <- function(level1, g1, level2, g2) {
+    pmap(list(level1, g1, level2, g2), function(level1, g1, level2, g2) {
+      which(groups1[[level1]] == g1 & groups2[[level2]] == g2)
+    })
+  }
+  
+  ## Filter intersection classes on size and Khi2 value, and add members
+  tab %>% 
+    filter(chi2 > min_chi2, n_both > min_members) %>%
+    select(g1, g2, level1, level2, n_both, chi2) %>% 
+    mutate(interclass = paste(g1, g2, sep = "x"),
+      members = compute_members(level1, g1, level2, g2)) %>% 
+    filter(!duplicated(members))
+  
+}
+
+## Compute size of each pairs of intersection classes. Lower triangle 
+## and diagonal at 1 not to be selected as a partition afterward.
+
+cross_sizes <- function(crosstab) {
+  sizes <- matrix(1, nrow = nrow(crosstab), ncol = nrow(crosstab),
+    dimnames = list(crosstab$interclass, crosstab$interclass))
+  for (i in 1:(nrow(crosstab)-1)) {
+    for (j in (i+1):nrow(crosstab)) {
+      sizes[i , j] <- length(intersect(crosstab$members[[i]], crosstab$members[[j]]))
+    }
+  }
+  sizes
+}
+
+## Compute next level partitions
+
+next_partitions <- function(partitions, sizes) {
+  
+  k <- length(partitions)
+  interclasses <- partitions[[1]]
+  
+  ## for each previous partition
+  res <- lapply(partitions[[k]], function(partition) {
+    size_inter <- sizes[partition, ]
+    if (k > 1) { 
+      size_inter <- colSums(size_inter)
+    }
+    ## add new class if intersection is empty
+    classes_ok <- which(size_inter == 0)
+    lapply(interclasses[classes_ok], function(x) c(partition, x))
+  })
+  res <- res[lapply(res, length) > 0]
+  
+  if (length(res) == 0) {
+    return(NULL)
+  }
+  
+  do.call(c, res)  
+}
+
+## From computed partitions, filter out the optimal ones and add group
+## membership
+
+get_optimal_partitions <- function(partitions, valid, n_tot) {
+  
+  ## Compute group memberships from a vector of clusters
+  compute_groups <- function(clusters) {
+    clusters <- unlist(clusters)
+    groups <- rep(NA, n_tot)
+    for (i in seq_along(clusters)) {
+      members <- unlist(valid$members[valid$interclass == clusters[i]])
+      groups[members] <- i
+    }
+    list(groups)
+  }
+  
+  ## Compute data frame of results 
+  res <- imap_dfr(partitions, function(partitions, k) {
+    if (is.null(partitions)) {
+      return(NULL)
+    }
+    tibble(clusters = partitions, k = k) %>% 
+      rowwise %>% 
+      ## Compute size and sum of Khi2 for each partition
+      mutate(chi2 = sum(valid$chi2[valid$interclass %in% clusters]),
+        n = sum(valid$n_both[valid$interclass %in% clusters])) %>% 
+      ungroup %>% 
+      ## Filter partitions with max size or max chi2 for each k
+      group_by(k) %>% 
+      filter(n == max(n) | chi2 == max(chi2)) %>% 
+      group_by(k, n) %>% 
+      filter(chi2 == max(chi2)) %>% 
+      group_by(k, chi2) %>% 
+      filter(n == max(n))
+  })
+  
+  ## Add group membership for each clustering
+  res %>%
+    rowwise %>% 
+    mutate(groups = compute_groups(clusters)) %>% 
+    ungroup
+}
+
 
 #' Corpus clustering based on the Reinert method - Double clustering
 #'
@@ -20,6 +157,7 @@ compute_chi2 <- function(n_both, n1, n2, n_tot) {
 #' @param uc_size1 if `x` is a dfm, minimum uc size for first clustering
 #' @param uc_size2 if `x` is a dfm, minimum uc size for second clustering
 #' @param min_members minimum members of each cluster
+#' @param min_chi2 minimum chi2 for each cluster
 #' @param ... if `x` is a dfm object, parameters passed to `rainette` for both 
 #'   simple clusterings
 #'
@@ -68,7 +206,8 @@ compute_chi2 <- function(n_both, n1, n2, n_tot) {
 #' }
 
 
-rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_members = 10, ...) {
+rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, 
+  min_members = 10, min_chi2 = 3.84, ...) {
 
   ## If passed a dfm, compute both clustering
   if (inherits(x, "dfm")) {
@@ -95,126 +234,43 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15, min_
   invisible(pb$tick(0))
   
   ## Compute data frame of groups at each k for both clusterings
-  groups1 <- purrr::imap_dfc(x$uce_groups, ~ paste(.y, .x, sep="."))
-  colnames(groups1) <- 1:ncol(groups1)
-  groups2 <- purrr::imap_dfc(y$uce_groups, ~ paste(.y, .x, sep="."))
-  colnames(groups2) <- 1:ncol(groups2)
+  groups1 <- get_groups(x)
+  groups2 <- get_groups(y)
   ## Total number of documents
   n_tot <- nrow(groups1)
 
-  ## Compute sizes and Khi2 of every crossing between classes
+  ## Compute sizes and chi2 of every crossing between classes
   ## of both clusterings (intersection classes)
-  cross_classes <- purrr::imap_dfr(groups1, function(g1, i1) {
-    purrr::imap_dfr(groups2, function(g2, i2) {
-      df <- tibble(g1, g2)
-      counts <- df %>% 
-        count(g1, g2) %>% 
-        tidyr::complete(g1, g2, fill = list(n = 0)) %>% 
-        rename(n_both = n) %>% 
-        right_join(df %>% count(g1), by = "g1") %>% 
-        rename(n1 = n) %>%
-        right_join(df %>% count(g2), by = "g2") %>%
-        rename(n2 = n) %>%
-        rowwise() %>%
-        mutate(level1 = i1, level2 = i2,
-               chi2 = compute_chi2(n_both, n1, n2, n_tot)) %>%
-        ungroup()
-    })
-  })
+  cross_classes <- classes_crosstab(groups1, groups2, n_tot)
 
-  ## Return members of an intersection class
-  compute_members <- function(level1, g1, level2, g2) {
-    pmap(list(level1, g1, level2, g2), function(level1, g1, level2, g2) {
-      which(groups1[[level1]] == g1 & groups2[[level2]] == g2)
-    })
-  }
-  
   ## Filter intersection classes on size and Khi2 value, and add members
-  valid <- cross_classes %>% 
-    filter(chi2 > 3.84, n_both > min_members) %>%
-    select(g1, g2, level1, level2, n_both, chi2) %>% 
-    mutate(interclass = paste(g1, g2, sep = "x"),
-           members = compute_members(level1, g1, level2, g2)) %>% 
-    filter(!duplicated(members))
+  valid <- filter_crosstab(cross_classes, groups1, groups2, min_members, min_chi2)
   
   if (nrow(valid) < 2) {
     stop("Not enough valid classes to continue. You may try a lower min_members value.")
   }
   
-  ## Matrix of sizes of intersection classes intersections
-  cross_inter <- matrix(1, nrow = nrow(valid), ncol = nrow(valid),
-                        dimnames = list(valid$interclass, valid$interclass))
-  for (i in 1:(nrow(valid)-1)) {
-    for (j in (i+1):nrow(valid)) {
-      cross_inter[i , j] <- length(intersect(valid$members[[i]], valid$members[[j]]))
-    }
-  }
+  ## Matrix of sizes of intersection classes crossing
+  sizes <- cross_sizes(valid)
   pb$tick(1)
   
-  ## Compute 2-class partitions
-  interclasses <- valid$interclass
+  ## Compute partitions
   partitions <- list()
-  k <- 2
-  res <- lapply(interclasses, function(class) {
-    classes_ok <- which(cross_inter[class, ] == 0)
-    lapply(interclasses[classes_ok], function(x) c(class, x))
-  })
-  res <- res[lapply(res, length) > 0]
-  partitions[[k]] <- do.call(c, res)
-  pb$tick(1)
-
-
-  ## Compute higher order partitions
-  for (k in 3:max_k) {
-    res <- lapply(partitions[[k-1]], function(partition) {
-      classes_ok <- which(colSums(cross_inter[partition, ]) == 0)
-      lapply(interclasses[classes_ok], function(x) c(partition, x))
-    })
-    res <- res[lapply(res, length) > 0]
-    if (length(res) == 0) {
+  interclasses <- valid$interclass
+  partitions[[1]] <- interclasses
+  for (k in 2:max_k) {
+    partitions[[k]] <- next_partitions(partitions, sizes)
+    if(is.null(partitions[[k]])) {
+      message("! No more partitions found, stopping at k=", k)
       break;
     }
-    partitions[[k]] <- do.call(c, res)
     pb$tick(1)
   }
+  partitions[[1]] <- NULL  
   
+  ## Select opimal partitions and add group membership for each one
+  res <- get_optimal_partitions(partitions, valid, n_tot)
   
-  ## Compute data frame of results 
-  res <- imap_dfr(partitions, function(partitions, k) {
-    if (is.null(partitions)) {
-      return(NULL)
-    }
-    tibble(clusters = partitions, k = k) %>% 
-      rowwise %>% 
-      ## Compute size and sum of Khi2 for each partition
-      mutate(chi2 = sum(valid$chi2[valid$interclass %in% clusters]),
-             n = sum(valid$n_both[valid$interclass %in% clusters])) %>% 
-      ungroup %>% 
-      ## Filter partitions with max size or max chi2 for each k
-      group_by(k) %>% 
-      filter(n == max(n) | chi2 == max(chi2)) %>% 
-      group_by(k, n) %>% 
-      filter(chi2 == max(chi2)) %>% 
-      group_by(k, chi2) %>% 
-      filter(n == max(n))
-  })
-  
-  ## Compute group memberships from a vector of clusters
-  compute_groups <- function(clusters) {
-    clusters <- unlist(clusters)
-    groups <- rep(NA, n_tot)
-    for (i in seq_along(clusters)) {
-      members <- unlist(valid$members[valid$interclass == clusters[i]])
-      groups[members] <- i
-    }
-    list(groups)
-  }
-  
-  ## Add group membership for each clustering
-  res <- res %>%
-    rowwise %>% 
-    mutate(groups = compute_groups(clusters)) %>% 
-    ungroup
   class(res) <- c("rainette2", class(res))
 
   pb$update(1)
