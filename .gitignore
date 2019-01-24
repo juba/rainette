@@ -12,3 +12,5 @@
 .vscode
 essai
 Rscript_iramuteq
+*.udpipe
+essai*.R
