@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
-- pourquoi dans le corpus de Karine avec thematics = "split", on a moins de docs après split_segments ?
 - tester double CDH
 
 
