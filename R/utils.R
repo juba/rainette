@@ -1,3 +1,9 @@
+if (getRversion() >= "2.15.1")  
+  utils::globalVariables(c("Dim1", "distance", "index", "segment", "segment_source", "weight", "p", 
+    "chi2", "n_both", "n1", "n2", "g1", "g2", "level1", "level2", "members", "clusters", "feature",
+    "Group"))
+
+
 # Fast chi-square value computation
 
 fchisq_val <- function(tab1, tab2, row_sum, n) {
@@ -6,7 +12,6 @@ fchisq_val <- function(tab1, tab2, row_sum, n) {
   E <- outer(row_sum, col_sum, "*") / n
   sum((tmp - E)^2 / E)
 }
-
 
 
 #' Merges uces into uc according to minimum uc size
