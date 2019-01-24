@@ -118,4 +118,10 @@ test_that("rainette2 gives the same result on dtm and on two clustering results"
   expect_equal(res$clusters, res12$clusters)
 })
 
-
+test_that("rainette2 is ok when stopping before max_k", {
+  res1 <- rainette(dtm, k = 4, min_uc_size = 2, min_members = 30)
+  res2 <- rainette(dtm, k = 4, min_uc_size = 3, min_members = 30)
+  expect_message(res <- rainette2(res1, res2, max_k = 4, min_members = 50),
+    "^! No more partitions found, stopping at k=2")
+  expect_equal(max(res$k), 2)
+})
