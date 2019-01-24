@@ -7,9 +7,9 @@
 cluster_tab(dtm, cc_test = 0.3, tsj = 3, ...)
 }
 \arguments{
-\item{dtm}{to be split, passed by `rainette`}
+\item{dtm}{to be split, passed by \code{rainette}}
 
-\item{cc_test}{maximum contingency coefficient value for the 
+\item{cc_test}{maximum contingency coefficient value for the
 feature to be kept in both groups.}
 
 \item{tsj}{minimum feature frequency in the dtm}
@@ -17,7 +17,7 @@ feature to be kept in both groups.}
 \item{...}{arguments passed to other methods}
 }
 \value{
-An object of class `hclust` and `rainette`
+An object of class \code{hclust} and \code{rainette}
 }
 \description{
 Split a dtm into two clusters with reinert algorithm

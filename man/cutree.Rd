@@ -15,5 +15,5 @@ cutree(tree, ...)
 Cut a tree into groups
 }
 \details{
-If `tree` is of class `rainette`, invokes `cutree.rainette`. Otherwise, just run `stats::cutree`.
+If \code{tree} is of class \code{rainette}, invokes \code{\link[=cutree_rainette]{cutree_rainette()}}. Otherwise, just run \code{\link[stats:cutree]{stats::cutree()}}.
 }

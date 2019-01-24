@@ -7,7 +7,7 @@
 rainette_explor(res, dtm)
 }
 \arguments{
-\item{res}{result object of a `rainette` clustering}
+\item{res}{result object of a \code{rainette} clustering}
 
 \item{dtm}{the dfm object used to compute the clustering}
 }
@@ -28,5 +28,5 @@ rainette_explor(dtm, res)
 
 }
 \seealso{
-`rainette_plot`
+\code{rainette_plot}
 }

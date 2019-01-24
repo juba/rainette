@@ -8,43 +8,44 @@ rainette2(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
   min_members = 10, min_chi2 = 3.84, ...)
 }
 \arguments{
-\item{x}{either a quanteda dfm object or the result of `rainette`}
+\item{x}{either a quanteda dfm object or the result of \code{\link[=rainette]{rainette()}}}
 
-\item{y}{if `x` is a `rainette` result, this must be another `rainette` from same dfm
+\item{y}{if \code{x} is a \code{\link[=rainette]{rainette()}} result, this must be another \code{\link[=rainette]{rainette()}} result from same dfm
 but with different uc size.}
 
 \item{max_k}{maximum number of clusters to compute}
 
-\item{uc_size1}{if `x` is a dfm, minimum uc size for first clustering}
+\item{uc_size1}{if \code{x} is a dfm, minimum uc size for first clustering}
 
-\item{uc_size2}{if `x` is a dfm, minimum uc size for second clustering}
+\item{uc_size2}{if \code{x} is a dfm, minimum uc size for second clustering}
 
 \item{min_members}{minimum members of each cluster}
 
 \item{min_chi2}{minimum chi2 for each cluster}
 
-\item{...}{if `x` is a dfm object, parameters passed to `rainette` for both 
+\item{...}{if \code{x} is a dfm object, parameters passed to \code{\link[=rainette]{rainette()}} for both
 simple clusterings}
 }
 \value{
-A tibble with optimal partitions found for each available value of `k` as rows, and the following
+A tibble with optimal partitions found for each available value of \code{k} as rows, and the following
 columns :
-
-- `clusters` list of the crossed original clusters used in the partition
-- `k` the number of clusters
-- `chi2` sum of the chi2 value of each cluster
-- `n` sum of the size of each cluster
-- `groups` group membership of each document for this partition (`NA` if not assigned)
+\itemize{
+\item \code{clusters} list of the crossed original clusters used in the partition
+\item \code{k} the number of clusters
+\item \code{chi2} sum of the chi2 value of each cluster
+\item \code{n} sum of the size of each cluster
+\item \code{groups} group membership of each document for this partition (\code{NA} if not assigned)
+}
 }
 \description{
 Corpus clustering based on the Reinert method - Double clustering
 }
 \details{
-You can pass a quanteda dfm as `x` object, the function then performs two simple
+You can pass a quanteda dfm as \code{x} object, the function then performs two simple
 clustering with varying minimum uc size, and then proceed to find optimal partitions
 based on the results of both clusterings.
 
-If both clusterings have already been computed, you can pass them as `x` and `y` arguments
+If both clusterings have already been computed, you can pass them as \code{x} and \code{y} arguments
 and the function will only look for optimal partitions.
 
 For more details on optimal partitions search algorithm, please see package vignettes.
@@ -65,10 +66,11 @@ rainette2_explor(res, dtm)
 }
 }
 \references{
-Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. [http://www.numdam.org/item/?id=CAD_1983__8_2_187_0](http://www.numdam.org/item/?id=CAD_1983__8_2_187_0)
-
-Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. [https://doi.org/10.1177/075910639002600103](https://doi.org/10.1177/075910639002600103)
+\itemize{
+\item Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. \url{http://www.numdam.org/item/?id=CAD_1983__8_2_187_0}
+\item Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. \url{https://doi.org/10.1177/075910639002600103}
+}
 }
 \seealso{
-`rainette`, `cutree_rainette2`, `rainette2_plot`, `rainette2_explor`
+\code{\link[=rainette]{rainette()}}, \code{\link[=cutree_rainette2]{cutree_rainette2()}}, \code{\link[=rainette2_plot]{rainette2_plot()}}, \code{\link[=rainette2_explor]{rainette2_explor()}}
 }

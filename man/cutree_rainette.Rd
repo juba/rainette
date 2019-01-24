@@ -7,7 +7,7 @@
 cutree_rainette(hres, k = NULL, h = NULL, ...)
 }
 \arguments{
-\item{hres}{the `rainette` result object to be cut}
+\item{hres}{the \code{rainette} result object to be cut}
 
 \item{k}{the desired number of groups}
 

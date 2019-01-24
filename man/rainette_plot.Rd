@@ -9,7 +9,7 @@ rainette_plot(res, dtm, k = NULL, type = c("bar", "cloud"),
   show_negative = TRUE, text_size = NULL)
 }
 \arguments{
-\item{res}{result object of a `rainette` clustering}
+\item{res}{result object of a \code{rainette} clustering}
 
 \item{dtm}{the dfm object used to compute the clustering}
 
@@ -44,5 +44,5 @@ rainette_plot(dtm, res)
 
 }
 \seealso{
-`quanteda::textstat_keyness`, `rainette_explor`
+\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette_explor]{rainette_explor()}}
 }

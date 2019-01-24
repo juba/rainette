@@ -9,7 +9,7 @@ docs_order_by_ca(dtm, ...)
 \arguments{
 \item{dtm}{dmt on which to compute the CA and order documents}
 
-\item{...}{arguments passed to `quanteda::textmodel_ca`}
+\item{...}{arguments passed to \code{quanteda::textmodel_ca}}
 }
 \value{
 ordered list of document indices

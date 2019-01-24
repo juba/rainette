@@ -8,8 +8,8 @@ rainette(dtm, k = 10, min_uc_size = 10, min_members = 5,
   cc_test = 0.3, tsj = 3, ...)
 }
 \arguments{
-\item{dtm}{quanteda dfm object of documents to cluster, usually the 
-result of `split_segments`}
+\item{dtm}{quanteda dfm object of documents to cluster, usually the
+result of \code{\link[=split_segments]{split_segments()}}}
 
 \item{k}{maximum number of clusters to compute}
 
@@ -21,14 +21,15 @@ result of `split_segments`}
 
 \item{tsj}{minimum frequency value for feature selection}
 
-\item{...}{parameters passed to `quanteda::textmodel_ca`}
+\item{...}{parameters passed to \link[quanteda:textmodel_ca]{quanteda::textmodel_ca}}
 }
 \value{
-The result is a list of both class `hclust` and `rainette`. Besides the elements 
-of an `hclust` object, two more results are available :
-
-- `uce_groups` give the group of each document for each k
-- `group` give the group of each document for the maximum value of k available
+The result is a list of both class \code{hclust} and \code{rainette}. Besides the elements
+of an \code{hclust} object, two more results are available :
+\itemize{
+\item \code{uce_groups} give the group of each document for each k
+\item \code{group} give the group of each document for the maximum value of k available
+}
 }
 \description{
 Corpus clustering based on the Reinert method - Simple clustering
@@ -51,10 +52,11 @@ res <- rainette(dtm, k = 3)
 
 }
 \references{
-Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. [http://www.numdam.org/item/?id=CAD_1983__8_2_187_0](http://www.numdam.org/item/?id=CAD_1983__8_2_187_0)
-
-Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. [https://doi.org/10.1177/075910639002600103](https://doi.org/10.1177/075910639002600103)
+\itemize{
+\item Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. \url{http://www.numdam.org/item/?id=CAD_1983__8_2_187_0}
+\item Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. \url{https://doi.org/10.1177/075910639002600103}
+}
 }
 \seealso{
-`split_segments`, `rainette2`, `cutree_rainette`, `rainette_plot`, `rainette_explor`
+\code{\link[=split_segments]{split_segments()}}, \code{\link[=rainette2]{rainette2()}}, \code{\link[=cutree_rainette]{cutree_rainette()}}, \code{\link[=rainette_plot]{rainette_plot()}}, \code{\link[=rainette_explor]{rainette_explor()}}
 }

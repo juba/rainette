@@ -7,12 +7,12 @@
 cutree_rainette2(res, k, criterion = c("chi2", "n"), ...)
 }
 \arguments{
-\item{res}{the `rainette2` result object to be cut}
+\item{res}{the \code{rainette2} result object to be cut}
 
 \item{k}{the desired number of groups}
 
-\item{criterion}{criterion to use to choose the best partition. `chi2` means 
-the partition with the maximum sum of chi2, `n` the partition with the 
+\item{criterion}{criterion to use to choose the best partition. \code{chi2} means
+the partition with the maximum sum of chi2, \code{n} the partition with the
 maximum size.}
 
 \item{...}{arguments passed to other methods}

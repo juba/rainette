@@ -7,7 +7,7 @@
 rainette2_explor(res, dtm)
 }
 \arguments{
-\item{res}{result object of a `rainette2` clustering}
+\item{res}{result object of a \code{rainette2} clustering}
 
 \item{dtm}{the dfm object used to compute the clustering}
 }
@@ -15,5 +15,5 @@ rainette2_explor(res, dtm)
 Shiny gadget for rainette2 clustering exploration
 }
 \seealso{
-`rainette2_plot`
+\code{\link[=rainette2_plot]{rainette2_plot()}}
 }

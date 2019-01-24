@@ -13,14 +13,14 @@ features_selection(tab, indices1, indices2, cc_test = 0.3, tsj = 3)
 
 \item{indices2}{indices of documents of group 2}
 
-\item{cc_test}{maximum contingency coefficient value for the 
+\item{cc_test}{maximum contingency coefficient value for the
 feature to be kept in both groups.}
 
 \item{tsj}{minimum feature frequency in the dtm}
 }
 \value{
-a list of two character vectors : `cols1` is the name of features to 
-keep in group 1, `cols2` the name of features to keep in group 2
+a list of two character vectors : \code{cols1} is the name of features to
+keep in group 1, \code{cols2} the name of features to keep in group 2
 }
 \description{
 Remove features from dtm of each group base don cc_test and tsj

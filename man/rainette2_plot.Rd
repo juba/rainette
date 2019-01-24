@@ -9,14 +9,14 @@ rainette2_plot(res, dtm, k = NULL, criterion = c("chi2", "n"),
   measure = c("chi2", "lr"), show_negative = TRUE, text_size = 10)
 }
 \arguments{
-\item{res}{result object of a `rainette2` clustering}
+\item{res}{result object of a \code{rainette2} clustering}
 
 \item{dtm}{the dfm object used to compute the clustering}
 
 \item{k}{number of groups. If NULL, use the biggest number possible}
 
-\item{criterion}{criterion to use to choose the best partition. `chi2` means 
-the partition with the maximum sum of chi2, `n` the partition with the 
+\item{criterion}{criterion to use to choose the best partition. \code{chi2} means
+the partition with the maximum sum of chi2, \code{n} the partition with the
 maximum size.}
 
 \item{type}{type of term plots : barplot or wordcloud}
@@ -35,5 +35,5 @@ maximum size.}
 Generate a clustering description plot from a rainette2 result
 }
 \seealso{
-`quanteda::textstat_keyness`, `rainette2_explor`
+\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette2_explor]{rainette2_explor()}}
 }

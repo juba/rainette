@@ -14,7 +14,7 @@ import_corpus_iramuteq(f, id_var = NULL, thematics = c("remove",
 
 \item{thematics}{if "remove", thematics lines are removed. If "split", texts as splitted at each thematic, and metadata duplicated accordingly}
 
-\item{...}{arguments passed to `file` if `f` is a file name.}
+\item{...}{arguments passed to \code{\link[base:file]{base::file()}} if \code{f} is a file name.}
 }
 \value{
 A quanteda corpus object. Note that metadata variables in docvars are all imported as characters.
@@ -23,5 +23,5 @@ A quanteda corpus object. Note that metadata variables in docvars are all import
 Import a corpus in Iramuteq format
 }
 \details{
-A description of the Iramuteq corpus format can be found here : [http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages](http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages)
+A description of the Iramuteq corpus format can be found here : \url{http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages}
 }
