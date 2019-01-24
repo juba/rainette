@@ -45,6 +45,18 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/introduction_usage.html">Utilisation de `rainette`</a>
+    </li>
+  </ul>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -98,7 +110,6 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">6</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_members =</span> <span class="dv">20</span>)</a></code></pre></div>
 <p>We can use the <code>rainette_explor</code> shiny interface to visualise and explore the different clusterings at each <code>k</code> :</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="reference/rainette_explor.html">rainette_explor</a></span>(res, dtm)</a></code></pre></div>
-<p>Which provides something like the following :</p>
 <p><img src="reference/figures/rainette_explor.png"></p>
 <p>We can then use the generated R code to generate the clustering visualisation plot :</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="reference/rainette_plot.html">rainette_plot</a></span>(res, dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">type =</span> <span class="st">"bar"</span>, <span class="dt">n_terms =</span> <span class="dv">20</span>, <span class="dt">free_scales =</span> <span class="ot">FALSE</span>,</a>
