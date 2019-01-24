@@ -3,7 +3,8 @@
 ##' Split a character string or corpus into segments, taking into account punctuation where possible
 ##'
 ##' @param obj character string, quanteda or tm corpus object
-##' @param ... arguments passed to other methods
+##' @param segment_size segment size (in words)
+##' @param segment_size_window window around segment size to look for best splitting point
 ##'
 ##' @return
 ##' If obj is a tm or quanteda corpus object, the result is a quanteda corpus.
@@ -16,7 +17,7 @@
 ##' split_segments(data_corpus_inaugural)
 ##' }
 
-split_segments <- function(obj, ...) {
+split_segments <- function(obj, segment_size = 40, segment_size_window = NULL) {
   UseMethod("split_segments")
 }
 
@@ -24,8 +25,6 @@ split_segments <- function(obj, ...) {
 ##' @rdname split_segments
 ##' @aliases split_segments.character
 ##' 
-##' @param segment_size segment size (in words)
-##' @param segment_size_window window around segment size to look for best splitting point
 ##' @export
 ##' @import dplyr
 ##' @import quanteda
@@ -33,7 +32,7 @@ split_segments <- function(obj, ...) {
 ##' @import purrr
 
 
-split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL, ...) {
+split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL) {
 
   text <- obj
   
@@ -53,42 +52,30 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
   }
 
   ## Compute "weight" for each word
-  words_tbl <- tibble(word = words) %>%
-    mutate(weight = case_when(
-      word %in% c(".", "?", "!", "\u2026") ~ 6,
-      word == ":" ~ 5,
-      word == ";" ~ 4,
-      word == "," ~ 1,
-      TRUE ~ 0.01
-    ))
+  weights <- case_when(
+    words %in% c(".", "?", "!", "\u2026") ~ 6,
+    words == ":" ~ 5,
+    words == ";" ~ 4,
+    words == "," ~ 1,
+    TRUE ~ 0.01
+  )
 
-  split_indices <- 1
-
-  ## Loop over words vector
-  while (sum(split_indices) <= nrow(words_tbl) - (segment_size * 1.25)) {
-    last_index <- sum(split_indices)
-    ## Filter words from start to segment size + window, and compute
-    ## distance and ratio weight / distance
-    tmp_tbl <- words_tbl %>%
-      slice(last_index:(last_index + segment_size + segment_size_window)) %>%
-      mutate(rank = 1:n(),
-             distance = abs(rank - segment_size) + 1,
-             ratio = weight / distance)
-
-    ## Split at maximum ratio
-    split <- which.max(tmp_tbl$ratio)
-    split_indices <- append(split_indices, split)
+  slice_indices <- 1:(segment_size + segment_size_window)
+  last_index <- 1
+  split_indices <- rep(1, length(words))
+  i <- 2
+  stop_index <- length(words) - (segment_size + segment_size_window) + 1
+  while(last_index < stop_index) {
+    indices <- last_index + slice_indices - 1
+    tmpw <- weights[indices]
+    split_index <- which.max(tmpw / (abs(slice_indices - segment_size) + 1))
+    split_indices[(last_index + split_index):length(split_indices)] <- i
+    i <- i + 1
+    last_index <- last_index + split_index
   }
-
-  ## Recompute split indices
-  split_indices <- cumsum(split_indices)
-
-  ## Recompute segments by splitting and pasting
-  segments <- purrr::map2_dfr(utils::head(split_indices, -1),
-                              utils::head(lead(split_indices), -1) - 1,
-                              ~ tibble(segment = paste0(words[.x:.y], collapse = " ")))
-
-  return(segments)
+  
+  tibble(segment = unlist(lapply(split(words, split_indices), paste0, collapse = " ")))
+  
 }
 
 
@@ -97,7 +84,7 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
 ##' @export
 
 
-split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = NULL, ...) {
+split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
   
   corpus <- obj
   
@@ -114,7 +101,7 @@ split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 
 ##' @export
 
 
-split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL, ...) {
+split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
   
   corpus <- obj
   
