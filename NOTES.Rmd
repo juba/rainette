@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
-- tester double CDH
+- Ajouter NA dans titre barplot de rainette2_plot
 
 
 # Notes Iramuteq
