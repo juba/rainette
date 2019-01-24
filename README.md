@@ -55,8 +55,6 @@ We can use the `rainette_explor` shiny interface to visualise and explore the di
 rainette_explor(res, dtm)
 ```
 
-Which provides something like the following :
-
 ![](reference/figures/rainette_explor.png)
 
 We can then use the generated R code to generate the clustering visualisation plot :
