@@ -5,7 +5,7 @@
 \title{Corpus clustering based on the Reinert method - Double clustering}
 \usage{
 rainette2(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
-  min_members = 10, ...)
+  min_members = 10, min_chi2 = 3.84, ...)
 }
 \arguments{
 \item{x}{either a quanteda dfm object or the result of `rainette`}
@@ -20,6 +20,8 @@ but with different uc size.}
 \item{uc_size2}{if `x` is a dfm, minimum uc size for second clustering}
 
 \item{min_members}{minimum members of each cluster}
+
+\item{min_chi2}{minimum chi2 for each cluster}
 
 \item{...}{if `x` is a dfm object, parameters passed to `rainette` for both 
 simple clusterings}
@@ -46,6 +48,21 @@ If both clusterings have already been computed, you can pass them as `x` and `y`
 and the function will only look for optimal partitions.
 
 For more details on optimal partitions search algorithm, please see package vignettes.
+}
+\examples{
+\dontrun{
+mini_corpus <- head(data_corpus_inaugural, n = 2)
+mini_corpus <- split_segments(mini_corpus, 5)
+dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
+dtm <- dfm_wordstem(dtm, language = "english")
+dtm <- dfm_trim(dtm, min_termfreq = 3)
+
+res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_members = 2)
+res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_members = 2)
+
+res <- rainette2(res1, res2, min_members = 2)
+rainette2_explor(res, dtm)
+}
 }
 \references{
 Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. [http://www.numdam.org/item/?id=CAD_1983__8_2_187_0](http://www.numdam.org/item/?id=CAD_1983__8_2_187_0)
