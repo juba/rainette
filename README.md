@@ -49,11 +49,15 @@ We can then apply a simple clustering on this dtm with the `rainette` function. 
 res <- rainette(dtm, k = 6, min_uc_size = 15, min_members = 20)
 ```
 
-We can use the `rainette_explor` shiny gadget to visualise and explore the different clusterings at each `k` :
+We can use the `rainette_explor` shiny interface to visualise and explore the different clusterings at each `k` :
 
 ```r
 rainette_explor(res, dtm)
 ```
+
+Which provides something like the following :
+
+![](reference/figures/rainette_explor.png)
 
 We can then use the generated R code to generate the clustering visualisation plot :
 
@@ -83,6 +87,8 @@ rainette2(dtm, max_k = 10, uc_size1 = 10, uc_size2 = 15, min_members = 20)
 ```
 
 You can then use `rainette2_explor`, `rainette2_plot` and `cutree_rainette2` to explore and visualise the results.
+
+![](reference/figures/rainette2_explor.png)
 
 ## Tell me more
 
