@@ -273,9 +273,13 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
   
   ## Select opimal partitions and add group membership for each one
   res <- get_optimal_partitions(partitions, valid, n_tot)
-  
-  class(res) <- c("rainette2", class(res))
 
+  class(res) <- c("rainette2", class(res))
+  
+  if(!pb$finished) {
+    pb$update(1)
+  }
+  
   res
 }
 
