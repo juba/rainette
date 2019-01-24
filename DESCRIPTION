@@ -37,4 +37,5 @@ Suggests:
     covr,
     vdiffr,
     tm
+Roxygen: list(markdown = TRUE)    
 RoxygenNote: 6.1.1
