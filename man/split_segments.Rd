@@ -7,21 +7,19 @@
 \alias{split_segments.corpus}
 \title{Split a character string or corpus into segments}
 \usage{
-split_segments(obj, ...)
+split_segments(obj, segment_size = 40, segment_size_window = NULL)
 
 \method{split_segments}{character}(obj, segment_size = 40,
-  segment_size_window = 15, ...)
+  segment_size_window = NULL)
 
 \method{split_segments}{Corpus}(obj, segment_size = 40,
-  segment_size_window = 15, ...)
+  segment_size_window = NULL)
 
 \method{split_segments}{corpus}(obj, segment_size = 40,
-  segment_size_window = 15, ...)
+  segment_size_window = NULL)
 }
 \arguments{
 \item{obj}{character string, quanteda or tm corpus object}
-
-\item{...}{arguments passed to other methods}
 
 \item{segment_size}{segment size (in words)}
 
