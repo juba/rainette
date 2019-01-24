@@ -96,8 +96,10 @@
 <a class="sourceLine" id="cb4-3" data-line-number="3">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span>(dtm, <span class="dt">min_termfreq =</span> <span class="dv">3</span>)</a></code></pre></div>
 <p>We can then apply a simple clustering on this dtm with the <code>rainette</code> function. We specify the number of clusters (<code>k</code>), the minimum size for a cluster to be splitted at next step (<code>min_members</code>) and the minimum number of forms in each segment (<code>min_uc_size</code>) :</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">6</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_members =</span> <span class="dv">20</span>)</a></code></pre></div>
-<p>We can use the <code>rainette_explor</code> shiny gadget to visualise and explore the different clusterings at each <code>k</code> :</p>
+<p>We can use the <code>rainette_explor</code> shiny interface to visualise and explore the different clusterings at each <code>k</code> :</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="reference/rainette_explor.html">rainette_explor</a></span>(res, dtm)</a></code></pre></div>
+<p>Which provides something like the following :</p>
+<p><img src="reference/figures/rainette_explor.png"></p>
 <p>We can then use the generated R code to generate the clustering visualisation plot :</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="reference/rainette_plot.html">rainette_plot</a></span>(res, dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">type =</span> <span class="st">"bar"</span>, <span class="dt">n_terms =</span> <span class="dv">20</span>, <span class="dt">free_scales =</span> <span class="ot">FALSE</span>,</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">    <span class="dt">measure =</span> <span class="st">"chi2"</span>, <span class="dt">show_negative =</span> <span class="st">"TRUE"</span>, <span class="dt">text_size =</span> <span class="dv">10</span>)</a></code></pre></div>
@@ -110,6 +112,7 @@
 <p>Or directly on a dtm with <code>uc_size1</code> and <code>uc_size2</code> arguments :</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="reference/rainette2.html">rainette2</a></span>(dtm, <span class="dt">max_k =</span> <span class="dv">10</span>, <span class="dt">uc_size1 =</span> <span class="dv">10</span>, <span class="dt">uc_size2 =</span> <span class="dv">15</span>, <span class="dt">min_members =</span> <span class="dv">20</span>)</a></code></pre></div>
 <p>You can then use <code>rainette2_explor</code>, <code>rainette2_plot</code> and <code>cutree_rainette2</code> to explore and visualise the results.</p>
+<p><img src="reference/figures/rainette2_explor.png"></p>
 </div>
 <div id="tell-me-more" class="section level2">
 <h2 class="hasAnchor">
