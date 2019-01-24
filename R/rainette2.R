@@ -125,7 +125,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
     if (is.null(partitions)) {
       return(NULL)
     }
-    tibble(clusters = partitions, k = k) %>% 
+    tibble(clusters = partitions, k = k + 1) %>% 
       rowwise %>% 
       ## Compute size and sum of Khi2 for each partition
       mutate(chi2 = sum(valid$chi2[valid$interclass %in% clusters]),
