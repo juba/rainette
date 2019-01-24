@@ -259,12 +259,15 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
   interclasses <- valid$interclass
   partitions[[1]] <- interclasses
   for (k in 2:max_k) {
-    partitions[[k]] <- next_partitions(partitions, sizes)
-    if(is.null(partitions[[k]])) {
-      message("! No more partitions found, stopping at k=", k)
+    part <- next_partitions(partitions, sizes)
+    if(!is.null(part)) {
+      partitions[[k]] <- part
+      pb$tick(1)
+    } else {
+      pb$update(1)
+      message("! No more partitions found, stopping at k=", k - 1)
       break;
     }
-    pb$tick(1)
   }
   partitions[[1]] <- NULL  
   
@@ -272,8 +275,6 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
   res <- get_optimal_partitions(partitions, valid, n_tot)
   
   class(res) <- c("rainette2", class(res))
-
-  pb$update(1)
 
   res
 }
