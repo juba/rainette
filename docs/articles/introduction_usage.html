@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Utilisation de <code>rainette</code> • rainette</title>
+<title>[fr] Utilisation de rainette • rainette</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Utilisation de &lt;code&gt;rainette&lt;/code&gt;">
+<script src="../pkgdown.js"></script><meta property="og:title" content="[fr] Utilisation de rainette">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -53,7 +53,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/introduction_usage.html">Utilisation de `rainette`</a>
+      <a href="../articles/introduction_usage.html">[fr] Utilisation de rainette</a>
     </li>
   </ul>
 </li>
@@ -77,11 +77,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Utilisation de <code>rainette</code>
-</h1>
+      <h1>[fr] Utilisation de rainette</h1>
                         <h4 class="author">Julien Barnier</h4>
             
-            <h4 class="date">2019-01-24</h4>
+            <h4 class="date">2019-01-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/master/vignettes/introduction_usage.Rmd"><code>vignettes/introduction_usage.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_usage.Rmd</code></div>
@@ -90,11 +89,11 @@
 
     
     
-<p><strong>Avertissement préalable :</strong> <code>rainette</code> est encore en cours de développemet, et a été très peu testé pour l’instant. Il est donc susceptible de contenir des bugs plus ou moins importants pouvant fausser les résultats obtenus.</p>
+<p><strong>Avertissement préalable :</strong> <code>rainette</code> est encore en cours de développement, et a été très peu testé pour l’instant. Il est donc susceptible de contenir des bugs plus ou moins importants pouvant fausser les résultats obtenus.</p>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
-<p>Le <em>package</em> n’étant pas encore disponible sur le CRAN, il s’installe depuis GitHub <em>via</em> l’extension <code>remotes</code> :</p>
+<p>Le <em>package</em> n’étant pas encore disponible sur le CRAN, il s’installe depuis GitHub <em>via</em> l’extension <code>remotes</code> :</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"juba/rainette"</span>)</a></code></pre></div>
 </div>
 <div id="preparation-du-corpus" class="section level1">
@@ -103,17 +102,17 @@
 <div id="importation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#importation" class="anchor"></a>Importation</h2>
-<p>La première étape consiste à importer votre corpus dans R. Vous pouvez utiliser un corpus ici de <code>tm</code> ou <code>quanteda</code> par exemple, ou bien utiliser la fonction <code>import_corpus_iramuteq</code> pour importer directement un corpus depuis un fichier texte <a href="http://www.iramuteq.org/documentation/formatage-des-corpus-texte">au format Iramuteq</a>. Dans ce cas vous obtiendrez un objet de type corpus du package <a href="https://quanteda.io">quanteda</a>. Les métadonnées éventuelles présentes dans le fichier (<em>variables étoilées</em>) sont importées en tant que métadonnées du corpus (variables de <code>docvar(corpus)</code>).</p>
-<p>Dans ce document, on va importer le texte du <em>Manifeste du parti communiste</em> (Source <a href="https://fr.wikisource.org/wiki/Manifeste_du_parti_communiste/Lafargue">wikisource</a>). Celui-ci est placé dans un fichier texte au format Iramuteq, avec un document par partie.</p>
+<p>La première étape consiste à importer votre corpus dans R. Vous pouvez utiliser un corpus au format <code>tm</code> ou <code>quanteda</code> par exemple, ou bien utiliser la fonction <code>import_corpus_iramuteq</code> pour importer directement un corpus depuis un fichier texte <a href="http://www.iramuteq.org/documentation/formatage-des-corpus-texte">au format Iramuteq</a>. Dans ce cas vous obtiendrez un objet de type corpus du package <a href="https://quanteda.io">quanteda</a>. Les métadonnées éventuelles présentes dans le fichier (<em>variables étoilées</em>) sont importées en tant que métadonnées du corpus (variables de <code><a href="https://quanteda.io/reference/docvars.html">docvars(corpus)</a></code>).</p>
+<p>Pour ce document, on va importer le texte du <em>Manifeste du parti communiste</em> (Karl Marx et Friedrich Engels, 1848, source <a href="https://fr.wikisource.org/wiki/Manifeste_du_parti_communiste/Lafargue">wikisource</a>). Celui-ci est placé dans un fichier texte au format Iramuteq fourni avec <code>rainette</code>. Le corpus est composé de quatre documents, un document par partie de l’ouvrage.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(rainette)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(quanteda)</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">## Import du corpus</span></a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">fichier &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"manifeste_pc.txt"</span>, <span class="dt">package =</span> <span class="st">"rainette"</span>)</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/import_corpus_iramuteq.html">import_corpus_iramuteq</a></span>(fichier)</a></code></pre></div>
-<p>On peut vérifier que notre corpus est bien constitué de 4 documents (l’introduction et les trois parties principales), et d’une variable de métadonnée :</p>
+<p>On peut vérifier que notre corpus est bien constitué de 4 documents (l’introduction et les trois parties principales), et d’une variable de métadonnée :</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">corpus</a></code></pre></div>
 <pre><code>## Corpus consisting of 4 documents and 1 docvar.</code></pre>
-<p>Cette variable de métadonnée est justement la partie correspondant au texte :</p>
+<p>Cette variable de métadonnée est justement la partie correspondant au texte :</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span>(corpus)</a></code></pre></div>
 <pre><code>##       partie
 ## text1  intro
@@ -124,9 +123,9 @@
 <div id="decoupage-en-segments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#decoupage-en-segments" class="anchor"></a>Découpage en segments</h2>
-<p>La méthode Reinert de classification s’applique en général à des segments de texte relativement courts (appelés <em>uce</em>, unités de contexte élémentaires), et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction <code>split_segments</code>. Ici on découpe en segments d’environ 40 mots : l’algorithme essaie de tenir compte de la ponctuation pour placer les césures entre des phrases, par exemple.</p>
+<p>La méthode Reinert de classification s’applique en général à des segments de texte relativement courts (appelés <em>uce</em>, unités de contexte élémentaires), et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction <code>split_segments</code>. Ici on découpe en segments d’environ 40 mots (l’algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d’une virgule).</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/split_segments.html">split_segments</a></span>(corpus, <span class="dt">segment_size =</span> <span class="dv">40</span>)</a></code></pre></div>
-<p>Notre corpus est désormais constitué de 318 segments et 2 variables de métadonnées :</p>
+<p>Notre corpus est désormais constitué de 318 segments et 2 variables de métadonnées :</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">corpus</a></code></pre></div>
 <pre><code>## Corpus consisting of 318 documents and 2 docvars.</code></pre>
 <p>Si on regarde les nouvelles métadonnées, on peut voir que la variable <code>partie</code> a été dupliquée pour chaque segment correspondant, et une nouvelle variable <code>segment_source</code> indique le document d’origine du segment.</p>
@@ -138,7 +137,7 @@
 ## text1_4  intro          text1
 ## text1_5  intro          text1
 ## text2_1      I          text2</code></pre>
-<p>On peut aussi visualiser les premiers segments de texte calculés :</p>
+<p>On peut aussi visualiser les premiers segments de texte calculés :</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="https://quanteda.io/reference/texts.html">texts</a></span>(corpus)[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</a></code></pre></div>
 <pre><code>##                                                                                                                                                                                                                                                              text1_1 
 ## "Un spectre hante l'Europe , le spectre du communisme . Toutes les puissances de la vieille Europe se sont unies en une Sainte-Alliance pour traquer ce spectre : le Pape et le Czar , Metternich et Guizot , les radicaux de France et les policiers d'Allemagne ." 
@@ -149,20 +148,22 @@
 <h2 class="hasAnchor">
 <a href="#calcul-et-traitement-de-la-matrice-termes-documents" class="anchor"></a>Calcul et traitement de la matrice termes-documents</h2>
 <p>L’étape suivante est de calculer la matrice termes-documents (<em>dtm</em>), grand tableau numérique avec les documents en lignes, les mots en colonnes, et le nombre d’occurrences de chaque mot dans chaque document comme valeurs.</p>
-<p>Notre corpus étant au format du package <code>quanteda</code>, on va utiliser les fonction de cette extension. D’abord on calcule la <em>dtm</em> en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :</p>
+<p>Notre corpus étant au format <code>quanteda</code>, on va utiliser les fonction de cette extension.</p>
+<p>D’abord on calcule la <em>dtm</em> en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span>(corpus, <span class="dt">remove =</span> <span class="kw"><a href="https://quanteda.io/reference/reexports.html">stopwords</a></span>(<span class="st">"fr"</span>), <span class="dt">tolower =</span> <span class="ot">TRUE</span>, <span class="dt">remove_punct =</span> <span class="ot">TRUE</span>, <span class="dt">remove_numbers =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<p>On va ensuite procéder à la racinisation des termes, puis on va supprimer les termes apparaissant dans moins de 3 segments :</p>
+<p>On va ensuite procéder à la racinisation des termes, puis on va supprimer les termes apparaissant dans moins de 3 segments :</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/tokens_wordstem.html">dfm_wordstem</a></span>(dtm, <span class="dt">language =</span> <span class="st">"french"</span>)</a>
 <a class="sourceLine" id="cb15-2" data-line-number="2">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span>(dtm, <span class="dt">min_termfreq =</span> <span class="dv">3</span>)</a></code></pre></div>
-<p>De nombreux autres traitements seraient possibles ou préférables, mais on va se contenter de cette matrice pour cet exemple.</p>
+<p>De nombreux autres traitements seraient possibles ou préférables, mais on se contentera de cette matrice pour cet exemple.</p>
 </div>
 </div>
 <div id="classification-simple" class="section level1">
 <h1 class="hasAnchor">
 <a href="#classification-simple" class="anchor"></a>Classification simple</h1>
-<p>Une fois notre matrice prête, on peut procéder à une première classification : une classification simple. Pour cela on va utiliser la fonction <code>rainette</code>. Ici on va lui passer trois arguments : le nombre maximal de classes souhaitées (<code>k = 5</code>), la taille minimale des segments de texte en nombre de mots (<code>min_uc_size = 10</code>), et le nombre minimal de termes pour qu’une classe soit découpée en deux à l’étape suivante de la classification (<code>min_members = 10</code>).</p>
+<p>Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction <code>rainette</code>. Ici on va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (<code>k = 5</code>) et le nombre minimal de termes pour qu’une classe soit découpée en deux à l’étape suivante de la classification (<code>min_members = 10</code>).</p>
+<p>L’argument <code>min_uc_size</code>, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec <code>min_uc_size = 10</code>, les segments comportant moins de 10 formes sont regroupés avec le segment suivant jusqu’à atteindre la taille minimale souhaitée.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">min_uc_size =</span> <span class="dv">10</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a></code></pre></div>
-<p>L’objet résultat ne nous dit pas gand chose en lui-même :</p>
+<p>L’objet résultat ne nous dit pas grand chose en lui-même :</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">res</a></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -170,20 +171,20 @@
 ## 
 ## Cluster method   : reinert 
 ## Number of objects: 5</code></pre>
-<p>Pour faciliter l’exploration des résultats, <code>rainette</code> propose une interface interactive sous la forme d’un <em>gadget shiny</em>, qui peut être lancée avec la fonction <code>rainette_explor</code> :</p>
+<p>Pour faciliter l’exploration des résultats, <code>rainette</code> propose une interface interactive sous la forme d’un <em>gadget shiny</em>, qui peut être lancée avec la fonction <code>rainette_explor</code> :</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="../reference/rainette_explor.html">rainette_explor</a></span>(res, dtm)</a></code></pre></div>
-<p>L’interface devrait ressembler à quelque chose comme ça :</p>
+<p>L’interface devrait ressembler à quelque chose comme ça :</p>
 <p><img src="rainette_explor_pc.png"></p>
 <p>Vous pouvez modifier le nombre de classes, la statistique utilisée pour le calcul des termes caractéristiques, etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge) selon la statistique considérée.</p>
-<p>À noter que vous pouvez aussi opter pour des graphiques sous forme de nuages de mots :</p>
+<p>À noter que vous pouvez aussi opter pour des graphiques sous forme de nuages de mots :</p>
 <p><img src="rainette_explor_pc_cloud.png"></p>
-<p>Cette interface vous permet d’expérimenter librement sur le nombre de classes et leur interprétation. Vous pouvez à tout moment cliquer sur le bouton <em>Get R code</em> pour obtenir le code R correspondant au graphique actuellement affiché, et aussi la commande <code>cutree_rainette</code> qui vous permet de récupérer les groupes d’appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.</p>
+<p>Cette interface vous permet d’expérimenter librement sur le nombre de classes et leur interprétation. Vous pouvez à tout moment cliquer sur le bouton <em>Get R code</em> pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande <code>cutree_rainette</code> qui vous permet de récupérer les groupes d’appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co">## Clustering description plot</span></a>
 <a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw"><a href="../reference/rainette_plot.html">rainette_plot</a></span>(res, dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">type =</span> <span class="st">"bar"</span>, <span class="dt">n_terms =</span> <span class="dv">20</span>, <span class="dt">free_scales =</span> <span class="ot">FALSE</span>,</a>
 <a class="sourceLine" id="cb20-3" data-line-number="3">    <span class="dt">measure =</span> <span class="st">"chi2"</span>, <span class="dt">show_negative =</span> <span class="st">"TRUE"</span>, <span class="dt">text_size =</span> <span class="dv">11</span>)</a>
 <a class="sourceLine" id="cb20-4" data-line-number="4"><span class="co">## Groups</span></a>
 <a class="sourceLine" id="cb20-5" data-line-number="5"><span class="kw"><a href="../reference/cutree_rainette.html">cutree_rainette</a></span>(res, <span class="dt">k =</span> <span class="dv">5</span>)</a></code></pre></div>
-<p>Vous pouvez par exemple utiliser l’appel de <code>cutree_rainette</code> pour ajouter comme nouvelle métadonnée du corpus le groupe d’appartenance pour la classification en 5 classes :</p>
+<p>Vous pouvez par exemple utiliser l’appel de <code>cutree_rainette</code> pour ajouter comme nouvelle métadonnée du corpus le groupe d’appartenance pour la classification en 5 classes :</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span>(corpus)<span class="op">$</span>group &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cutree_rainette.html">cutree_rainette</a></span>(res, <span class="dt">k =</span> <span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="kw"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span>(corpus))</a></code></pre></div>
 <pre><code>##         partie segment_source group
@@ -197,18 +198,18 @@
 <div id="classification-double" class="section level1">
 <h1 class="hasAnchor">
 <a href="#classification-double" class="anchor"></a>Classification double</h1>
-<p>Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille des segments, puis on “croise” les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes.</p>
-<p>Une classification double utilise la fonction <code>rainette2</code>. Celle-ci peut se faire de deux manières. On peut d’abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :</p>
+<p>Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on “croise” les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes.</p>
+<p>Une classification double utilise la fonction <code>rainette2</code>. Celle-ci peut se faire de deux manières. On peut d’abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">res1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">7</span>, <span class="dt">min_uc_size =</span> <span class="dv">10</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb23-2" data-line-number="2">res2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">7</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a></code></pre></div>
-<p>Puis on utilise <code>rainette2</code> sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument <code>max_k</code>) et le nombre minimal de segments par classe (argument <code>min_members</code>) :</p>
+<p>Puis on utilise <code>rainette2</code> sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument <code>max_k</code>) et le nombre minimal de segments par classe (argument <code>min_members</code>) :</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette2.html">rainette2</a></span>(res1, res2, <span class="dt">max_k =</span> <span class="dv">7</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a></code></pre></div>
-<p>L’autre manière est d’appeler directement <code>rainette2</code> sur notre matrice dtm, en lui indiquant avec les arguments <code>uc_size1</code> et <code>uc_size2</code> les tailles de segments souhaitées :</p>
+<p>L’autre manière est d’appeler directement <code>rainette2</code> sur notre matrice dtm, en lui indiquant avec les arguments <code>uc_size1</code> et <code>uc_size2</code> les deux tailles de segments souhaitées :</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette2.html">rainette2</a></span>(dtm, <span class="dt">uc_size1 =</span> <span class="dv">10</span>, <span class="dt">uc_size2 =</span> <span class="dv">15</span>, <span class="dt">max_k =</span> <span class="dv">7</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a></code></pre></div>
-<p>L’objet résultat est un <em>tibble</em> contenant, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code>rainette2_explor</code> :</p>
+<p>L’objet résultat est un <em>tibble</em> contenant, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code>rainette2_explor</code> :</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span>(res, dtm)</a></code></pre></div>
-<p><img src="rainette2_explor.png"> L’interface est très semblable à la précédente, sauf qu’il n’y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux <code>NA</code>, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent être assez nombreux ici.</p>
-<p>Là encore, vous pouvez utiliser le bouton <em>Get R code</em> pour récupérer et copier/coller le code R permettant de reproduire le grpahique affiché, et récupérer les groupes d’appartenance des segments du corpus.</p>
+<p><img src="rainette2_explor.png"> L’interface est très semblable à la précédente, sauf qu’il n’y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux <code>NA</code>, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent être assez nombreux ici.</p>
+<p>Là encore, vous pouvez utiliser le bouton <em>Get R code</em> pour récupérer et copier/coller le code R permettant de reproduire le graphique affiché, et récupérer les groupes d’appartenance des segments du corpus.</p>
 </div>
   </div>
 
