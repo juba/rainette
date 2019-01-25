@@ -4,4 +4,7 @@ pkgdown_sha: ~
 articles:
   algorithmes: algorithmes.html
   introduction_usage: introduction_usage.html
+urls:
+  reference: https://juba.github.io/rainette//reference
+  article: https://juba.github.io/rainette//articles
 

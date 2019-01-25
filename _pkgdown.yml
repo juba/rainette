@@ -1,3 +1,7 @@
+url: https://juba.github.io/rainette/
+template:
+  params:
+    bootswatch: cosmo
 reference:
 - title: Simple clustering
   desc: Simple clustering computation and visualisation
