@@ -1,0 +1,141 @@
+---
+title: "[fr] Description des algorithmes"
+author: "Julien Barnier"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rmdformats usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+L'objectif de ce document est de décrire les algorithmes utilisés pour les classifications dans `rainette`, et de comparer notamment avec l'implémentation d'Iramuteq (dans sa version `0.7-alpha2`). Aucune comparaison n'a pu être faite avec Alceste car il s'agit d'un logiciel commercial et propriétaire.
+
+À noter que l'implémentation de `rainette` repose sur deux éléments principaux :
+
+- les deux articles de Max Reinert cités dans les [références]
+- le code source d'Iramuteq, notamment les fichiers `CHD.R` et `chdtxt.R`. Le code R a cependant été quasiment entièrement réécrit.
+
+# Algorithme de classification simple
+
+## Matrice de départ
+
+La classification simple est une classification descendante hiérarchique (CDH). 
+
+Le tableau de départ est la matrice termes-documents croisant les segments de texte (unités de contexte élémentaires, *uce*), éventuellement regroupés en unités de contexte (*uc*) s'ils ne comportent pas suffisamment de formes différentes (selon la valeur de l'argument `min_uc_size`), et les termes. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d'effectifs. 
+
+On a donc un tableau de ce type :
+
+```{r echo=FALSE}
+set.seed(1337)
+m <- matrix(sample(0:1, 20, replace = TRUE), nrow = 4)
+rownames(m) <- paste0("uc", 1:4)
+colnames(m) <- c("partir", "un", "jour", "sans", "retour")
+m
+```
+
+## Division maximisant le Khi2
+
+On souhaite diviser ce tableau de départ en maximisant la valeur du Khi2 obtenue lorsqu'on regroupe les lignes en deux classes. Par exemple, dans le tableau ci-dessus, si on regroupe `uc1` avec `uc2` et `uc3` avec `uc4`, on obtient le tableau suivant :
+
+```{r echo=FALSE}
+tmp <- rbind(colSums(m[1:2,]), colSums(m[3:4,]))
+tmp  
+```
+
+On peut calculer le Khi2 de ce tableau (qui vaut en l'occurrence 
+`r chisq.test(tmp)$statistic`). Dans un cas aussi simple, on peut effectuer tous les regroupements d'`uc` possible et déterminer lequel correspond au Khi2 maximal, mais avec des données réelles cela prendrait trop de temps.
+
+On opère donc de la manière suivante :
+
+- on effectue une analyse factorielle des correspondances de la matrice termes-documents, et on ordonne les documents selon leur coordonnée sur le premier axe de cette AFC.
+- on regroupe tour à tour les points entre eux selon cet ordre : d'abord le point avec la coordonnée la plus basse *vs* tous les autres, puis les deux points avec les coordonnées les plus basses *vs* tous les autres, etc. On calcule le Khi2 correspondant à chaque fois et on conserve le regroupement qui le maximise.
+- enfin, à partir de ce premier regroupement, on effectue une réaffectation des points : on change tour à tour chaque point de classe, et on regarde si cela fait augmenter le Khi2. Dans ce cas on garde cette nouvelle affectation.
+- on recommence cette opération de réaffectation jusqu'à ce qu'elle ne permette plus d'augmenter la valeur du Khi2.
+
+On obtient donc deux nouveaux tableaux correspondant au regroupement des lignes en vue de la maximisation du Khi2 du tableau regroupé. 
+
+## Sélection des termes
+
+L'étape suivante consiste en une sélection des termes dans chacun des deux tableaux pour les prochaines itérations :
+
+- dans chaque tableau, on regarde la fréquence de chaque terme. On supprime les termes qui apparaissent moins de `tsj` fois (3 par défaut). 
+- on compare également cet effectif avec l'effectif attendu sous l'hypothèse d'indépendance de la répartition du terme entre les deux groupes et on en déduit un Khi2 et un coefficient de contingence pour ce terme. Si ce coefficient de contingence est supérieur à `cc` (0.3 par défaut), on ne conserve le terme que dans le tableau dans lequel il est surreprésenté.
+
+Parmi les deux tableaux finaux obtenus après séparation et sélection des termes, on recommence l'algorithme sur le tableau le plus gros, celui comportant le plus de documents (sauf si le tableau en question est trop petit pour calculer une AFC, ou si son effectif est inférieur à l'argument `min_members`).
+
+En procédant de cette manière `k` fois, on obtient une CDH en `k` groupes, et un dendrogramme correspondant (la hauteur du dendrogramme étant la valeur maximale du Khi2 trouvée au moment du split).
+
+
+## Différences avec Iramuteq
+
+L'implémentation de l'algorithme dans `rainette` se différencie de celle d'Iramuteq surtout dans la gestion du paramètre `min_members` (le nombre minimal de documents dans une classe).
+
+Dans `rainette`, `min_members` est uniquement utilisé au moment du choix du tableau suivant à splitter : si aucun tableau n'a un effectif supérieur à ce paramètre, l'algorithme s'arrête même si on n'a pas atteint la valeur souhaitée de `k`.
+
+Dans Iramuteq, l'algorithme se répète `k` fois dans tous les cas, et il procède à la fin à un regroupement des classes dont l'effectif est inférieur à l'effectif minimal souhaité. Ce regroupement s'effectue en fusionnant ces classes en "remontant" le dendrogramme.
+
+L'avantage de l'implémentation dans `rainette` est qu'on ne "casse" pas la logique du dendrogramme, et qu'on obtient donc comme résultat un arbre complet, qu'on peut couper à la hauteur souhaitée : on peut donc explorer la classification en 2, 3 ... `k` groupes. L'inconvénient est qu'on n'a pas d'assurance de n'avoir aucune classe avec un effectif inférieur à `min_members` : on doit procéder à des regroupements manuels si nécessaire.
+
+
+# Algorithme de double classification
+
+La double classification consiste à effectuer deux classifications simples, mais avec des tailles d'*uc* différentes (valeurs distinctes de `min_uc_size`). L'idée est alors de "croiser" les résultats de ces deux CDH pour déterminer des classes plus "robustes".
+
+## Calcul des classes croisées
+
+Dans ce qui suit on considère, pour les deux CDH, toutes les classes obtenues pour chaque niveau de `k`. Pour une CDH avec `k = 5`, on a donc un total de 14 classes dans chaque CDH.
+
+La première étape consiste à croiser les classes des deux CDH :
+
+- on prend chaque classe de la CDH1, et on la croise avec chaque classe de la CDH2 (y compris si les classes ne sont pas de même niveau `k`). On appelle la nouvelle classe obtenue une "classe croisée".
+- pour chaque classe croisée, on calcule l'effectif du croisement (le nombre de documents présents dans les deux classes).
+- à partir de cet effectif, de l'effectif de chaque classe et du nombre total de documents, on peut créer un tableau croisé d'appartenance aux deux classes : on calcule alors le Khi2 de ce tableau, qui représente une mesure de "l'association" entre les deux classes.
+
+À noter que le croisement systématique de toutes les classes entraîne beaucoup de "doublons", c'est-à-dire de classes croisées avec exactement les mêmes membres. Ceux-ci ne sont évidemment pas conservés.
+
+L'étape suivante consiste à sélectionner les ensembles de classes croisées correspondant à la meilleure partition de l'ensemble des documents, c'est-à-dire qu'on va considérer tous les ensembles de classes croisées n'ayant aucun document en commun, et qu'on va chercher parmi toutes ces partitions la partition "optimale".
+
+La procédure à suivre décrite dans les articles cités dans les [références] n'est pas très claire, on s'est donc pour la suite surtout inspiré du code d'Iramuteq.
+
+## Sélection des classes croisées
+
+Pour diminuer le nombre de partitions à examiner, on commence par sélectionner certaines classes croisées :
+
+- on supprime toutes les classes croisées dont l'effectif (le nombre de documents) est inférieur à `min_members`
+- on supprime toutes les classes croisées dont le Khi2 d'association est inférieur à `min_chi2` (par défaut 3.84, c'est-à-dire la valeur du quantile à 95% pour un degré de liberté)
+
+## Calcul des partitions
+
+Le calcul des partitions s'effectue de manière récursive à partir des classes croisées conservées à l'étape précédente :
+
+- pour `k = 2`, on croise toutes les classes croisées deux à deux et on ne conserve que les paires n'ayant aucun élément en commun.
+- pour `k = 3`, on part de toutes les paires sélectionnées précédemment, on les croise avec les autres classes croisées et on ne garde que les ensembles n'ayant aucun élément en commun.
+- on recommence pour les autres valeurs de `k`, jusqu'à avoir atteint `max_k` ou jusqu'à ce qu'il n'y ait plus de nouvelle partition.
+
+## Sélection des partitions optimales
+
+Une fois toutes les partitions déterminées, on calcule pour chacune d'elle deux critères :
+
+- la taille totale, c'est-à-dire le nombre total de documents appartenant aux classes croisées de la partition
+- le Khi2 total, c'est-à-dire la somme des Khi2 d'association de chaque classe croisée de la partition
+
+Au final, on conserve pour chaque valeur de `k` (donc pour les partitions en 2, 3...`max_k` classes) les partitions ayant soit la taille totale maximale, soit le Khi2 total maximal (on a donc une ou deux partitions pour chaque `k`).
+
+
+## Différences avec Iramuteq
+
+L'algorithme reste très proche de celui d'Iramuteq jusqu'à l'étape de la sélection de partition optimale. Ici on procède à une recherche exhaustive des partitions à partir des classes croisées sélectionnées (ce qui peut occasionner des calculs potentiellement longs si `min_members` est faible et `max_k` élevé), tandis qu'Iramuteq procède autrement. 
+
+Au niveau des résultats, Iramuteq ne renvoie qu'une seule partition qu'il juge optimale, tandis que `rainette` retourne pour chaque valeur de `k` les deux meilleures partitions selon les critères de la taille ou du Khi2 maximum.
+
+## Différences avec la "méthode Reinert"
+
+Le mode de détermination des partitions optimales ne nous a pas semblé très détaillé dans les articles cités en [références], il ne nous est donc pas vraiment possible de comparer avec l'implémentation de `rainette`. Une différence majeure réside dans le fait que dans les articles cités, une fois la partition optimale déterminée, celle-ci est utilisée comme point de départ pour une affectation des documents aux classes via une méthode de type "centres mobiles". Ceci permet notamment de réaffecter des points qui ne feraient pas partie des classes croisées de la partition retenue.
+
+Cette réaffectation par centre mobile n'est pas implémentée pour le moment dans `rainette` (et elle ne semble pas l'être non plus dans Iramuteq). Il faut donc être vigilant au nombre et à la proportion de documents non affectés (valeur de classe à `NA`) à l'issue d'une classification double, car celui-ci peut être élevé.
+
+# Références
+
+- Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+- Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
