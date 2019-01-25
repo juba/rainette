@@ -1,12 +1,12 @@
+# Rainette
+
 [![CRAN status](https://www.r-pkg.org/badges/version-ago/rainette)](https://cran.r-project.org/package=rainette)
 [![Travis build status](https://travis-ci.org/juba/rainette.svg?branch=master)](https://travis-ci.org/juba/rainette)
 <!-- [![Coverage status](https://codecov.io/gh/juba/rainette/branch/master/graph/badge.svg)](https://codecov.io/github/juba/rainette?branch=master) -->
 
-# Rainette
-
 *Note :* This package is still in development, available only for testing.
 
-The package website can be found here : https://juba.github.io/rainette/.
+The package website can be found at : https://juba.github.io/rainette/.
 
 Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other software such as [Iramuteq](http://www.iramuteq.org/) (free software) or [Alceste](http://www.image-zafar.com/Logiciel.html) (commercial, closed source).
 
@@ -57,7 +57,7 @@ We can use the `rainette_explor` shiny interface to visualise and explore the di
 rainette_explor(res, dtm)
 ```
 
-![](reference/figures/rainette_explor.png)
+![](man/figures/rainette_explor.png)
 
 We can then use the generated R code to reproduce the displayed clustering visualisation plot :
 
@@ -88,7 +88,7 @@ rainette2(dtm, max_k = 10, uc_size1 = 10, uc_size2 = 15, min_members = 20)
 
 You can then use `rainette2_explor`, `rainette2_plot` and `cutree_rainette2` to explore and visualise the results.
 
-![](reference/figures/rainette2_explor.png)
+![](man/figures/rainette2_explor.png)
 
 ## Tell me more
 
