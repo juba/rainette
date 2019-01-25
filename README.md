@@ -90,7 +90,10 @@ You can then use `rainette2_explor`, `rainette2_plot` and `cutree_rainette2` to 
 
 ## Tell me more
 
-Vignettes should be available soon. Well, one day. In fact, there's already [one in french](https://juba.github.io/rainette/articles/introduction_usage.html).
+Two vignettes are available, but only in french for now :
+
+- [Introduction à rainette](https://juba.github.io/rainette/articles/introduction_usage.html)
+- [Description des algorithmes](https://juba.github.io/rainette/articles/algorithmes.html)
 
 ## Credits
 
