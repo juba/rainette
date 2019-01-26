@@ -9,7 +9,7 @@ Maintainer: Julien Barnier <julien.barnier@ens-lyon.fr>
 Description: An R implementation of the Reinert text clustering method.
 License: GPL (>= 3)
 VignetteBuilder: knitr
-URL: https://github.com/juba/rainette
+URL: https://juba.github.io/rainette/
 BugReports: https://github.com/juba/rainette/issues
 Encoding: UTF-8
 Imports: 
