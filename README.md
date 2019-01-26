@@ -1,8 +1,10 @@
-# Rainette
-
+# Rainette  
 [![CRAN status](https://www.r-pkg.org/badges/version-ago/rainette)](https://cran.r-project.org/package=rainette)
 [![Travis build status](https://travis-ci.org/juba/rainette.svg?branch=master)](https://travis-ci.org/juba/rainette)
 <!-- [![Coverage status](https://codecov.io/gh/juba/rainette/branch/master/graph/badge.svg)](https://codecov.io/github/juba/rainette?branch=master) -->
+
+<img src="man/figures/logo.png" width=200 align="right" />
+
 
 *Note :* This package is still in development, available only for testing.
 
@@ -105,3 +107,5 @@ This classification method has been created by Max Reinert, and is described in 
 - Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
 
 Thanks to Pierre Ratineau, the author of [Iramuteq](http://www.iramuteq.org/), for providing it as free software and open source. Even if the R code has been almost entirely rewritten, it has been a precious resource to understand the algorithms.
+
+Many thanks to [Sébastien Rochette](https://github.com/statnmap) for the creation of the hex logo.
