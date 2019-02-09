@@ -130,7 +130,7 @@ rainette_explor <- function(res, dtm) {
     })
     
     output$rainette_plot <- renderPlot({
-      eval(parse(text = plot_code()))
+      eval(parse(text = plot_code()), envir = .GlobalEnv)
     })
     
     ## Code export modal dialog
