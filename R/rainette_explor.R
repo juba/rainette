@@ -46,9 +46,8 @@ rainette_explor <- function(res, dtm) {
   
   res_name <- deparse(substitute(res))
   dtm_name <- deparse(substitute(dtm))
-  max_n_groups <- max(res$group)
-  
-  
+  max_n_groups <- max(res$group, na.rm = TRUE)
+
   ui <- miniPage(
     gadgetTitleBar("Clustering exploration", left = NULL),
     tags$head(tags$style(rainette_explor_css())),

@@ -15,7 +15,7 @@ rainette2_explor <- function(res, dtm) {
   
   res_name <- deparse(substitute(res))
   dtm_name <- deparse(substitute(dtm))
-  max_n_groups <- max(res$k)
+  max_n_groups <- max(res$k, na.rm = TRUE)
   
   
   ui <- miniPage(
