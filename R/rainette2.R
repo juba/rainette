@@ -34,9 +34,8 @@ classes_crosstab <- function(groups1, groups2, n_tot) {
         rename(n1 = n) %>%
         right_join(df %>% count(g2), by = "g2") %>%
         rename(n2 = n) %>%
-        rowwise() %>%
         mutate(level1 = i1, level2 = i2,
-          chi2 = compute_chi2(n_both, n1, n2, n_tot)) %>%
+          chi2 = pmap_dbl(list(n_both, n1, n2, n_tot), compute_chi2)) %>%
         ungroup()
     })
   })
@@ -117,7 +116,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
       members <- unlist(valid$members[valid$interclass == clusters[i]])
       groups[members] <- i
     }
-    list(groups)
+    groups
   }
   
   ## Compute data frame of results 
@@ -126,11 +125,9 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
       return(NULL)
     }
     tibble(clusters = partitions, k = k + 1) %>% 
-      rowwise %>% 
       ## Compute size and sum of Khi2 for each partition
-      mutate(chi2 = sum(valid$chi2[valid$interclass %in% clusters]),
-        n = sum(valid$n_both[valid$interclass %in% clusters])) %>% 
-      ungroup %>% 
+      mutate(chi2 = map_dbl(clusters, ~sum(valid$chi2[valid$interclass %in% .x])),
+             n = map_dbl(clusters, ~sum(valid$n_both[valid$interclass %in% .x]))) %>% 
       ## Filter partitions with max size or max chi2 for each k
       group_by(k) %>% 
       filter(n == max(n) | chi2 == max(chi2)) %>% 
@@ -142,8 +139,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
   
   ## Add group membership for each clustering
   res %>%
-    rowwise %>% 
-    mutate(groups = compute_groups(clusters)) %>% 
+    mutate(groups = map(clusters, compute_groups)) %>% 
     ungroup
 }
 
