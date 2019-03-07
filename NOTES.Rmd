@@ -10,6 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
+- Mieux expliquer ou trouver un autre nom pour `min_members` ?
+- Accélérer découpage en segments
+- Tester compatibilité de textmodel_ca avec explor
+- Donner un exemple de calcul des spécificités des mots outils sur des groupes calculés. L'idée est de déterminer si certains mots exclus sont associés à des groupes et donc à réintégrer comme actifs.
 - Ajouter NA dans titre barplot de rainette2_plot
 
 
