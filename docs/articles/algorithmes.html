@@ -67,15 +67,11 @@
     </li>
   </ul>
 </li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/juba/rainette">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -90,9 +86,9 @@
       <h1>[fr] Description des algorithmes</h1>
                         <h4 class="author">Julien Barnier</h4>
             
-            <h4 class="date">2019-01-26</h4>
+            <h4 class="date">2019-06-06</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/master/vignettes/algorithmes.Rmd"><code>vignettes/algorithmes.Rmd</code></a></small>
+      
       <div class="hidden name"><code>algorithmes.Rmd</code></div>
 
     </div>
@@ -116,19 +112,19 @@
 <p>Le tableau de départ est la matrice termes-documents croisant les segments de texte (unités de contexte élémentaires, <em>uce</em>), éventuellement regroupés en unités de contexte (<em>uc</em>) s’ils ne comportent pas suffisamment de formes différentes (selon la valeur de l’argument <code>min_uc_size</code>), et les termes. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d’effectifs.</p>
 <p>On a donc un tableau de ce type :</p>
 <pre><code>##     partir un jour sans retour
-## uc1      1  0    0    1      1
-## uc2      1  0    0    0      1
-## uc3      0  1    1    1      0
-## uc4      0  0    1    0      0</code></pre>
+## uc1      1  1    0    1      0
+## uc2      0  1    1    0      1
+## uc3      1  1    1    0      1
+## uc4      0  1    0    1      1</code></pre>
 </div>
 <div id="division-maximisant-le-khi2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#division-maximisant-le-khi2" class="anchor"></a>Division maximisant le Khi2</h2>
 <p>On souhaite diviser ce tableau de départ en maximisant la valeur du Khi2 obtenue lorsqu’on regroupe les lignes en deux classes. Par exemple, dans le tableau ci-dessus, si on regroupe <code>uc1</code> avec <code>uc2</code> et <code>uc3</code> avec <code>uc4</code>, on obtient le tableau suivant :</p>
 <pre><code>##      partir un jour sans retour
-## [1,]      2  0    0    1      2
-## [2,]      0  1    2    1      0</code></pre>
-<p>On peut calculer le Khi2 de ce tableau (qui vaut en l’occurrence 6.975). Dans un cas aussi simple, on peut effectuer tous les regroupements d’<code>uc</code> possible et déterminer lequel correspond au Khi2 maximal, mais avec des données réelles cela prendrait trop de temps.</p>
+## [1,]      1  2    1    1      1
+## [2,]      1  2    1    1      2</code></pre>
+<p>On peut calculer le Khi2 de ce tableau (qui vaut en l’occurrence 0.2579365). Dans un cas aussi simple, on peut effectuer tous les regroupements d’<code>uc</code> possible et déterminer lequel correspond au Khi2 maximal, mais avec des données réelles cela prendrait trop de temps.</p>
 <p>On opère donc de la manière suivante :</p>
 <ul>
 <li>on effectue une analyse factorielle des correspondances de la matrice termes-documents, et on ordonne les documents selon leur coordonnée sur le premier axe de cette AFC.</li>
