@@ -12,4 +12,5 @@ tests_iramuteq.R
 .*.udpipe
 _pkgdown.yml
 docs/
+pkgdown/
 
