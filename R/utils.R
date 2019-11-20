@@ -29,10 +29,14 @@ fchisq_val <- function(tab1, tab2, row_sum, n) {
 compute_uc <- function(dtm, min_uc_size = 10) {
   
   ## Add id to documents
-  docvars(dtm, field = "rainette_uce_id") <- 1:nrow(dtm)
+  if (nrow(docvars(dtm)) > 0) {
+    docvars(dtm, field = "rainette_uce_id") <- 1:nrow(dtm)
+  } else {
+    dtm@docvars <- data.frame(rainette_uce_id = 1:nrow(dtm))
+  }
   
   if (min_uc_size <= 1) {
-    docvars(dtm)$rainette_uc_id <- docvars(dtm)$rainette_uce_id
+    docvars(dtm, field = "rainette_uc_id") <- docvars(dtm)$rainette_uce_id
     return(dtm)
   }
   
