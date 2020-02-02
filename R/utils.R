@@ -1,7 +1,7 @@
 if (getRversion() >= "2.15.1")  
   utils::globalVariables(c("Dim1", "distance", "index", "segment", "segment_source", "weight", "p", 
     "chi2", "n_both", "n1", "n2", "g1", "g2", "level1", "level2", "members", "clusters", "feature",
-    "Group"))
+    "Group", "rainette_group"))
 
 
 # Fast chi-square value computation

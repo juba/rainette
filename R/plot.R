@@ -276,6 +276,8 @@ rainette_plot <- function(res, dtm, k = NULL,
 #' @param criterion criterion to use to choose the best partition. `chi2` means 
 #'    the partition with the maximum sum of chi2, `n` the partition with the 
 #'    maximum size.
+#' @param complete_groups if TRUE, documents with NA cluster are reaffected by
+#'    k-means clustering initialised with current groups centers.
 #' @param type type of term plots : barplot or wordcloud
 #' @param n_terms number of terms to display in keyness plots
 #' @param free_scales if TRUE, all the keyness plots will have the same scale
@@ -283,13 +285,14 @@ rainette_plot <- function(res, dtm, k = NULL,
 #' @param show_negative if TRUE, show negative keyness features
 #' @param text_size font size for barplots, max word size for wordclouds
 #'
-#' @seealso [quanteda::textstat_keyness()], [rainette2_explor()]
+#' @seealso [quanteda::textstat_keyness()], [rainette2_explor()], [rainette2_complete_groups()]
 #'
 #' @export
 #' 
 #' @import ggplot2
 
 rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
+  complete_groups = FALSE,
   type = c("bar", "cloud"), n_terms = 15, 
   free_scales = FALSE, measure = c("chi2", "lr"),
   show_negative = TRUE,
@@ -312,6 +315,9 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   
   if (k < 2 || k > max_k) stop("k must be between 2 and ", max_k)
   groups <- cutree_rainette2(res, k, criterion)
+  if (complete_groups) {
+    groups <- rainette2_complete_groups(dtm, groups)
+  }
   
   ## Keyness statistics
   tabs <- keyness_stats(groups, dtm, measure, stat_col, show_negative, n_terms)

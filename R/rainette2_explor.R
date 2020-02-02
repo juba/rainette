@@ -33,6 +33,7 @@ rainette2_explor <- function(res, dtm) {
           selectInput("criterion", "Partition criterion", 
             choices = c("Partition sum of chi-squared" = "chi2",
               "Partition sum of sizes" = "n")),
+          checkboxInput("complete_km", label = "Complete with k-means", value = FALSE),
           selectInput("measure", "Statistics", 
             choices = c("Chi-squared" = "chi2",
                         "Likelihood ratio" = "lr")),
@@ -69,6 +70,7 @@ rainette2_explor <- function(res, dtm) {
       if (input$type == "bar") {
         code <- paste0("rainette2_plot(", res_name, ",", dtm_name,", k = ", input$k,
           ", criterion = \"", input$criterion, "\"",
+          ", complete_groups = \"", input$complete_km, "\"",          
           ", type = \"bar\"",
           ", n_terms = ", input$n_terms, 
           ", free_scales = ", !input$same_scales, 
@@ -79,6 +81,7 @@ rainette2_explor <- function(res, dtm) {
       if (input$type == "cloud") {
         code <- paste0("rainette2_plot(", res_name, ",", dtm_name,", k = ", input$k,
           ", criterion = \"", input$criterion, "\"",
+          ", complete_groups = \"", input$complete_km, "\"",
           ", type = \"cloud\"",
           ", n_terms = ", input$n_terms, 
           ", free_scales = ", !input$same_scales, 
@@ -89,10 +92,21 @@ rainette2_explor <- function(res, dtm) {
     })
     
     cutree_code <- reactive({
-      paste0("cutree_rainette2(", res_name, 
+      out <- ""
+      if (input$complete_km) {
+        out <- "group <- "
+      }
+      out <- paste0(out, "cutree_rainette2(", res_name, 
         ", k = ", input$k, 
         ", criterion = \"", input$criterion, "\"",
         ")")
+      if (input$complete_km) {
+        out <- paste0(
+          out, "\n",
+          "rainette2_complete_groups(", dtm_name, ", groups)"
+        )
+      }
+      out
     })
     
     generate_code <- reactive({

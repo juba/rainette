@@ -44,6 +44,8 @@ cutree_rainette <- function(hres, k = NULL, h = NULL,...) {
 #'    maximum size.
 #' @param ... arguments passed to other methods
 #'
+#' @seealso [rainette2_complete_groups()]
+#'
 #' @export
 
 cutree_rainette2 <- function(res, k, criterion = c("chi2", "n"), ...) {
@@ -58,4 +60,42 @@ cutree_rainette2 <- function(res, k, criterion = c("chi2", "n"), ...) {
       filter(n == max(n))
   }
   line %>% pull(groups) %>% unlist
+}
+
+
+#' Complete groups membership with k-means
+#' 
+#' Starting with groups membership computed from a `rainette2` clustering, 
+#' every document not assigned to a cluster is reassigned using a k-means
+#' clustering initialized with the centers of defined groups.
+#' 
+#' @param dfm dfm object used for `rainette2`` clustering
+#' @param groups group membership computed by `cutree` on `rainette2` result.
+#' @param ... other arguments passed to `kmeans`
+#' 
+#' @seealso [cutree_rainette2()]
+#' 
+#' @export
+
+rainette2_complete_groups <- function(dfm, groups, ...) {
+  
+  data <- quanteda::convert(dfm, to = "data.frame") %>% 
+    dplyr::select(-1) %>% 
+    dplyr::bind_cols(rainette_group = groups) 
+  
+  centers <- data %>% 
+    dplyr::group_by(rainette_group) %>% 
+    dplyr::summarise_all(mean) %>% 
+    tidyr::drop_na(rainette_group) %>% 
+    dplyr::select(-rainette_group)
+    
+  data <- data %>% 
+    dplyr::filter(is.na(rainette_group)) %>% 
+    dplyr::select(-rainette_group)
+  
+  km <- stats::kmeans(data, centers, ...)
+  
+  groups[is.na(groups)] <- km$cluster
+  
+  groups
 }
