@@ -336,11 +336,13 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   
   ## Frequency barplot
   freq <- data.frame(table(groups, exclude=NULL))
+  n_na <- sum(is.na(groups))
+  title <- paste0("Clusters size\n(NA = ", n_na, ")")
   colnames(freq) <- c("Group", "n")
   g <- ggplot(freq) +
     geom_col(aes(x = Group, y = n, fill = Group)) +
     scale_fill_manual(guide = FALSE, values = c(groups_colors(k)), na.value = "grey20") +
-    ggtitle("Clusters size") +
+    ggtitle(title) +
     theme(
       plot.title = element_text(size = 10, face = "bold", hjust = 0.5),
       plot.margin = grid::unit(c(0.05,0.05,0,0), "npc"),
