@@ -49,10 +49,10 @@ dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 ```
 
-We can then apply a simple clustering on this dtm with the `rainette` function. We specify the number of clusters (`k`), the minimum size for a cluster to be splitted at next step (`min_members`) and the minimum number of forms in each segment (`min_uc_size`) :
+We can then apply a simple clustering on this dtm with the `rainette` function. We specify the number of clusters (`k`), the minimum size for a cluster to be splitted at next step (`min_split_members`) and the minimum number of forms in each segment (`min_uc_size`) :
 
 ```r
-res <- rainette(dtm, k = 6, min_uc_size = 15, min_members = 20)
+res <- rainette(dtm, k = 6, min_uc_size = 15, min_split_members = 20)
 ```
 
 We can use the `rainette_explor` shiny interface to visualise and explore the different clusterings at each `k` :
@@ -79,8 +79,8 @@ docvars(corpus)$group <- cutree_rainette(res, k = 5)
 In addition to this, you can also perform a double clustering, *ie* two simple clusterings produced with different `min_uc_size` which are then "crossed" to generate more solid clusters. To do this, use `rainette2` either on two `rainette` results :
 
 ```r
-res1 <- rainette(dtm, k = 10, min_uc_size = 10, min_members = 10)
-res2 <- rainette(dtm, k = 10, min_uc_size = 15, min_members = 10)
+res1 <- rainette(dtm, k = 10, min_uc_size = 10, min_split_members = 10)
+res2 <- rainette(dtm, k = 10, min_uc_size = 15, min_split_members = 10)
 res <- rainette2(res1, res2, max_k = 10, min_members = 20)
 ```
 

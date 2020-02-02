@@ -4,9 +4,10 @@
 #'   result of [split_segments()]
 #' @param k maximum number of clusters to compute
 #' @param min_uc_size minimum number of forms by document
-#' @param min_members don't try to split groups with fewer members
+#' @param min_split_members don't try to split groups with fewer members
 #' @param cc_test contingency coefficient value for feature selection
 #' @param tsj minimum frequency value for feature selection
+#' @param min_members deprecated, use `min_split_members` instead
 #' @param ... parameters passed to [quanteda::textmodel_ca]
 #'
 #' @details
@@ -41,7 +42,15 @@
 #' 
 #' @export
 
-rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0.3, tsj = 3,...) {
+rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_test = 0.3, tsj = 3, min_members, ...) {
+  
+  ## Check for deprecated min_members argument
+  if (!missing(min_members)) {
+    warning("min_members is deprecated. Use min_split_members instead.")
+    if (missing(min_split_members)) {
+      min_split_members <- min_members
+    }
+  }
   
   if (any(dtm@x > 1)) {
     ## We don't use dfm_weight here because of https://github.com/quanteda/quanteda/issues/1545
@@ -70,9 +79,9 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_members = 5, cc_test = 0
 
     ## Split the biggest group
     biggest_group <- which.max(purrr::map(res[[i]]$tabs, nrow))
-    if (nrow(res[[i]]$tabs[[biggest_group]]) < min_members) {
+    if (nrow(res[[i]]$tabs[[biggest_group]]) < min_split_members) {
       pb$update(1)
-      message("! No more group bigger than min_members. Stopping after iteration ", i, ".")
+      message("! No more group bigger than min_split_members. Stopping after iteration ", i, ".")
       k <- i
       break
     }

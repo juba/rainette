@@ -78,7 +78,7 @@ test_that("features_selection is ok", {
 ## rainette
 
 test_that("rainette on mini_dfm is ok", {
-  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_members = 1)
+  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 1)
   expect_is(res, c("rainette", "hclust"))
   expect_equal(res$group, c(2, 2, 1, 2, 2, 1, 2))
   expect_equal(which(res$group == 1), indices[1:which(indices == res_split$max_index)])
@@ -87,7 +87,7 @@ test_that("rainette on mini_dfm is ok", {
 
 ## Verbose option has been removed
 # test_that("rainette on mini_dfm with verbose is ok", {
-#   res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_members = 1, verbose = TRUE)
+#   res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 1, verbose = TRUE)
 #   expect_equal(dim(res$corresp_uce_uc), c(7, 2))
 #   expect_is(res$res, "list")
 # })
@@ -99,14 +99,14 @@ dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
 test_that("Stopping if tab too small", {
-  expect_message(res <- rainette(dtm, k = 12, min_uc_size = 10, min_members = 1),
+  expect_message(res <- rainette(dtm, k = 12, min_uc_size = 10, min_split_members = 1),
     "! Tab to be splitted is not big enough. Stopping after iteration")
   expect_equal(max(res$group), 7)
 })
 
 test_that("Stopping if no more group > min_members", {
-  expect_message(res <- rainette(dtm, k = 3, min_uc_size = 10, min_members = 15),
-    "^! No more group bigger than min_members. Stopping after iteration")
+  expect_message(res <- rainette(dtm, k = 3, min_uc_size = 10, min_split_members = 15),
+    "^! No more group bigger than min_split_members. Stopping after iteration")
   expect_equal(max(res$group), 2)
 })
 
@@ -137,14 +137,28 @@ test_that("dfm with 'document' feature is ok", {
   m_document <- m
   colnames(m_document) <- c("document", "éé", "ùù", "feat4", "feat5")
   dfm_document <- as.dfm(m_document)
-  res_document <- rainette(dfm_document, k = 2, min_uc_size = 1, min_members = 1)
-  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_members = 1)
+  res_document <- rainette(dfm_document, k = 2, min_uc_size = 1, min_split_members = 1)
+  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 1)
   expect_equal(res$group, res_document$group)
   expect_equal(res$height, res_document$height)  
 })
 
 
+## min_members deprecation
 
+test_that("min_members is deprecated", {
+  expect_warning(
+    res_deprecated <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_members = 1),
+    "min_members is deprecated. Use min_split_members instead."
+  )
+  res_deprecated$call <- NULL
+  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 1)
+  res$call <- NULL
+  expect_equal(
+    res,
+    res_deprecated
+  )
+})
 
 
 
