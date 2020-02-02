@@ -3,7 +3,6 @@
 [![CRAN status](https://www.r-pkg.org/badges/version-ago/rainette)](https://cran.r-project.org/package=rainette)
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![R build status](https://github.com/juba/rainette/workflows/R-CMD-check/badge.svg)](https://github.com/juba/rainette)
-<!-- [![Travis build status](https://travis-ci.org/juba/rainette.svg?branch=master)](https://travis-ci.org/juba/rainette) -->
 <!-- [![Coverage status](https://codecov.io/gh/juba/rainette/branch/master/graph/badge.svg)](https://codecov.io/github/juba/rainette?branch=master) -->
 
 <img src="man/figures/logo.png" width=200 align="right" />
