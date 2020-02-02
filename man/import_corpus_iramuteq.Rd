@@ -4,8 +4,7 @@
 \alias{import_corpus_iramuteq}
 \title{Import a corpus in Iramuteq format}
 \usage{
-import_corpus_iramuteq(f, id_var = NULL, thematics = c("remove",
-  "split"), ...)
+import_corpus_iramuteq(f, id_var = NULL, thematics = c("remove", "split"), ...)
 }
 \arguments{
 \item{f}{a file name or a connection}

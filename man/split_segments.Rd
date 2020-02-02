@@ -9,14 +9,11 @@
 \usage{
 split_segments(obj, segment_size = 40, segment_size_window = NULL)
 
-\method{split_segments}{character}(obj, segment_size = 40,
-  segment_size_window = NULL)
+\method{split_segments}{character}(obj, segment_size = 40, segment_size_window = NULL)
 
-\method{split_segments}{Corpus}(obj, segment_size = 40,
-  segment_size_window = NULL)
+\method{split_segments}{Corpus}(obj, segment_size = 40, segment_size_window = NULL)
 
-\method{split_segments}{corpus}(obj, segment_size = 40,
-  segment_size_window = NULL)
+\method{split_segments}{corpus}(obj, segment_size = 40, segment_size_window = NULL)
 }
 \arguments{
 \item{obj}{character string, quanteda or tm corpus object}

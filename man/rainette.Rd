@@ -4,8 +4,16 @@
 \alias{rainette}
 \title{Corpus clustering based on the Reinert method - Simple clustering}
 \usage{
-rainette(dtm, k = 10, min_uc_size = 10, min_members = 5,
-  cc_test = 0.3, tsj = 3, ...)
+rainette(
+  dtm,
+  k = 10,
+  min_uc_size = 10,
+  min_split_members = 5,
+  cc_test = 0.3,
+  tsj = 3,
+  min_members,
+  ...
+)
 }
 \arguments{
 \item{dtm}{quanteda dfm object of documents to cluster, usually the
@@ -15,11 +23,13 @@ result of \code{\link[=split_segments]{split_segments()}}}
 
 \item{min_uc_size}{minimum number of forms by document}
 
-\item{min_members}{don't try to split groups with fewer members}
+\item{min_split_members}{don't try to split groups with fewer members}
 
 \item{cc_test}{contingency coefficient value for feature selection}
 
 \item{tsj}{minimum frequency value for feature selection}
+
+\item{min_members}{deprecated, use \code{min_split_members} instead}
 
 \item{...}{parameters passed to \link[quanteda:textmodel_ca]{quanteda::textmodel_ca}}
 }

@@ -4,8 +4,16 @@
 \alias{rainette2}
 \title{Corpus clustering based on the Reinert method - Double clustering}
 \usage{
-rainette2(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
-  min_members = 10, min_chi2 = 3.84, ...)
+rainette2(
+  x,
+  y = NULL,
+  max_k = 5,
+  uc_size1 = 10,
+  uc_size2 = 15,
+  min_members = 10,
+  min_chi2 = 3.84,
+  ...
+)
 }
 \arguments{
 \item{x}{either a quanteda dfm object or the result of \code{\link[=rainette]{rainette()}}}
@@ -58,8 +66,8 @@ dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct =
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
-res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_members = 2)
-res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_members = 2)
+res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 2)
+res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 2)
 
 res <- rainette2(res1, res2, min_members = 2)
 rainette2_explor(res, dtm)

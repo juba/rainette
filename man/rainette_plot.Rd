@@ -4,9 +4,17 @@
 \alias{rainette_plot}
 \title{Generate a clustering description plot from a rainette result}
 \usage{
-rainette_plot(res, dtm, k = NULL, type = c("bar", "cloud"),
-  n_terms = 15, free_scales = FALSE, measure = c("chi2", "lr"),
-  show_negative = TRUE, text_size = NULL)
+rainette_plot(
+  res,
+  dtm,
+  k = NULL,
+  type = c("bar", "cloud"),
+  n_terms = 15,
+  free_scales = FALSE,
+  measure = c("chi2", "lr"),
+  show_negative = TRUE,
+  text_size = NULL
+)
 }
 \arguments{
 \item{res}{result object of a \code{rainette} clustering}

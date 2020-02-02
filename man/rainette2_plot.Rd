@@ -4,9 +4,18 @@
 \alias{rainette2_plot}
 \title{Generate a clustering description plot from a rainette2 result}
 \usage{
-rainette2_plot(res, dtm, k = NULL, criterion = c("chi2", "n"),
-  type = c("bar", "cloud"), n_terms = 15, free_scales = FALSE,
-  measure = c("chi2", "lr"), show_negative = TRUE, text_size = 10)
+rainette2_plot(
+  res,
+  dtm,
+  k = NULL,
+  criterion = c("chi2", "n"),
+  type = c("bar", "cloud"),
+  n_terms = 15,
+  free_scales = FALSE,
+  measure = c("chi2", "lr"),
+  show_negative = TRUE,
+  text_size = 10
+)
 }
 \arguments{
 \item{res}{result object of a \code{rainette2} clustering}
