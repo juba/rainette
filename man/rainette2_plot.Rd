@@ -9,6 +9,7 @@ rainette2_plot(
   dtm,
   k = NULL,
   criterion = c("chi2", "n"),
+  complete_groups = FALSE,
   type = c("bar", "cloud"),
   n_terms = 15,
   free_scales = FALSE,
@@ -28,6 +29,9 @@ rainette2_plot(
 the partition with the maximum sum of chi2, \code{n} the partition with the
 maximum size.}
 
+\item{complete_groups}{if TRUE, documents with NA cluster are reaffected by
+k-means clustering initialised with current groups centers.}
+
 \item{type}{type of term plots : barplot or wordcloud}
 
 \item{n_terms}{number of terms to display in keyness plots}
@@ -44,5 +48,5 @@ maximum size.}
 Generate a clustering description plot from a rainette2 result
 }
 \seealso{
-\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette2_explor]{rainette2_explor()}}
+\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette2_explor]{rainette2_explor()}}, \code{\link[=rainette2_complete_groups]{rainette2_complete_groups()}}
 }

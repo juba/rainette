@@ -20,3 +20,6 @@ maximum size.}
 \description{
 Cut a rainette2 result object into groups of documents
 }
+\seealso{
+\code{\link[=rainette2_complete_groups]{rainette2_complete_groups()}}
+}
