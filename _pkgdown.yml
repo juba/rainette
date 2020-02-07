@@ -15,6 +15,7 @@ reference:
   contents:
   - '`rainette2`'
   - '`cutree_rainette2`'  
+  - '`rainette2_complete_groups`'  
   - '`rainette2_plot`'
   - '`rainette2_explor`'
 - title: Clustering statistics
