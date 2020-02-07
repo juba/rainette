@@ -10,9 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
-- Compléter vignette et ajouter tests pour `rainette2_complete_groups`
 - Accélérer découpage en segments
-- Donner un exemple de calcul des spécificités des mots outils sur des groupes calculés. L'idée est de déterminer si certains mots exclus sont associés à des groupes et donc à les réintégrer comme actifs.
 - Regarder / implémenter ce qui est décrit dans Ratinaud_JADT2018
 
 # Notes Iramuteq
