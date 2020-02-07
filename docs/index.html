@@ -13,8 +13,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="The Reinert Method For Textual Data Clustering">
 <meta property="og:description" content="An R implementation of the Reinert text clustering method.">
 <meta property="og:image" content="https://juba.github.io/rainette/logo.png">
@@ -45,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -80,6 +81,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="contents col-md-9">
 <div id="rainette" class="section level1">
@@ -103,9 +105,9 @@
 <h2 class="hasAnchor">
 <a href="#installation-and-usage" class="anchor"></a>Installation and usage</h2>
 <p>The package is installable from Github :</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"juba/rainette"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"juba/rainette"</span>)</a></code></pre></div>
 <p>Let’s start with an example corpus provided by the excellent <a href="https://quanteda.io">quanteda</a> package :</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(quanteda)</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(quanteda)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">data_corpus_inaugural</a></code></pre></div>
 <p>First, we’ll use <code>split_segments</code> to split each text in the corpus into segments of about 40 words (punctuation is taken into account) :</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">corpus &lt;-<span class="st"> </span><span class="kw"><a href="reference/split_segments.html">split_segments</a></span>(data_corpus_inaugural, <span class="dt">segment_size =</span> <span class="dv">40</span>)</a></code></pre></div>
@@ -113,8 +115,8 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span>(corpus, <span class="dt">remove =</span> <span class="kw"><a href="https://quanteda.io/reference/reexports.html">stopwords</a></span>(<span class="st">"en"</span>), <span class="dt">tolower =</span> <span class="ot">TRUE</span>, <span class="dt">remove_punct =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/tokens_wordstem.html">dfm_wordstem</a></span>(dtm, <span class="dt">language =</span> <span class="st">"english"</span>)</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span>(dtm, <span class="dt">min_termfreq =</span> <span class="dv">3</span>)</a></code></pre></div>
-<p>We can then apply a simple clustering on this dtm with the <code>rainette</code> function. We specify the number of clusters (<code>k</code>), the minimum size for a cluster to be splitted at next step (<code>min_members</code>) and the minimum number of forms in each segment (<code>min_uc_size</code>) :</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">6</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_members =</span> <span class="dv">20</span>)</a></code></pre></div>
+<p>We can then apply a simple clustering on this dtm with the <code>rainette</code> function. We specify the number of clusters (<code>k</code>), the minimum size for a cluster to be splitted at next step (<code>min_split_members</code>) and the minimum number of forms in each segment (<code>min_uc_size</code>) :</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">6</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_split_members =</span> <span class="dv">20</span>)</a></code></pre></div>
 <p>We can use the <code>rainette_explor</code> shiny interface to visualise and explore the different clusterings at each <code>k</code> :</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="reference/rainette_explor.html">rainette_explor</a></span>(res, dtm)</a></code></pre></div>
 <p><img src="reference/figures/rainette_explor.png"></p>
@@ -124,8 +126,8 @@
 <p>Or cut the tree at chosen <code>k</code> and add a group membership variable to our corpus metadata :</p>
 <pre><code>docvars(corpus)$group &lt;- cutree_rainette(res, k = 5)</code></pre>
 <p>In addition to this, you can also perform a double clustering, <em>ie</em> two simple clusterings produced with different <code>min_uc_size</code> which are then “crossed” to generate more solid clusters. To do this, use <code>rainette2</code> either on two <code>rainette</code> results :</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">res1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">min_uc_size =</span> <span class="dv">10</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">res2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">res1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">min_uc_size =</span> <span class="dv">10</span>, <span class="dt">min_split_members =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">res2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_split_members =</span> <span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">res &lt;-<span class="st"> </span><span class="kw"><a href="reference/rainette2.html">rainette2</a></span>(res1, res2, <span class="dt">max_k =</span> <span class="dv">10</span>, <span class="dt">min_members =</span> <span class="dv">20</span>)</a></code></pre></div>
 <p>Or directly on a dtm with <code>uc_size1</code> and <code>uc_size2</code> arguments :</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="reference/rainette2.html">rainette2</a></span>(dtm, <span class="dt">max_k =</span> <span class="dv">10</span>, <span class="dt">uc_size1 =</span> <span class="dv">10</span>, <span class="dt">uc_size2 =</span> <span class="dv">15</span>, <span class="dt">min_members =</span> <span class="dv">20</span>)</a></code></pre></div>
@@ -183,23 +185,26 @@
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=rainette"><img src="https://www.r-pkg.org/badges/version-ago/rainette" alt="CRAN status"></a></li>
 <li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
-<li><a href="https://travis-ci.org/juba/rainette"><img src="https://travis-ci.org/juba/rainette.svg?branch=master" alt="Travis build status"></a></li>
+<li><a href="https://github.com/juba/rainette/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/juba/rainette/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 </ul>
 </div>
 </div>
 </div>
+
 
       <footer><div class="copyright">
   <p>Developed by Julien Barnier.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

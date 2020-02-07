@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merges uces into uc according to minimum uc size — compute_uc • rainette</title>
+<title>Generate cluster keyness statistics from a rainette result — rainette_stats • rainette</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,8 +42,8 @@
 
 
 
-<meta property="og:title" content="Merges uces into uc according to minimum uc size — compute_uc" />
-<meta property="og:description" content="rainette_uc_index docvar" />
+<meta property="og:title" content="Generate cluster keyness statistics from a rainette result — rainette_stats" />
+<meta property="og:description" content="Generate cluster keyness statistics from a rainette result" />
 <meta property="og:image" content="https://juba.github.io/rainette/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -126,44 +126,76 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merges uces into uc according to minimum uc size</h1>
+    <h1>Generate cluster keyness statistics from a rainette result</h1>
     
-    <div class="hidden name"><code>compute_uc.Rd</code></div>
+    <div class="hidden name"><code>rainette_stats.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>rainette_uc_index</code> docvar</p>
+    <p>Generate cluster keyness statistics from a rainette result</p>
     </div>
 
-    <pre class="usage"><span class='fu'>compute_uc</span>(<span class='no'>dtm</span>, <span class='kw'>min_uc_size</span> <span class='kw'>=</span> <span class='fl'>10</span>)</pre>
+    <pre class="usage"><span class='fu'>rainette_stats</span>(
+  <span class='no'>groups</span>,
+  <span class='no'>dtm</span>,
+  <span class='kw'>measure</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"chi2"</span>, <span class='st'>"lr"</span>),
+  <span class='kw'>n_terms</span> <span class='kw'>=</span> <span class='fl'>15</span>,
+  <span class='kw'>show_negative</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>max_p</span> <span class='kw'>=</span> <span class='fl'>0.05</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>dtm</th>
-      <td><p>dtm of uces, with a <code>rainette_uce_id</code> docvar</p></td>
+      <th>groups</th>
+      <td><p>groups membership computed by <code>cutree_rainette</code> or <code>cutree_rainette2</code></p></td>
     </tr>
     <tr>
-      <th>min_uc_size</th>
-      <td><p>minimum number of forms by uc</p></td>
+      <th>dtm</th>
+      <td><p>the dfm object used to compute the clustering</p></td>
+    </tr>
+    <tr>
+      <th>measure</th>
+      <td><p>statistics to compute</p></td>
+    </tr>
+    <tr>
+      <th>n_terms</th>
+      <td><p>number of terms to display in keyness plots</p></td>
+    </tr>
+    <tr>
+      <th>show_negative</th>
+      <td><p>if TRUE, show negative keyness features</p></td>
+    </tr>
+    <tr>
+      <th>max_p</th>
+      <td><p>maximum keyness statistic p-value</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>the original dtm with a new <code>rainette_uc_id</code> docvar.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <div class='dont-index'><p><code><a href='https://quanteda.io/reference/textstat_keyness.html'>quanteda::textstat_keyness()</a></code>, <code><a href='rainette_explor.html'>rainette_explor()</a></code>, <code><a href='rainette_plot.html'>rainette_plot()</a></code></p></div>
 
-    <p>Internal function, not to be used directly</p>
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>quanteda</span>)
+<span class='no'>corpus</span> <span class='kw'>&lt;-</span> <span class='no'>data_corpus_inaugural</span>
+<span class='no'>corpus</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>corpus</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>)
+<span class='no'>corpus</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='split_segments.html'>split_segments</a></span>(<span class='no'>corpus</span>)
+<span class='no'>dtm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span>(<span class='no'>corpus</span>, <span class='kw'>remove</span> <span class='kw'>=</span> <span class='fu'><a href='https://quanteda.io/reference/reexports.html'>stopwords</a></span>(<span class='st'>"en"</span>), <span class='kw'>tolower</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>remove_punct</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>dtm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span>(<span class='no'>dtm</span>, <span class='kw'>min_termfreq</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span>(<span class='no'>dtm</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+<span class='no'>groups</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cutree_rainette.html'>cutree_rainette</a></span>(<span class='no'>res</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+<span class='fu'>rainette_stats</span>(<span class='no'>groups</span>, <span class='no'>dtm</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

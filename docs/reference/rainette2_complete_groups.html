@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merges uces into uc according to minimum uc size — compute_uc • rainette</title>
+<title>Complete groups membership with knn classification — rainette2_complete_groups • rainette</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,8 +42,10 @@
 
 
 
-<meta property="og:title" content="Merges uces into uc according to minimum uc size — compute_uc" />
-<meta property="og:description" content="rainette_uc_index docvar" />
+<meta property="og:title" content="Complete groups membership with knn classification — rainette2_complete_groups" />
+<meta property="og:description" content="Starting with groups membership computed from a rainette2 clustering,
+every document not assigned to a cluster is reassigned using a k-nearest
+neighbour classification." />
 <meta property="og:image" content="https://juba.github.io/rainette/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -126,36 +128,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merges uces into uc according to minimum uc size</h1>
+    <h1>Complete groups membership with knn classification</h1>
     
-    <div class="hidden name"><code>compute_uc.Rd</code></div>
+    <div class="hidden name"><code>rainette2_complete_groups.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>rainette_uc_index</code> docvar</p>
+    <p>Starting with groups membership computed from a <code>rainette2</code> clustering,
+every document not assigned to a cluster is reassigned using a k-nearest
+neighbour classification.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>compute_uc</span>(<span class='no'>dtm</span>, <span class='kw'>min_uc_size</span> <span class='kw'>=</span> <span class='fl'>10</span>)</pre>
+    <pre class="usage"><span class='fu'>rainette2_complete_groups</span>(<span class='no'>dfm</span>, <span class='no'>groups</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>dtm</th>
-      <td><p>dtm of uces, with a <code>rainette_uce_id</code> docvar</p></td>
+      <th>dfm</th>
+      <td><p>dfm object used for <code>rainette2</code> clustering.</p></td>
     </tr>
     <tr>
-      <th>min_uc_size</th>
-      <td><p>minimum number of forms by uc</p></td>
+      <th>groups</th>
+      <td><p>group membership computed by <code>cutree</code> on <code>rainette2</code> result.</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>number of neighbours considered.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>other arguments passed to <code><a href='https://rdrr.io/pkg/FNN/man/knn.html'>FNN::knn</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>the original dtm with a new <code>rainette_uc_id</code> docvar.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>Completed group membership vector.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>Internal function, not to be used directly</p>
+    <div class='dont-index'><p><code><a href='cutree_rainette2.html'>cutree_rainette2()</a></code>, <code><a href='https://rdrr.io/pkg/FNN/man/knn.html'>FNN::knn()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -163,7 +175,7 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
     </ul>
 
   </div>
