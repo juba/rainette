@@ -133,7 +133,10 @@ Au niveau des résultats, Iramuteq ne renvoie qu'une seule partition qu'il juge 
 
 Le mode de détermination des partitions optimales ne nous a pas semblé très détaillé dans les articles cités en [références], il ne nous est donc pas vraiment possible de comparer avec l'implémentation de `rainette`. Une différence majeure réside dans le fait que dans les articles cités, une fois la partition optimale déterminée, celle-ci est utilisée comme point de départ pour une affectation des documents aux classes via une méthode de type "centres mobiles". Ceci permet notamment de réaffecter des points qui ne feraient pas partie des classes croisées de la partition retenue.
 
-Cette réaffectation par centre mobile n'est pas implémentée pour le moment dans `rainette` (et elle ne semble pas l'être non plus dans Iramuteq). Il faut donc être vigilant au nombre et à la proportion de documents non affectés (valeur de classe à `NA`) à l'issue d'une classification double, car celui-ci peut être élevé.
+Cette réaffectation par centre mobile n'est pas implémentée dans `rainette` (et elle ne semble pas l'être non plus dans Iramuteq). Il faut donc être vigilant au nombre et à la proportion de documents non affectés (valeur de classe à `NA`) à l'issue d'une classification double, car celui-ci peut être élevé. Une fonction `rainette2_complete_groups` est cependant disponible pour
+rattacher les points non affectés à une des classes via une méthode du type _k-nearest neighbours_.
+
+
 
 # Références
 

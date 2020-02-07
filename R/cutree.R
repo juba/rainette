@@ -63,39 +63,41 @@ cutree_rainette2 <- function(res, k, criterion = c("chi2", "n"), ...) {
 }
 
 
-#' Complete groups membership with k-means
+#' Complete groups membership with knn classification
 #' 
 #' Starting with groups membership computed from a `rainette2` clustering, 
-#' every document not assigned to a cluster is reassigned using a k-means
-#' clustering initialized with the centers of defined groups.
+#' every document not assigned to a cluster is reassigned using a k-nearest
+#' neighbour classification.
 #' 
-#' @param dfm dfm object used for `rainette2`` clustering
+#' @param dfm dfm object used for `rainette2` clustering.
 #' @param groups group membership computed by `cutree` on `rainette2` result.
-#' @param ... other arguments passed to `kmeans`
+#' @param k number of neighbours considered.
+#' @param ... other arguments passed to `FNN::knn`.
 #' 
-#' @seealso [cutree_rainette2()]
+#' @return
+#' Completed group membership vector.
+#' 
+#' @seealso [cutree_rainette2()], [FNN::knn()]
 #' 
 #' @export
 
-rainette2_complete_groups <- function(dfm, groups, ...) {
+rainette2_complete_groups <- function(dfm, groups, k = 1, ...) {
   
-  data <- quanteda::convert(dfm, to = "data.frame") %>% 
-    dplyr::select(-1) %>% 
-    dplyr::bind_cols(rainette_group = groups) 
+  if (!requireNamespace("FNN", quietly = TRUE)) {
+    stop("Package \"FNN\" needed for this function to work. Please install it.",
+      call. = FALSE)
+  }
   
-  centers <- data %>% 
-    dplyr::group_by(rainette_group) %>% 
-    dplyr::summarise_all(mean) %>% 
-    tidyr::drop_na(rainette_group) %>% 
-    dplyr::select(-rainette_group)
-    
-  data <- data %>% 
-    dplyr::filter(is.na(rainette_group)) %>% 
-    dplyr::select(-rainette_group)
+  m <- quanteda::convert(dfm, to = "matrix")
   
-  km <- stats::kmeans(data, centers, ...)
+  test <- m[is.na(groups), ]
+  train <- m[!is.na(groups), ]
+  train_groups <- groups[!is.na(groups)]
   
-  groups[is.na(groups)] <- km$cluster
+  new_groups <- FNN::knn(train, test, train_groups, k = k, ...)
+  groups[is.na(groups)] <- new_groups
   
   groups
+  
 }
+

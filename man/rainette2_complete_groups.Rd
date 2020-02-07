@@ -2,22 +2,27 @@
 % Please edit documentation in R/cutree.R
 \name{rainette2_complete_groups}
 \alias{rainette2_complete_groups}
-\title{Complete groups membership with k-means}
+\title{Complete groups membership with knn classification}
 \usage{
-rainette2_complete_groups(dfm, groups, ...)
+rainette2_complete_groups(dfm, groups, k = 1, ...)
 }
 \arguments{
-\item{dfm}{dfm object used for `rainette2`` clustering}
+\item{dfm}{dfm object used for \code{rainette2} clustering.}
 
 \item{groups}{group membership computed by \code{cutree} on \code{rainette2} result.}
 
-\item{...}{other arguments passed to \code{kmeans}}
+\item{k}{number of neighbours considered.}
+
+\item{...}{other arguments passed to \code{FNN::knn}.}
+}
+\value{
+Completed group membership vector.
 }
 \description{
 Starting with groups membership computed from a \code{rainette2} clustering,
-every document not assigned to a cluster is reassigned using a k-means
-clustering initialized with the centers of defined groups.
+every document not assigned to a cluster is reassigned using a k-nearest
+neighbour classification.
 }
 \seealso{
-\code{\link[=cutree_rainette2]{cutree_rainette2()}}
+\code{\link[=cutree_rainette2]{cutree_rainette2()}}, \code{\link[FNN:knn]{FNN::knn()}}
 }

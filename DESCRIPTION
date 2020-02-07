@@ -36,6 +36,7 @@ Suggests:
     rmarkdown,
     covr,
     vdiffr,
-    tm
+    tm,
+    FNN
 Roxygen: list(markdown = TRUE)    
 RoxygenNote: 7.0.2

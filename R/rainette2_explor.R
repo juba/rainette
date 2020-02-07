@@ -33,7 +33,7 @@ rainette2_explor <- function(res, dtm) {
           selectInput("criterion", "Partition criterion", 
             choices = c("Partition sum of chi-squared" = "chi2",
               "Partition sum of sizes" = "n")),
-          checkboxInput("complete_km", label = "Complete with k-means", value = FALSE),
+          checkboxInput("complete_km", label = "Complete with k-nearest neighbours", value = FALSE),
           selectInput("measure", "Statistics", 
             choices = c("Chi-squared" = "chi2",
                         "Likelihood ratio" = "lr")),

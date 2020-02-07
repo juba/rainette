@@ -21,3 +21,12 @@ test_that("cutree_rainette is ok", {
     2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 
     2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 1L))
 })
+
+test_that("rainette2_complete_groups", {
+  res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 2)
+  res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 2)
+  res_double <- rainette2(res1, res2, min_members = 2)
+
+  groups <- cutree(res_double, k = 4)
+  expect_equal(sum(is.na(rainette2_complete_groups(dtm, groups))), 0)
+})
