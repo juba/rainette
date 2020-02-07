@@ -17,6 +17,10 @@ reference:
   - '`cutree_rainette2`'  
   - '`rainette2_plot`'
   - '`rainette2_explor`'
+- title: Clustering statistics
+  desc: Functions used for clustering statistics display
+  contents:
+  - '`rainette_stats`'
 - title: Corpus importation and segmentation
   desc: Functions to import or segment a textual corpus
   contents:

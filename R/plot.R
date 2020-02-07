@@ -130,32 +130,8 @@ keyness_plots <- function(tabs, groups, type = "bar",
   })
 }
 
-## Compute and filter keyness statistics table for each group
 
-keyness_stats <- function(groups, dtm, measure, stat_col, show_negative, n_terms) {
-  
-  groups_list <- sort(unique(groups))
-  groups_list <- groups_list[!is.na(groups_list)]
-  tabs <- purrr::map(groups_list, function(group) {
-    select <- (groups == group & !is.na(groups))
-    tab <- quanteda::textstat_keyness(dtm, select, measure = measure) %>% 
-      arrange(desc(abs(!!stat_col))) %>% 
-      filter(p < 0.05)
-    if (show_negative) {
-      tab %>% 
-        slice(1:n_terms) %>% 
-        mutate(sign = if_else(!!stat_col > 0, "positive", "negative"),
-          sign = factor(sign, levels = c("positive", "negative")))
-    } else {
-      tab %>% 
-        filter(!!stat_col > 0) %>% 
-        slice(1:n_terms) %>% 
-        mutate(sign = "positive")
-    }
-  })
-  
-  tabs
-}
+
 
 #' Generate a clustering description plot from a rainette result
 #'
@@ -169,7 +145,7 @@ keyness_stats <- function(groups, dtm, measure, stat_col, show_negative, n_terms
 #' @param show_negative if TRUE, show negative keyness features
 #' @param text_size font size for barplots, max word size for wordclouds
 #'
-#' @seealso [quanteda::textstat_keyness()], [rainette_explor()]
+#' @seealso [quanteda::textstat_keyness()], [rainette_explor()], [rainette_stats()]
 #'
 #' @export
 #' @examples 
@@ -181,7 +157,7 @@ keyness_stats <- function(groups, dtm, measure, stat_col, show_negative, n_terms
 #' dtm <- dfm(corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
 #' dtm <- dfm_trim(dtm, min_termfreq = 3)
 #' res <- rainette(dtm, k = 3)
-#' rainette_plot(dtm, res)
+#' rainette_plot(res, dtm)
 #' }
 #' 
 #' @import ggplot2
@@ -195,15 +171,11 @@ rainette_plot <- function(res, dtm, k = NULL,
   
   type <- match.arg(type)
   measure <- match.arg(measure)
+  stat_col <- stat_col(measure)
   if (type == "cloud") {
     show_negative <- FALSE
   }
-  stat_col <- switch(measure,
-    "chi2" = "chi2",
-    "lr" = "G2"
-  )
-  stat_col <- rlang::sym(stat_col)
-  
+
   ## Maximum number of clusters
   max_k <- max(res$group, na.rm = TRUE)
   
@@ -216,12 +188,12 @@ rainette_plot <- function(res, dtm, k = NULL,
     groups <- cutree_rainette(res, k)
   }
   
+  ## Keyness statistics
+  tabs <- rainette_stats(groups, dtm, measure, n_terms, show_negative)
+  
   ## Number of NA
   na_n <- sum(is.na(groups))
   na_prop <- round(na_n / length(groups) * 100, 1)
-  
-  ## Keyness statistics
-  tabs <- keyness_stats(groups, dtm, measure, stat_col, show_negative, n_terms)
   
   ## Min and max statistics to fix x axis in terms plots
   range <- NULL
@@ -268,6 +240,7 @@ rainette_plot <- function(res, dtm, k = NULL,
 }
 
 
+
 #' Generate a clustering description plot from a rainette2 result
 #'
 #' @param res result object of a `rainette2` clustering
@@ -301,15 +274,8 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   type <- match.arg(type)
   measure <- match.arg(measure)
   criterion <- match.arg(criterion)
-  if (type == "cloud") {
-    show_negative <- FALSE
-  }
-  stat_col <- switch(measure,
-    "chi2" = "chi2",
-    "lr" = "G2"
-  )
-  stat_col <- rlang::sym(stat_col)
-  
+  stat_col <- stat_col(measure)
+
   ## Maximum number of clusters
   max_k <- max(res$k, na.rm = TRUE)
   
@@ -320,7 +286,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   }
   
   ## Keyness statistics
-  tabs <- keyness_stats(groups, dtm, measure, stat_col, show_negative, n_terms)
+  tabs <- rainette_stats(groups, dtm, measure, n_terms, show_negative)
   
   ## Min and max statistics to fix x axis in terms plots
   range <- NULL

@@ -39,3 +39,11 @@ test_that("fchisq_val result is ok", {
                unname(chisq.test(cbind(t1, t2))$statistic))
 }) 
 
+# stat_col
+
+test_that("stat_col is ok", {
+  expect_equal(stat_col("chi2"), rlang::sym("chi2"))
+  expect_equal(stat_col("lr"), rlang::sym("G2"))
+})
+
+

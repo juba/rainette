@@ -148,6 +148,12 @@ docvars(corpus)$group <- cutree_rainette(res, k = 5)
 head(docvars(corpus))
 ```
 
+Vous pouvez aussi récupérer directement les statistiques de spécificité de chaque groupe à l'aide de `rainette_stats` :
+
+```{r}
+rainette_stats(docvars(corpus)$group, dtm, n_terms = 5)
+```
+
 
 
 # Classification double

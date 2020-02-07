@@ -68,3 +68,17 @@ compute_uc <- function(dtm, min_uc_size = 10) {
   return(dtm)
 }
 
+
+#' @importFrom rlang sym
+
+stat_col <- function(measure) {
+
+    stat_col <- switch(measure,
+    "chi2" = "chi2",
+    "lr" = "G2"
+  )
+  stat_col <- rlang::sym(stat_col)
+  
+}
+
+

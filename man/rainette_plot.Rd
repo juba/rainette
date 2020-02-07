@@ -47,10 +47,10 @@ corpus <- split_segments(corpus)
 dtm <- dfm(corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 res <- rainette(dtm, k = 3)
-rainette_plot(dtm, res)
+rainette_plot(res, dtm)
 }
 
 }
 \seealso{
-\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette_explor]{rainette_explor()}}
+\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette_explor]{rainette_explor()}}, \code{\link[=rainette_stats]{rainette_stats()}}
 }
