@@ -33,50 +33,56 @@ split_segments <- function(obj, segment_size = 40, segment_size_window = NULL) {
 
 
 split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL) {
-
+  
   text <- obj
   
   if (!(inherits(text, "character") && length(text) == 1)) stop("text must be a character vector of size 1")
-
+  
   ## Default segment_size_window
   if (is.null(segment_size_window)) {
     segment_size_window <- 0.4 * segment_size
   }
   
   ## Tokenize into words
-  words <- as.character(quanteda::tokens(text, what = "word"))
+  words <- as.character(quanteda::tokens(text, what = "fastestword"))
   
   ## If string is shorter than segment_size, returns it
   if (length(words) <= segment_size) {
     return(tibble(segment = obj))
   }
-
+  
   ## Compute "weight" for each word
+  last_char <- stringi::stri_sub(words, -1, -1)
   weights <- case_when(
-    words %in% c(".", "?", "!", "\u2026") ~ 6,
-    words == ":" ~ 5,
-    words == ";" ~ 4,
-    words == "," ~ 1,
+    last_char %in% c(".", "?", "!", "\u2026") ~ 6,
+    last_char == ":" ~ 5,
+    last_char == ";" ~ 4,
+    last_char == "," ~ 1,
     TRUE ~ 0.01
   )
-
+  
   slice_indices <- 1:(segment_size + segment_size_window)
   last_index <- 1
-  split_indices <- rep(1, length(words))
-  i <- 2
+  split_indices <- 1
   stop_index <- length(words) - (segment_size + segment_size_window) + 1
   while(last_index < stop_index) {
     indices <- last_index + slice_indices - 1
     tmpw <- weights[indices]
     split_index <- which.max(tmpw / (abs(slice_indices - segment_size) + 1))
-    split_indices[(last_index + split_index):length(split_indices)] <- i
-    i <- i + 1
+    split_indices <- append(split_indices, split_index)
     last_index <- last_index + split_index
   }
+  split_indices <- cumsum(split_indices)
   
-  tibble(segment = unlist(lapply(split(words, split_indices), paste0, collapse = " ")))
-  
+  segment <- purrr::map_chr(seq_len(length(split_indices) - 1), ~{
+    w <- words[split_indices[.x]:(split_indices[.x + 1] - 1)]
+    paste0(w, collapse = " ")
+  })
+      
+  tibble(segment = segment)
+      
 }
+
 
 
 ##' @rdname split_segments
@@ -108,19 +114,19 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
   if (!inherits(corpus, "corpus")) stop("corpus must be of class corpus")
   
   corpus$documents$segment_source <- rownames(docvars(corpus))
-  
-  pb <- progress::progress_bar$new(total = ndoc(corpus),
-    format = "  Splitting [:bar] :percent in :elapsed",
-    clear = FALSE, show_after = 0)
-  invisible(pb$tick(0))
-  
-  corpus$documents$texts <- purrr::map(
-    corpus$documents$texts, 
-    function(text) {
-       pb$tick(1)
-       split_segments(text, segment_size, segment_size_window)
-    }
-  )
+  options(future.supportsMulticore.unstable = "quiet")
+  future::plan(future::multiprocess)
+
+  progressr::with_progress({
+    p <- progressr::progressor(along = corpus$documents$texts)
+    corpus$documents$texts <- future.apply::future_lapply(
+      corpus$documents$texts, 
+      function(text) {
+        p()
+        split_segments(text, segment_size, segment_size_window)
+      }
+    )
+  })
   
   corpus$documents <- corpus$documents %>%
     tidyr::unnest(texts) %>%
