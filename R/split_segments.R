@@ -53,7 +53,7 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
   
   ## Compute "weight" for each word
   last_char <- stringi::stri_sub(words, -1, -1)
-  weights <- case_when(
+  weights <- dplyr::case_when(
     last_char %in% c(".", "?", "!", "\u2026") ~ 6,
     last_char == ":" ~ 5,
     last_char == ";" ~ 4,
@@ -72,14 +72,15 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
     split_indices <- append(split_indices, split_index)
     last_index <- last_index + split_index
   }
+  split_indices <- append(split_indices, length(words) - sum(split_indices) + 1)
   split_indices <- cumsum(split_indices)
   
-  segment <- purrr::map_chr(seq_len(length(split_indices) - 1), ~{
+  segments <- purrr::map_chr(seq_len(length(split_indices) - 1), ~{
     w <- words[split_indices[.x]:(split_indices[.x + 1] - 1)]
     paste0(w, collapse = " ")
   })
       
-  tibble(segment = segment)
+  tibble(segment = segments)
       
 }
 
@@ -105,6 +106,7 @@ split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 
 ##' @rdname split_segments
 ##' @aliases split_segments.corpus
 ##' @export
+##' @importFrom purrr map_int 
 
 
 split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
@@ -114,18 +116,39 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
   if (!inherits(corpus, "corpus")) stop("corpus must be of class corpus")
   
   corpus$documents$segment_source <- rownames(docvars(corpus))
-  options(future.supportsMulticore.unstable = "quiet")
-  future::plan(future::multiprocess)
-
+  
+  corpus_length <- sum(purrr::map_int(texts(obj), nchar))
+  use_multicore <- corpus_length > 10000000
+  
+  if (use_multicore) {
+    message("Splitting in parallel (please wait while R sessions start)...")    
+  } else {
+    message("Splitting...")
+  }
+  
   progressr::with_progress({
     p <- progressr::progressor(along = corpus$documents$texts)
-    corpus$documents$texts <- future.apply::future_lapply(
-      corpus$documents$texts, 
-      function(text) {
-        p()
-        split_segments(text, segment_size, segment_size_window)
-      }
-    )
+
+    if (use_multicore) {
+      options(future.supportsMulticore.unstable = "quiet")
+      future::plan(future::multiprocess)
+
+      corpus$documents$texts <- future.apply::future_lapply(
+        corpus$documents$texts, 
+        function(text) {
+          p()
+          split_segments(text, segment_size, segment_size_window)
+        }
+      )
+    } else {
+      corpus$documents$texts <- lapply(
+        corpus$documents$texts, 
+        function(text) {
+          p()
+          split_segments(text, segment_size, segment_size_window)
+        }
+      )
+    }
   })
   
   corpus$documents <- corpus$documents %>%
