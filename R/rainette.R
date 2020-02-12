@@ -70,44 +70,47 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
   res <- list(list(tabs = list(dtm)))
   
   ## Display progress bar
-  pb <- progress::progress_bar$new(total = k - 1,
-    format = "  Clustering [:bar] :percent in :elapsed",
-    clear = FALSE, show_after = 0)
-  invisible(pb$tick(0))
-  
-  for (i in 1:(k - 1)) {
-
-    ## Split the biggest group
-    biggest_group <- which.max(purrr::map(res[[i]]$tabs, nrow))
-    if (nrow(res[[i]]$tabs[[biggest_group]]) < min_split_members) {
-      pb$update(1)
-      message("! No more group bigger than min_split_members. Stopping after iteration ", i, ".")
-      k <- i
-      break
-    }
-    tab <- res[[i]]$tabs[[biggest_group]]
-    ## textmodel_ca only works if nrow >= 3 and ncol >= 3
-    if (nrow(tab) < 3 || ncol(tab) < 3) {
-      pb$update(1)
-      message("! Tab to be splitted is not big enough. Stopping after iteration ", i, ".")
-      k <- i
-      break
-    }
-    clusters <- cluster_tab(tab, cc_test = cc_test, tsj = tsj,...)
+  progressr::with_progress({
+    p <- progressr::progressor(along = k - 1)
     
-    ## Populate results
-    res[[i + 1]] <- list()
-    res[[i + 1]]$height <- clusters$height
-    res[[i + 1]]$splitted <- c(biggest_group, biggest_group + 1)
-    res[[i + 1]]$tabs <- append(res[[i]]$tabs[-biggest_group], 
-                                clusters$tabs,
-                                after = biggest_group - 1)
-    res[[i + 1]]$groups <- append(res[[i]]$groups[-biggest_group], 
-                                  clusters$groups,
-                                  after = biggest_group - 1)
-    pb$tick(1)
-  }
+    for (i in 1:(k - 1)) {
+      
+      ## Split the biggest group
+      biggest_group <- which.max(purrr::map(res[[i]]$tabs, nrow))
+      if (nrow(res[[i]]$tabs[[biggest_group]]) < min_split_members) {
+        p()
+        message("! No more group bigger than min_split_members. Stopping after iteration ", i, ".")
+        k <- i
+        break
+      }
+      tab <- res[[i]]$tabs[[biggest_group]]
+      ## textmodel_ca only works if nrow >= 3 and ncol >= 3
+      if (nrow(tab) < 3 || ncol(tab) < 3) {
+        p()
+        message("! Tab to be splitted is not big enough. Stopping after iteration ", i, ".")
+        k <- i
+        break
+      }
+      clusters <- cluster_tab(tab, cc_test = cc_test, tsj = tsj,...)
+      
+      ## Populate results
+      res[[i + 1]] <- list()
+      res[[i + 1]]$height <- clusters$height
+      res[[i + 1]]$splitted <- c(biggest_group, biggest_group + 1)
+      res[[i + 1]]$tabs <- append(res[[i]]$tabs[-biggest_group], 
+        clusters$tabs,
+        after = biggest_group - 1)
+      res[[i + 1]]$groups <- append(res[[i]]$groups[-biggest_group], 
+        clusters$groups,
+        after = biggest_group - 1)
+      p()
+    }
+  })
   
+  if (k == 1) {
+    message("! No computed clusters. Returning NULL.")
+    return(NULL)
+  }
   res <- res[-1]
   
   ## Compute the merge element of resulting hclust result
