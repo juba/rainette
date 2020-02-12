@@ -222,11 +222,11 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
   }
   
   ## Progress bar
-  message("  Searching for best partitions")
+  message("  Searching for best partitions...")
   pb_max <- max_k + 4
   
   progressr::with_progress({
-    p <- progressr::progressor(along = pb_max)
+    p <- progressr::progressor(along = seq_len(pb_max))
 
     ## Compute data frame of groups at each k for both clusterings
     groups1 <- get_groups(x)
@@ -272,6 +272,8 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
   
   })
 
+  message("  Done.")
+  
   class(res) <- c("rainette2", class(res))
   
   res
