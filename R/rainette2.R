@@ -35,7 +35,7 @@ classes_crosstab <- function(groups1, groups2, n_tot) {
         right_join(df %>% count(g2), by = "g2") %>%
         rename(n2 = n) %>%
         mutate(level1 = i1, level2 = i2,
-          chi2 = pmap_dbl(list(n_both, n1, n2, n_tot), compute_chi2)) %>%
+          chi2 = purrr::pmap_dbl(list(n_both, n1, n2, n_tot), compute_chi2)) %>%
         ungroup()
     })
   })
@@ -48,7 +48,7 @@ filter_crosstab <- function(tab, groups1, groups2, min_members, min_chi2) {
   
   ## Return members of an intersection class
   compute_members <- function(level1, g1, level2, g2) {
-    pmap(list(level1, g1, level2, g2), function(level1, g1, level2, g2) {
+    purrr::pmap(list(level1, g1, level2, g2), function(level1, g1, level2, g2) {
       which(groups1[[level1]] == g1 & groups2[[level2]] == g2)
     })
   }
@@ -120,14 +120,14 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
   }
   
   ## Compute data frame of results 
-  res <- imap_dfr(partitions, function(partitions, k) {
+  res <- purrr::imap_dfr(partitions, function(partitions, k) {
     if (is.null(partitions)) {
       return(NULL)
     }
     tibble(clusters = partitions, k = k + 1) %>% 
       ## Compute size and sum of Khi2 for each partition
-      mutate(chi2 = map_dbl(clusters, ~sum(valid$chi2[valid$interclass %in% .x])),
-             n = map_dbl(clusters, ~sum(valid$n_both[valid$interclass %in% .x]))) %>% 
+      mutate(chi2 = purrr::map_dbl(clusters, ~sum(valid$chi2[valid$interclass %in% .x])),
+             n = purrr::map_dbl(clusters, ~sum(valid$n_both[valid$interclass %in% .x]))) %>% 
       ## Filter partitions with max size or max chi2 for each k
       group_by(k) %>% 
       filter(n == max(n) | chi2 == max(chi2)) %>% 
@@ -139,7 +139,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
   
   ## Add group membership for each clustering
   res %>%
-    mutate(groups = map(clusters, compute_groups)) %>% 
+    mutate(groups = purrr::map(clusters, compute_groups)) %>% 
     ungroup
 }
 

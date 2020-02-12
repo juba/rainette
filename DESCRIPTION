@@ -23,13 +23,15 @@ Imports:
     dendextend,
     ggwordcloud,
     gridExtra,
-    progress,
     rlang,
     RColorBrewer,
     shiny,
     miniUI,
     formatR,
-    highr
+    highr,
+    future,
+    future.apply,
+    progressr
 Suggests: 
     testthat,
     knitr,
@@ -40,3 +42,4 @@ Suggests:
     FNN
 Roxygen: list(markdown = TRUE)    
 RoxygenNote: 7.0.2
+

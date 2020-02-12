@@ -28,8 +28,8 @@ split_segments <- function(obj, segment_size = 40, segment_size_window = NULL) {
 ##' @export
 ##' @import dplyr
 ##' @import quanteda
-##' @import tibble
-##' @import purrr
+##' @importFrom tibble tibble
+##' @importFrom purrr map_chr
 
 
 split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL) {
@@ -48,11 +48,11 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
   
   ## If string is shorter than segment_size, returns it
   if (length(words) <= segment_size) {
-    return(tibble(segment = obj))
+    return(tibble::tibble(segment = obj))
   }
   
   ## Compute "weight" for each word
-  last_char <- stringi::stri_sub(words, -1, -1)
+  last_char <- stringr::str_sub(words, -1)
   weights <- dplyr::case_when(
     last_char %in% c(".", "?", "!", "\u2026") ~ 6,
     last_char == ":" ~ 5,
@@ -80,7 +80,7 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
     paste0(w, collapse = " ")
   })
       
-  tibble(segment = segments)
+  tibble::tibble(segment = segments)
       
 }
 
@@ -107,6 +107,7 @@ split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 
 ##' @aliases split_segments.corpus
 ##' @export
 ##' @importFrom purrr map_int 
+##' @importFrom tibble column_to_rownames
 
 
 split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
