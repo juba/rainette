@@ -85,12 +85,6 @@ test_that("rainette on mini_dfm is ok", {
   expect_equal(res$height, res_split$max_chisq)
 })
 
-## Verbose option has been removed
-# test_that("rainette on mini_dfm with verbose is ok", {
-#   res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 1, verbose = TRUE)
-#   expect_equal(dim(res$corresp_uce_uc), c(7, 2))
-#   expect_is(res$res, "list")
-# })
 
 mini_corpus <- head(data_corpus_inaugural, n = 2)
 mini_corpus <- split_segments(mini_corpus)
@@ -101,13 +95,16 @@ dtm <- dfm_trim(dtm, min_termfreq = 3)
 test_that("Stopping if tab too small", {
   expect_message(res <- rainette(dtm, k = 12, min_uc_size = 10, min_split_members = 1),
     "! Tab to be splitted is not big enough. Stopping after iteration")
-  expect_equal(max(res$group), 7)
+  expect_equal(max(res$group), 9)
 })
 
 test_that("Stopping if no more group > min_members", {
-  expect_message(res <- rainette(dtm, k = 3, min_uc_size = 10, min_split_members = 15),
+  expect_message(res <- rainette(dtm, k = 3, min_uc_size = 10, min_split_members = 12),
     "^! No more group bigger than min_split_members. Stopping after iteration")
   expect_equal(max(res$group), 2)
+  expect_message(res <- rainette(dtm, k = 3, min_uc_size = 10, min_split_members = 15),
+    "! No computed clusters. Returning NULL.")
+  expect_null(res)
 })
 
 test_that("all uce belong to the same group", {
