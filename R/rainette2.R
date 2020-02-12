@@ -224,57 +224,55 @@ rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
   ## Progress bar
   message("  Searching for best partitions")
   pb_max <- max_k + 4
-  pb <- progress::progress_bar$new(total = pb_max,
-    format = "  [:bar] :percent in :elapsed",
-    clear = FALSE, show_after = 0)
-  invisible(pb$tick(0))
   
-  ## Compute data frame of groups at each k for both clusterings
-  groups1 <- get_groups(x)
-  groups2 <- get_groups(y)
-  ## Total number of documents
-  n_tot <- nrow(groups1)
+  progressr::with_progress({
+    p <- progressr::progressor(along = pb_max)
 
-  ## Compute sizes and chi2 of every crossing between classes
-  ## of both clusterings (intersection classes)
-  cross_classes <- classes_crosstab(groups1, groups2, n_tot)
+    ## Compute data frame of groups at each k for both clusterings
+    groups1 <- get_groups(x)
+    groups2 <- get_groups(y)
+    ## Total number of documents
+    n_tot <- nrow(groups1)
 
-  ## Filter intersection classes on size and Khi2 value, and add members
-  valid <- filter_crosstab(cross_classes, groups1, groups2, min_members, min_chi2)
+    ## Compute sizes and chi2 of every crossing between classes
+    ## of both clusterings (intersection classes)
+    cross_classes <- classes_crosstab(groups1, groups2, n_tot)
+
+    ## Filter intersection classes on size and Khi2 value, and add members
+    valid <- filter_crosstab(cross_classes, groups1, groups2, min_members, min_chi2)
   
-  if (nrow(valid) < 2) {
-    stop("Not enough valid classes to continue. You may try a lower min_members value.")
-  }
-  
-  ## Matrix of sizes of intersection classes crossing
-  sizes <- cross_sizes(valid)
-  pb$tick(1)
-  
-  ## Compute partitions
-  partitions <- list()
-  interclasses <- valid$interclass
-  partitions[[1]] <- interclasses
-  for (k in 2:max_k) {
-    part <- next_partitions(partitions, sizes)
-    if(!is.null(part)) {
-      partitions[[k]] <- part
-      pb$tick(1)
-    } else {
-      pb$update(1)
-      message("! No more partitions found, stopping at k=", k - 1)
-      break;
+    if (nrow(valid) < 2) {
+      stop("Not enough valid classes to continue. You may try a lower min_members value.")
     }
-  }
-  partitions[[1]] <- NULL  
   
-  ## Select opimal partitions and add group membership for each one
-  res <- get_optimal_partitions(partitions, valid, n_tot)
+    ## Matrix of sizes of intersection classes crossing
+    sizes <- cross_sizes(valid)
+    p()
+  
+    ## Compute partitions
+    partitions <- list()
+    interclasses <- valid$interclass
+    partitions[[1]] <- interclasses
+    for (k in 2:max_k) {
+      part <- next_partitions(partitions, sizes)
+      if(!is.null(part)) {
+        partitions[[k]] <- part
+        p()
+      } else {
+        p()
+        message("! No more partitions found, stopping at k=", k - 1)
+        break;
+      }
+    }
+
+    partitions[[1]] <- NULL  
+  
+    ## Select opimal partitions and add group membership for each one
+    res <- get_optimal_partitions(partitions, valid, n_tot)
+  
+  })
 
   class(res) <- c("rainette2", class(res))
-  
-  if(!pb$finished) {
-    pb$update(1)
-  }
   
   res
 }
