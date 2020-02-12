@@ -158,24 +158,26 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
 #' return documents indices ordered by CA first axis coordinates
 #'
 #' @param dtm dmt on which to compute the CA and order documents
-#' @param ... arguments passed to `quanteda::textmodel_ca`
 #' 
 #' @details
 #' Internal function, not to be used directly
 #' 
 #' @return ordered list of document indices
 
-docs_order_by_ca <- function(dtm, ...) {
+docs_order_by_ca <- function(dtm) {
   
   ## Compute first factor of CA on DTM
-  afc <- quanteda::textmodel_ca(dtm, nd = 1, ...)
+  ## Code taken from getAnywhere(textmodel_ca.dfm)
+  P <- dtm / sum(dtm)
+  rm <- rowSums(P)
+  cm <- colSums(P)
+  eP <- Matrix::tcrossprod(rm, cm)
+  S <- (P - eP)/sqrt(eP)
+  dec <- RSpectra::svds(S, 1)
+  coord <- dec$u[, 1]/sqrt(rm)
   
   ## Order documents by their first factor coordinates
-  indices <- afc$rowcoord %>% 
-    as.data.frame %>% 
-    mutate(index = 1:n()) %>% 
-    arrange(Dim1) %>% 
-    pull(index)
+  indices <- (seq_along(coord))[order(coord)]
   
   return(indices)
 }
