@@ -23,7 +23,7 @@ test_that("compute_chi2 is ok", {
 })
 
 test_that("get_groups is ok", {
-  expect_equal(dim(rainette:::get_groups(res1)), c(336, 4))
+  expect_equal(dim(rainette:::get_groups(res1)), c(316, 4))
   expect_equal(substr(rainette:::get_groups(res1)[[2]],3,3), as.character(res1$uce_groups[[2]]))
   expect_equal(substr(rainette:::get_groups(res1)[[2]],1,2), rep("2.", length(res1$group)))
 })
