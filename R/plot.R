@@ -161,7 +161,6 @@ keyness_plots <- function(tabs, groups, type = "bar",
 #' }
 #' 
 #' @import ggplot2
-#' @import dendextend
 
 rainette_plot <- function(res, dtm, k = NULL, 
                           type = c("bar", "cloud"), n_terms = 15, 
@@ -210,23 +209,24 @@ rainette_plot <- function(res, dtm, k = NULL,
   ## Prune the dendrogram if necessary
   if( k < max(res$group, na.rm = TRUE)) {
     for (i in nrow(res$merge):(k)) {
-      dend <- dend %>% prune(as.character(i))
+      dend <- dend %>% dendextend::prune(as.character(i))
     }
-    labels(dend) <- 1:k
+    dendextend::labels(dend) <- 1:k
   }
   ## Style labels and branches
-  labels_colors(dend) <- groups_colors(k)
+  dendextend::labels_colors(dend) <- groups_colors(k)
   dend <- dend %>% 
-    color_branches(k = k, col = groups_colors(k)) %>% 
-    set("branches_lwd", 0.4)
+    dendextend::color_branches(k = k, col = groups_colors(k)) %>% 
+    dendextend::set("branches_lwd", 0.4)
   ## Generate plot
-  dend <- as.ggdend(dend)
+  dend <- dendextend::as.ggdend(dend)
   margin <- ifelse(k>=7, 0, 0.175 - k * 0.025)
   title_size <- ifelse(is.null(text_size), 10, text_size)
-  g <- ggplot(dend, nodes = FALSE) + scale_y_continuous(breaks = NULL) +
-      ggtitle(paste0("NA : ", na_n, " (", na_prop, "%)")) +
-      theme(plot.margin = grid::unit(c(0.05,margin,0,margin), "npc"),
-            plot.title = element_text(hjust = 0.5, size = title_size))
+  g <- ggplot(dend, nodes = FALSE) + 
+    scale_y_continuous(breaks = NULL) +
+    ggtitle(paste0("NA : ", na_n, " (", na_prop, "%)")) +
+    theme(plot.margin = grid::unit(c(0.05,margin,0,margin), "npc"),
+          plot.title = element_text(hjust = 0.5, size = title_size))
   plots[[1]] <- g
   
   
