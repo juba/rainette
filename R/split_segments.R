@@ -121,9 +121,9 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
   use_multicore <- corpus_length > 10000000
   
   if (use_multicore) {
-    message("Splitting in parallel (please wait while R sessions start)...")    
+    message("  Splitting in parallel (please wait while R sessions start)...")    
   } else {
-    message("Splitting...")
+    message("  Splitting...")
   }
   
   progressr::with_progress({
