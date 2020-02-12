@@ -160,6 +160,8 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
     as.data.frame %>% 
     tibble::column_to_rownames("segment_id")
   
+  message("  Done.")
+  
   corpus
   
 }
