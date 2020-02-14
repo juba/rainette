@@ -163,6 +163,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
 #' Internal function, not to be used directly
 #' 
 #' @return ordered list of document indices
+#' @importFrom Matrix tcrossprod
 
 docs_order_by_ca <- function(dtm) {
   
