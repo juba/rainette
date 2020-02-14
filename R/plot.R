@@ -161,6 +161,7 @@ keyness_plots <- function(tabs, groups, type = "bar",
 #' }
 #' 
 #' @import ggplot2
+#' @import dendextend
 
 rainette_plot <- function(res, dtm, k = NULL, 
                           type = c("bar", "cloud"), n_terms = 15, 
@@ -211,12 +212,12 @@ rainette_plot <- function(res, dtm, k = NULL,
     for (i in nrow(res$merge):(k)) {
       dend <- dend %>% dendextend::prune(as.character(i))
     }
-    dendextend::labels(dend) <- 1:k
+    dend <- dendextend::set(dend, "labels", 1:k)
   }
   ## Style labels and branches
   dendextend::labels_colors(dend) <- groups_colors(k)
   dend <- dend %>% 
-    dendextend::color_branches(k = k, col = groups_colors(k)) %>% 
+    dendextend::set("color_branches", k = k, col = groups_colors(k)) %>% 
     dendextend::set("branches_lwd", 0.4)
   ## Generate plot
   dend <- dendextend::as.ggdend(dend)
