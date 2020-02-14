@@ -20,6 +20,7 @@ Imports:
     ggplot2,
     stringr,
     quanteda (>= 1.5),
+    RSpectra,
     dendextend,
     ggwordcloud,
     gridExtra,
@@ -31,7 +32,10 @@ Imports:
     highr,
     future,
     future.apply,
-    progressr
+    progressr,
+    Rcpp (>= 1.0.3),
+    RcppEigen,
+    Matrix
 Suggests: 
     testthat,
     knitr,
@@ -42,4 +46,5 @@ Suggests:
     FNN
 Roxygen: list(markdown = TRUE)    
 RoxygenNote: 7.0.2
+LinkingTo: Rcpp, RcppEigen
 

@@ -13,4 +13,5 @@ tests_iramuteq.R
 _pkgdown.yml
 docs/
 pkgdown/
-^\.github/workflows/R-CMD-check\.yaml$
+\.github/
+src/*.INACTIVE
