@@ -380,8 +380,7 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   ## First step : CA partition
 
   ## Remove documents with zero terms
-  rs <- rowSums(dtm) > 0
-  dtm <- dtm[rs,]
+  dtm <- dtm[rowSums(dtm) > 0,]
     
   indices <- docs_order_by_ca(dtm)
   
