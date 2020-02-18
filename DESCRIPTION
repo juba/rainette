@@ -34,8 +34,7 @@ Imports:
     future.apply,
     progressr,
     Rcpp (>= 1.0.3),
-    RcppEigen,
-    Matrix
+    RcppEigen
 Suggests: 
     testthat,
     knitr,

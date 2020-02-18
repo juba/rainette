@@ -157,22 +157,21 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
 
 #' return documents indices ordered by CA first axis coordinates
 #'
-#' @param dtm dmt on which to compute the CA and order documents
+#' @param dtm dtm on which to compute the CA and order documents, converted to a matrix.
 #' 
 #' @details
 #' Internal function, not to be used directly
 #' 
 #' @return ordered list of document indices
-#' @importFrom Matrix tcrossprod
 
-docs_order_by_ca <- function(dtm) {
+docs_order_by_ca <- function(m) {
   
   ## Compute first factor of CA on DTM
   ## Code taken from getAnywhere(textmodel_ca.dfm)
-  P <- dtm / sum(dtm)
+  P <- m / sum(m)
   rm <- rowSums(P)
   cm <- colSums(P)
-  eP <- Matrix::tcrossprod(rm, cm)
+  eP <- tcrossprod(rm, cm)
   S <- (P - eP)/sqrt(eP)
   dec <- RSpectra::svds(S, 1)
   coord <- dec$u[, 1]/sqrt(rm)
@@ -182,50 +181,6 @@ docs_order_by_ca <- function(dtm) {
   
   return(indices)
 }
-
-
-#' Split a dtm in two according to the chi-square value between the two aggregated tables
-#'
-#' @param tab dtm to be split
-#' @param indices documents indices ordered by CA first axis coordinate
-#' 
-#' @details
-#' Internal function, not to be used directly
-#'
-#' @return a list with the index of the document where the split generates a maximum chi-square,
-#' and the corresponding max chi-square value
-
-split_tab_by_chisq <- function(tab, indices) {
-  
-  ## Precompute row sums et total
-  row_sum <- rowSums(tab)
-  total <- sum(tab)
-  
-  ## First iteration
-  ## Compute first aggregate table
-  tab1 <- rowSums(tab[,indices[1], drop = FALSE])
-  tab2 <- rowSums(tab[,indices[-1]])
-  ## Initialize chisquared and index
-  max_chisq <- fchisq_val(tab1, tab2, row_sum, total)
-  max_index <- indices[1]
-  
-  ## For each index (ordered by first factor coordinates)
-  for (index in indices[2:(length(indices) - 1)]) {
-    ## Recompute aggregate table for both groups
-    tab1 <- tab1 + tab[,index]
-    tab2 <- tab2 - tab[,index]
-    ## Compute chi squared of aggregate table and compare
-    chisq <- fchisq_val(tab1, tab2, row_sum, total)
-    if (chisq > max_chisq) {
-      max_chisq <- chisq
-      max_index <- index
-    }
-  }
-  
-  return(list(max_index = max_index,
-              max_chisq = max_chisq))
-}
-
 
 
 #' Switch documents between two groups to maximize chi-square value
@@ -247,49 +202,51 @@ switch_docs_by_chisq <- function(tab, indices, max_index, max_chisq) {
   ## Group indices and tabs  
   group1 <- indices[1:which(indices == max_index)]
   group2 <- indices[(which(indices == max_index) + 1):length(indices)]
-  tab1 <- rowSums(tab[,group1, drop = FALSE])
-  tab2 <- rowSums(tab[,group2, drop = FALSE])
-  row_sum <- rowSums(tab)
-  total <- sum(tab)
+  tab1 <- colSums(tab[group1, , drop = FALSE])
+  tab2 <- colSums(tab[group2, , drop = FALSE])
+  col_sum <- tab1 + tab2
+  total <- sum(col_sum)
   chisq <- max_chisq
-  switched <- 1
+  switched <- TRUE
 
   ## Run while points are switched
-  while(switched > 0) {
+  while(switched) {
     
-    switched <- 0
+    switched <- FALSE
 
-    ## For each point
-    for (index in indices) {
-      index_1 <- index %in% group1
-      ## Switch current element
-      if (index_1) {
-        tab1_new <- tab1 - tab[,index]
-        tab2_new <- tab2 + tab[,index]
-      } else {
-        tab1_new <- tab1 + tab[,index]
-        tab2_new <- tab2 - tab[,index]
-      }
-      ## Compute new chi-squared
-      chisq_new <- fchisq_val(tab1_new, tab2_new, row_sum, total)
-      ## Compare
+    ## For each point in group 1
+    for (index in group1) {
+      tab1_new <- tab1 - tab[index, , drop = FALSE]
+      tab2_new <- tab2 + tab[index, , drop = FALSE]
+      chisq_new <- eigen_chisq(tab1_new, tab2_new, col_sum, total)
+      ## Compare chisq before and after switch
       ## chisq_new can be NaN if one of tab1 or tab2 is only zeros
       if (!is.nan(chisq_new) && chisq_new > chisq) {
-        if (index_1) {
-          group1 <- group1[-which(group1 == index)] 
-          group2 <- c(group2, index)
-        } else {
-          group1 <- c(group1, index)
-          group2 <- group2[-which(group2 == index)] 
-        }
+        group1 <- group1[-which(group1 == index)] 
+        group2 <- c(group2, index)
         tab1 <- tab1_new
         tab2 <- tab2_new
         chisq <- chisq_new
-        switched <- switched + 1
+        switched <- TRUE
       }
     }
-  }
+    ## For each point in group 1
+    for (index in group2) {
+      tab1_new <- tab1 + tab[index,]
+      tab2_new <- tab2 - tab[index,]
+      chisq_new <- eigen_chisq(tab1_new, tab2_new, col_sum, total)
+      if (!is.nan(chisq_new) && chisq_new > chisq) {
+        group1 <- c(group1, index)
+        group2 <- group2[-which(group2 == index)] 
+        tab1 <- tab1_new
+        tab2 <- tab2_new
+        chisq <- chisq_new
+        switched <- TRUE
+      }
+    }
   
+  }    
+
   return(list(indices1 = group1, 
     indices2 = group2, 
     chisq = chisq))
@@ -314,20 +271,20 @@ switch_docs_by_chisq <- function(tab, indices, max_index, max_chisq) {
 features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) {
   
   ## features count for each group
-  tab1 <- rowSums(tab[, indices1, drop = FALSE])
-  tab2 <- rowSums(tab[, indices2, drop = FALSE])
+  tab1 <- colSums(tab[indices1, , drop = FALSE])
+  tab2 <- colSums(tab[indices2, , drop = FALSE])
   ## Total number of features in each group
   nfeat_group1 <- sum(tab1)
   nfeat_group2 <- sum(tab2)
   ## Observed frequency of features
-  observed <- cbind(tab1, tab2)
+  observed <- rbind(tab1, tab2)
   ## Expected frequency of features
   expected_prop <- (tab1 + tab2) / sum(tab1 + tab2)
-  expected <- cbind(expected_prop * nfeat_group1, expected_prop * nfeat_group2)
+  expected <- rbind(expected_prop * nfeat_group1, expected_prop * nfeat_group2)
   ## Chi2 and contingency coefficients for each feature
-  feat_chisq <- rowSums((observed - expected)^2 / expected)
+  feat_chisq <- colSums((observed - expected)^2 / expected)
   ## C contingency coefficient, sqrt(khi2 / (khi2 + N))
-  feat_cc <- sqrt(feat_chisq / (feat_chisq + rowSums(observed)))
+  feat_cc <- sqrt(feat_chisq / (feat_chisq + colSums(observed)))
 
   ## Features selection
   cols1 <- character()
@@ -346,10 +303,10 @@ features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) 
     ## If cc > cc_test, only keep feature in the group
     ## where observed frequency > expected frequency
     if (cc > cc_test) {
-      if (tab1[i] > expected[i, 1] && tab1[i] >= tsj) {
+      if (tab1[i] > expected[1, i] && tab1[i] >= tsj) {
         cols1 <- c(cols1, name)
       }
-      if (tab2[i] > expected[i, 2] && tab2[i] >= tsj) {
+      if (tab2[i] > expected[2, i] && tab2[i] >= tsj) {
         cols2 <- c(cols2, name)
       }
     }
@@ -376,35 +333,29 @@ features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) 
 
 
 cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
-  
-  ## First step : CA partition
 
   ## Remove documents with zero terms
   dtm <- dtm[rowSums(dtm) > 0,]
-    
-  indices <- docs_order_by_ca(dtm)
+  m <- convert(dtm, to = "matrix")
+  storage.mode(m) <- "integer"
   
-  ## Transpose and convert DTM to ease computations
-  tab <- dtm %>% 
-    convert(to = "data.frame")
-  tab <- tab[, -1] %>% 
-      t %>% 
-      as.data.frame
- 
-  res <- split_tab_by_chisq(tab, indices)
+  ## First step : CA partition
+
+  indices <- docs_order_by_ca(m)
+  res <- eigen_split_tab_by_chisq(m, indices)
   max_index <- res$max_index
   max_chisq <- res$max_chisq
 
   ## Second step : switching docs
   
-  res <- switch_docs_by_chisq(tab, indices, max_index, max_chisq)
+  res <- switch_docs_by_chisq(m, indices, max_index, max_chisq)
   indices1 <- res$indices1
   indices2 <- res$indices2
   chisq <- res$chisq
   
   ## Third step : features selection
   
-  res <- features_selection(tab, indices1, indices2, cc_test, tsj)
+  res <- features_selection(m, indices1, indices2, cc_test, tsj)
   cols1 <- res$cols1
   cols2 <- res$cols2
   

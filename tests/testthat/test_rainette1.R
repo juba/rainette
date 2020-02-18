@@ -2,13 +2,13 @@ library(quanteda)
 context("simple reinert classification")
 
 m <- matrix(
-  c(1,1,1,0,0,
-    0,0,1,1,0,
-    1,0,0,0,0,
-    1,1,1,1,0,
-    1,1,1,1,1,
-    1,0,0,0,0,
-    1,1,1,0,0
+  c(1L,1L,1L,0L,0L,
+    0L,0L,1L,1L,0L,
+    1L,0L,0L,0L,0L,
+    1L,1L,1L,1L,0L,
+    1L,1L,1L,1L,1L,
+    1L,0L,0L,0L,0L,
+    1L,1L,1L,0L,0L
     ),
   ncol = 5,
   byrow = TRUE,
@@ -27,24 +27,21 @@ test_that("doc_order_by_ca results are ok", {
 
 ## split_tab_by_chisq
  
-tab <- mini_dfm %>% 
-  convert(to = "data.frame")
-tab <- tab[, -1] %>% 
-  t %>% 
-  as.data.frame
-res_split <- rainette:::split_tab_by_chisq(tab, indices)
+tab <- convert(mini_dfm, to = "matrix")
+storage.mode(tab) <- "integer"
+res_split <- rainette:::eigen_split_tab_by_chisq(m, indices)
 
 test_that("split_tab_by_chisq results are ok", {
   manual_res <- data.frame(index = -1, chisq = -1)
-  for (i in 2:5) {
-    tab1 <- tab[, indices[1:i], drop = FALSE]
-    tab2 <- tab[, indices[(i + 1):7, drop = FALSE]]
-    expect_warning(chisq <- chisq.test(cbind(rowSums(tab1), rowSums(tab2)))$statistic)
+  for (i in 1:6) {
+    tab1 <- m[indices[1:i],,drop=FALSE]
+    tab2 <- m[indices[(i + 1):7],,drop=FALSE]
+    expect_warning(chisq <- chisq.test(rbind(colSums(tab1), colSums(tab2)))$statistic)
     manual_res <- rbind(manual_res, c(index = indices[i], chisq = chisq))
   }
   max <- which.max(manual_res$chisq)
   expect_equal(res_split$max_index, manual_res$index[max])
-  expect_equal(res_split$max_chisq, manual_res$chisq[max])
+  expect_equal(res_split$max_chisq, manual_res$chisq[max], tolerance = 1e-06)
 })
 
 ## switch_docs_by_chisq

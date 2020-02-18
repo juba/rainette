@@ -6,47 +6,36 @@
 
 using namespace Rcpp;
 
-// eigen_colsums
-Eigen::VectorXi eigen_colsums(const Eigen::Map<Eigen::MatrixXi> M);
-RcppExport SEXP _rainette_eigen_colsums(SEXP MSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXi> >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(eigen_colsums(M));
-    return rcpp_result_gen;
-END_RCPP
-}
-// eigen_rowsums
-Eigen::VectorXi eigen_rowsums(const Eigen::Map<Eigen::MatrixXi> M);
-RcppExport SEXP _rainette_eigen_rowsums(SEXP MSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXi> >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(eigen_rowsums(M));
-    return rcpp_result_gen;
-END_RCPP
-}
 // eigen_chisq
-double eigen_chisq(Eigen::Map<Eigen::VectorXi> T1, Eigen::Map<Eigen::VectorXi> T2, Eigen::Map<Eigen::VectorXi> RowSum, int n);
+float eigen_chisq(Eigen::VectorXi T1, Eigen::VectorXi T2, Eigen::VectorXi RowSum, int n);
 RcppExport SEXP _rainette_eigen_chisq(SEXP T1SEXP, SEXP T2SEXP, SEXP RowSumSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Eigen::Map<Eigen::VectorXi> >::type T1(T1SEXP);
-    Rcpp::traits::input_parameter< Eigen::Map<Eigen::VectorXi> >::type T2(T2SEXP);
-    Rcpp::traits::input_parameter< Eigen::Map<Eigen::VectorXi> >::type RowSum(RowSumSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type T1(T1SEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type T2(T2SEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type RowSum(RowSumSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     rcpp_result_gen = Rcpp::wrap(eigen_chisq(T1, T2, RowSum, n));
     return rcpp_result_gen;
 END_RCPP
 }
+// eigen_split_tab_by_chisq
+List eigen_split_tab_by_chisq(Eigen::MatrixXi tab, Eigen::VectorXi indices);
+RcppExport SEXP _rainette_eigen_split_tab_by_chisq(SEXP tabSEXP, SEXP indicesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::MatrixXi >::type tab(tabSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type indices(indicesSEXP);
+    rcpp_result_gen = Rcpp::wrap(eigen_split_tab_by_chisq(tab, indices));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rainette_eigen_colsums", (DL_FUNC) &_rainette_eigen_colsums, 1},
-    {"_rainette_eigen_rowsums", (DL_FUNC) &_rainette_eigen_rowsums, 1},
     {"_rainette_eigen_chisq", (DL_FUNC) &_rainette_eigen_chisq, 4},
+    {"_rainette_eigen_split_tab_by_chisq", (DL_FUNC) &_rainette_eigen_split_tab_by_chisq, 2},
     {NULL, NULL, 0}
 };
 
