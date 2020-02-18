@@ -4,10 +4,10 @@
 \alias{docs_order_by_ca}
 \title{return documents indices ordered by CA first axis coordinates}
 \usage{
-docs_order_by_ca(dtm)
+docs_order_by_ca(m)
 }
 \arguments{
-\item{dtm}{dmt on which to compute the CA and order documents}
+\item{dtm}{dtm on which to compute the CA and order documents, converted to a matrix.}
 }
 \value{
 ordered list of document indices
