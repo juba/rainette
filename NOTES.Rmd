@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
-- Accélérer découpage en segments
 - Regarder / implémenter ce qui est décrit dans Ratinaud_JADT2018
 
 # Notes Iramuteq
@@ -196,3 +195,48 @@ Bugs possibles dans certains cas particuliers : voir `tests_iramuteq.R`
 
 Description de la double classification : p. 40 de *Alceste, une méthodologie d'analyse des données textuelles et une application (1990)*.
 
+# Cave
+
+Contenu de `arma.cpp` :
+
+```{cpp}
+#define RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR
+#include <RcppArmadillo.h>
+
+
+using namespace Rcpp;
+
+// [[Rcpp::depends(RcppArmadillo)]]
+
+
+//' @export
+// [[Rcpp::export]]
+IntegerVector arma_colsums(const arma::imat& M) {
+  const arma::irowvec sum = arma::sum(M, 0);
+  return IntegerVector(sum.begin(), sum.end());
+}
+
+//' @export
+// [[Rcpp::export]]
+IntegerVector arma_rowsums(const arma::imat& M) {
+  const arma::icolvec sum =  arma::sum(M, 1);
+  return IntegerVector(sum.begin(), sum.end());
+}
+
+
+//' @export
+// [[Rcpp::export]]
+double arma_chisq(
+  arma::ivec& T1,
+  arma::ivec& T2,
+  arma::ivec& RowSum,
+  int n
+) {
+  int vecLen = T1.size();
+  arma::imat m = arma::join_rows(T1, T2);
+  const arma::irowvec ColSum = arma::sum(m, 0);
+  const arma::mat E = arma::conv_to<arma::mat>::from(RowSum * ColSum) / n;
+  const arma::mat diff = pow(arma::conv_to<arma::mat>::from(m) - E, 2) / E;
+  return accu(diff);
+}
+```
