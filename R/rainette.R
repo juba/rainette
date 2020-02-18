@@ -232,8 +232,8 @@ switch_docs_by_chisq <- function(tab, indices, max_index, max_chisq) {
     }
     ## For each point in group 1
     for (index in group2) {
-      tab1_new <- tab1 + tab[index,]
-      tab2_new <- tab2 - tab[index,]
+      tab1_new <- tab1 + tab[index, , drop = FALSE]
+      tab2_new <- tab2 - tab[index, , drop = FALSE]
       chisq_new <- eigen_chisq(tab1_new, tab2_new, col_sum, total)
       if (!is.nan(chisq_new) && chisq_new > chisq) {
         group1 <- c(group1, index)
