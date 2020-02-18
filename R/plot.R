@@ -217,7 +217,7 @@ rainette_plot <- function(res, dtm, k = NULL,
   ## Style labels and branches
   dendextend::labels_colors(dend) <- groups_colors(k)
   dend <- dend %>% 
-    dendextend::set("color_branches", k = k, col = groups_colors(k)) %>% 
+    dendextend::color_branches(k = k, col = groups_colors(k)) %>% 
     dendextend::set("branches_lwd", 0.4)
   ## Generate plot
   dend <- dendextend::as.ggdend(dend)
