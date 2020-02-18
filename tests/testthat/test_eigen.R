@@ -16,17 +16,6 @@ m <- matrix(
 mini_dfm <- as.dfm(m)
 mini_dfm@docvars <- data.frame(rainette_uce_id = 1:nrow(mini_dfm))
 
-# colsums and rowsums
-
-test_that("eigen_colsums and eigen_rowsums", {
-  expect_equal(eigen_colsums(m), colSums(m))
-  expect_equal(eigen_rowsums(m), rowSums(m))
-  m2 <- matrix(sample(0:100, 100), nrow = 10)
-  expect_equal(eigen_colsums(m2), colSums(m2))
-  expect_equal(eigen_rowsums(m2), rowSums(m2))
-})
-
-
 # fchisq_val
 
 test_that("eigen_chisq", {
