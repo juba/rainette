@@ -7,7 +7,7 @@
 docs_order_by_ca(m)
 }
 \arguments{
-\item{dtm}{dtm on which to compute the CA and order documents, converted to a matrix.}
+\item{m}{dtm on which to compute the CA and order documents, converted to an integer matrix.}
 }
 \value{
 ordered list of document indices

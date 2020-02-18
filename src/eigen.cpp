@@ -5,8 +5,7 @@
 
 using namespace Rcpp;
 
-
-//' @export
+// Fast chi-square computation
 // [[Rcpp::export]]
 float eigen_chisq(
     Eigen::VectorXi T1, 
@@ -25,7 +24,7 @@ float eigen_chisq(
 }
 
 
-//' @export
+// Split a Matrix at max chi-squared 
 // [[Rcpp::export]]
 List eigen_split_tab_by_chisq(
   Eigen::MatrixXi tab,
@@ -35,6 +34,7 @@ List eigen_split_tab_by_chisq(
   int total = tab.sum();
   indices = indices.array() - 1;
   
+  // Initialisation
   int index = indices(0);
   Eigen::Matrix<int, 1, Eigen::Dynamic> tab1 = tab.row(index);
   Eigen::Matrix<int, 1, Eigen::Dynamic> tab2_1 = (tab.topRows(index)).colwise().sum();
@@ -45,6 +45,7 @@ List eigen_split_tab_by_chisq(
   float max_index = index + 1;
   float max_chisq = chisq;
 
+  // Compute chi-squared values for each index and keep the maxima
   for (int i = 1; i < indices.size(); i = i + 1) {
     index = indices(i);
     tab1 = tab1 + tab.row(index);

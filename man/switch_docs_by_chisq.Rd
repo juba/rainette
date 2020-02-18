@@ -11,9 +11,9 @@ switch_docs_by_chisq(tab, indices, max_index, max_chisq)
 
 \item{indices}{documents indices orderes by first CA axis coordinates}
 
-\item{max_index}{document index where the split is maximum, computed with \code{\link[=split_tab_by_chisq]{split_tab_by_chisq()}}}
+\item{max_index}{document index where the split is maximum}
 
-\item{max_chisq}{maximum chi-square value computed by \code{\link[=split_tab_by_chisq]{split_tab_by_chisq()}}}
+\item{max_chisq}{maximum chi-square value}
 }
 \value{
 a list of two vectors \code{indices1} and \code{indices2}, which contain

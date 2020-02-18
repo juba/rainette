@@ -157,7 +157,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
 
 #' return documents indices ordered by CA first axis coordinates
 #'
-#' @param dtm dtm on which to compute the CA and order documents, converted to a matrix.
+#' @param m dtm on which to compute the CA and order documents, converted to an integer matrix.
 #' 
 #' @details
 #' Internal function, not to be used directly
@@ -187,8 +187,8 @@ docs_order_by_ca <- function(m) {
 #'
 #' @param tab original dtm
 #' @param indices documents indices orderes by first CA axis coordinates
-#' @param max_index document index where the split is maximum, computed with [split_tab_by_chisq()]
-#' @param max_chisq maximum chi-square value computed by [split_tab_by_chisq()]
+#' @param max_index document index where the split is maximum
+#' @param max_chisq maximum chi-square value 
 #' 
 #' @details
 #' Internal function, not to be used directly
