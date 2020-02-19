@@ -64,6 +64,43 @@ List eigen_split_tab(
 }
 
 
+// Switch rows to maximize chi-square
+// [[Rcpp::export]]
+Eigen::VectorXf eigen_switch_docs(
+    Eigen::MatrixXi tab1,
+    Eigen::MatrixXi tab2) {
+  int n1 = tab1.rows();
+  int n2 = tab2.rows();
+  Eigen::Matrix<int, 1, Eigen::Dynamic> tab1Sum = tab1.colwise().sum();
+  Eigen::Matrix<int, 1, Eigen::Dynamic> tab2Sum = tab2.colwise().sum();
+  Eigen::VectorXi colSum = tab1Sum + tab2Sum;
+  int total = colSum.sum();
+  
+  Eigen::VectorXf chisq_values;
+  chisq_values.resize(n1 + n2);
+  Eigen::Matrix<int, 1, Eigen::Dynamic> tab1Sum_new;
+  Eigen::Matrix<int, 1, Eigen::Dynamic> tab2Sum_new;
+  int i1, i2, index;
+  
+  for (i1 = 0; i1 < n1; i1 = i1 + 1) {
+    tab1Sum_new = tab1Sum - tab1.row(i1);
+    tab2Sum_new = tab2Sum + tab1.row(i1);
+    chisq_values(i1) = eigen_chisq(tab1Sum_new, tab2Sum_new, colSum, total);
+  }
+  for (i2 = 0; i2 < n2; i2 = i2 + 1) {
+    tab1Sum_new = tab1Sum + tab2.row(i2);
+    tab2Sum_new = tab2Sum - tab2.row(i2);
+    index = n1 + i2;
+    if (index < (chisq_values.size())) {
+      chisq_values(index) = eigen_chisq(tab1Sum_new, tab2Sum_new, colSum, total);
+    } else {
+      Rcpp::stop("chisq_value assignment error");
+    }
+  }
+
+  return chisq_values;
+}
+
 
 
 // Pas utilisé : pas utile

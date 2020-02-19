@@ -4,10 +4,10 @@
 \alias{switch_docs}
 \title{Switch documents between two groups to maximize chi-square value}
 \usage{
-switch_docs(tab, indices, max_index, max_chisq)
+switch_docs(m, indices, max_index, max_chisq)
 }
 \arguments{
-\item{tab}{original dtm}
+\item{m}{original dtm}
 
 \item{indices}{documents indices orderes by first CA axis coordinates}
 

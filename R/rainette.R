@@ -90,6 +90,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
         k <- i
         break
       }
+
       clusters <- cluster_tab(tab, cc_test = cc_test, tsj = tsj,...)
       p()
 
@@ -185,7 +186,7 @@ order_docs <- function(m) {
 
 #' Switch documents between two groups to maximize chi-square value
 #'
-#' @param tab original dtm
+#' @param m original dtm
 #' @param indices documents indices orderes by first CA axis coordinates
 #' @param max_index document index where the split is maximum
 #' @param max_chisq maximum chi-square value 
@@ -197,65 +198,48 @@ order_docs <- function(m) {
 #' the documents indices of each group after documents switching, and a `chisq` value,
 #' the new corresponding chi-square value after switching
 
-switch_docs <- function(tab, indices, max_index, max_chisq) {
+switch_docs <- function(m, indices, max_index, max_chisq) {
 
   ## Group indices and tabs  
   group1 <- indices[1:which(indices == max_index)]
   group2 <- indices[(which(indices == max_index) + 1):length(indices)]
-  tab1 <- colSums(tab[group1, , drop = FALSE])
-  tab2 <- colSums(tab[group2, , drop = FALSE])
-  col_sum <- tab1 + tab2
-  total <- sum(col_sum)
-  chisq <- max_chisq
+
   switched <- TRUE
 
   ## Run while points are switched
   while(switched) {
-    
+
     switched <- FALSE
+    
+    tab1 <- m[group1, , drop = FALSE]
+    tab2 <- m[group2, , drop = FALSE]
 
-    ## For each point in group 1
-    for (index in group1) {
-      tab1_new <- tab1 - tab[index, , drop = FALSE]
-      tab2_new <- tab2 + tab[index, , drop = FALSE]
-      chisq_new <- eigen_chisq(tab1_new, tab2_new, col_sum, total)
-      ## Compare chisq before and after switch
-      ## chisq_new can be NaN if one of tab1 or tab2 is only zeros
-      if (!is.nan(chisq_new) && chisq_new > chisq) {
-        group1 <- group1[-which(group1 == index)] 
-        group2 <- c(group2, index)
-        tab1 <- tab1_new
-        tab2 <- tab2_new
-        chisq <- chisq_new
-        switched <- TRUE
+    chisq_values <- rainette:::eigen_switch_docs(tab1, tab2)
+    current_max <- max(chisq_values, na.rm = TRUE)
+    
+    if (current_max > max_chisq) {
+      switched <- TRUE
+      to_switch <- indices[which.max(chisq_values)]
+      if (to_switch %in% group1) {
+        group1 <- group1[group1 != to_switch]
+        group2 <- c(group2, to_switch)
+      } else {
+        group2 <- group2[group2 != to_switch]
+        group1 <- c(group1, to_switch)
       }
+      max_chisq <- current_max
     }
-    ## For each point in group 1
-    for (index in group2) {
-      tab1_new <- tab1 + tab[index, , drop = FALSE]
-      tab2_new <- tab2 - tab[index, , drop = FALSE]
-      chisq_new <- eigen_chisq(tab1_new, tab2_new, col_sum, total)
-      if (!is.nan(chisq_new) && chisq_new > chisq) {
-        group1 <- c(group1, index)
-        group2 <- group2[-which(group2 == index)] 
-        tab1 <- tab1_new
-        tab2 <- tab2_new
-        chisq <- chisq_new
-        switched <- TRUE
-      }
-    }
+  }
   
-  }    
-
   return(list(indices1 = group1, 
     indices2 = group2, 
-    chisq = chisq))
+    chisq = max_chisq))
 }
 
 
 #' Remove features from dtm of each group base don cc_test and tsj
 #'
-#' @param tab global dtm
+#' @param m global dtm
 #' @param indices1 indices of documents of group 1
 #' @param indices2 indices of documents of group 2
 #' @param cc_test maximum contingency coefficient value for the 
@@ -268,11 +252,11 @@ switch_docs <- function(tab, indices, max_index, max_chisq) {
 #' @return a list of two character vectors : `cols1` is the name of features to 
 #' keep in group 1, `cols2` the name of features to keep in group 2
 
-select_features <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) {
+select_features <- function(m, indices1, indices2, cc_test = 0.3, tsj = 3) {
   
   ## features count for each group
-  tab1 <- colSums(tab[indices1, , drop = FALSE])
-  tab2 <- colSums(tab[indices2, , drop = FALSE])
+  tab1 <- colSums(m[indices1, , drop = FALSE])
+  tab2 <- colSums(m[indices2, , drop = FALSE])
   ## Total number of features in each group
   nfeat_group1 <- sum(tab1)
   nfeat_group2 <- sum(tab2)
@@ -352,7 +336,7 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   indices1 <- res$indices1
   indices2 <- res$indices2
   chisq <- res$chisq
-  
+
   ## Third step : features selection
   
   res <- select_features(m, indices1, indices2, cc_test, tsj)

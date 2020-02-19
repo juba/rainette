@@ -9,3 +9,7 @@ eigen_split_tab <- function(tab, indices) {
     .Call('_rainette_eigen_split_tab', PACKAGE = 'rainette', tab, indices)
 }
 
+eigen_switch_docs <- function(tab1, tab2) {
+    .Call('_rainette_eigen_switch_docs', PACKAGE = 'rainette', tab1, tab2)
+}
+

@@ -4,10 +4,10 @@
 \alias{select_features}
 \title{Remove features from dtm of each group base don cc_test and tsj}
 \usage{
-select_features(tab, indices1, indices2, cc_test = 0.3, tsj = 3)
+select_features(m, indices1, indices2, cc_test = 0.3, tsj = 3)
 }
 \arguments{
-\item{tab}{global dtm}
+\item{m}{global dtm}
 
 \item{indices1}{indices of documents of group 1}
 

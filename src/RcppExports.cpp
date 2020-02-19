@@ -32,10 +32,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// eigen_switch_docs
+Eigen::VectorXf eigen_switch_docs(Eigen::MatrixXi tab1, Eigen::MatrixXi tab2);
+RcppExport SEXP _rainette_eigen_switch_docs(SEXP tab1SEXP, SEXP tab2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::MatrixXi >::type tab1(tab1SEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXi >::type tab2(tab2SEXP);
+    rcpp_result_gen = Rcpp::wrap(eigen_switch_docs(tab1, tab2));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rainette_eigen_chisq", (DL_FUNC) &_rainette_eigen_chisq, 4},
     {"_rainette_eigen_split_tab", (DL_FUNC) &_rainette_eigen_split_tab, 2},
+    {"_rainette_eigen_switch_docs", (DL_FUNC) &_rainette_eigen_switch_docs, 2},
     {NULL, NULL, 0}
 };
 
