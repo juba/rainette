@@ -164,7 +164,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
 #' 
 #' @return ordered list of document indices
 
-docs_order_by_ca <- function(m) {
+order_docs <- function(m) {
   
   ## Compute first factor of CA on DTM
   ## Code taken from getAnywhere(textmodel_ca.dfm)
@@ -197,7 +197,7 @@ docs_order_by_ca <- function(m) {
 #' the documents indices of each group after documents switching, and a `chisq` value,
 #' the new corresponding chi-square value after switching
 
-switch_docs_by_chisq <- function(tab, indices, max_index, max_chisq) {
+switch_docs <- function(tab, indices, max_index, max_chisq) {
 
   ## Group indices and tabs  
   group1 <- indices[1:which(indices == max_index)]
@@ -268,7 +268,7 @@ switch_docs_by_chisq <- function(tab, indices, max_index, max_chisq) {
 #' @return a list of two character vectors : `cols1` is the name of features to 
 #' keep in group 1, `cols2` the name of features to keep in group 2
 
-features_selection <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) {
+select_features <- function(tab, indices1, indices2, cc_test = 0.3, tsj = 3) {
   
   ## features count for each group
   tab1 <- colSums(tab[indices1, , drop = FALSE])
@@ -341,21 +341,21 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   
   ## First step : CA partition
 
-  indices <- docs_order_by_ca(m)
-  res <- eigen_split_tab_by_chisq(m, indices)
+  indices <- order_docs(m)
+  res <- eigen_split_tab(m, indices)
   max_index <- res$max_index
   max_chisq <- res$max_chisq
 
   ## Second step : switching docs
   
-  res <- switch_docs_by_chisq(m, indices, max_index, max_chisq)
+  res <- switch_docs(m, indices, max_index, max_chisq)
   indices1 <- res$indices1
   indices2 <- res$indices2
   chisq <- res$chisq
   
   ## Third step : features selection
   
-  res <- features_selection(m, indices1, indices2, cc_test, tsj)
+  res <- select_features(m, indices1, indices2, cc_test, tsj)
   cols1 <- res$cols1
   cols2 <- res$cols2
   

@@ -20,22 +20,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// eigen_split_tab_by_chisq
-List eigen_split_tab_by_chisq(Eigen::MatrixXi tab, Eigen::VectorXi indices);
-RcppExport SEXP _rainette_eigen_split_tab_by_chisq(SEXP tabSEXP, SEXP indicesSEXP) {
+// eigen_split_tab
+List eigen_split_tab(Eigen::MatrixXi tab, Eigen::VectorXi indices);
+RcppExport SEXP _rainette_eigen_split_tab(SEXP tabSEXP, SEXP indicesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXi >::type tab(tabSEXP);
     Rcpp::traits::input_parameter< Eigen::VectorXi >::type indices(indicesSEXP);
-    rcpp_result_gen = Rcpp::wrap(eigen_split_tab_by_chisq(tab, indices));
+    rcpp_result_gen = Rcpp::wrap(eigen_split_tab(tab, indices));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rainette_eigen_chisq", (DL_FUNC) &_rainette_eigen_chisq, 4},
-    {"_rainette_eigen_split_tab_by_chisq", (DL_FUNC) &_rainette_eigen_split_tab_by_chisq, 2},
+    {"_rainette_eigen_split_tab", (DL_FUNC) &_rainette_eigen_split_tab, 2},
     {NULL, NULL, 0}
 };
 

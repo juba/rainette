@@ -5,7 +5,7 @@ eigen_chisq <- function(T1, T2, RowSum, n) {
     .Call('_rainette_eigen_chisq', PACKAGE = 'rainette', T1, T2, RowSum, n)
 }
 
-eigen_split_tab_by_chisq <- function(tab, indices) {
-    .Call('_rainette_eigen_split_tab_by_chisq', PACKAGE = 'rainette', tab, indices)
+eigen_split_tab <- function(tab, indices) {
+    .Call('_rainette_eigen_split_tab', PACKAGE = 'rainette', tab, indices)
 }
 

@@ -18,9 +18,9 @@ mini_dfm@docvars <- data.frame(rainette_uce_id = 1:nrow(mini_dfm))
 
 ## docs_order_by_ca
 
-indices <- rainette:::docs_order_by_ca(mini_dfm)
+indices <- rainette:::order_docs(mini_dfm)
 
-test_that("doc_order_by_ca results are ok", {
+test_that("order_docs", {
   expect_equal(order(quanteda::textmodel_ca(mini_dfm)$rowcoord[,1]),
                indices)
 })
@@ -29,9 +29,9 @@ test_that("doc_order_by_ca results are ok", {
  
 tab <- convert(mini_dfm, to = "matrix")
 storage.mode(tab) <- "integer"
-res_split <- rainette:::eigen_split_tab_by_chisq(m, indices)
+res_split <- rainette:::eigen_split_tab(m, indices)
 
-test_that("split_tab_by_chisq results are ok", {
+test_that("split_tab", {
   manual_res <- data.frame(index = -1, chisq = -1)
   for (i in 1:6) {
     tab1 <- m[indices[1:i],,drop=FALSE]
@@ -44,30 +44,30 @@ test_that("split_tab_by_chisq results are ok", {
   expect_equal(res_split$max_chisq, manual_res$chisq[max], tolerance = 1e-06)
 })
 
-## switch_docs_by_chisq
+## switch_docs
 
-test_that("switch_docs_by_chisq results are ok", {
+test_that("switch_docs", {
   ## Wrong max_index et max_chisq
   max_chisq <- 4.5
   max_index <- 1
-  res_switch <- rainette:::switch_docs_by_chisq(tab, indices, max_index, max_chisq)
+  res_switch <- rainette:::switch_docs(tab, indices, max_index, max_chisq)
   expect_equal(res_switch$indices1, c(3, 6))
   expect_equal(res_switch$indices2, c(7, 4, 5, 2, 1))
   expect_equal(res_switch$chisq, res_split$max_chisq)
 })
 
-## features_selection
+## select_features
 
-test_that("features_selection is ok", {
-  res_switch <- rainette:::switch_docs_by_chisq(tab, indices, res_split$max_index, res_split$max_chisq)
+test_that("select_features is ok", {
+  res_switch <- rainette:::switch_docs(tab, indices, res_split$max_index, res_split$max_chisq)
   indices1 <- res_switch$indices1
   indices2 <- res_switch$indices2
-  res <- rainette:::features_selection(tab, indices1, indices2)
+  res <- rainette:::select_features(tab, indices1, indices2)
   expect_equal(res$cols1, character(0))
   expect_equal(res$cols2, c("feat2", "feat3", "feat4"))
   indices1 <- c(4, 3, 5, 6, 2)
   indices2 <- c(7, 1)
-  res <- rainette:::features_selection(tab, indices1, indices2)
+  res <- rainette:::select_features(tab, indices1, indices2)
   expect_equal(res$cols1, c("feat1", "feat3", "feat4"))
   expect_equal(res$cols2, character(0))
 })

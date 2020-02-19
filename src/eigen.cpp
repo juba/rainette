@@ -5,6 +5,7 @@
 
 using namespace Rcpp;
 
+
 // Fast chi-square computation
 // [[Rcpp::export]]
 float eigen_chisq(
@@ -26,7 +27,7 @@ float eigen_chisq(
 
 // Split a Matrix at max chi-squared 
 // [[Rcpp::export]]
-List eigen_split_tab_by_chisq(
+List eigen_split_tab(
   Eigen::MatrixXi tab,
   Eigen::VectorXi indices) {
   
@@ -61,6 +62,8 @@ List eigen_split_tab_by_chisq(
   return List::create(Named("max_index") = max_index,
 		      Named("max_chisq") = max_chisq);
 }
+
+
 
 
 // Pas utilisé : pas utile
