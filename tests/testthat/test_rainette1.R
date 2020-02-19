@@ -58,7 +58,7 @@ test_that("switch_docs", {
 
 ## select_features
 
-test_that("select_features is ok", {
+test_that("select_features", {
   res_switch <- rainette:::switch_docs(tab, indices, res_split$max_index, res_split$max_chisq)
   indices1 <- res_switch$indices1
   indices2 <- res_switch$indices2
@@ -74,7 +74,7 @@ test_that("select_features is ok", {
 
 ## rainette
 
-test_that("rainette on mini_dfm is ok", {
+test_that("rainette on mini_dfm", {
   res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 1)
   expect_is(res, c("rainette", "hclust"))
   expect_equal(res$group, c(2, 2, 1, 2, 2, 1, 2))
