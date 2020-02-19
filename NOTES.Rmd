@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TODO
 
-- Regarder / implémenter ce qui est décrit dans Ratinaud_JADT2018
+- Implémenter une méthode basée sur la distance du cosinus plutôt que celle du Khi2
 
 # Notes Iramuteq
 
