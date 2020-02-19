@@ -1,5 +1,4 @@
 #include <RcppEigen.h>
-#include <Eigen/Dense>
 
 // [[Rcpp::depends(RcppEigen)]]
 
@@ -100,35 +99,6 @@ Eigen::VectorXf eigen_switch_docs(
 
   return chisq_values;
 }
-
-
-
-// Pas utilisé : pas utile
-// Eigen::VectorXi eigen_colsums(const Eigen::MatrixXi M) {
-//   const Eigen::MatrixXi S(M.colwise().sum());
-//   const Eigen::VectorXi B(Eigen::Map<const Eigen::VectorXi>(S.data(), S.cols()*S.rows()));
-//   return B;
-// }
-// Pas utilisé : pas utile
-// Eigen::VectorXi eigen_rowsums(const Eigen::MatrixXi M) {
-//   const Eigen::MatrixXi S(M.rowwise().sum());
-//   const Eigen::VectorXi B(Eigen::Map<const Eigen::VectorXi>(S.data(), S.cols()*S.rows()));
-//   return B;
-// }
-
-
-// Pas utilisé : trop lent
-// Eigen::MatrixXf eigen_u_coords(Eigen::MatrixXf m) {
-//   Eigen::MatrixXf P = m / m.sum();
-//   Eigen::MatrixXf rm = P.rowwise().sum();
-//   Eigen::MatrixXf cm = P.colwise().sum();
-//   Eigen::MatrixXf eP = (rm * cm);
-//   Eigen::MatrixXf S = (P.array() - eP.array()) / eP.array().sqrt();
-//   Eigen::BDCSVD<Eigen::MatrixXf> svd(S, Eigen::ComputeThinU);
-//   Eigen::MatrixXf u = svd.matrixU().col(0);
-//   Eigen::MatrixXf coord = u.array() / rm.array().sqrt();
-//   return coord;
-// }
 
 
 
