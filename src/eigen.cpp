@@ -10,16 +10,13 @@ double eigen_chisq(const IntegerVector& T1,
                    const IntegerVector& T2,
                    const IntegerVector& Tsum) {
 
-  int vecLen = T1.size();
-  double sum_T1 = 0, sum_T2 = 0;
-  for (int i = 0; i < vecLen; i++) {
-    sum_T1 += T1[i];
-    sum_T2 += T2[i];
-  }
+  double sum_T1 = Rcpp::sum(T1);
+  double sum_T2 = Rcpp::sum(T2);
   double n = sum_T1 + sum_T2;
   double p1 = sum_T1 / n;
   double p2 = sum_T2 / n;
 
+  int vecLen = T1.size();
   double res = 0;
   for (int i = 0; i < vecLen; i++) {
     double e1 = Tsum[i] * p1;
