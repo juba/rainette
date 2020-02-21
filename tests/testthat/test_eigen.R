@@ -1,5 +1,5 @@
 library(quanteda)
-context("RcppEigen functions")
+context("Rcpp functions")
 
 m <- matrix(
   c(1L,1L,1L,0L,0L,
@@ -22,9 +22,7 @@ test_that("eigen_chisq", {
   set.seed(13370)
   t1 <- as.integer(round(runif(100, 5, 50)))
   t2 <- as.integer(round(runif(100, 10, 200)))
-  row_sums <- t1 + t2
-  total <- sum(t1 + t2)
-  expect_equal(rainette:::eigen_chisq(t1, t2, row_sums, total),
+  expect_equal(rainette:::eigen_chisq(t1, t2, t1 + t2),
                unname(chisq.test(cbind(t1, t2))$statistic))
-}) 
+})
 
