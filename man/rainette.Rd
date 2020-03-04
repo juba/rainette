@@ -11,8 +11,7 @@ rainette(
   min_split_members = 5,
   cc_test = 0.3,
   tsj = 3,
-  min_members,
-  ...
+  min_members
 )
 }
 \arguments{
@@ -30,8 +29,6 @@ result of \code{\link[=split_segments]{split_segments()}}}
 \item{tsj}{minimum frequency value for feature selection}
 
 \item{min_members}{deprecated, use \code{min_split_members} instead}
-
-\item{...}{parameters passed to \link[quanteda:textmodel_ca]{quanteda::textmodel_ca}}
 }
 \value{
 The result is a list of both class \code{hclust} and \code{rainette}. Besides the elements
@@ -47,6 +44,8 @@ Corpus clustering based on the Reinert method - Simple clustering
 \details{
 See the references for original articles on the method. Computations and results may differ
 quite a bit, see the package vignettes for more details.
+
+The dtm object is automatically converted to boolean.
 }
 \examples{
 \dontrun{

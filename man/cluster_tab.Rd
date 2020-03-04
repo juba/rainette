@@ -4,7 +4,7 @@
 \alias{cluster_tab}
 \title{Split a dtm into two clusters with reinert algorithm}
 \usage{
-cluster_tab(dtm, cc_test = 0.3, tsj = 3, ...)
+cluster_tab(dtm, cc_test = 0.3, tsj = 3)
 }
 \arguments{
 \item{dtm}{to be split, passed by \code{rainette}}
@@ -13,8 +13,6 @@ cluster_tab(dtm, cc_test = 0.3, tsj = 3, ...)
 feature to be kept in both groups.}
 
 \item{tsj}{minimum feature frequency in the dtm}
-
-\item{...}{arguments passed to other methods}
 }
 \value{
 An object of class \code{hclust} and \code{rainette}

@@ -8,11 +8,12 @@
 #' @param cc_test contingency coefficient value for feature selection
 #' @param tsj minimum frequency value for feature selection
 #' @param min_members deprecated, use `min_split_members` instead
-#' @param ... parameters passed to [quanteda::textmodel_ca]
 #'
 #' @details
 #' See the references for original articles on the method. Computations and results may differ
 #' quite a bit, see the package vignettes for more details.
+#' 
+#' The dtm object is automatically converted to boolean.
 #'
 #' @return
 #' The result is a list of both class `hclust` and `rainette`. Besides the elements 
@@ -42,7 +43,7 @@
 #' 
 #' @export
 
-rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_test = 0.3, tsj = 3, min_members, ...) {
+rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_test = 0.3, tsj = 3, min_members) {
   
   ## Check for deprecated min_members argument
   if (!missing(min_members)) {
@@ -52,9 +53,9 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
     }
   }
   
-  if (any(dtm@x > 1)) {
+  if (any(!(dtm@x %in% c(0, 1)))) {
     ## We don't use dfm_weight here because of https://github.com/quanteda/quanteda/issues/1545
-    dtm@x <- as.numeric(dtm@x > 0)
+    dtm@x <- as.numeric(dtm@x != 0)
   }
   
   ## Compute uc ids based on minimum size
@@ -94,7 +95,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
         break
       }
 
-      clusters <- cluster_tab(tab, cc_test = cc_test, tsj = tsj,...)
+      clusters <- cluster_tab(tab, cc_test = cc_test, tsj = tsj)
       p()
 
       ## Populate results
@@ -310,7 +311,6 @@ select_features <- function(m, indices1, indices2, cc_test = 0.3, tsj = 3) {
 #' @param cc_test maximum contingency coefficient value for the 
 #' feature to be kept in both groups. 
 #' @param tsj minimum feature frequency in the dtm
-#' @param ... arguments passed to other methods
 #' 
 #' @details
 #' Internal function, not to be used directly
@@ -319,7 +319,7 @@ select_features <- function(m, indices1, indices2, cc_test = 0.3, tsj = 3) {
 #' An object of class `hclust` and `rainette`
 
 
-cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
+cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3) {
 
   ## Remove documents with zero terms
   dtm <- dtm[rowSums(dtm) > 0,]
