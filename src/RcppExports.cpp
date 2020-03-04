@@ -5,48 +5,48 @@
 
 using namespace Rcpp;
 
-// eigen_chisq
-double eigen_chisq(const IntegerVector& T1, const IntegerVector& T2, const IntegerVector& Tsum);
-RcppExport SEXP _rainette_eigen_chisq(SEXP T1SEXP, SEXP T2SEXP, SEXP TsumSEXP) {
+// cpp_chisq
+double cpp_chisq(const IntegerVector& T1, const IntegerVector& T2, const IntegerVector& Tsum);
+RcppExport SEXP _rainette_cpp_chisq(SEXP T1SEXP, SEXP T2SEXP, SEXP TsumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const IntegerVector& >::type T1(T1SEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type T2(T2SEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type Tsum(TsumSEXP);
-    rcpp_result_gen = Rcpp::wrap(eigen_chisq(T1, T2, Tsum));
+    rcpp_result_gen = Rcpp::wrap(cpp_chisq(T1, T2, Tsum));
     return rcpp_result_gen;
 END_RCPP
 }
-// eigen_split_tab
-List eigen_split_tab(const IntegerMatrix& tab, const IntegerVector& indices);
-RcppExport SEXP _rainette_eigen_split_tab(SEXP tabSEXP, SEXP indicesSEXP) {
+// cpp_split_tab
+List cpp_split_tab(const IntegerMatrix& tab, const IntegerVector& indices);
+RcppExport SEXP _rainette_cpp_split_tab(SEXP tabSEXP, SEXP indicesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type tab(tabSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type indices(indicesSEXP);
-    rcpp_result_gen = Rcpp::wrap(eigen_split_tab(tab, indices));
+    rcpp_result_gen = Rcpp::wrap(cpp_split_tab(tab, indices));
     return rcpp_result_gen;
 END_RCPP
 }
-// eigen_switch_docs
-NumericVector eigen_switch_docs(const IntegerMatrix& tab1, const IntegerMatrix& tab2);
-RcppExport SEXP _rainette_eigen_switch_docs(SEXP tab1SEXP, SEXP tab2SEXP) {
+// cpp_switch_docs
+NumericVector cpp_switch_docs(const IntegerMatrix& tab1, const IntegerMatrix& tab2);
+RcppExport SEXP _rainette_cpp_switch_docs(SEXP tab1SEXP, SEXP tab2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type tab1(tab1SEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type tab2(tab2SEXP);
-    rcpp_result_gen = Rcpp::wrap(eigen_switch_docs(tab1, tab2));
+    rcpp_result_gen = Rcpp::wrap(cpp_switch_docs(tab1, tab2));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rainette_eigen_chisq", (DL_FUNC) &_rainette_eigen_chisq, 3},
-    {"_rainette_eigen_split_tab", (DL_FUNC) &_rainette_eigen_split_tab, 2},
-    {"_rainette_eigen_switch_docs", (DL_FUNC) &_rainette_eigen_switch_docs, 2},
+    {"_rainette_cpp_chisq", (DL_FUNC) &_rainette_cpp_chisq, 3},
+    {"_rainette_cpp_split_tab", (DL_FUNC) &_rainette_cpp_split_tab, 2},
+    {"_rainette_cpp_switch_docs", (DL_FUNC) &_rainette_cpp_switch_docs, 2},
     {NULL, NULL, 0}
 };
 

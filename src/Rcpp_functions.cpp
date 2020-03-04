@@ -6,7 +6,7 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
-double eigen_chisq(const IntegerVector& T1,
+double cpp_chisq(const IntegerVector& T1,
                    const IntegerVector& T2,
                    const IntegerVector& Tsum) {
 
@@ -33,7 +33,7 @@ double eigen_chisq(const IntegerVector& T1,
 
 // Split a Matrix at max chi-squared
 // [[Rcpp::export]]
-List eigen_split_tab(const IntegerMatrix& tab,
+List cpp_split_tab(const IntegerMatrix& tab,
                      const IntegerVector& indices) {
 
   IntegerVector colSum = Rcpp::colSums(tab);
@@ -42,7 +42,7 @@ List eigen_split_tab(const IntegerMatrix& tab,
   int index = indices(0) - 1;
   IntegerVector tab1 = tab.row(index);
   IntegerVector tab2 = colSum - tab1;
-  double chisq = eigen_chisq(tab1, tab2, colSum);
+  double chisq = cpp_chisq(tab1, tab2, colSum);
 
   int max_index = index + 1;
   double max_chisq = chisq;
@@ -56,7 +56,7 @@ List eigen_split_tab(const IntegerMatrix& tab,
       tab1[j] += tab(index, j);
       tab2[j] -= tab(index, j);
     }
-    chisq = eigen_chisq(tab1, tab2, colSum);
+    chisq = cpp_chisq(tab1, tab2, colSum);
 
     if (chisq > max_chisq) {
       max_chisq = chisq;
@@ -72,7 +72,7 @@ List eigen_split_tab(const IntegerMatrix& tab,
 
 // Switch rows to maximize chi-square
 // [[Rcpp::export]]
-NumericVector eigen_switch_docs(const IntegerMatrix& tab1,
+NumericVector cpp_switch_docs(const IntegerMatrix& tab1,
                                 const IntegerMatrix& tab2) {
 
   int n1 = tab1.nrow();
@@ -90,14 +90,14 @@ NumericVector eigen_switch_docs(const IntegerMatrix& tab1,
       tab1Sum_new[j] = tab1Sum[j] - tab1(i1, j);
       tab2Sum_new[j] = tab2Sum[j] + tab1(i1, j);
     }
-    chisq_values[i1] = eigen_chisq(tab1Sum_new, tab2Sum_new, colSum);
+    chisq_values[i1] = cpp_chisq(tab1Sum_new, tab2Sum_new, colSum);
   }
   for (int i2 = 0; i2 < n2; i2++) {
     for (int j = 0; j < p; j++) {
       tab1Sum_new[j] = tab1Sum[j] + tab2(i2, j);
       tab2Sum_new[j] = tab2Sum[j] - tab2(i2, j);
     }
-    chisq_values[n1 + i2] = eigen_chisq(tab1Sum_new, tab2Sum_new, colSum);
+    chisq_values[n1 + i2] = cpp_chisq(tab1Sum_new, tab2Sum_new, colSum);
   }
 
   return chisq_values;
