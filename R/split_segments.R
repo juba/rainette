@@ -28,7 +28,6 @@ split_segments <- function(obj, segment_size = 40, segment_size_window = NULL) {
 ##' @export
 ##' @import dplyr
 ##' @import quanteda
-##' @importFrom tibble tibble
 ##' @importFrom purrr map_chr
 
 
@@ -80,7 +79,7 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
     paste0(w, collapse = " ")
   })
       
-  tibble::tibble(segment = segments)
+  segments
       
 }
 
@@ -116,9 +115,9 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
   
   if (!inherits(corpus, "corpus")) stop("corpus must be of class corpus")
   
-  corpus$documents$segment_source <- rownames(docvars(corpus))
+  corpus$segment_source <- rownames(docvars(corpus))
   
-  corpus_length <- sum(purrr::map_int(texts(obj), nchar))
+  corpus_length <- sum(purrr::map_int(texts(corpus), nchar))
   use_multicore <- corpus_length > 10000000
   
   if (use_multicore) {
@@ -128,22 +127,22 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
   }
   
   progressr::with_progress({
-    p <- progressr::progressor(along = corpus$documents$texts)
+    p <- progressr::progressor(along = texts(corpus))
 
     if (use_multicore) {
       options(future.supportsMulticore.unstable = "quiet")
       future::plan(future::multiprocess)
 
-      corpus$documents$texts <- future.apply::future_lapply(
-        corpus$documents$texts, 
+      texts <- future.apply::future_lapply(
+        texts(corpus), 
         function(text) {
           p()
           split_segments(text, segment_size, segment_size_window)
         }
       )
     } else {
-      corpus$documents$texts <- lapply(
-        corpus$documents$texts, 
+      texts <- lapply(
+        texts(corpus), 
         function(text) {
           p()
           split_segments(text, segment_size, segment_size_window)
@@ -152,17 +151,21 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
     }
   })
   
-  corpus$documents <- corpus$documents %>%
-    tidyr::unnest(texts) %>%
-    dplyr::rename(texts = segment) %>% 
-    group_by(segment_source) %>% 
-    mutate(segment_id = paste0(segment_source, "_", 1:n())) %>% 
-    as.data.frame %>% 
-    tibble::column_to_rownames("segment_id")
+
   
+  new_corpus <- docvars(corpus) %>% 
+    dplyr::mutate(text = texts) %>% 
+    tidyr::unnest(text) %>%        
+    dplyr::group_by(segment_source) %>% 
+    dplyr::mutate(segment_id = paste0(segment_source, "_", 1:dplyr::n())) %>% 
+    quanteda::corpus(
+      docid_field = "segment_id",
+      text_field = "text"
+    )
+
   message("  Done.")
   
-  corpus
+  new_corpus
   
 }
   
