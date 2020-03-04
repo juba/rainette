@@ -14,7 +14,7 @@ m <- matrix(
   byrow = TRUE,
 )
 mini_dfm <- as.dfm(m)
-mini_dfm@docvars <- data.frame(rainette_uce_id = 1:nrow(mini_dfm))
+docvars(mini_dfm, "rainette_uce_id") <- 1:nrow(mini_dfm)
 
 # compute_uc
 
