@@ -116,7 +116,7 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
   if (!inherits(corpus, "corpus")) stop("corpus must be of class corpus")
   
   corpus$segment_source <- docnames(corpus)
-  
+
   corpus_length <- sum(purrr::map_int(texts(corpus), nchar))
   use_multicore <- corpus_length > 10000000
   
