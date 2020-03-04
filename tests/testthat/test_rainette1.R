@@ -21,7 +21,7 @@ mini_dfm@docvars <- data.frame(rainette_uce_id = 1:nrow(mini_dfm))
 indices <- rainette:::order_docs(mini_dfm)
 
 test_that("order_docs", {
-  expect_equal(order(quanteda::textmodel_ca(mini_dfm)$rowcoord[,1]),
+  expect_equal(order(quanteda.textmodels::textmodel_ca(mini_dfm)$rowcoord[,1]),
                indices)
 })
 
