@@ -135,6 +135,6 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
     corpus[["rainette_split_id"]] <- NULL
   }
   
-  quanteda::corpus(corpus)
+  quanteda::corpus(corpus, text_field = "text")
   
 }
