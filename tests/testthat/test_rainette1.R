@@ -14,22 +14,26 @@ m <- matrix(
   byrow = TRUE,
 )
 mini_dfm <- as.dfm(m)
-mini_dfm@docvars <- data.frame(rainette_uce_id = 1:nrow(mini_dfm))
+
 
 ## docs_order_by_ca
 
 indices <- rainette:::order_docs(mini_dfm)
 
 test_that("order_docs", {
-  expect_equal(order(quanteda.textmodels::textmodel_ca(mini_dfm)$rowcoord[,1]),
-               indices)
+  ca_values <- if(installed.packages()["quanteda","Version"] < "2.0.0") {
+    quanteda::textmodel_ca(mini_dfm)$rowcoord[,1]
+  } else {
+    quanteda.textmodels::textmodel_ca(mini_dfm)$rowcoord[,1]
+  }
+  expect_equal(order(ca_values), indices)
 })
 
 ## split_tab_by_chisq
  
 tab <- convert(mini_dfm, to = "matrix")
 storage.mode(tab) <- "integer"
-res_split <- rainette:::eigen_split_tab(m, indices)
+res_split <- rainette:::cpp_split_tab(m, indices)
 
 test_that("split_tab", {
   manual_res <- data.frame(index = -1, chisq = -1)

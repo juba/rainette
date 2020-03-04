@@ -40,13 +40,14 @@ test_that("split_segments.character is ok", {
 
 test_that("split_segments.Corpus is ok", {
   expect_equal(ndoc(split_tm), 188)
-  expect_equal(split_tm$segment_source[1], "reut-00001.xml")
+  skip_if(installed.packages()["quanteda", "Version"] < "2.0.0")
+  expect_equal(docvars(split_tm, "segment_source")[1], "reut-00001.xml")
   expect_equal(docnames(split_tm)[1], "reut-00001.xml_1")
 })
 
 test_that("split_segments.corpus is ok", {
   expect_equal(ndoc(split_quanteda), 229)
-  expect_equal(split_quanteda$segment_source[1], "1789-Washington")
+  expect_equal(docvars(split_quanteda, "segment_source")[1], "1789-Washington")
   expect_equal(docnames(split_quanteda)[1], "1789-Washington_1")
 })
 

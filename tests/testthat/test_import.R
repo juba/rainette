@@ -33,11 +33,11 @@ corpus_split <- import_corpus_iramuteq(con, thematics = "split")
 close(con)
 
 test_that("metadata imported correctly", {
-  expect_equal(docvars(corpus)$id, c("01", "02", "03"))
-  expect_equal(docvars(corpus)$sexe, c("m", "f", "f"))
-  expect_equal(docvars(corpus)$age, c("18", "", "26"))
-  expect_equal(docvars(corpus)$prof, c("ouvrier", "agent_dentretien", NA))
-  expect_equal(docnames(corpus), docvars(corpus)$id)
+  expect_equal(docvars(corpus, "id"), c("01", "02", "03"))
+  expect_equal(docvars(corpus, "sexe"), c("m", "f", "f"))
+  expect_equal(docvars(corpus, "age"), c("18", "", "26"))
+  expect_equal(docvars(corpus, "prof"), c("ouvrier", "agent_dentretien", NA))
+  expect_equal(docnames(corpus), docvars(corpus, "id"))
 })
 
 test_that("texts imported correctly", {
@@ -53,10 +53,10 @@ test_that("thematics splitted correctly", {
   expect_equal(docnames(corpus_split), paste0("text", 1:6))
   expect_equal(docnames(corpus_split_id), c("01_1", "01_2", "02_1", "02_2", "03_1", "03_2"))
   expect_equal(names(docvars(corpus_split)), names(docvars(corpus_split_id)))
-  expect_equal(docvars(corpus_split)$age, c("18", "18", "", "", "26", "26"))
-  expect_equal(docvars(corpus_split)$age, docvars(corpus_split_id)$age)
-  expect_equal(docvars(corpus_split)$thematic, docvars(corpus_split_id)$thematic)
-  expect_equal(docvars(corpus_split)$thematic, c("t1", "t2", "t1", "t2", "t3", "t4"))
+  expect_equal(docvars(corpus_split, "age"), c("18", "18", "", "", "26", "26"))
+  expect_equal(docvars(corpus_split, "age"), docvars(corpus_split_id, "age"))
+  expect_equal(docvars(corpus_split, "thematics"), docvars(corpus_split_id, "thematics"))
+  expect_equal(docvars(corpus_split, "thematics"), c("t1", "t2", "t1", "t2", "t3", "t4"))
 })
 
 text <- "****
@@ -86,7 +86,7 @@ test_that("corpus without meta is ok", {
 
 test_that("splitted corpus without meta is ok", {
   expect_equal(dim(docvars(corpus_without_meta_split)), c(4, 1))
-  expect_equal(docvars(corpus_without_meta_split)$thematics, c("t1","t2","t1","t2"))
+  expect_equal(docvars(corpus_without_meta_split, "thematics"), c("t1","t2","t1","t2"))
   expect_equal(ndoc(corpus_without_meta_split), 4)
   expect_equal(texts(corpus_without_meta_split)[[3]], "Vestibulum vitae ante eget justo maximus luctus. ")
 })
@@ -108,8 +108,8 @@ test_that("corpus with partial meta is ok", {
   expect_equal(texts(corpus_with_partial_meta)[[2]], "Vestibulum vitae ante eget justo maximus luctus.")
   expect_equal(ndoc(corpus_with_partial_meta), 4)
   expect_equal(dim(docvars(corpus_with_partial_meta)), c(4, 2))
-  expect_equal(docvars(corpus_with_partial_meta)$foo, c(NA, "1", NA, NA))
-  expect_equal(docvars(corpus_with_partial_meta)$bar, c(NA, NA, NA, "bar"))
+  expect_equal(docvars(corpus_with_partial_meta, "foo"), c(NA, "1", NA, NA))
+  expect_equal(docvars(corpus_with_partial_meta, "bar"), c(NA, NA, NA, "bar"))
 })
 
 test_that("error if f is not a valid file path", {
