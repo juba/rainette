@@ -24,7 +24,6 @@ split_segments(obj, segment_size = 40, segment_size_window = NULL)
 }
 \value{
 If obj is a tm or quanteda corpus object, the result is a quanteda corpus.
-If obj is a character string, the result is a tibble.
 }
 \description{
 Split a character string or corpus into segments, taking into account punctuation where possible

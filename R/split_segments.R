@@ -8,7 +8,6 @@
 ##'
 ##' @return
 ##' If obj is a tm or quanteda corpus object, the result is a quanteda corpus.
-##' If obj is a character string, the result is a tibble.
 ##' @export
 ##'
 ##' @examples
@@ -106,7 +105,6 @@ split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 
 ##' @aliases split_segments.corpus
 ##' @export
 ##' @importFrom purrr map_int 
-##' @importFrom tibble column_to_rownames
 
 
 split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
