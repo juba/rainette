@@ -61,9 +61,12 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
   message("  Computing ucs from segments...")
   dtm <- compute_uc(dtm, min_uc_size = min_uc_size)
   ## Correspondance table between uce and uc
-  corresp_uce_uc <- data.frame(uce = docvars(dtm)$rainette_uce_id, uc = docvars(dtm)$rainette_uc_id)
+  corresp_uce_uc <- data.frame(
+    uce = docvars(dtm, "rainette_uce_id"), 
+    uc = docvars(dtm, "rainette_uc_id")
+  )
   ## Group dfm by uc
-  dtm <- dfm_group(dtm, docvars(dtm)$rainette_uc_id)
+  dtm <- dfm_group(dtm, docvars(dtm, "rainette_uc_id"))
   dtm <- dfm_weight(dtm, scheme = "boolean")
   
   message("  Clustering...")
@@ -343,8 +346,8 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3, ...) {
   cols1 <- res$cols1
   cols2 <- res$cols2
   
-  return(list(groups = list(docvars(dtm)$rainette_uc_id[indices1],
-                            docvars(dtm)$rainette_uc_id[indices2]), 
+  return(list(groups = list(docvars(dtm, "rainette_uc_id")[indices1],
+                            docvars(dtm, "rainette_uc_id")[indices2]), 
               tabs = list(dtm[indices1, cols1], 
                           dtm[indices2, cols2]), 
               height = chisq))

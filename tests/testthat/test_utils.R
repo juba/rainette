@@ -20,7 +20,7 @@ mini_dfm@docvars <- data.frame(rainette_uce_id = 1:nrow(mini_dfm))
 
 test_that("computed uc are ok", {
   dfm_uc <- rainette:::compute_uc(mini_dfm, min_uc_size = 3)
-  expect_equal(docvars(dfm_uc)$rainette_uc_id, c(1,2,2,4,5,6,6))
+  expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1,2,2,4,5,6,6))
 })
 
 test_that("error if uc can't be computed", {

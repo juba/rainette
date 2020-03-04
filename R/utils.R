@@ -1,7 +1,7 @@
 if (getRversion() >= "2.15.1")  
   utils::globalVariables(c("Dim1", "distance", "index", "segment", "segment_source", "weight", "p", 
     "chi2", "n_both", "n1", "n2", "g1", "g2", "level1", "level2", "members", "clusters", "feature",
-    "Group", "rainette_group"))
+    "Group", "rainette_group", "text"))
 
 
 # Fast chi-square value computation
@@ -36,7 +36,7 @@ compute_uc <- function(dtm, min_uc_size = 10) {
   }
   
   if (min_uc_size <= 1) {
-    docvars(dtm, field = "rainette_uc_id") <- docvars(dtm)$rainette_uce_id
+    docvars(dtm, field = "rainette_uc_id") <- docvars(dtm, "rainette_uce_id")
     return(dtm)
   }
   
@@ -44,7 +44,7 @@ compute_uc <- function(dtm, min_uc_size = 10) {
   terms_by_uce <- rowSums(dtm)
   if (any(terms_by_uce < min_uc_size)) {
     index <- 1
-    uc_id <- docvars(dtm)$rainette_uce_id
+    uc_id <- docvars(dtm, "rainette_uce_id")
     while (index < length(terms_by_uce)) {
       current_size <- terms_by_uce[index]
       grouping_index <- index
@@ -60,9 +60,9 @@ compute_uc <- function(dtm, min_uc_size = 10) {
       index <- grouping_index + 1
     }
     ## Add computed uc ids to docvars
-    docvars(dtm)$rainette_uc_id <- uc_id
+    docvars(dtm, "rainette_uc_id") <- uc_id
   } else {
-    docvars(dtm)$rainette_uc_id <- docvars(dtm)$rainette_uce_id
+    docvars(dtm, "rainette_uc_id") <- docvars(dtm, "rainette_uce_id")
   }
   
   return(dtm)
