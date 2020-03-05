@@ -321,8 +321,9 @@ select_features <- function(m, indices1, indices2, cc_test = 0.3, tsj = 3) {
 
 cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3) {
 
-  ## Remove documents with zero terms
-  dtm <- dtm[rowSums(dtm) > 0,]
+  ## Remove documents and features with zero occurrences
+  dtm <- dtm[rowSums(dtm) > 0, colSums(dtm) > 0]
+  ## Remove features with zero 
   m <- convert(dtm, to = "matrix")
   storage.mode(m) <- "integer"
   
