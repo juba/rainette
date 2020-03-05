@@ -5,6 +5,10 @@
 ##' @param obj character string, quanteda or tm corpus object
 ##' @param segment_size segment size (in words)
 ##' @param segment_size_window window around segment size to look for best splitting point
+##' @param force_single_core don't use multithreading even on large corpus
+##' 
+##' @details
+##' By default, if the corpus is large (> 10 000 000 chars), multithreading is used for segments splitting.
 ##'
 ##' @return
 ##' If obj is a tm or quanteda corpus object, the result is a quanteda corpus.
@@ -16,7 +20,7 @@
 ##' split_segments(data_corpus_inaugural)
 ##' }
 
-split_segments <- function(obj, segment_size = 40, segment_size_window = NULL) {
+split_segments <- function(obj, segment_size = 40, segment_size_window = NULL, force_single_core = FALSE) {
   UseMethod("split_segments")
 }
 
@@ -30,7 +34,7 @@ split_segments <- function(obj, segment_size = 40, segment_size_window = NULL) {
 ##' @importFrom purrr map_chr
 
 
-split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL) {
+split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL, force_single_core = FALSE) {
   
   text <- obj
   
@@ -89,7 +93,7 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
 ##' @export
 
 
-split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
+split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = NULL, force_single_core = FALSE) {
   
   corpus <- obj
   
@@ -107,7 +111,7 @@ split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 
 ##' @importFrom purrr map_int 
 
 
-split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
+split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL, force_single_core = FALSE) {
   
   corpus <- obj
   
@@ -116,7 +120,7 @@ split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = 
   docvars(corpus, "segment_source") <- docnames(corpus)
 
   corpus_length <- sum(purrr::map_int(texts(corpus), nchar))
-  use_multicore <- corpus_length > 10000000
+  use_multicore <- corpus_length > 10000000 && !force_single_core
   
   if (use_multicore) {
     message("  Splitting in parallel (please wait while R sessions start)...")    
