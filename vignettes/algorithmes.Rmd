@@ -14,7 +14,7 @@ L'objectif de ce document est de décrire les algorithmes utilisés pour les cla
 À noter que l'implémentation de `rainette` repose sur deux éléments principaux :
 
 - les deux articles de Max Reinert cités dans les [références]
-- le code source d'Iramuteq, notamment les fichiers `CHD.R` et `chdtxt.R`. Le code R a cependant été quasiment entièrement réécrit.
+- le code source d'Iramuteq, notamment les fichiers `CHD.R` et `chdtxt.R`. Le code R a cependant été quasiment entièrement réécrit, et certaines portions ont été implémentées en C++ via [Rcpp](http://rcpp.org/).
 
 # Algorithme de classification simple
 
