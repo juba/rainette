@@ -1,0 +1,71 @@
+---
+title: '[en] Introduction to rainette'
+author: "Julien Barnier"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{[fr] Utilisation de rainette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Reinert textual clustering method
+
+`rainette` is an R implementation of the Reinert textual clustering algorithm. This algorithm is already available in softwares like [Iramuteq](http://www.iramuteq.org/) or Alceste, but the goal of `rainette` is to provide it as an R package.
+
+This is not a new method, as the first articles describing it date back to 1983. Here are some features of the method :
+
+- each text is only assigned to one cluster, unlike methods like LDA.
+- it is better suited to cluster small documents : in fact the good practice is first to split texts into segments before applying the method.
+- as the algorithm uses a singular value decomposition of a document-term matrix, the algorithm may not work on very large corpus.
+
+
+## Description of the algorithm
+
+The Reinert method is a divisive hierarchical clustering algorithm whose aim is to split clusters by maximising the inter-cluster Chi-squared distance. 
+
+The algorithm is applied to the document-term matrix computed on the corpus. Documents are called `uce` (elementary context units). If an `uce` doesn't include enough valid forms, it is merged with the following one into an `uc` (context unit). The resulting matrix is then weighted as binary, so only the presence/absence of terms are taken into account, not their frequencies.
+
+The aim is to split this matrix into two clusters by maximizing the Chi-squared distance between those. As an exhaustive search would be too compute-intensive, the following method is used to get a good approximation :
+
+- first, `uc` are ordered according to their coordinates on the first axis of the correspondance analysis of the binary matrix.
+- `uc` are grouped in two clusters based on this order, and the grouping with the maximum inter-cluster Chi-squared distance is kept.
+- based on this grouping, each `uc` is in turn assigned to the other cluster. If this new assignment gives a higher inter-cluster Chi-squared value, it is kept. The operation is repeated until no new assignment gives a higher Chi-squared.
+- finally, on the resulting clusters binary matrices, features are selected based on their frequency and on a contingency coefficient minimum value.
+- the biggest of the two resulting clusters is then split with the same algorithm.
+
+
+## Double clustering
+
+The Reinert method suggests to do a double clustering to get more robust clusters. This method is also implemented in `rainette`.
+
+The principle is to run two simple clusterings by varying the minimum `uc` size. For example, the first one will be run with a minimum size of 10 valid forms, and the second one with a minimum size of 15.
+
+The two sets of clusters are then "crossed" : every pair of cluster of each clustering are crossed together, even if they are not on the same hierarchical level. We then compute the number of `uc` present in both clusters, and a Chi-squared value of association between them.
+
+Only a subset of all these "crossed-clusters" are kept : those with different elements, with a minimum number of `uc` or with a minimum association value. Then, for a given number of clusters `k`, the algorithm looks for the optimal partitionof crossed-clusters, ie it keeps the set of crossed-clusters with no common elements, and with either the higher total number of elements, or the higher sum of Chi-squared association coefficients.
+
+Then, this optimal partition is used either as the final clustering (with potentially quite a high proportion of `NA`), or as a starting point for a k-nearest-neighbour clustering for non-assigned documents.
+
+## References
+
+- Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+- Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
+
+
+# `rainette` usage
+
+## Corpus preparation
+
+
+
+## Simple clustering
+
+
+## Double clustering
+
