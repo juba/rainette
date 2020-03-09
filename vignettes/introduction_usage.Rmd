@@ -9,7 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-**Avertissement préalable :** `rainette` est encore en cours de développement, et a été très peu testé pour l'instant. Il est donc susceptible de contenir des bugs plus ou moins importants pouvant fausser les résultats obtenus.
 
 
 # Installation
