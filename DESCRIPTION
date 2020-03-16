@@ -14,10 +14,9 @@ URL: https://juba.github.io/rainette/
 BugReports: https://github.com/juba/rainette/issues
 Encoding: UTF-8
 Imports: 
-    dplyr (>= 0.7.3),
+    dplyr (>= 0.8.3),
     tidyr,
     purrr,
-    tibble,
     ggplot2,
     stringr,
     quanteda (>= 1.5),
