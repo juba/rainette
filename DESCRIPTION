@@ -1,13 +1,15 @@
 Package: rainette
 Type: Package
-Title: The Reinert Method For Textual Data Clustering
+Title: The Reinert Method for Textual Data Clustering
 Version: 0.1
 Date: 2020-03-16
 Authors@R: c(person("Julien", "Barnier", email="julien.barnier@cnrs.fr",
     role=c("aut","cre")), person("Florian", "Privé",
     email="florian.prive.21@gmail.com", role="ctb"))
 Maintainer: Julien Barnier <julien.barnier@cnrs.fr>
-Description: An R implementation of the Reinert text clustering method.
+Description: An R implementation of the Reinert text clustering method. For more 
+    details about the algorithm see the included vignettes or Reinert (1990) 
+    <doi:10.1177/075910639002600103>.
 License: GPL (>= 3)
 VignetteBuilder: knitr
 URL: https://juba.github.io/rainette/
