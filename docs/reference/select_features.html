@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Split a character string or corpus into segments — split_segments • rainette</title>
+<title>Remove features from dtm of each group base don cc_test and tsj — select_features • rainette</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,8 +42,8 @@
 
 
 
-<meta property="og:title" content="Split a character string or corpus into segments — split_segments" />
-<meta property="og:description" content="Split a character string or corpus into segments, taking into account punctuation where possible" />
+<meta property="og:title" content="Remove features from dtm of each group base don cc_test and tsj — select_features" />
+<meta property="og:description" content="Remove features from dtm of each group base don cc_test and tsj" />
 <meta property="og:image" content="https://juba.github.io/rainette/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -129,79 +129,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Split a character string or corpus into segments</h1>
+    <h1>Remove features from dtm of each group base don cc_test and tsj</h1>
     
-    <div class="hidden name"><code>split_segments.Rd</code></div>
+    <div class="hidden name"><code>select_features.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Split a character string or corpus into segments, taking into account punctuation where possible</p>
+    <p>Remove features from dtm of each group base don cc_test and tsj</p>
     </div>
 
-    <pre class="usage"><span class='fu'>split_segments</span>(
-  <span class='no'>obj</span>,
-  <span class='kw'>segment_size</span> <span class='kw'>=</span> <span class='fl'>40</span>,
-  <span class='kw'>segment_size_window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>force_single_core</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)
-
-<span class='co'># S3 method for character</span>
-<span class='fu'>split_segments</span>(
-  <span class='no'>obj</span>,
-  <span class='kw'>segment_size</span> <span class='kw'>=</span> <span class='fl'>40</span>,
-  <span class='kw'>segment_size_window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>force_single_core</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)
-
-<span class='co'># S3 method for Corpus</span>
-<span class='fu'>split_segments</span>(
-  <span class='no'>obj</span>,
-  <span class='kw'>segment_size</span> <span class='kw'>=</span> <span class='fl'>40</span>,
-  <span class='kw'>segment_size_window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>force_single_core</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)
-
-<span class='co'># S3 method for corpus</span>
-<span class='fu'>split_segments</span>(
-  <span class='no'>obj</span>,
-  <span class='kw'>segment_size</span> <span class='kw'>=</span> <span class='fl'>40</span>,
-  <span class='kw'>segment_size_window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>force_single_core</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>select_features</span>(<span class='no'>m</span>, <span class='no'>indices1</span>, <span class='no'>indices2</span>, <span class='kw'>cc_test</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>tsj</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>obj</th>
-      <td><p>character string, quanteda or tm corpus object</p></td>
+      <th>m</th>
+      <td><p>global dtm</p></td>
     </tr>
     <tr>
-      <th>segment_size</th>
-      <td><p>segment size (in words)</p></td>
+      <th>indices1</th>
+      <td><p>indices of documents of group 1</p></td>
     </tr>
     <tr>
-      <th>segment_size_window</th>
-      <td><p>window around segment size to look for best splitting point</p></td>
+      <th>indices2</th>
+      <td><p>indices of documents of group 2</p></td>
     </tr>
     <tr>
-      <th>force_single_core</th>
-      <td><p>don't use multithreading even on large corpus</p></td>
+      <th>cc_test</th>
+      <td><p>maximum contingency coefficient value for the
+feature to be kept in both groups.</p></td>
+    </tr>
+    <tr>
+      <th>tsj</th>
+      <td><p>minimum feature frequency in the dtm</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If obj is a tm or quanteda corpus object, the result is a quanteda corpus.</p>
+    <p>a list of two character vectors : <code>cols1</code> is the name of features to
+keep in group 1, <code>cols2</code> the name of features to keep in group 2</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>By default, if the corpus is large (&gt; 10 000 000 chars), multithreading is used for segments splitting.</p>
+    <p>Internal function, not to be used directly</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>quanteda</span>)
-<span class='fu'>split_segments</span>(<span class='no'>data_corpus_inaugural</span>)
-}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -209,7 +181,6 @@
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
       <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
