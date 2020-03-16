@@ -8,8 +8,6 @@
 <img src="man/figures/logo.png" width=200 align="right" />
 
 
-*Note :* This package is still in development, available only for testing.
-
 The package website can be found at : https://juba.github.io/rainette/.
 
 Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other software such as [Iramuteq](http://www.iramuteq.org/) (free software) or [Alceste](http://www.image-zafar.com/Logiciel.html) (commercial, closed source).
@@ -96,7 +94,12 @@ You can then use `rainette2_explor`, `rainette2_plot` and `cutree_rainette2` to 
 
 ## Tell me more
 
-Two vignettes are available, but only in french for now :
+Three vignettes are available, an introduction in english :
+
+- [Introduction to rainette](https://juba.github.io/rainette/articles/introduction_en.html)
+
+
+And an introduction and an algorithm description, in french :
 
 - [Introduction à rainette](https://juba.github.io/rainette/articles/introduction_usage.html)
 - [Description des algorithmes](https://juba.github.io/rainette/articles/algorithmes.html)
