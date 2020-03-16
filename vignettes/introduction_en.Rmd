@@ -4,7 +4,7 @@ author: "Julien Barnier"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{[fr] Utilisation de rainette}
+  %\VignetteIndexEntry{[en] Introduction to rainette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -19,7 +19,7 @@ reference:
   - '`rainette2_plot`'
   - '`rainette2_explor`'
 - title: Clustering statistics
-  desc: Functions used for clustering statistics display
+  desc: Functions used to get clustering statistics
   contents:
   - '`rainette_stats`'
 - title: Corpus importation and segmentation
@@ -33,7 +33,6 @@ reference:
   - '`cluster_tab`'
   - '`compute_uc`'
   - '`cutree`'
-  - '`docs_order_by_ca`'
-  - '`features_selection`'
-  - '`split_tab_by_chisq`'
-  - '`switch_docs_by_chisq`'
+  - '`order_docs`'
+  - '`select_features`'
+  - '`switch_docs`'

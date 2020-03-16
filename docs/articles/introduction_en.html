@@ -158,9 +158,9 @@
 <p>As explained before, as it doesn’t take into account terms frequencies and assign each document to only one cluster, the Reinert method must be applied to short and “homogeneous” documents. It could be ok if your work on short comments on a website, but on longer documents the corpus must first be split into small textual segments.</p>
 <p>The <code>split_segments</code> function does just that, and can be applied on a <code>tm</code> or <code>quanteda</code> corpus.</p>
 <p>On this article we will apply it to the sample <code>data_corpus_inaugural</code> <code>quanteda</code> corpus :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(quanteda)
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(rainette)
-corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/split_segments.html">split_segments</a></span>(data_corpus_inaugural)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(quanteda)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(rainette)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/split_segments.html">split_segments</a></span>(data_corpus_inaugural)</a></code></pre></div>
 <p><code>split_segments</code> will split the original texts into smaller chunks, attempting to respect sentences and punctuation when possible. The function takes three arguments :</p>
 <ul>
 <li>
@@ -171,7 +171,7 @@ corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/spli
 <code>force_single_core</code> : by default, multithreading is used when the corpus is big. Set this to <code>TRUE</code> to disable multithreading completely.</li>
 </ul>
 <p>The result of the function is always a <code>quanteda</code> corpus, which keeps the original corpus metadata :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">corpus</a></code></pre></div>
 <pre><code>## Corpus consisting of 3,524 documents and 5 docvars.
 ## 1789-Washington_1 :
 ## "Fellow-Citizens of the Senate and of the House of Representa..."
@@ -192,7 +192,7 @@ corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/spli
 ## "In this conflict of emotions all I dare aver is that it has ..."
 ## 
 ## [ reached max_ndoc ... 3,518 more documents ]</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span>(corpus))</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span>(corpus))</a></code></pre></div>
 <pre><code>##   Year  President FirstName Party  segment_source
 ## 1 1789 Washington    George  none 1789-Washington
 ## 2 1789 Washington    George  none 1789-Washington
@@ -205,9 +205,9 @@ corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/spli
 <h3 class="hasAnchor">
 <a href="#dfm-computation" class="anchor"></a>dfm computation</h3>
 <p>Next step is to compute the document-feature matrix. As our <code>corpus</code> object is a <code>quanteda</code> corpus, we can use its <code>dfm</code> function :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span>(corpus, <span class="dt">remove =</span> <span class="kw"><a href="https://quanteda.io/reference/reexports.html">stopwords</a></span>(<span class="st">"en"</span>), <span class="dt">tolower =</span> <span class="ot">TRUE</span>, <span class="dt">remove_punct =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span>(corpus, <span class="dt">remove =</span> <span class="kw"><a href="https://quanteda.io/reference/reexports.html">stopwords</a></span>(<span class="st">"en"</span>), <span class="dt">tolower =</span> <span class="ot">TRUE</span>, <span class="dt">remove_punct =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>We only keep the terms that appear at least in 10 segments by using <code>dfm_trim</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span>(dtm, <span class="dt">min_termfreq =</span> <span class="dv">10</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">dtm &lt;-<span class="st"> </span><span class="kw"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span>(dtm, <span class="dt">min_termfreq =</span> <span class="dv">10</span>)</a></code></pre></div>
 </div>
 </div>
 <div id="simple-clustering" class="section level2">
@@ -223,24 +223,20 @@ corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/spli
 <code>min_split_members</code> : if a cluster is smaller than this value, it won’t be split afterwards (default : 5).</li>
 </ul>
 <p>Here we will compute 5 clusters with a <code>minimum_uc_size</code> of 15 :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>)</a></code></pre></div>
 <p>To help exploring the clustering results, <code>rainette</code> offers a small <em>shiny gadget</em> which can be launched with <code>rainette_explor</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/rainette_explor.html">rainette_explor</a></span>(res, dtm)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/rainette_explor.html">rainette_explor</a></span>(res, dtm)</a></code></pre></div>
 <p>The interactive interface should look something like this :</p>
-<div class="figure">
-<img src="rainette_explor_en.png">
-</div>
+<p><img src="rainette_explor_en.png"></p>
 <p>You can change the number of clusters, the keyness statistic used, etc., and see the result in real time. The most characteristics terms are displayed with a blue bar or a red one for those with a negative keyness.</p>
 <p>It’s also possible to display terms keyness as word clouds :</p>
-<div class="figure">
-<img src="rainette_explor_en_cloud.png">
-</div>
+<p><img src="rainette_explor_en_cloud.png"></p>
 <p>At any time, you can click on the <em>Get R code</em> button to get the R code to reproduce the current plot and to compute cluster membership.</p>
 <p>You can also directly use <code>cutree_rainette</code> to get each document cluster at level <code>k</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">groups &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cutree_rainette.html">cutree_rainette</a></span>(res, <span class="dt">k =</span> <span class="dv">3</span>)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">groups &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cutree_rainette.html">cutree_rainette</a></span>(res, <span class="dt">k =</span> <span class="dv">3</span>)</a></code></pre></div>
 <p>This vector can be used, for example, as a new corpus metadata variable :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corpus<span class="op">$</span>group &lt;-<span class="st"> </span>groups
-<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span>(corpus))</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">corpus<span class="op">$</span>group &lt;-<span class="st"> </span>groups</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span>(corpus))</a></code></pre></div>
 <pre><code>##   Year  President FirstName Party  segment_source group
 ## 1 1789 Washington    George  none 1789-Washington     3
 ## 2 1789 Washington    George  none 1789-Washington     3
@@ -249,7 +245,7 @@ corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/spli
 ## 5 1789 Washington    George  none 1789-Washington     2
 ## 6 1789 Washington    George  none 1789-Washington     2</code></pre>
 <p>Finally, you can also directly compute each cluster keyness statistics with the <code>rainette_stats</code> function :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/rainette_stats.html">rainette_stats</a></span>(corpus<span class="op">$</span>group, dtm, <span class="dt">n_terms =</span> <span class="dv">5</span>)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="../reference/rainette_stats.html">rainette_stats</a></span>(corpus<span class="op">$</span>group, dtm, <span class="dt">n_terms =</span> <span class="dv">5</span>)</a></code></pre></div>
 <pre><code>## [[1]]
 ##        feature      chi2 p n_target n_reference     sign
 ## 1        world  212.8512 0      258          53 positive
@@ -280,21 +276,19 @@ corpus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/spli
 <p><code>rainette</code> also offers a “double clustering” algorithm, as described above : two simple clusterings are computed with varying <code>min_uc_size</code>, and then combined to get a better partition and more robust clusters.</p>
 <p>This can be done with the <code>rainette2</code> function</p>
 <p><code>rainette2</code> can be applied to two already computed simple clusterings. Here, we compute them with <code>min_uc_size</code> at 10 and 15 :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">min_uc_size =</span> <span class="dv">10</span>, <span class="dt">min_split_members =</span> <span class="dv">10</span>)
-res2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_split_members =</span> <span class="dv">10</span>)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">res1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">min_uc_size =</span> <span class="dv">10</span>, <span class="dt">min_split_members =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">res2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette.html">rainette</a></span>(dtm, <span class="dt">k =</span> <span class="dv">5</span>, <span class="dt">min_uc_size =</span> <span class="dv">15</span>, <span class="dt">min_split_members =</span> <span class="dv">10</span>)</a></code></pre></div>
 <p>We then use <code>rainette2</code> to combine them. The main function arguments are <code>max_k</code>, the maximum number of clusters, and <code>min_members</code>, the minimum cluster size :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette2.html">rainette2</a></span>(res1, res2, <span class="dt">max_k =</span> <span class="dv">5</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette2.html">rainette2</a></span>(res1, res2, <span class="dt">max_k =</span> <span class="dv">5</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a></code></pre></div>
 <p>Another way is to call <code>rainette2</code> directly on our <code>dtm</code> matrix by giving it two <code>uc_size1</code> and <code>uc_size2</code> arguments :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette2.html">rainette2</a></span>(dtm, <span class="dt">uc_size1 =</span> <span class="dv">10</span>, <span class="dt">uc_size2 =</span> <span class="dv">15</span>, <span class="dt">max_k =</span> <span class="dv">5</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette2.html">rainette2</a></span>(dtm, <span class="dt">uc_size1 =</span> <span class="dv">10</span>, <span class="dt">uc_size2 =</span> <span class="dv">15</span>, <span class="dt">max_k =</span> <span class="dv">5</span>, <span class="dt">min_members =</span> <span class="dv">10</span>)</a></code></pre></div>
 <p>The resulting object is a <em>tibble</em> with, for each level <em>k</em>, the optimal partitions and their characteristics. Another interactive interface is available to explore the results. It is launched with <code>rainette2_explor</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span>(res, dtm)</code></pre></div>
-<div class="figure">
-<img src="rainette2_explor_en.png">
-</div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span>(res, dtm)</a></code></pre></div>
+<p><img src="rainette2_explor_en.png"></p>
 <p>The interface is very similar to the previous one, except there is no dendrogram anymore, but a single barplot with each cluster size instead. Be careful of the number of <code>NA</code> (not assigned documents), as it can be quite high. You can still use the <em>Get R code</em> button to get the current plot code, and use <code>cutree_rainette</code> to get clusters membership.</p>
 <p><code>rainette_stats</code> can also be used to get keyness statistics for each cluster :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">groups &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cutree.html">cutree</a></span>(res, <span class="dv">3</span>)
-<span class="kw"><a href="../reference/rainette_stats.html">rainette_stats</a></span>(groups, dtm, <span class="dt">n_terms =</span> <span class="dv">5</span>)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">groups &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cutree.html">cutree</a></span>(res, <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw"><a href="../reference/rainette_stats.html">rainette_stats</a></span>(groups, dtm, <span class="dt">n_terms =</span> <span class="dv">5</span>)</a></code></pre></div>
 <pre><code>## [[1]]
 ##   feature     chi2 p n_target n_reference     sign
 ## 1   world 218.9950 0      245          66 positive
@@ -319,7 +313,7 @@ res2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainet
 ## 4  states  119.1668 0      263          70 positive
 ## 5     new -105.4897 0       41         206 negative</code></pre>
 <p>Finally, if some points are not assigned to any cluster, you can use <code>rainette2_complete_groups</code> to assign them to the nearest one by using a <em>k-nearest-neighbors</em> algorithm :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">groups_completed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span>(dtm, groups)</code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">groups_completed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span>(dtm, groups)</a></code></pre></div>
 </div>
 </div>
   </div>
