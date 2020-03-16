@@ -1,3 +1,3 @@
-# 0.1
+# rainette 0.1
 
-- First version
+* First version
