@@ -143,14 +143,14 @@ cutree_rainette(res, k = 5)
 Vous pouvez par exemple utiliser l'appel de `cutree_rainette` pour ajouter comme nouvelle métadonnée du corpus le groupe d'appartenance pour la classification en 5 classes :
 
 ```{r}
-docvars(corpus)$group <- cutree_rainette(res, k = 5)
+corpus$group <- cutree_rainette(res, k = 5)
 head(docvars(corpus))
 ```
 
 Vous pouvez aussi récupérer directement les statistiques de spécificité de chaque groupe à l'aide de `rainette_stats` :
 
 ```{r}
-rainette_stats(docvars(corpus)$group, dtm, n_terms = 5)
+rainette_stats(corpus$group, dtm, n_terms = 5)
 ```
 
 
