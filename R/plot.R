@@ -207,11 +207,12 @@ rainette_plot <- function(res, dtm, k = NULL,
   
   ## Dendrogram
   dend <- stats::as.dendrogram(res)
-  ## Prune the dendrogram if necessary
-  if( k < max(res$group, na.rm = TRUE)) {
-    for (i in nrow(res$merge):(k)) {
-      dend <- dend %>% dendextend::prune(as.character(i))
-    }
+  max_k <- max(res$group, na.rm = TRUE)
+  ## Cut the dendrogram if necessary
+  if( k < max_k) {
+    dend <- cut(dend, res$height[max_k - k])$upper
+    ## Double conversion to "balance" the dendrogram
+    dend <- as.dendrogram(as.hclust(dend))
     dend <- dendextend::set(dend, "labels", 1:k)
   }
   ## Style labels and branches
