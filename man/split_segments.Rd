@@ -54,7 +54,7 @@ Split a character string or corpus into segments, taking into account punctuatio
 By default, if the corpus is large (> 10 000 000 chars), multithreading is used for segments splitting.
 }
 \examples{
-\dontrun{
+\donttest{
 require(quanteda)
 split_segments(data_corpus_inaugural)
 }

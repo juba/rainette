@@ -15,7 +15,7 @@ rainette_explor(res, dtm)
 Shiny gadget for rainette clustering exploration
 }
 \examples{
-\dontrun{
+\donttest{
 library(quanteda)
 corpus <- data_corpus_inaugural
 corpus <- head(corpus, n = 10)

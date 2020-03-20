@@ -39,7 +39,7 @@ rainette_plot(
 Generate a clustering description plot from a rainette result
 }
 \examples{
-\dontrun{
+\donttest{
 library(quanteda)
 corpus <- data_corpus_inaugural
 corpus <- head(corpus, n = 10)

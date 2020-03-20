@@ -30,7 +30,7 @@ rainette_stats(
 Generate cluster keyness statistics from a rainette result
 }
 \examples{
-\dontrun{
+\donttest{
 library(quanteda)
 corpus <- data_corpus_inaugural
 corpus <- head(corpus, n = 10)

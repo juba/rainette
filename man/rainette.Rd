@@ -48,7 +48,7 @@ quite a bit, see the package vignettes for more details.
 The dtm object is automatically converted to boolean.
 }
 \examples{
-\dontrun{
+\donttest{
 library(quanteda)
 corpus <- data_corpus_inaugural
 corpus <- head(corpus, n = 10)
