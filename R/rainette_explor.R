@@ -26,7 +26,7 @@ span.hl.com { color: #888; font-style: italic;}
 #' @seealso `rainette_plot`
 #'
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' library(quanteda)
 #' corpus <- data_corpus_inaugural
 #' corpus <- head(corpus, n = 10)

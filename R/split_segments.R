@@ -15,7 +15,7 @@
 ##' @export
 ##'
 ##' @examples
-##' \dontrun{
+##' \donttest{
 ##' require(quanteda)
 ##' split_segments(data_corpus_inaugural)
 ##' }

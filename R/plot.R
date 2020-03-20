@@ -149,7 +149,7 @@ keyness_plots <- function(tabs, groups, type = "bar",
 #'
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' library(quanteda)
 #' corpus <- data_corpus_inaugural
 #' corpus <- head(corpus, n = 10)

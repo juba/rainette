@@ -30,7 +30,7 @@
 #' - Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(quanteda)
 #' corpus <- data_corpus_inaugural
 #' corpus <- head(corpus, n = 10)
