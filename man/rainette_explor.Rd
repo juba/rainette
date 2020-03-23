@@ -11,6 +11,9 @@ rainette_explor(res, dtm)
 
 \item{dtm}{the dfm object used to compute the clustering}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Shiny gadget for rainette clustering exploration
 }

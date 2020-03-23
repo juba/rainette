@@ -11,6 +11,9 @@ cutree(tree, ...)
 
 \item{...}{arguments passed to other methods}
 }
+\value{
+A vector with group membership.
+}
 \description{
 Cut a tree into groups
 }

@@ -44,6 +44,9 @@ k-means clustering initialised with current groups centers.}
 
 \item{text_size}{font size for barplots, max word size for wordclouds}
 }
+\value{
+A gtable object.
+}
 \description{
 Generate a clustering description plot from a rainette2 result
 }

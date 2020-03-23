@@ -35,6 +35,9 @@ rainette_plot(
 
 \item{text_size}{font size for barplots, max word size for wordclouds}
 }
+\value{
+A gtable object.
+}
 \description{
 Generate a clustering description plot from a rainette result
 }

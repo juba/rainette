@@ -17,6 +17,9 @@ maximum size.}
 
 \item{...}{arguments passed to other methods}
 }
+\value{
+A vector with group membership.
+}
 \description{
 Cut a rainette2 result object into groups of documents
 }

@@ -26,6 +26,10 @@ rainette_stats(
 
 \item{max_p}{maximum keyness statistic p-value}
 }
+\value{
+A list with, for each group, a data.frame of keyness statistics for the most specific
+n_terms features.
+}
 \description{
 Generate cluster keyness statistics from a rainette result
 }

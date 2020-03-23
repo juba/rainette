@@ -15,6 +15,9 @@ cutree_rainette(hres, k = NULL, h = NULL, ...)
 
 \item{...}{arguments passed to other methods}
 }
+\value{
+A vector with group membership.
+}
 \description{
 Cut a rainette result tree into groups of documents
 }
