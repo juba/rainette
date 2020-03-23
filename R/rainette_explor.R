@@ -24,6 +24,9 @@ span.hl.com { color: #888; font-style: italic;}
 #' @param dtm the dfm object used to compute the clustering
 #'
 #' @seealso `rainette_plot`
+#' 
+#' @return
+#' No return value, called for side effects.
 #'
 #' @examples 
 #' \donttest{

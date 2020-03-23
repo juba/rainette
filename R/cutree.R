@@ -3,6 +3,9 @@
 #' @param tree the hclust tree object to be cut
 #' @param ... arguments passed to other methods
 #'
+#' @return
+#' A vector with group membership.
+#'
 #' @details
 #' If `tree` is of class `rainette`, invokes [cutree_rainette()]. Otherwise, just run [stats::cutree()].
 #'
@@ -26,6 +29,9 @@ cutree <- function(tree, ...) {
 #' @param h unsupported
 #' @param ... arguments passed to other methods
 #'
+#' @return
+#' A vector with group membership.
+#'
 #' @export
 
 cutree_rainette <- function(hres, k = NULL, h = NULL,...) {
@@ -43,6 +49,9 @@ cutree_rainette <- function(hres, k = NULL, h = NULL,...) {
 #'    the partition with the maximum sum of chi2, `n` the partition with the 
 #'    maximum size.
 #' @param ... arguments passed to other methods
+#' 
+#' @return
+#' A vector with group membership.
 #'
 #' @seealso [rainette2_complete_groups()]
 #'

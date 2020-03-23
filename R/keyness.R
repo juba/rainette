@@ -9,6 +9,10 @@
 #'
 #' @seealso [quanteda::textstat_keyness()], [rainette_explor()], [rainette_plot()]
 #'
+#' @return
+#' A list with, for each group, a data.frame of keyness statistics for the most specific
+#' n_terms features.
+#'
 #' @export
 #' @examples 
 #' \donttest{

@@ -147,6 +147,9 @@ keyness_plots <- function(tabs, groups, type = "bar",
 #'
 #' @seealso [quanteda::textstat_keyness()], [rainette_explor()], [rainette_stats()]
 #'
+#' @return
+#' A gtable object.
+#'
 #' @export
 #' @examples 
 #' \donttest{
@@ -259,6 +262,9 @@ rainette_plot <- function(res, dtm, k = NULL,
 #' @param measure statistics to compute
 #' @param show_negative if TRUE, show negative keyness features
 #' @param text_size font size for barplots, max word size for wordclouds
+#'
+#' @return
+#' A gtable object.
 #'
 #' @seealso [quanteda::textstat_keyness()], [rainette2_explor()], [rainette2_complete_groups()]
 #'

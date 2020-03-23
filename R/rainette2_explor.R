@@ -5,6 +5,8 @@
 #'
 #' @seealso [rainette2_plot()]
 #'
+#' @return
+#' No return value, called for side effects.
 #' 
 #' @export
 #' 
