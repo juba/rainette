@@ -27,18 +27,6 @@ test_that("error if uc can't be computed", {
   expect_error(compute_uc(mini_dfm, min_uc_size = 5)) 
 })
 
-# fchisq_val
-
-test_that("fchisq_val result is ok", {
-  set.seed(13370)
-  t1 <- round(runif(100, 5, 50))
-  t2 <- round(runif(100, 10, 200))
-  row_sums <- t1 + t2
-  total <- sum(t1 + t2)
-  expect_equal(rainette:::fchisq_val(t1, t2, row_sums, total),
-               unname(chisq.test(cbind(t1, t2))$statistic))
-}) 
-
 # stat_col
 
 test_that("stat_col is ok", {

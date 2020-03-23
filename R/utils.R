@@ -4,16 +4,6 @@ if (getRversion() >= "2.15.1")
     "Group", "rainette_group", "text"))
 
 
-# Fast chi-square value computation
-
-fchisq_val <- function(tab1, tab2, row_sum, n) {
-  tmp <- cbind(tab1, tab2)
-  col_sum <- colSums(tmp)
-  E <- outer(row_sum, col_sum, "*") / n
-  sum((tmp - E)^2 / E)
-}
-
-
 #' Merges uces into uc according to minimum uc size
 #' 
 #' `rainette_uc_index` docvar
