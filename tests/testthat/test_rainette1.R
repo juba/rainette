@@ -21,7 +21,7 @@ mini_dfm <- as.dfm(m)
 indices <- rainette:::order_docs(mini_dfm)
 
 test_that("order_docs", {
-  ca_values <- if(installed.packages()["quanteda","Version"] < "2.0.0") {
+  ca_values <- if(utils::packageVersion("quanteda") < "2.0.0") {
     quanteda::textmodel_ca(mini_dfm)$rowcoord[,1]
   } else {
     quanteda.textmodels::textmodel_ca(mini_dfm)$rowcoord[,1]
