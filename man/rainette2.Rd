@@ -70,7 +70,6 @@ res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 2)
 res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 2)
 
 res <- rainette2(res1, res2, min_members = 2)
-rainette2_explor(res, dtm)
 }
 }
 \references{
