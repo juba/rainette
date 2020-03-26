@@ -1,10 +1,11 @@
 pandoc: 1.19.2.4
-pkgdown: 1.4.1
+pkgdown: 1.5.0
 pkgdown_sha: ~
 articles:
   algorithmes: algorithmes.html
   introduction_en: introduction_en.html
   introduction_usage: introduction_usage.html
+last_built: 2020-03-26T09:25Z
 urls:
   reference: https://juba.github.io/rainette//reference
   article: https://juba.github.io/rainette//articles
