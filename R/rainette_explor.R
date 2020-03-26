@@ -29,7 +29,7 @@ span.hl.com { color: #888; font-style: italic;}
 #' No return value, called for side effects.
 #'
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' library(quanteda)
 #' corpus <- data_corpus_inaugural
 #' corpus <- head(corpus, n = 10)

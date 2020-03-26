@@ -18,7 +18,7 @@ No return value, called for side effects.
 Shiny gadget for rainette clustering exploration
 }
 \examples{
-\donttest{
+\dontrun{
 library(quanteda)
 corpus <- data_corpus_inaugural
 corpus <- head(corpus, n = 10)
