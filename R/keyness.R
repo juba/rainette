@@ -42,8 +42,8 @@ rainette_stats <- function(
   tabs <- purrr::map(groups_list, function(group) {
     select <- (groups == group & !is.na(groups))
     tab <- quanteda::textstat_keyness(dtm, select, measure = measure) %>% 
-      arrange(desc(abs(!!stat_col))) %>% 
-      filter(p < 0.05)
+      as_tibble() %>% 
+      arrange(desc(abs(!!stat_col)))
     if (show_negative) {
       tab %>% 
         filter(p <= max_p) %>% 
