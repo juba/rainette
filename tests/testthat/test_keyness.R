@@ -16,13 +16,12 @@ test_that("rainette_stats", {
   expect_equal(length(stats), max(groups))
   n_stats_pos <- sum(stats[[2]]$sign == "positive")
   expect_equivalent(
-    stats[[2]][stats[[2]]$sign == "positive",] %>% dplyr::select(-sign),
+    stats[[2]][stats[[2]]$sign == "positive", -ncol(stats[[2]])],
     head(quanteda::textstat_keyness(dtm, groups == 2), n_stats_pos)
   )
   n_stats_neg <- sum(stats[[1]]$sign == "negative")
   expect_equivalent(
-    stats[[1]][stats[[1]]$sign == "negative",] %>% 
-      dplyr::select(-sign) %>% 
+    stats[[1]][stats[[1]]$sign == "negative",  -ncol(stats[[1]])] %>% 
       dplyr::arrange(desc(chi2)),
     tail(quanteda::textstat_keyness(dtm, groups == 1), n_stats_neg)
   )
