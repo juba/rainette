@@ -22,7 +22,7 @@ test_that("rainette_stats", {
   )
   n_stats_neg <- sum(stats[[3]]$sign == "negative")
   expect_equivalent(
-    stats[[3]][stats[[3]]$sign == "negative",  -ncol(stats[[1]])] %>% 
+    stats[[3]][stats[[3]]$sign == "negative",  -ncol(stats[[3]])] %>% 
       dplyr::arrange(desc(chi2)),
     tail(quanteda::textstat_keyness(dtm, groups == 3), n_stats_neg)
   )
