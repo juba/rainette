@@ -1,3 +1,4 @@
+library(testthat)
 library(quanteda)
 context("keyness stats functions")
 
@@ -16,15 +17,14 @@ test_that("rainette_stats", {
   expect_equal(length(stats), max(groups))
   n_stats_pos <- sum(stats[[2]]$sign == "positive")
   expect_equivalent(
-    stats[[2]][stats[[2]]$sign == "positive",] %>% dplyr::select(-sign),
+    stats[[2]][stats[[2]]$sign == "positive", -ncol(stats[[2]])],
     head(quanteda::textstat_keyness(dtm, groups == 2), n_stats_pos)
   )
-  n_stats_neg <- sum(stats[[1]]$sign == "negative")
+  n_stats_neg <- sum(stats[[3]]$sign == "negative")
   expect_equivalent(
-    stats[[1]][stats[[1]]$sign == "negative",] %>% 
-      dplyr::select(-sign) %>% 
+    stats[[3]][stats[[3]]$sign == "negative",  -ncol(stats[[1]])] %>% 
       dplyr::arrange(desc(chi2)),
-    tail(quanteda::textstat_keyness(dtm, groups == 1), n_stats_neg)
+    tail(quanteda::textstat_keyness(dtm, groups == 3), n_stats_neg)
   )
 
   ## lr
@@ -33,15 +33,14 @@ test_that("rainette_stats", {
   expect_equal(length(stats), max(groups))
   n_stats_pos <- sum(stats[[1]]$sign == "positive")
   expect_equivalent(
-    stats[[1]][stats[[1]]$sign == "positive",] %>% dplyr::select(-sign),
+    stats[[1]][stats[[1]]$sign == "positive", -ncol(stats[[1]])],
     head(quanteda::textstat_keyness(dtm, measure = "lr", groups == 1), n_stats_pos)
   )
-  n_stats_neg <- sum(stats[[3]]$sign == "negative")
+  n_stats_neg <- sum(stats[[4]]$sign == "negative")
   expect_equivalent(
-    stats[[3]][stats[[3]]$sign == "negative",] %>% 
-      dplyr::select(-sign) %>% 
+    stats[[4]][stats[[4]]$sign == "negative", -ncol(stats[[4]])] %>% 
       dplyr::arrange(desc(G2)),
-    tail(quanteda::textstat_keyness(dtm, measure = "lr", groups == 3), n_stats_neg)
+    tail(quanteda::textstat_keyness(dtm, measure = "lr", groups == 4), n_stats_neg)
   )
 
   ## max_p
