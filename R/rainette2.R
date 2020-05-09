@@ -14,7 +14,11 @@ compute_chi2 <- function(n_both, n1, n2, n_tot) {
 ## Compute data frame of groups at each k for a clustering
 
 get_groups <- function(res) {
-  groups <- purrr::imap_dfc(res$uce_groups, ~ paste(.y, .x, sep="."))
+  groups <- purrr::imap_dfc(res$uce_groups, ~ {
+    v <- data.frame(paste(.y, .x, sep="."))
+    colnames(v) <- .y
+    v
+  })
   colnames(groups) <- seq_along(groups)
   return(groups)
 }
@@ -188,6 +192,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 #' 
 #' @examples
 #' \donttest{
+#' library(quanteda)
 #' mini_corpus <- head(data_corpus_inaugural, n = 2)
 #' mini_corpus <- split_segments(mini_corpus, 5)
 #' dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
