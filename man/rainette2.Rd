@@ -60,6 +60,7 @@ For more details on optimal partitions search algorithm, please see package vign
 }
 \examples{
 \donttest{
+require(quanteda)
 mini_corpus <- head(data_corpus_inaugural, n = 2)
 mini_corpus <- split_segments(mini_corpus, 5)
 dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)

@@ -31,7 +31,7 @@
 #'
 #' @examples
 #' \donttest{
-#' library(quanteda)
+#' require(quanteda)
 #' corpus <- data_corpus_inaugural
 #' corpus <- head(corpus, n = 10)
 #' corpus <- split_segments(corpus)
