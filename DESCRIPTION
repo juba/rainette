@@ -41,7 +41,6 @@ Suggests:
     knitr,
     rmarkdown,
     covr,
-    vdiffr,
     tm,
     FNN,
     quanteda.textmodels
