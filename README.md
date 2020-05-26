@@ -121,3 +121,5 @@ This classification method has been created by Max Reinert, and is described in 
 Thanks to Pierre Ratineau, the author of [Iramuteq](http://www.iramuteq.org/), for providing it as free software and open source. Even if the R code has been almost entirely rewritten, it has been a precious resource to understand the algorithms.
 
 Many thanks to [Sébastien Rochette](https://github.com/statnmap) for the creation of the hex logo.
+
+Many thanks to [Florian Privé](https://github.com/privefl/) for his work on rewriting and optimizing Rcpp code.
