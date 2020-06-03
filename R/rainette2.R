@@ -15,7 +15,7 @@ compute_chi2 <- function(n_both, n1, n2, n_tot) {
 
 get_groups <- function(res) {
   groups <- purrr::imap_dfc(res$uce_groups, ~ {
-    v <- data.frame(paste(.y, .x, sep="."))
+    v <- data.frame(paste(.y, .x, sep="."), stringsAsFactors = FALSE)
     colnames(v) <- .y
     v
   })
