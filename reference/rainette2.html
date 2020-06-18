@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rainette</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -147,14 +147,14 @@
     </div>
 
     <pre class="usage"><span class='fu'>rainette2</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>max_k</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>uc_size1</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>uc_size2</span> <span class='kw'>=</span> <span class='fl'>15</span>,
-  <span class='kw'>min_members</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>min_chi2</span> <span class='kw'>=</span> <span class='fl'>3.84</span>,
-  <span class='no'>...</span>
+  <span class='kw'>x</span>,
+  y = <span class='kw'>NULL</span>,
+  max_k = <span class='fl'>5</span>,
+  uc_size1 = <span class='fl'>10</span>,
+  uc_size2 = <span class='fl'>15</span>,
+  min_members = <span class='fl'>10</span>,
+  min_chi2 = <span class='fl'>3.84</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -162,11 +162,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>either a quanteda dfm object or the result of <code><a href='rainette.html'>rainette()</a></code></p></td>
+      <td><p>either a quanteda dfm object or the result of <code>rainette()</code></p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>if <code>x</code> is a <code><a href='rainette.html'>rainette()</a></code> result, this must be another <code><a href='rainette.html'>rainette()</a></code> result from same dfm
+      <td><p>if <code>x</code> is a <code>rainette()</code> result, this must be another <code>rainette()</code> result from same dfm
 but with different uc size.</p></td>
     </tr>
     <tr>
@@ -191,7 +191,7 @@ but with different uc size.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>if <code>x</code> is a dfm object, parameters passed to <code><a href='rainette.html'>rainette()</a></code> for both
+      <td><p>if <code>x</code> is a dfm object, parameters passed to <code>rainette()</code> for both
 simple clusterings</p></td>
     </tr>
     </table>
@@ -225,19 +225,18 @@ and the function will only look for optimal partitions.</p>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='rainette.html'>rainette()</a></code>, <code><a href='cutree_rainette2.html'>cutree_rainette2()</a></code>, <code><a href='rainette2_plot.html'>rainette2_plot()</a></code>, <code><a href='rainette2_explor.html'>rainette2_explor()</a></code></p></div>
+    <div class='dont-index'><p><code>rainette()</code>, <code>cutree_rainette2()</code>, <code>rainette2_plot()</code>, <code>rainette2_explor()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>quanteda</span>)
-<span class='no'>mini_corpus</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>data_corpus_inaugural</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>mini_corpus</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='split_segments.html'>split_segments</a></span>(<span class='no'>mini_corpus</span>, <span class='fl'>5</span>)</div><div class='output co'>#&gt; <span class='message'>  Splitting...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='no'>dtm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span>(<span class='no'>mini_corpus</span>, <span class='kw'>remove</span> <span class='kw'>=</span> <span class='fu'><a href='https://quanteda.io/reference/reexports.html'>stopwords</a></span>(<span class='st'>"en"</span>), <span class='kw'>tolower</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>remove_punct</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>dtm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_wordstem.html'>dfm_wordstem</a></span>(<span class='no'>dtm</span>, <span class='kw'>language</span> <span class='kw'>=</span> <span class='st'>"english"</span>)
-<span class='no'>dtm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span>(<span class='no'>dtm</span>, <span class='kw'>min_termfreq</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='kw'><a href='https://quanteda.io'>quanteda</a></span>)
+<span class='kw'>mini_corpus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>data_corpus_inaugural</span>, n = <span class='fl'>2</span>)
+<span class='kw'>mini_corpus</span> <span class='op'>&lt;-</span> <span class='fu'>split_segments</span>(<span class='kw'>mini_corpus</span>, <span class='fl'>5</span>)</div><div class='output co'>#&gt; <span class='message'>  Splitting...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='kw'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span>(<span class='kw'>mini_corpus</span>, remove = <span class='fu'><a href='https://rdrr.io/pkg/stopwords/man/stopwords.html'>stopwords</a></span>(<span class='st'>"en"</span>), tolower = <span class='fl'>TRUE</span>, remove_punct = <span class='fl'>TRUE</span>)
+<span class='kw'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_wordstem.html'>dfm_wordstem</a></span>(<span class='kw'>dtm</span>, language = <span class='st'>"english"</span>)
+<span class='kw'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span>(<span class='kw'>dtm</span>, min_termfreq = <span class='fl'>3</span>)
 
-<span class='no'>res1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span>(<span class='no'>dtm</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>min_uc_size</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>min_split_members</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='no'>res2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span>(<span class='no'>dtm</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>min_uc_size</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>min_split_members</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'>
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>rainette2</span>(<span class='no'>res1</span>, <span class='no'>res2</span>, <span class='kw'>min_members</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>  Searching for best partitions...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'># }
-</div></pre>
+<span class='kw'>res1</span> <span class='op'>&lt;-</span> <span class='fu'>rainette</span>(<span class='kw'>dtm</span>, k = <span class='fl'>5</span>, min_uc_size = <span class='fl'>2</span>, min_split_members = <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='kw'>res2</span> <span class='op'>&lt;-</span> <span class='fu'>rainette</span>(<span class='kw'>dtm</span>, k = <span class='fl'>5</span>, min_uc_size = <span class='fl'>3</span>, min_split_members = <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'>
+<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>rainette2</span>(<span class='kw'>res1</span>, <span class='kw'>res2</span>, min_members = <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>  Searching for best partitions...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='co'># }</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -253,7 +252,7 @@ and the function will only look for optimal partitions.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rainette</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -147,13 +147,13 @@
     </div>
 
     <pre class="usage"><span class='fu'>rainette</span>(
-  <span class='no'>dtm</span>,
-  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>min_uc_size</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>min_split_members</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>cc_test</span> <span class='kw'>=</span> <span class='fl'>0.3</span>,
-  <span class='kw'>tsj</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='no'>min_members</span>
+  <span class='kw'>dtm</span>,
+  k = <span class='fl'>10</span>,
+  min_uc_size = <span class='fl'>10</span>,
+  min_split_members = <span class='fl'>5</span>,
+  cc_test = <span class='fl'>0.3</span>,
+  tsj = <span class='fl'>3</span>,
+  <span class='kw'>min_members</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -162,7 +162,7 @@
     <tr>
       <th>dtm</th>
       <td><p>quanteda dfm object of documents to cluster, usually the
-result of <code><a href='split_segments.html'>split_segments()</a></code></p></td>
+result of <code>split_segments()</code></p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -213,20 +213,19 @@ quite a bit, see the package vignettes for more details.</p>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='split_segments.html'>split_segments()</a></code>, <code><a href='rainette2.html'>rainette2()</a></code>, <code><a href='cutree_rainette.html'>cutree_rainette()</a></code>, <code><a href='rainette_plot.html'>rainette_plot()</a></code>, <code><a href='rainette_explor.html'>rainette_explor()</a></code></p></div>
+    <div class='dont-index'><p><code>split_segments()</code>, <code>rainette2()</code>, <code>cutree_rainette()</code>, <code>rainette_plot()</code>, <code>rainette_explor()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>quanteda</span>)</div><div class='output co'>#&gt; <span class='message'>Le chargement a nécessité le package : quanteda</span></div><div class='output co'>#&gt; <span class='message'>Package version: 2.0.1</span></div><div class='output co'>#&gt; <span class='message'>Parallel computing: 2 of 8 threads used.</span></div><div class='output co'>#&gt; <span class='message'>See https://quanteda.io for tutorials and examples.</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attachement du package : ‘quanteda’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:utils’:</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='kw'><a href='https://quanteda.io'>quanteda</a></span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: quanteda</span></div><div class='output co'>#&gt; <span class='message'>Package version: 2.0.1</span></div><div class='output co'>#&gt; <span class='message'>Parallel computing: 2 of 4 threads used.</span></div><div class='output co'>#&gt; <span class='message'>See https://quanteda.io for tutorials and examples.</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘quanteda’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:utils’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    View</span></div><div class='input'><span class='no'>corpus</span> <span class='kw'>&lt;-</span> <span class='no'>data_corpus_inaugural</span>
-<span class='no'>corpus</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>corpus</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>corpus</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='split_segments.html'>split_segments</a></span>(<span class='no'>corpus</span>)</div><div class='output co'>#&gt; <span class='message'>  Splitting...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='no'>dtm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span>(<span class='no'>corpus</span>, <span class='kw'>remove</span> <span class='kw'>=</span> <span class='fu'><a href='https://quanteda.io/reference/reexports.html'>stopwords</a></span>(<span class='st'>"en"</span>), <span class='kw'>tolower</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>remove_punct</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>dtm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_wordstem.html'>dfm_wordstem</a></span>(<span class='no'>dtm</span>, <span class='kw'>language</span> <span class='kw'>=</span> <span class='st'>"english"</span>)
-<span class='no'>dtm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span>(<span class='no'>dtm</span>, <span class='kw'>min_termfreq</span> <span class='kw'>=</span> <span class='fl'>3</span>)
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>rainette</span>(<span class='no'>dtm</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'># }
-
+#&gt; <span class='message'>    View</span></div><div class='input'><span class='kw'>corpus</span> <span class='op'>&lt;-</span> <span class='kw'>data_corpus_inaugural</span>
+<span class='kw'>corpus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>corpus</span>, n = <span class='fl'>10</span>)
+<span class='kw'>corpus</span> <span class='op'>&lt;-</span> <span class='fu'>split_segments</span>(<span class='kw'>corpus</span>)</div><div class='output co'>#&gt; <span class='message'>  Splitting...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='kw'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span>(<span class='kw'>corpus</span>, remove = <span class='fu'><a href='https://rdrr.io/pkg/stopwords/man/stopwords.html'>stopwords</a></span>(<span class='st'>"en"</span>), tolower = <span class='fl'>TRUE</span>, remove_punct = <span class='fl'>TRUE</span>)
+<span class='kw'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_wordstem.html'>dfm_wordstem</a></span>(<span class='kw'>dtm</span>, language = <span class='st'>"english"</span>)
+<span class='kw'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span>(<span class='kw'>dtm</span>, min_termfreq = <span class='fl'>3</span>)
+<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>rainette</span>(<span class='kw'>dtm</span>, k = <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -243,7 +242,7 @@ quite a bit, see the package vignettes for more details.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>
