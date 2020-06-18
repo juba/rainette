@@ -47,10 +47,10 @@ extract_metadata <- function(docs) {
 #' @param f a file name or a connection
 #' @param id_var name of metadata variable to be used as documents id
 #' @param thematics if "remove", thematics lines are removed. If "split", texts as splitted at each thematic, and metadata duplicated accordingly
-#' @param ... arguments passed to [base::file()] if `f` is a file name.
+#' @param ... arguments passed to \code{\link[base:connections]{file}} if `f` is a file name.
 #'
 #' @details 
-#' A description of the Iramuteq corpus format can be found here : <http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages>
+#' A description of the Iramuteq corpus format can be found here : \url{http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages}
 #' 
 #' @return
 #' A quanteda corpus object. Note that metadata variables in docvars are all imported as characters.

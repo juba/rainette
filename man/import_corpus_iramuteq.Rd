@@ -13,7 +13,7 @@ import_corpus_iramuteq(f, id_var = NULL, thematics = c("remove", "split"), ...)
 
 \item{thematics}{if "remove", thematics lines are removed. If "split", texts as splitted at each thematic, and metadata duplicated accordingly}
 
-\item{...}{arguments passed to \code{\link[base:file]{base::file()}} if \code{f} is a file name.}
+\item{...}{arguments passed to \code{\link[base]{file}} if \code{f} is a file name.}
 }
 \value{
 A quanteda corpus object. Note that metadata variables in docvars are all imported as characters.
