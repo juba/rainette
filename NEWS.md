@@ -1,3 +1,6 @@
+# rainette 0.1.2
+
+
 # rainette 0.1.1
 
 * Compatibility with dplyr 1.0
