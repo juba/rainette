@@ -16,3 +16,4 @@ Rscript_iramuteq
 essai*.R
 *.o
 *.so
+docs/
