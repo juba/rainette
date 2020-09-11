@@ -36,3 +36,11 @@ reference:
   - '`order_docs`'
   - '`select_features`'
   - '`switch_docs`'
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - introduction_en
+  - introduction_usage
+  - algorithmes
+  
