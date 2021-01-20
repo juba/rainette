@@ -1,8 +1,8 @@
 Package: rainette
 Type: Package
 Title: The Reinert Method for Textual Data Clustering
-Version: 0.1.2
-Date: 2021-01-19
+Version: 0.1.3
+Date: 2021-01-21
 Authors@R: c(person("Julien", "Barnier", email="julien.barnier@cnrs.fr",
     role=c("aut","cre")), person("Florian", "Privé",
     email="florian.prive.21@gmail.com", role="ctb"))
