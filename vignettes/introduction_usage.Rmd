@@ -72,7 +72,7 @@ head(docvars(corpus))
 On peut aussi visualiser les premiers segments de texte calculés :
 
 ```{r}
-texts(corpus)[1:2]
+as.character(corpus)[1:2]
 ```
 
 

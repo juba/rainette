@@ -30,7 +30,7 @@ test_that("order_docs", {
 })
 
 ## split_tab_by_chisq
- 
+
 tab <- convert(mini_dfm, to = "matrix")
 storage.mode(tab) <- "integer"
 res_split <- rainette:::cpp_split_tab(m, indices)
@@ -89,7 +89,8 @@ test_that("rainette on mini_dfm", {
 
 mini_corpus <- head(data_corpus_inaugural, n = 2)
 mini_corpus <- split_segments(mini_corpus)
-dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
+dtm <- dfm(tokens(mini_corpus, remove_punct = TRUE), tolower = TRUE)
+dtm <- dfm_remove(dtm, stopwords("en"))
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
@@ -117,7 +118,8 @@ test_that("all uce belong to the same group", {
 
 corpus <- head(data_corpus_inaugural, n = 10)
 corpus <- split_segments(corpus)
-dtm <- dfm(corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
+dtm <- dfm(tokens(corpus, remove_punct = TRUE), tolower = TRUE)
+dtm <- dfm_remove(dtm, stopwords("en"))
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
@@ -140,7 +142,7 @@ test_that("dfm with 'document' feature is ok", {
   res_document <- rainette(dfm_document, k = 2, min_uc_size = 1, min_split_members = 1)
   res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 1)
   expect_equal(res$group, res_document$group)
-  expect_equal(res$height, res_document$height)  
+  expect_equal(res$height, res_document$height)
 })
 
 

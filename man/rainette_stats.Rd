@@ -47,5 +47,5 @@ rainette_stats(groups, dtm)
 }
 }
 \seealso{
-\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette_explor]{rainette_explor()}}, \code{\link[=rainette_plot]{rainette_plot()}}
+\code{\link[quanteda.textstats:textstat_keyness]{quanteda.textstats::textstat_keyness()}}, \code{\link[=rainette_explor]{rainette_explor()}}, \code{\link[=rainette_plot]{rainette_plot()}}
 }

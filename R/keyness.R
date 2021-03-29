@@ -7,14 +7,14 @@
 #' @param show_negative if TRUE, show negative keyness features
 #' @param max_p maximum keyness statistic p-value
 #'
-#' @seealso [quanteda::textstat_keyness()], [rainette_explor()], [rainette_plot()]
+#' @seealso [quanteda.textstats::textstat_keyness()], [rainette_explor()], [rainette_plot()]
 #'
 #' @return
 #' A list with, for each group, a data.frame of keyness statistics for the most specific
 #' n_terms features.
 #'
 #' @export
-#' @examples 
+#' @examples
 #' \donttest{
 #' library(quanteda)
 #' corpus <- data_corpus_inaugural
@@ -29,35 +29,35 @@
 
 rainette_stats <- function(
   groups, dtm,
-  measure = c("chi2", "lr"), 
-  n_terms = 15, 
+  measure = c("chi2", "lr"),
+  n_terms = 15,
   show_negative = TRUE,
   max_p = 0.05) {
-  
+
   measure <- match.arg(measure)
   stat_col <- stat_col(measure)
-  
+
   groups_list <- sort(unique(groups))
   groups_list <- groups_list[!is.na(groups_list)]
   tabs <- purrr::map(groups_list, function(group) {
     select <- (groups == group & !is.na(groups))
-    tab <- quanteda::textstat_keyness(dtm, select, measure = measure) %>% 
-      as_tibble() %>% 
+    tab <- quanteda.textstats::textstat_keyness(dtm, select, measure = measure) %>%
+      as_tibble() %>%
       arrange(desc(abs(!!stat_col)))
     if (show_negative) {
-      tab %>% 
-        filter(p <= max_p) %>% 
-        slice(1:n_terms) %>% 
+      tab %>%
+        filter(p <= max_p) %>%
+        slice(1:n_terms) %>%
         mutate(sign = if_else(!!stat_col > 0, "positive", "negative"),
           sign = factor(sign, levels = c("positive", "negative")))
     } else {
-      tab %>% 
-        filter(!!stat_col > 0, p <= max_p) %>% 
-        slice(1:n_terms) %>% 
+      tab %>%
+        filter(!!stat_col > 0, p <= max_p) %>%
+        slice(1:n_terms) %>%
         mutate(sign = "positive")
     }
   })
-  
+
   tabs
-  
+
 }

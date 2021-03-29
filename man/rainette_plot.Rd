@@ -55,5 +55,5 @@ rainette_plot(res, dtm)
 
 }
 \seealso{
-\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette_explor]{rainette_explor()}}, \code{\link[=rainette_stats]{rainette_stats()}}
+\code{\link[quanteda.textstats:textstat_keyness]{quanteda.textstats::textstat_keyness()}}, \code{\link[=rainette_explor]{rainette_explor()}}, \code{\link[=rainette_stats]{rainette_stats()}}
 }
