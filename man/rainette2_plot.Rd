@@ -51,5 +51,5 @@ A gtable object.
 Generate a clustering description plot from a rainette2 result
 }
 \seealso{
-\code{\link[quanteda:textstat_keyness]{quanteda::textstat_keyness()}}, \code{\link[=rainette2_explor]{rainette2_explor()}}, \code{\link[=rainette2_complete_groups]{rainette2_complete_groups()}}
+\code{\link[quanteda.textstats:textstat_keyness]{quanteda.textstats::textstat_keyness()}}, \code{\link[=rainette2_explor]{rainette2_explor()}}, \code{\link[=rainette2_complete_groups]{rainette2_complete_groups()}}
 }

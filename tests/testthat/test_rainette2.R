@@ -3,7 +3,8 @@ context("double reinert classification")
 
 mini_corpus <- head(data_corpus_inaugural, n = 2)
 mini_corpus <- split_segments(mini_corpus, 5)
-dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
+dtm <- dfm(tokens(mini_corpus, remove_punct = TRUE), tolower = TRUE)
+dtm <- dfm_remove(dtm, stopwords("en"))
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
@@ -15,10 +16,10 @@ res <- rainette2(res1, res2, min_members = 2)
 
 test_that("compute_chi2 is ok", {
   tab <- matrix(c(45, 121 - 45, 257 - 45, 1213 - 121 - 257 +45), nrow = 2)
-  expect_equal(rainette:::compute_chi2(45, 121, 257, 1213), 
+  expect_equal(rainette:::compute_chi2(45, 121, 257, 1213),
     chisq.test(tab)$statistic)
   tab <- matrix(c(0, 12, 25, 121 - 12 - 25), nrow = 2)
-  expect_equal(rainette:::compute_chi2(0, 12, 25, 121), 
+  expect_equal(rainette:::compute_chi2(0, 12, 25, 121),
     suppressWarnings(-chisq.test(tab)$statistic))
 })
 
@@ -35,7 +36,7 @@ test_that("classes_crosstab is ok", {
   colnames(g2) <- 1:2
   n_tot <- 4
   tab <- rainette:::classes_crosstab(g1, g2, n_tot)
-  
+
   expect_equal(nrow(tab), 25)
   expect_equal(colnames(tab), c("g1", "g2", "n_both", "n1", "n2", "level1", "level2", "chi2"))
   tmp <- tab %>% dplyr::filter(level1 == 2, level2 == 2, g1 == 2, g2 == 2)
@@ -53,13 +54,13 @@ test_that("filter_crosstab is ok", {
   n_tot <- 5
   tab <- rainette:::classes_crosstab(g1, g2, n_tot)
   ftab <- rainette:::filter_crosstab(tab, g1, g2, min_members = 2, min_chi2 = 0.5)
-  
+
   expect_equal(nrow(ftab), 1)
   expect_equal(ftab$g1, 1)
   expect_equal(ftab$g2, 1)
   expect_equal(ftab$n_both, 4)
   expect_equal(ftab$interclass, "1x1")
-  expect_equal(ftab$chi2, 
+  expect_equal(ftab$chi2,
     suppressWarnings(unname(chisq.test(matrix(c(4,0,0,1), nrow=2))$statistic)))
   expect_equal(ftab$members, list(1:4))
 })
@@ -68,9 +69,9 @@ test_that("cross_sizes is ok", {
   tab <- tibble(interclass = c("1.1x1.1", "1.2x1.1", "2.1x2.2", "2.1x1.1"),
     members = list(c(1,2,3), c(4,5,6), c(1,2), 5))
   sizes <- rainette:::cross_sizes(tab)
-  expect_equal(sizes, structure(c(1, 1, 1, 1, 0, 1, 1, 1, 2, 0, 1, 1, 0, 1, 0, 1), .Dim = c(4L, 
+  expect_equal(sizes, structure(c(1, 1, 1, 1, 0, 1, 1, 1, 2, 0, 1, 1, 0, 1, 0, 1), .Dim = c(4L,
     4L), .Dimnames = list(c("1.1x1.1", "1.2x1.1", "2.1x2.2", "2.1x1.1"
-    ), c("1.1x1.1", "1.2x1.1", "2.1x2.2", "2.1x1.1"))))  
+    ), c("1.1x1.1", "1.2x1.1", "2.1x2.2", "2.1x1.1"))))
 })
 
 test_that("next_partitions is ok", {
@@ -78,13 +79,13 @@ test_that("next_partitions is ok", {
     members = list(c(1,2,3), c(4,5,6), c(1,2), 7))
   sizes <- rainette:::cross_sizes(tab)
   partitions <- list(colnames(sizes))
-  
+
   partitions[[2]] <- rainette:::next_partitions(partitions, sizes)
-  expect_equal(partitions[[2]], list(c("1.1x1.1", "1.2x1.1"), c("1.1x1.1", "2.1x1.1"), c("1.2x1.1", 
+  expect_equal(partitions[[2]], list(c("1.1x1.1", "1.2x1.1"), c("1.1x1.1", "2.1x1.1"), c("1.2x1.1",
     "2.1x2.2"), c("1.2x1.1", "2.1x1.1"), c("2.1x2.2", "2.1x1.1")))
-  
+
   partitions[[3]] <- rainette:::next_partitions(partitions, sizes)
-  expect_equal(partitions[[3]], list(c("1.1x1.1", "1.2x1.1", "2.1x1.1"), c("1.2x1.1", "2.1x2.2", 
+  expect_equal(partitions[[3]], list(c("1.1x1.1", "1.2x1.1", "2.1x1.1"), c("1.2x1.1", "2.1x2.2",
     "2.1x1.1")))
   expect_equal(rainette:::next_partitions(partitions, sizes), NULL)
 })

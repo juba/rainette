@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Julien Barnier" />
+
+<meta name="date" content="2021-03-29" />
+
+<title>[fr] Description des algorithmes</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">[fr] Description des algorithmes</h1>
+<h4 class="author">Julien Barnier</h4>
+<h4 class="date">2021-03-29</h4>
+
+
+
+<p>L’objectif de ce document est de décrire les algorithmes utilisés pour les classifications dans <code>rainette</code>, et de comparer notamment avec l’implémentation d’Iramuteq (dans sa version <code>0.7-alpha2</code>). Aucune comparaison n’a pu être faite avec Alceste car il s’agit d’un logiciel commercial et propriétaire.</p>
+<p>À noter que l’implémentation de <code>rainette</code> repose sur deux éléments principaux :</p>
+<ul>
+<li>les deux articles de Max Reinert cités dans les <a href="#références">références</a></li>
+<li>le code source d’Iramuteq, notamment les fichiers <code>CHD.R</code> et <code>chdtxt.R</code>. Le code R a cependant été quasiment entièrement réécrit, et certaines portions ont été implémentées en C++ via <a href="http://rcpp.org/">Rcpp</a>.</li>
+</ul>
+<div id="algorithme-de-classification-simple" class="section level1">
+<h1>Algorithme de classification simple</h1>
+<div id="matrice-de-départ" class="section level2">
+<h2>Matrice de départ</h2>
+<p>La classification simple est une classification descendante hiérarchique (CDH).</p>
+<p>Le tableau de départ est la matrice termes-documents croisant les segments de texte (unités de contexte élémentaires, <em>uce</em>), éventuellement regroupés en unités de contexte (<em>uc</em>) s’ils ne comportent pas suffisamment de formes différentes (selon la valeur de l’argument <code>min_uc_size</code>), et les termes. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d’effectifs.</p>
+<p>On a donc un tableau de ce type :</p>
+<pre><code>##     partir un jour sans retour
+## uc1      1  1    0    1      0
+## uc2      0  1    1    0      1
+## uc3      1  1    1    0      1
+## uc4      0  1    0    1      1</code></pre>
+</div>
+<div id="division-maximisant-le-khi2" class="section level2">
+<h2>Division maximisant le Khi2</h2>
+<p>On souhaite diviser ce tableau de départ en maximisant la valeur du Khi2 obtenue lorsqu’on regroupe les lignes en deux classes. Par exemple, dans le tableau ci-dessus, si on regroupe <code>uc1</code> avec <code>uc2</code> et <code>uc3</code> avec <code>uc4</code>, on obtient le tableau suivant :</p>
+<pre><code>##      partir un jour sans retour
+## [1,]      1  2    1    1      1
+## [2,]      1  2    1    1      2</code></pre>
+<p>On peut calculer le Khi2 de ce tableau (qui vaut en l’occurrence 0.2579365). Dans un cas aussi simple, on peut effectuer tous les regroupements d’<code>uc</code> possible et déterminer lequel correspond au Khi2 maximal, mais avec des données réelles cela prendrait trop de temps.</p>
+<p>On opère donc de la manière suivante :</p>
+<ul>
+<li>on effectue une analyse factorielle des correspondances de la matrice termes-documents, et on ordonne les documents selon leur coordonnée sur le premier axe de cette AFC.</li>
+<li>on regroupe tour à tour les points entre eux selon cet ordre : d’abord le point avec la coordonnée la plus basse <em>vs</em> tous les autres, puis les deux points avec les coordonnées les plus basses <em>vs</em> tous les autres, etc. On calcule le Khi2 correspondant à chaque fois et on conserve le regroupement qui le maximise.</li>
+<li>enfin, à partir de ce premier regroupement, on effectue une réaffectation des points : on change tour à tour chaque point de classe, et on regarde si cela fait augmenter le Khi2. Dans ce cas on garde cette nouvelle affectation.</li>
+<li>on recommence cette opération de réaffectation jusqu’à ce qu’elle ne permette plus d’augmenter la valeur du Khi2.</li>
+</ul>
+<p>On obtient donc deux nouveaux tableaux correspondant au regroupement des lignes en vue de la maximisation du Khi2 du tableau regroupé.</p>
+</div>
+<div id="sélection-des-termes" class="section level2">
+<h2>Sélection des termes</h2>
+<p>L’étape suivante consiste en une sélection des termes dans chacun des deux tableaux pour les prochaines itérations :</p>
+<ul>
+<li>dans chaque tableau, on regarde la fréquence de chaque terme. On supprime les termes qui apparaissent moins de <code>tsj</code> fois (3 par défaut).</li>
+<li>on compare également cet effectif avec l’effectif attendu sous l’hypothèse d’indépendance de la répartition du terme entre les deux groupes et on en déduit un Khi2 et un coefficient de contingence pour ce terme. Si ce coefficient de contingence est supérieur à <code>cc</code> (0.3 par défaut), on ne conserve le terme que dans le tableau dans lequel il est surreprésenté.</li>
+</ul>
+<p>Parmi les deux tableaux finaux obtenus après séparation et sélection des termes, on recommence l’algorithme sur le tableau le plus gros, celui comportant le plus de documents (sauf si le tableau en question est trop petit pour calculer une AFC, ou si son effectif est inférieur à l’argument <code>min_members</code>).</p>
+<p>En procédant de cette manière <code>k</code> fois, on obtient une CDH en <code>k</code> groupes, et un dendrogramme correspondant (la hauteur du dendrogramme étant la valeur maximale du Khi2 trouvée au moment du split).</p>
+</div>
+<div id="différences-avec-iramuteq" class="section level2">
+<h2>Différences avec Iramuteq</h2>
+<p>L’implémentation de l’algorithme dans <code>rainette</code> se différencie de celle d’Iramuteq surtout dans la gestion du paramètre <code>min_members</code> (le nombre minimal de documents dans une classe).</p>
+<p>Dans <code>rainette</code>, <code>min_members</code> est uniquement utilisé au moment du choix du tableau suivant à splitter : si aucun tableau n’a un effectif supérieur à ce paramètre, l’algorithme s’arrête même si on n’a pas atteint la valeur souhaitée de <code>k</code>.</p>
+<p>Dans Iramuteq, l’algorithme se répète <code>k</code> fois dans tous les cas, et il procède à la fin à un regroupement des classes dont l’effectif est inférieur à l’effectif minimal souhaité. Ce regroupement s’effectue en fusionnant ces classes en “remontant” le dendrogramme.</p>
+<p>L’avantage de l’implémentation dans <code>rainette</code> est qu’on ne “casse” pas la logique du dendrogramme, et qu’on obtient donc comme résultat un arbre complet, qu’on peut couper à la hauteur souhaitée : on peut donc explorer la classification en 2, 3 … <code>k</code> groupes. L’inconvénient est qu’on n’a pas d’assurance de n’avoir aucune classe avec un effectif inférieur à <code>min_members</code> : on doit procéder à des regroupements manuels si nécessaire.</p>
+</div>
+</div>
+<div id="algorithme-de-double-classification" class="section level1">
+<h1>Algorithme de double classification</h1>
+<p>La double classification consiste à effectuer deux classifications simples, mais avec des tailles d’<em>uc</em> différentes (valeurs distinctes de <code>min_uc_size</code>). L’idée est alors de “croiser” les résultats de ces deux CDH pour déterminer des classes plus “robustes”.</p>
+<div id="calcul-des-classes-croisées" class="section level2">
+<h2>Calcul des classes croisées</h2>
+<p>Dans ce qui suit on considère, pour les deux CDH, toutes les classes obtenues pour chaque niveau de <code>k</code>. Pour une CDH avec <code>k = 5</code>, on a donc un total de 14 classes dans chaque CDH.</p>
+<p>La première étape consiste à croiser les classes des deux CDH :</p>
+<ul>
+<li>on prend chaque classe de la CDH1, et on la croise avec chaque classe de la CDH2 (y compris si les classes ne sont pas de même niveau <code>k</code>). On appelle la nouvelle classe obtenue une “classe croisée”.</li>
+<li>pour chaque classe croisée, on calcule l’effectif du croisement (le nombre de documents présents dans les deux classes).</li>
+<li>à partir de cet effectif, de l’effectif de chaque classe et du nombre total de documents, on peut créer un tableau croisé d’appartenance aux deux classes : on calcule alors le Khi2 de ce tableau, qui représente une mesure de “l’association” entre les deux classes.</li>
+</ul>
+<p>À noter que le croisement systématique de toutes les classes entraîne beaucoup de “doublons”, c’est-à-dire de classes croisées avec exactement les mêmes membres. Ceux-ci ne sont évidemment pas conservés.</p>
+<p>L’étape suivante consiste à sélectionner les ensembles de classes croisées correspondant à la meilleure partition de l’ensemble des documents, c’est-à-dire qu’on va considérer tous les ensembles de classes croisées n’ayant aucun document en commun, et qu’on va chercher parmi toutes ces partitions la partition “optimale”.</p>
+<p>La procédure à suivre décrite dans les articles cités dans les <a href="#références">références</a> n’est pas très claire, on s’est donc pour la suite surtout inspiré du code d’Iramuteq.</p>
+</div>
+<div id="sélection-des-classes-croisées" class="section level2">
+<h2>Sélection des classes croisées</h2>
+<p>Pour diminuer le nombre de partitions à examiner, on commence par sélectionner certaines classes croisées :</p>
+<ul>
+<li>on supprime toutes les classes croisées dont l’effectif (le nombre de documents) est inférieur à <code>min_members</code></li>
+<li>on supprime toutes les classes croisées dont le Khi2 d’association est inférieur à <code>min_chi2</code> (par défaut 3.84, c’est-à-dire la valeur du quantile à 95% pour un degré de liberté)</li>
+</ul>
+</div>
+<div id="calcul-des-partitions" class="section level2">
+<h2>Calcul des partitions</h2>
+<p>Le calcul des partitions s’effectue de manière récursive à partir des classes croisées conservées à l’étape précédente :</p>
+<ul>
+<li>pour <code>k = 2</code>, on croise toutes les classes croisées deux à deux et on ne conserve que les paires n’ayant aucun élément en commun.</li>
+<li>pour <code>k = 3</code>, on part de toutes les paires sélectionnées précédemment, on les croise avec les autres classes croisées et on ne garde que les ensembles n’ayant aucun élément en commun.</li>
+<li>on recommence pour les autres valeurs de <code>k</code>, jusqu’à avoir atteint <code>max_k</code> ou jusqu’à ce qu’il n’y ait plus de nouvelle partition.</li>
+</ul>
+</div>
+<div id="sélection-des-partitions-optimales" class="section level2">
+<h2>Sélection des partitions optimales</h2>
+<p>Une fois toutes les partitions déterminées, on calcule pour chacune d’elle deux critères :</p>
+<ul>
+<li>la taille totale, c’est-à-dire le nombre total de documents appartenant aux classes croisées de la partition</li>
+<li>le Khi2 total, c’est-à-dire la somme des Khi2 d’association de chaque classe croisée de la partition</li>
+</ul>
+<p>Au final, on conserve pour chaque valeur de <code>k</code> (donc pour les partitions en 2, 3…<code>max_k</code> classes) les partitions ayant soit la taille totale maximale, soit le Khi2 total maximal (on a donc une ou deux partitions pour chaque <code>k</code>).</p>
+</div>
+<div id="différences-avec-iramuteq-1" class="section level2">
+<h2>Différences avec Iramuteq</h2>
+<p>L’algorithme reste très proche de celui d’Iramuteq jusqu’à l’étape de la sélection de partition optimale. Ici on procède à une recherche exhaustive des partitions à partir des classes croisées sélectionnées (ce qui peut occasionner des calculs potentiellement longs si <code>min_members</code> est faible et <code>max_k</code> élevé), tandis qu’Iramuteq procède autrement.</p>
+<p>Au niveau des résultats, Iramuteq ne renvoie qu’une seule partition qu’il juge optimale, tandis que <code>rainette</code> retourne pour chaque valeur de <code>k</code> les deux meilleures partitions selon les critères de la taille ou du Khi2 maximum.</p>
+</div>
+<div id="différences-avec-la-méthode-reinert" class="section level2">
+<h2>Différences avec la “méthode Reinert”</h2>
+<p>Le mode de détermination des partitions optimales ne nous a pas semblé très détaillé dans les articles cités en <a href="#références">références</a>, il ne nous est donc pas vraiment possible de comparer avec l’implémentation de <code>rainette</code>. Une différence majeure réside dans le fait que dans les articles cités, une fois la partition optimale déterminée, celle-ci est utilisée comme point de départ pour une affectation des documents aux classes via une méthode de type “centres mobiles”. Ceci permet notamment de réaffecter des points qui ne feraient pas partie des classes croisées de la partition retenue.</p>
+<p>Cette réaffectation par centre mobile n’est pas implémentée dans <code>rainette</code> (et elle ne semble pas l’être non plus dans Iramuteq). Il faut donc être vigilant au nombre et à la proportion de documents non affectés (valeur de classe à <code>NA</code>) à l’issue d’une classification double, car celui-ci peut être élevé. Une fonction <code>rainette2_complete_groups</code> est cependant disponible pour rattacher les points non affectés à une des classes via une méthode du type <em>k-nearest neighbours</em>.</p>
+</div>
+</div>
+<div id="références" class="section level1">
+<h1>Références</h1>
+<ul>
+<li>Reinert M, Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte, Cahiers de l’analyse des données, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a></li>
+<li>Reinert M., Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="uri">https://doi.org/10.1177/075910639002600103</a></li>
+</ul>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
