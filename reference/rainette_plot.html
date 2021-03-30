@@ -204,7 +204,7 @@
     <p>A gtable object.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://quanteda.io/reference/textstat_keyness.html'>quanteda::textstat_keyness()</a></code>, <code><a href='rainette_explor.html'>rainette_explor()</a></code>, <code><a href='rainette_stats.html'>rainette_stats()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='https://quanteda.io/reference/textstat_keyness.html'>quanteda.textstats::textstat_keyness()</a></code>, <code><a href='rainette_explor.html'>rainette_explor()</a></code>, <code><a href='rainette_stats.html'>rainette_stats()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
@@ -216,7 +216,13 @@
 <span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_termfreq <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='fu'>rainette_plot</span><span class='op'>(</span><span class='va'>res</span>, <span class='va'>dtm</span><span class='op'>)</span>
-</div><div class='img'><img src='rainette_plot-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
+</div><div class='output co'>#&gt; <span class='message'>Registered S3 methods overwritten by 'quanteda.textstats':</span>
+#&gt; <span class='message'>  method                       from    </span>
+#&gt; <span class='message'>  [.textstat                   quanteda</span>
+#&gt; <span class='message'>  as.data.frame.textstat_proxy quanteda</span>
+#&gt; <span class='message'>  as.list.textstat_proxy       quanteda</span>
+#&gt; <span class='message'>  head.textstat_proxy          quanteda</span>
+#&gt; <span class='message'>  tail.textstat_proxy          quanteda</span></div><div class='img'><img src='rainette_plot-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
