@@ -1,6 +1,7 @@
 # rainette 0.1.3
 
-
+* Fix potential name conflicts in rainette_explor
+* Compatibility with quanteda v3 (thanks @kbenoit)
 
 
 # rainette 0.1.2
