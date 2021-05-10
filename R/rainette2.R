@@ -32,7 +32,7 @@ get_groups <- function(res) {
 classes_crosstab <- function(groups1, groups2, n_tot) {
   purrr::imap_dfr(groups1, function(g1, i1) {
     purrr::imap_dfr(groups2, function(g2, i2) {
-      df <- tibble::tibble(g1, g2)
+      df <- dplyr::tibble(g1, g2)
       df %>%
         count(g1, g2) %>%
         tidyr::complete(g1, g2, fill = list(n = 0)) %>%
@@ -133,7 +133,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
     if (is.null(partitions)) {
       return(NULL)
     }
-    tibble(clusters = partitions, k = k + 1) %>%
+    dplyr::tibble(clusters = partitions, k = k + 1) %>%
       ## Compute size and sum of Khi2 for each partition
       mutate(
         chi2 = purrr::map_dbl(clusters, ~sum(valid$chi2[valid$interclass %in% .x])),
