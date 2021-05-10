@@ -5,10 +5,6 @@
 ##' @param obj character string, quanteda or tm corpus object
 ##' @param segment_size segment size (in words)
 ##' @param segment_size_window window around segment size to look for best splitting point
-##' @param force_single_core don't use multithreading even on large corpus
-##'
-##' @details
-##' By default, if the corpus is large (> 10 000 000 chars), multithreading is used for segments splitting.
 ##'
 ##' @return
 ##' If obj is a tm or quanteda corpus object, the result is a quanteda corpus.
@@ -20,7 +16,9 @@
 ##' split_segments(data_corpus_inaugural)
 ##' }
 
-split_segments <- function(obj, segment_size = 40, segment_size_window = NULL, force_single_core = FALSE) {
+split_segments <- function(
+  obj, segment_size = 40, segment_size_window = NULL
+) {
   UseMethod("split_segments")
 }
 
@@ -34,11 +32,15 @@ split_segments <- function(obj, segment_size = 40, segment_size_window = NULL, f
 ##' @importFrom purrr map_chr
 
 
-split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL, force_single_core = FALSE) {
+split_segments.character <- function(
+  obj, segment_size = 40, segment_size_window = NULL
+) {
 
   text <- obj
 
-  if (!(inherits(text, "character") && length(text) == 1)) stop("text must be a character vector of size 1")
+  if (!(inherits(text, "character") && length(text) == 1)) {
+    stop("text must be a character vector of size 1")
+  }
 
   ## Default segment_size_window
   if (is.null(segment_size_window)) {
@@ -93,7 +95,9 @@ split_segments.character <- function(obj, segment_size = 40, segment_size_window
 ##' @export
 
 
-split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = NULL, force_single_core = FALSE) {
+split_segments.Corpus <- function(
+  obj, segment_size = 40, segment_size_window = NULL
+) {
 
   corpus <- obj
 
@@ -111,46 +115,28 @@ split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = 
 ##' @importFrom purrr map_int
 
 
-split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL, force_single_core = FALSE) {
+split_segments.corpus <- function(
+  obj, segment_size = 40, segment_size_window = NULL
+) {
 
   corpus <- obj
 
   if (!inherits(corpus, "corpus")) stop("corpus must be of class corpus")
 
-  docvars(corpus, "segment_source") <- docnames(corpus)
+  quanteda::docvars(corpus, "segment_source") <- quanteda::docnames(corpus)
 
-  corpus_length <- sum(purrr::map_int(as.character(corpus), nchar))
-  use_multicore <- corpus_length > 10000000 && !force_single_core
-
-  if (use_multicore) {
-    message("  Splitting in parallel (please wait while R sessions start)...")
-  } else {
-    message("  Splitting...")
-  }
+  message("  Splitting...")
 
   progressr::with_progress({
     p <- progressr::progressor(along = as.character(corpus))
 
-    if (use_multicore) {
-      options(future.supportsMulticore.unstable = "quiet")
-      future::plan(future::multiprocess)
-
-      texts <- future.apply::future_lapply(
-        as.character(corpus),
-        function(text) {
-          p()
-          split_segments(text, segment_size, segment_size_window)
-        }
-      )
-    } else {
-      texts <- lapply(
-        as.character(corpus),
-        function(text) {
-          p()
-          split_segments(text, segment_size, segment_size_window)
-        }
-      )
-    }
+    texts <- lapply(
+      as.character(corpus),
+      function(text) {
+        p()
+        split_segments(text, segment_size, segment_size_window)
+      }
+    )
   })
 
   new_corpus <- docvars(corpus) %>%

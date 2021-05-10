@@ -1,5 +1,6 @@
 # rainette 0.1.3
 
+* Parallel computing in split_segments has been removed
 * Fix potential name conflicts in rainette_explor
 * Compatibility with quanteda v3 (thanks @kbenoit)
 
