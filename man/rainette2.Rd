@@ -18,8 +18,8 @@ rainette2(
 \arguments{
 \item{x}{either a quanteda dfm object or the result of \code{\link[=rainette]{rainette()}}}
 
-\item{y}{if \code{x} is a \code{\link[=rainette]{rainette()}} result, this must be another \code{\link[=rainette]{rainette()}} result from same dfm
-but with different uc size.}
+\item{y}{if \code{x} is a \code{\link[=rainette]{rainette()}} result, this must be another \code{\link[=rainette]{rainette()}}
+result from same dfm but with different uc size.}
 
 \item{max_k}{maximum number of clusters to compute}
 

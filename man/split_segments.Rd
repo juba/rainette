@@ -7,33 +7,13 @@
 \alias{split_segments.corpus}
 \title{Split a character string or corpus into segments}
 \usage{
-split_segments(
-  obj,
-  segment_size = 40,
-  segment_size_window = NULL,
-  force_single_core = FALSE
-)
+split_segments(obj, segment_size = 40, segment_size_window = NULL)
 
-\method{split_segments}{character}(
-  obj,
-  segment_size = 40,
-  segment_size_window = NULL,
-  force_single_core = FALSE
-)
+\method{split_segments}{character}(obj, segment_size = 40, segment_size_window = NULL)
 
-\method{split_segments}{Corpus}(
-  obj,
-  segment_size = 40,
-  segment_size_window = NULL,
-  force_single_core = FALSE
-)
+\method{split_segments}{Corpus}(obj, segment_size = 40, segment_size_window = NULL)
 
-\method{split_segments}{corpus}(
-  obj,
-  segment_size = 40,
-  segment_size_window = NULL,
-  force_single_core = FALSE
-)
+\method{split_segments}{corpus}(obj, segment_size = 40, segment_size_window = NULL)
 }
 \arguments{
 \item{obj}{character string, quanteda or tm corpus object}
@@ -41,17 +21,12 @@ split_segments(
 \item{segment_size}{segment size (in words)}
 
 \item{segment_size_window}{window around segment size to look for best splitting point}
-
-\item{force_single_core}{don't use multithreading even on large corpus}
 }
 \value{
 If obj is a tm or quanteda corpus object, the result is a quanteda corpus.
 }
 \description{
 Split a character string or corpus into segments, taking into account punctuation where possible
-}
-\details{
-By default, if the corpus is large (> 10 000 000 chars), multithreading is used for segments splitting.
 }
 \examples{
 \donttest{
