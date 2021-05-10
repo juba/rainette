@@ -156,10 +156,13 @@ rainette_explor <- function(res, dtm) {
                     paste(code, collapse = "\n"),
                     "\n\n--------- End exported code ---------\n")
       cat(out)
-      stopApp()
+      shiny::stopApp()
     })
   }
 
-  runGadget(ui, server, viewer = dialogViewer("Clusters exploration", width = 1500, height = 1000))
+  shiny::runGadget(
+    ui, server,
+    viewer = dialogViewer("Clusters exploration", width = 1500, height = 1000)
+  )
 
 }
