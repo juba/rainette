@@ -43,6 +43,7 @@
 #' 
 #' @export
 
+
 rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_test = 0.3, tsj = 3, min_members) {
   
   ## Check for deprecated min_members argument
@@ -58,17 +59,20 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
     dtm@x <- as.numeric(dtm@x != 0)
   }
   
-  ## Compute uc ids based on minimum size
-  message("  Computing ucs from segments...")
-  dtm <- compute_uc(dtm, min_uc_size = min_uc_size)
+  if (min_uc_size > 1) {
+    ## Compute uc from uces based on minimum size
+    message("  Computing ucs from segments...")
+  }
+  dtm <- rainette::compute_uc(dtm, min_uc_size = min_uc_size)
+
   ## Correspondance table between uce and uc
   corresp_uce_uc <- data.frame(
     uce = docvars(dtm, "rainette_uce_id"), 
     uc = docvars(dtm, "rainette_uc_id")
   )
   ## Group dfm by uc
-  dtm <- dfm_group(dtm, docvars(dtm, "rainette_uc_id"))
-  dtm <- dfm_weight(dtm, scheme = "boolean")
+  dtm <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
+  dtm <- quanteda::dfm_weight(dtm, scheme = "boolean")
   
   message("  Clustering...")
   ## Initialize results list with first dtm
@@ -218,7 +222,7 @@ switch_docs <- function(m, indices, max_index, max_chisq) {
     tab1 <- m[group1, , drop = FALSE]
     tab2 <- m[group2, , drop = FALSE]
 
-    chisq_values <- cpp_switch_docs(tab1, tab2)
+    chisq_values <- rainette::cpp_switch_docs(tab1, tab2)
     current_max <- max(chisq_values, na.rm = TRUE)
     
     if (current_max > max_chisq) {
@@ -324,13 +328,13 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3) {
   ## Remove documents and features with zero occurrences
   dtm <- dtm[rowSums(dtm) > 0, colSums(dtm) > 0]
   ## Remove features with zero 
-  m <- convert(dtm, to = "matrix")
+  m <- quanteda::convert(dtm, to = "matrix")
   storage.mode(m) <- "integer"
   
   ## First step : CA partition
 
   indices <- order_docs(m)
-  res <- cpp_split_tab(m, indices)
+  res <- rainette::cpp_split_tab(m, indices)
   max_index <- res$max_index
   max_chisq <- res$max_chisq
 
