@@ -106,7 +106,7 @@ k-nearest-neighbour clustering for non-assigned documents.
 
 As explained before, as it doesn't take into account terms frequencies and
 assign each document to only one cluster, the Reinert method must be applied
-to short and "homogeneous" documents. It could be ok if your work on short
+to short and "homogeneous" documents. It could be ok if you work on short
 comments on a website, but on longer documents the corpus must first be split
 into small textual segments.
 
@@ -129,8 +129,6 @@ arguments :
 - `segment_size` : the preferred segment size, in words
 - `segment_size_window` : the "window" into which looking for the best segment
   split, in words. If `NULL`, it is set to 0.4*`segment_size`.
-- `force_single_core` : by default, multithreading is used when the corpus is
-  big. Set this to `TRUE` to disable multithreading completely.
 
 The result of the function is always a `quanteda` corpus, which keeps the
 original corpus metadata :
@@ -149,7 +147,9 @@ Next step is to compute the document-feature matrix. As our `corpus` object is
 a `quanteda` corpus, we can use its `dfm` function :
 
 ```{r}
-dtm <- dfm(corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
+tok <- tokens(corpus, remove_punct = TRUE) 
+tok <- tokens_remove(tok, stopwords("en"))
+dtm <- dfm(corpus, tolower = TRUE)
 ```
 
 We only keep the terms that appear at least in 10 segments by using `dfm_trim`

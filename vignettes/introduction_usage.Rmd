@@ -85,7 +85,9 @@ Notre corpus étant au format `quanteda`, on va utiliser les fonction de cette e
 D'abord on calcule la *dtm* en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :
 
 ```{r}
-dtm <- dfm(corpus, remove = stopwords("fr"), tolower = TRUE, remove_punct = TRUE, remove_numbers = TRUE)
+tok <- tokens(corpus, remove_punct = TRUE, remove_numbers = TRUE) 
+tok <- tokens_remove(tok, stopwords("fr"))
+dtm <- dfm(corpus, tolower = TRUE)
 ```
 
 On va ensuite procéder à la racinisation des termes, puis on va supprimer les termes apparaissant dans moins de 3 segments :
