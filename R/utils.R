@@ -15,6 +15,7 @@ if (getRversion() >= "2.15.1")
 #' Internal function, not to be used directly
 #'
 #' @return the original dtm with a new `rainette_uc_id` docvar.
+#' @export
 
 compute_uc <- function(dtm, min_uc_size = 10) {
   

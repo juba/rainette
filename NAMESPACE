@@ -3,6 +3,7 @@
 S3method(split_segments,Corpus)
 S3method(split_segments,character)
 S3method(split_segments,corpus)
+export(compute_uc)
 export(cutree)
 export(cutree_rainette)
 export(cutree_rainette2)
