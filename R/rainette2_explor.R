@@ -46,7 +46,7 @@ rainette2_explor <- function(res, dtm) {
             value = 20, min = 5, max = 30, step = 1),
           checkboxInput("same_scales", label = "Force same scales", value = TRUE),
           conditionalPanel("input.type == 'bar'",
-            checkboxInput("show_negative", label = "Show negative values", value = TRUE),
+            checkboxInput("show_negative", label = "Show negative values", value = FALSE),
             sliderInput("text_size", label = "Text size", 
               value = 13, min = 6, max = 20, step = 1)
           ),
