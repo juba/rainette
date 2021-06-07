@@ -19,14 +19,11 @@ if (getRversion() >= "2.15.1")
 compute_uc <- function(dtm, min_uc_size = 10) {
   
   ## Add id to documents
-  if (nrow(docvars(dtm)) == 0 && utils::packageVersion("quanteda") < "2.0.0") {
-    dtm@docvars <- data.frame(rainette_uce_id = 1:nrow(dtm))
-  } else {
-    docvars(dtm, field = "rainette_uce_id") <- 1:nrow(dtm)
-  }
+  quanteda::docvars(dtm, field = "rainette_uce_id") <- seq_len(nrow(dtm))
   
   if (min_uc_size <= 1) {
-    docvars(dtm, field = "rainette_uc_id") <- docvars(dtm, "rainette_uce_id")
+    ## Do nothing
+    quanteda::docvars(dtm, field = "rainette_uc_id") <- quanteda::docvars(dtm, "rainette_uce_id")
     return(dtm)
   }
   
@@ -34,7 +31,7 @@ compute_uc <- function(dtm, min_uc_size = 10) {
   terms_by_uce <- rowSums(dtm)
   if (any(terms_by_uce < min_uc_size)) {
     index <- 1
-    uc_id <- docvars(dtm, "rainette_uce_id")
+    uc_id <- quanteda::docvars(dtm, "rainette_uce_id")
     while (index < length(terms_by_uce)) {
       current_size <- terms_by_uce[index]
       grouping_index <- index
@@ -50,9 +47,9 @@ compute_uc <- function(dtm, min_uc_size = 10) {
       index <- grouping_index + 1
     }
     ## Add computed uc ids to docvars
-    docvars(dtm, "rainette_uc_id") <- uc_id
+    quanteda::docvars(dtm, "rainette_uc_id") <- uc_id
   } else {
-    docvars(dtm, "rainette_uc_id") <- docvars(dtm, "rainette_uce_id")
+    quanteda::docvars(dtm, "rainette_uc_id") <- quanteda::docvars(dtm, "rainette_uce_id")
   }
   
   return(dtm)
