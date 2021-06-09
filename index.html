@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rainette</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -112,15 +112,23 @@
 <li>Utility functions to split a corpus into segments or import a corpus in Iramuteq format</li>
 </ul>
 </div>
-<div id="installation-and-usage" class="section level2">
+<div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installation-and-usage" class="anchor"></a>Installation and usage</h2>
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p>The package is installable from CRAN :</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">install_packages</span><span class="op">(</span><span class="st">"rainette"</span><span class="op">)</span></code></pre></div>
-<p>The development version is installable from Github :</p>
+<p>The development version is installable from R-universe :</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"juba/rainette"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    juba <span class="op">=</span> <span class="st">'https://juba.r-universe.dev'</span>,
+    CRAN <span class="op">=</span> <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'rainette'</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="usage" class="section level2">
+<h2 class="hasAnchor">
+<a href="#usage" class="anchor"></a>Usage</h2>
 <p>Let’s start with an example corpus provided by the excellent <a href="https://quanteda.io">quanteda</a> package :</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io">quanteda</a></span><span class="op">)</span>
@@ -128,9 +136,11 @@
 <p>First, we’ll use <code>split_segments</code> to split each text in the corpus into segments of about 40 words (punctuation is taken into account) :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">data_corpus_inaugural</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
-<p>Next, we’ll compute a document-term matrix and apply some treatments with <code>quanteda</code> functions :</p>
+<p>Next, we’ll apply some preprocessing and compute a document-term matrix with <code>quanteda</code> functions :</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">corpus</span>, remove <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_wordstem.html">dfm_wordstem</a></span><span class="op">(</span><span class="va">dtm</span>, language <span class="op">=</span> <span class="st">"english"</span><span class="op">)</span>
 <span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_termfreq <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p>We can then apply a simple clustering on this dtm with the <code>rainette</code> function. We specify the number of clusters (<code>k</code>), the minimum size for a cluster to be splitted at next step (<code>min_split_members</code>) and the minimum number of forms in each segment (<code>min_uc_size</code>) :</p>
@@ -148,12 +158,12 @@
 <pre><code>docvars(corpus)$group &lt;- cutree_rainette(res, k = 5)</code></pre>
 <p>In addition to this, you can also perform a double clustering, <em>ie</em> two simple clusterings produced with different <code>min_uc_size</code> which are then “crossed” to generate more solid clusters. To do this, use <code>rainette2</code> either on two <code>rainette</code> results :</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">10</span>, min_uc_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">10</span>, min_uc_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">10</span>, min_members <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">8</span>, min_uc_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">8</span>, min_uc_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">8</span>, min_members <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
 <p>Or directly on a dtm with <code>uc_size1</code> and <code>uc_size2</code> arguments :</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, max_k <span class="op">=</span> <span class="fl">10</span>, uc_size1 <span class="op">=</span> <span class="fl">10</span>, uc_size2 <span class="op">=</span> <span class="fl">15</span>, min_members <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, max_k <span class="op">=</span> <span class="fl">8</span>, uc_size1 <span class="op">=</span> <span class="fl">10</span>, uc_size2 <span class="op">=</span> <span class="fl">15</span>, min_members <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
 <p>You can then use <code>rainette2_explor</code>, <code>rainette2_plot</code> and <code>cutree_rainette2</code> to explore and visualise the results.</p>
 <p><img src="reference/figures/rainette2_explor.png"></p>
 </div>

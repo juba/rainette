@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rainette</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -146,7 +146,7 @@
     <p><code>rainette_uc_index</code> docvar</p>
     </div>
 
-    <pre class="usage"><span class='fu'>compute_uc</span><span class='op'>(</span><span class='va'>dtm</span>, min_uc_size <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>compute_uc</span><span class='op'>(</span><span class='va'>dtm</span>, min_uc_size <span class='op'>=</span> <span class='fl'>10</span>, doc_id <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,6 +159,10 @@
       <th>min_uc_size</th>
       <td><p>minimum number of forms by uc</p></td>
     </tr>
+    <tr>
+      <th>doc_id</th>
+      <td><p>character name of a dtm docvar which identifies source documents.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -166,7 +170,10 @@
     <p>the original dtm with a new <code>rainette_uc_id</code> docvar.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Internal function, not to be used directly</p>
+    <p>If <code>min_uc_size == 0</code>, different uc ids are added to the dtm docvars
+(ie no uce are merged together). If <code>min_uc_size &gt; 0</code> then <code>doc_id</code> must be provided
+unless the corpus comes from <code>split_segments</code>, in this case
+<code>segment_source</code> is used by default.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
