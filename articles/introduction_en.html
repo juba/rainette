@@ -114,14 +114,14 @@
 <p>This is not a new algorithm, as the first articles describing it date back to 1983. Here are some features of the method :</p>
 <ul>
 <li>each text is only assigned to one cluster, unlike methods like LDA.</li>
-<li>it is better suited to cluster small “homogeneous” documents : in fact the good practice is first to split texts into segments before applying the method.</li>
-<li>as the algorithm uses a singular value decomposition of a document-term matrix, the algorithm may not work on very large corpus.</li>
+<li>it is better suited to cluster small “homogeneous” documents : for long texts the good practice is first to split them into segments before applying the method.</li>
+<li>as the algorithm uses a singular value decomposition of a document-term matrix, it may not work on very large corpus. In this case, as only the smaller dimension of the matrix is taken into account for the decomposition, a workaround can be to reduce the number of features by removing the less frequent terms.</li>
 </ul>
 <div id="description-of-the-algorithm" class="section level2">
 <h2 class="hasAnchor">
 <a href="#description-of-the-algorithm" class="anchor"></a>Description of the algorithm</h2>
 <p>The Reinert method is a divisive hierarchical clustering algorithm whose aim is to maximise the inter-cluster Chi-squared distance.</p>
-<p>The algorithm is applied to the document-term matrix computed on the corpus. Documents are called <code>uce</code> (elementary context units). If an <code>uce</code> doesn’t include enough terms, it is merged with the following one into an <code>uc</code> (context unit). The resulting matrix is then weighted as binary, so only the presence/absence of terms are taken into account, not their frequencies.</p>
+<p>The algorithm is applied to the document-term matrix computed on the corpus. Documents are called <code>uce</code> (elementary context units). If an <code>uce</code> doesn’t include enough terms, it can be merged with the following one into an <code>uc</code> (context unit). The resulting matrix is then weighted as binary, so only the presence/absence of terms are taken into account, not their frequencies.</p>
 <p>The aim is to split this matrix into two clusters by maximizing the Chi-squared distance between those. As an exhaustive search would be too compute-intensive, the following method is used to get a good approximation :</p>
 <ul>
 <li>first, <code>uc</code> are ordered according to their coordinates on the first axis of the correspondance analysis of the binary matrix.</li>
@@ -162,13 +162,13 @@
 <h3 class="hasAnchor">
 <a href="#split_segments" class="anchor"></a><code>split_segments</code>
 </h3>
-<p>As explained before, as it doesn’t take into account terms frequencies and assign each document to only one cluster, the Reinert method must be applied to short and “homogeneous” documents. It could be ok if you work on short comments on a website, but on longer documents the corpus must first be split into small textual segments.</p>
+<p>As explained before, as it doesn’t take into account terms frequencies and assign each document to only one cluster, the Reinert method must be applied to short and “homogeneous” documents. It could be ok if you work on tweets or short answers to a specific question, but on longer documents the corpus must first be split into small textual segments.</p>
 <p>The <code>split_segments</code> function does just that, and can be applied on a <code>tm</code> or <code>quanteda</code> corpus.</p>
 <p>On this article we will apply it to the sample <code>data_corpus_inaugural</code> <code>quanteda</code> corpus :</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io">quanteda</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://juba.github.io/rainette/">rainette</a></span><span class="op">)</span>
-<span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">data_corpus_inaugural</span><span class="op">)</span></code></pre></div>
+<span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">data_corpus_inaugural</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
 <p><code>split_segments</code> will split the original texts into smaller chunks, attempting to respect sentences and punctuation when possible. The function takes three arguments :</p>
 <ul>
 <li>
@@ -176,7 +176,7 @@
 <li>
 <code>segment_size_window</code> : the “window” into which looking for the best segment split, in words. If <code>NULL</code>, it is set to 0.4*<code>segment_size</code>.</li>
 </ul>
-<p>The result of the function is always a <code>quanteda</code> corpus, which keeps the original corpus metadata :</p>
+<p>The result of the function is a <code>quanteda</code> corpus, which keeps the original corpus metadata with an additional <code>segment_source</code> variable :</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span></code></pre></div>
 <pre><code>## Corpus consisting of 3,584 documents and 5 docvars.
@@ -212,14 +212,13 @@
 <div id="dfm-computation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#dfm-computation" class="anchor"></a>dfm computation</h3>
-<p>Next step is to compute the document-feature matrix. As our <code>corpus</code> object is a <code>quanteda</code> corpus, we can use its <code>dfm</code> function :</p>
+<p>Next step is to compute the document-feature matrix. As our <code>corpus</code> object is a <code>quanteda</code> corpus, we can tokenize it and then use the <code>dfm</code> function :</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> 
+<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">corpus</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning: 'dfm.corpus()' is deprecated. Use 'tokens()' first.</code></pre>
+<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>We only keep the terms that appear at least in 10 segments by using <code>dfm_trim</code> :</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_termfreq <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
@@ -231,128 +230,123 @@
 <li>
 <code>k</code> : the number of clusters to compute.</li>
 <li>
-<code>min_uc_size</code> : the minimum number of terms in each context unit at startup (default : 10). If a <code>dfm</code> document contains less than this number of terms, it will be merged with the following one.</li>
+<code>min_uc_size</code> : the minimum number of terms in each context unit at startup. If a <code>dfm</code> segment contains less than this number of terms, it will be merged with the following one (if they come from the same source document). The default value is 0, <em>ie</em> no merging is done.</li>
 <li>
 <code>min_split_members</code> : if a cluster is smaller than this value, it won’t be split afterwards (default : 5).</li>
 </ul>
-<p>Here we will compute 5 clusters with a <code>minimum_uc_size</code> of 15 :</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>Here we will compute 5 clusters with a <code>min_uc_size</code> of 15 :</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_uc_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in rainette::compute_uc(dtm, min_uc_size = min_uc_size, doc_id =
-## doc_id): some uc will have a size &lt; min_uc_size</code></pre>
 <p>To help exploring the clustering results, <code>rainette</code> offers a small <em>shiny gadget</em> which can be launched with <code>rainette_explor</code> :</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>
 <p>The interactive interface should look something like this :</p>
 <p><img src="rainette_explor_en.png"></p>
-<p>You can change the number of clusters, the keyness statistic used, etc., and see the result in real time. The most characteristics terms are displayed with a blue bar or a red one for those with a negative keyness.</p>
+<p>You can change the number of clusters, the keyness statistic used, etc., and see the result in real time. The most characteristics terms are displayed with a blue bar or a red one for those with a negative keyness (if <em>Show negative values</em> has been checked).</p>
 <p>It’s also possible to display terms keyness as word clouds :</p>
 <p><img src="rainette_explor_en_cloud.png"></p>
 <p>At any time, you can click on the <em>Get R code</em> button to get the R code to reproduce the current plot and to compute cluster membership.</p>
 <p>You can also directly use <code>cutree_rainette</code> to get each document cluster at level <code>k</code> :</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree_rainette.html">cutree_rainette</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p>This vector can be used, for example, as a new corpus metadata variable :</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="va">groups</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##   Year  President FirstName Party  segment_source group
-## 1 1789 Washington    George  none 1789-Washington     3
-## 2 1789 Washington    George  none 1789-Washington     1
+## 1 1789 Washington    George  none 1789-Washington     2
+## 2 1789 Washington    George  none 1789-Washington     2
 ## 3 1789 Washington    George  none 1789-Washington     2
-## 4 1789 Washington    George  none 1789-Washington     3
-## 5 1789 Washington    George  none 1789-Washington     2
+## 4 1789 Washington    George  none 1789-Washington     2
+## 5 1789 Washington    George  none 1789-Washington     3
 ## 6 1789 Washington    George  none 1789-Washington     3</code></pre>
 <p>Finally, you can also directly compute each cluster keyness statistics with the <code>rainette_stats</code> function :</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette_stats.html">rainette_stats</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">$</span><span class="va">group</span>, <span class="va">dtm</span>, n_terms <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
 <pre><code>## [[1]]
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 we      1013.     0     1422         405 positive
-## 2 the     -374.     0     3293        6890 negative
-## 3 us       262.     0      388         117 positive
-## 4 .        260.     0     2693        2462 positive
-## 5 america  210.     0      185          17 positive
+## 1 us       222.     0      375         130 positive
+## 2 world    199.     0      257          62 positive
+## 3 america  187.     0      180          22 positive
+## 4 new      145.     0      198          52 positive
+## 5 let      138.     0      140          20 positive
 ## 
 ## [[2]]
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 we      -586.     0      370        1457 negative
-## 2 the      228.     0     5655        4528 positive
-## 3 i       -176.     0      226         645 negative
-## 4 my      -171.     0      101         414 negative
-## 5 us      -148.     0      108         397 negative
+## 1 us      -177.     0      124         381 negative
+## 2 world   -159.     0       60         259 negative
+## 3 america -154.     0       21         181 negative
+## 4 new     -127.     0       46         204 negative
+## 5 let     -117.     0       18         142 negative
 ## 
 ## [[3]]
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 my       974.     0      267         248 positive
-## 2 i        785.     0      339         532 positive
-## 3 me       477.     0      113          84 positive
-## 4 office   224.     0       47          28 positive
-## 5 duties   195.     0       50          42 positive</code></pre>
+## 1 duties   242.     0       35          57 positive
+## 2 office   237.     0       31          44 positive
+## 3 station  174.     0       12           4 positive
+## 4 oath     165.     0       23          35 positive
+## 5 solemn   159.     0       17          17 positive</code></pre>
 </div>
 <div id="double-clustering-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#double-clustering-1" class="anchor"></a>Double clustering</h2>
 <p><code>rainette</code> also offers a “double clustering” algorithm, as described above : two simple clusterings are computed with varying <code>min_uc_size</code>, and then combined to get a better partition and more robust clusters.</p>
-<p>This can be done with the <code>rainette2</code> function</p>
-<p><code>rainette2</code> can be applied to two already computed simple clusterings. Here, we compute them with <code>min_uc_size</code> at 10 and 15 :</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p>This can be done with the <code>rainette2</code> function. It can be applied to two already computed simple clusterings. Here, we compute them with <code>min_uc_size</code> at 10 and 15 :</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_uc_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_uc_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in rainette::compute_uc(dtm, min_uc_size = min_uc_size, doc_id =
-## doc_id): some uc will have a size &lt; min_uc_size</code></pre>
 <p>We then use <code>rainette2</code> to combine them. The main function arguments are <code>max_k</code>, the maximum number of clusters, and <code>min_members</code>, the minimum cluster size :</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">5</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>Another way is to call <code>rainette2</code> directly on our <code>dtm</code> matrix by giving it two <code>uc_size1</code> and <code>uc_size2</code> arguments :</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, uc_size1 <span class="op">=</span> <span class="fl">10</span>, uc_size2 <span class="op">=</span> <span class="fl">15</span>, max_k <span class="op">=</span> <span class="fl">5</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>The resulting object is a <em>tibble</em> with, for each level <em>k</em>, the optimal partitions and their characteristics. Another interactive interface is available to explore the results. It is launched with <code>rainette2_explor</code> :</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>
 <p><img src="rainette2_explor_en.png"></p>
 <p>The interface is very similar to the previous one, except there is no dendrogram anymore, but a single barplot with each cluster size instead. Be careful of the number of <code>NA</code> (not assigned documents), as it can be quite high. You can still use the <em>Get R code</em> button to get the current plot code, and use <code>cutree_rainette</code> to get clusters membership.</p>
 <p><code>rainette_stats</code> can also be used to get keyness statistics for each cluster :</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, <span class="fl">3</span><span class="op">)</span>
 <span class="fu"><a href="../reference/rainette_stats.html">rainette_stats</a></span><span class="op">(</span><span class="va">groups</span>, <span class="va">dtm</span>, n_terms <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
 <pre><code>## [[1]]
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 we      1027.     0     1410         417 positive
-## 2 the     -374.     0     3215        6968 negative
-## 3 .        257.     0     2648        2507 positive
-## 4 us       255.     0      381         124 positive
-## 5 america  214.     0      184          18 positive
+## 1 us      -234.     0      111         394 negative
+## 2 world   -198.     0       53         266 negative
+## 3 america -179.     0       18         184 negative
+## 4 let     -143.     0       14         146 negative
+## 5 new     -138.     0       47         203 negative
 ## 
 ## [[2]]
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 we      -587.     0      364        1463 negative
-## 2 the      218.     0     5608        4575 positive
-## 3 i       -175.     0      224         647 negative
-## 4 my      -170.     0      100         415 negative
-## 5 us      -151.     0      105         400 negative
+## 1 us       234.     0      362         143 positive
+## 2 america  200.     0      176          26 positive
+## 3 world    199.     0      246          73 positive
+## 4 new      160.     0      194          56 positive
+## 5 let      157.     0      139          21 positive
 ## 
 ## [[3]]
 ## # A tibble: 5 x 6
-##   feature  chi2     p n_target n_reference sign    
-##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 my      1030.     0      266         249 positive
-## 2 i        807.     0      333         538 positive
-## 3 me       508.     0      113          84 positive
-## 4 office   204.     0       44          31 positive
-## 5 duties   198.     0       49          43 positive</code></pre>
-<p>Finally, if some points are not assigned to any cluster, you can use <code>rainette2_complete_groups</code> to assign them to the nearest one by using a <em>k-nearest-neighbors</em> algorithm :</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+##   feature    chi2     p n_target n_reference sign    
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
+## 1 mr        2285.     0       20          11 positive
+## 2 vice      2244.     0       16           4 positive
+## 3 president 1150.     0       25          70 positive
+## 4 senator   1050.     0        8           2 positive
+## 5 chief      654.     0       12          25 positive</code></pre>
+<p>Finally, if some points are not assigned to any cluster, you can use <code>rainette2_complete_groups</code> to assign them to the nearest one by using a <em>k-nearest-neighbors</em> algorithm (with k=1) :</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">groups_completed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span><span class="op">(</span><span class="va">dtm</span>, <span class="va">groups</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
