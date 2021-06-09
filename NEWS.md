@@ -10,6 +10,7 @@
 ### Other
 
 - When `rainette` is called with `min_uc_size` > 0, a `doc_id` argument must be given which is the name of a `dtm` docvar identifying the segments source. If the corpus has been produced by `split_segments`, the added `segment_source` docvar is used by default.
+- Negative keyness values are not shown by default anymore in `rainette_explor` and `rainette2_explor`.
 - Add warning when `min_split_members` < 3
 
 ## rainette 0.1.3
