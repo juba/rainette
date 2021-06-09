@@ -8,9 +8,9 @@ dtm <- dfm_remove(dtm, stopwords("en"))
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
-res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 2)
-res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 2)
-res12 <- rainette2(dtm, max_k = 5, uc_size1 = 2, uc_size2 = 3, min_members = 2)
+res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 3)
+res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 3)
+res12 <- rainette2(dtm, max_k = 5, uc_size1 = 2, uc_size2 = 3, min_members = 3)
 
 res <- rainette2(res1, res2, min_members = 2)
 
