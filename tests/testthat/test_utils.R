@@ -47,6 +47,18 @@ test_that("computed uc are ok with respect to doc_id", {
   docvars(mini_dfm_docs, "doc_id") <- c("doc1", "doc2", "doc3", "doc4", "doc4", "doc5", "doc5")
   expect_warning(dfm_uc <- rainette::compute_uc(mini_dfm_docs, min_uc_size = 3, doc_id = "doc_id"))
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 2, 3, 4, 5, 6, 6))
+
+  corpus <- head(data_corpus_inaugural, n = 10)
+  corpus <- split_segments(corpus)
+  dtm <- dfm(tokens(corpus, remove_punct = TRUE), tolower = TRUE)
+  dtm <- dfm_remove(dtm, stopwords("en"))
+  dtm <- dfm_trim(dtm, min_termfreq = 3)
+  expect_warning(dfm_uc <- rainette::compute_uc(dtm, min_uc_size = 500))
+  tmp <- docvars(dfm_uc) |>
+    group_by(rainette_uc_id) |>
+    summarise(nd = n_distinct(segment_source)) |>
+    filter(nd > 1)
+  expect_equal(nrow(tmp), 0)
 })
 
 mini_dfm_segsource <- mini_dfm
@@ -55,6 +67,9 @@ test_that("segment_source used by default when min_uc_size > 0", {
   dfm_uc <- rainette::compute_uc(mini_dfm_segsource, min_uc_size = 3)
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 2, 2, 4, 5, 6, 6))
 })
+
+
+
 
 
 # stat_col
