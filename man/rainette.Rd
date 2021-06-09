@@ -7,7 +7,8 @@
 rainette(
   dtm,
   k = 10,
-  min_uc_size = 10,
+  min_uc_size = 0,
+  doc_id = NULL,
   min_split_members = 5,
   cc_test = 0.3,
   tsj = 3,
@@ -21,6 +22,8 @@ result of \code{\link[=split_segments]{split_segments()}}}
 \item{k}{maximum number of clusters to compute}
 
 \item{min_uc_size}{minimum number of forms by document}
+
+\item{doc_id}{character name of a dtm docvar which identifies source documents.}
 
 \item{min_split_members}{don't try to split groups with fewer members}
 
@@ -46,6 +49,9 @@ See the references for original articles on the method. Computations and results
 quite a bit, see the package vignettes for more details.
 
 The dtm object is automatically converted to boolean.
+
+If \code{min_uc_size > 0} then \code{doc_id} must be provided unless the corpus comes from \code{split_segments},
+in this case \code{segment_source} is used by default.
 }
 \examples{
 \donttest{

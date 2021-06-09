@@ -10,6 +10,7 @@ rainette2(
   max_k = 5,
   uc_size1 = 10,
   uc_size2 = 15,
+  doc_id = NULL,
   min_members = 10,
   min_chi2 = 3.84,
   ...
@@ -26,6 +27,8 @@ result from same dfm but with different uc size.}
 \item{uc_size1}{if \code{x} is a dfm, minimum uc size for first clustering}
 
 \item{uc_size2}{if \code{x} is a dfm, minimum uc size for second clustering}
+
+\item{doc_id}{character name of a dtm docvar which identifies source documents.}
 
 \item{min_members}{minimum members of each cluster}
 
@@ -56,6 +59,9 @@ based on the results of both clusterings.
 If both clusterings have already been computed, you can pass them as \code{x} and \code{y} arguments
 and the function will only look for optimal partitions.
 
+\code{doc_id} must be provided unless the corpus comes from \code{split_segments},
+in this case \code{segment_source} is used by default.
+
 For more details on optimal partitions search algorithm, please see package vignettes.
 }
 \examples{
@@ -67,8 +73,8 @@ dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct =
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
-res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 2)
-res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 2)
+res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 3)
+res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 3)
 
 res <- rainette2(res1, res2, min_members = 2)
 }

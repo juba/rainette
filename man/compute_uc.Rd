@@ -4,12 +4,14 @@
 \alias{compute_uc}
 \title{Merges uces into uc according to minimum uc size}
 \usage{
-compute_uc(dtm, min_uc_size = 10)
+compute_uc(dtm, min_uc_size = 10, doc_id = NULL)
 }
 \arguments{
 \item{dtm}{dtm of uces, with a \code{rainette_uce_id} docvar}
 
 \item{min_uc_size}{minimum number of forms by uc}
+
+\item{doc_id}{character name of a dtm docvar which identifies source documents.}
 }
 \value{
 the original dtm with a new \code{rainette_uc_id} docvar.
@@ -18,5 +20,8 @@ the original dtm with a new \code{rainette_uc_id} docvar.
 \code{rainette_uc_index} docvar
 }
 \details{
-Internal function, not to be used directly
+If \code{min_uc_size == 0}, different uc ids are added to the dtm docvars
+(ie no uce are merged together). If \code{min_uc_size > 0} then \code{doc_id} must be provided
+unless the corpus comes from \code{split_segments}, in this case
+\code{segment_source} is used by default.
 }
