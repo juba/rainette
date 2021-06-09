@@ -9,17 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-
-
-# Installation
-
-Le *package* n'étant pas encore disponible sur le CRAN, il s'installe depuis GitHub *via* l'extension `remotes` :
-
-```{r eval=FALSE}
-remotes::install_github("juba/rainette")
-```
-
-
 # Préparation du corpus
 
 ## Importation
@@ -85,26 +74,25 @@ Notre corpus étant au format `quanteda`, on va utiliser les fonction de cette e
 D'abord on calcule la *dtm* en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :
 
 ```{r}
-tok <- tokens(corpus, remove_punct = TRUE, remove_numbers = TRUE) 
+tok <- tokens(corpus, remove_punct = TRUE, remove_numbers = TRUE)
 tok <- tokens_remove(tok, stopwords("fr"))
-dtm <- dfm(corpus, tolower = TRUE)
+dtm <- dfm(tok, tolower = TRUE)
 ```
 
-On va ensuite procéder à la racinisation des termes, puis on va supprimer les termes apparaissant dans moins de 3 segments :
+On va ensuite supprimer les termes apparaissant dans moins de 3 segments :
 
 ```{r}
-dtm <- dfm_wordstem(dtm, language = "french")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 ```
 
-De nombreux autres traitements seraient possibles ou préférables, mais on se contentera de cette matrice pour cet exemple.
+De nombreux autres traitements seraient possibles, mais on se contentera de cette matrice pour cet exemple.
 
 
 # Classification simple
 
-Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction `rainette`. Ici on va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (`k = 5`) et le nombre minimal de termes pour qu'une classe soit découpée en deux à l'étape suivante de la classification (`min_split_members = 10`).
+Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction `rainette`. On va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (`k = 5`) et le nombre minimal de termes pour qu'une classe soit découpée en deux à l'étape suivante de la classification (`min_split_members = 10`).
 
-L'argument `min_uc_size`, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec `min_uc_size = 10`, les segments comportant moins de 10 formes sont regroupés avec le segment suivant jusqu'à atteindre la taille minimale souhaitée.
+L'argument `min_uc_size`, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec `min_uc_size = 10`, les segments comportant moins de 10 formes sont regroupés avec le segment suivant (si possible) jusqu'à atteindre la taille minimale souhaitée.
 
 ```{r message=FALSE}
 res <- rainette(dtm, k = 5, min_uc_size = 10, min_split_members = 10)
@@ -126,9 +114,9 @@ L'interface devrait ressembler à quelque chose comme ça :
 
 ![](rainette_explor_pc.png)
 
-Vous pouvez modifier le nombre de classes, la statistique utilisée pour le calcul des termes caractéristiques, etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge) selon la statistique considérée.
+Vous pouvez modifier le nombre de classes, la statistique utilisée pour le calcul des termes caractéristiques, etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case *Show negative values*) selon la statistique considérée.
 
-À noter que vous pouvez aussi opter pour des graphiques sous forme de nuages de mots :
+À noter que vous pouvez aussi opter pour des graphiques sous forme de nuages de mots (plutôt déconseillés cependant car moins lisibles) :
 
 ![](rainette_explor_pc_cloud.png)
 
@@ -163,7 +151,7 @@ Le deuxième type de classification proposé est une classification double : se
 
 Une classification double utilise la fonction `rainette2`. Celle-ci peut se faire de deux manières. On peut d'abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 res1 <- rainette(dtm, k = 7, min_uc_size = 10, min_split_members = 10)
 res2 <- rainette(dtm, k = 7, min_uc_size = 15, min_split_members = 10)
 ```
@@ -187,6 +175,7 @@ rainette2_explor(res, dtm)
 ```
 
 ![](rainette2_explor.png)
+
 L'interface est très semblable à la précédente, sauf qu'il n'y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux `NA`, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent être assez nombreux ici.
 
 Là encore, vous pouvez utiliser le bouton *Get R code* pour récupérer et copier/coller le code R permettant de reproduire le graphique affiché, et récupérer les groupes d'appartenance des segments du corpus.
@@ -198,7 +187,7 @@ groups <- cutree(res, 3)
 rainette_stats(groups, dtm, n_terms = 5)
 ```
 
-Si certains points n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups` pour les assigner au groupe le plus proche selon une méthode _k-nearest neighbors_ :
+Si certains points n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups` pour les assigner au groupe le plus proche selon une méthode _k-nearest neighbors_  (avec k=1) :
 
 ```{r}
 groups_completed <- rainette2_complete_groups(dtm, groups)
