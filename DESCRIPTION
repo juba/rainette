@@ -39,7 +39,6 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    covr,
     tm,
     FNN,
     quanteda.textmodels
