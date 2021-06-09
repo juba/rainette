@@ -26,12 +26,14 @@ The package is installable from CRAN :
 install_packages("rainette")
 ```
 
-The development version is installable from R-universe :
+The development version is installable from [R-universe](https://r-universe.dev) :
 
 ```r
-options(repos = c(
-    juba = 'https://juba.r-universe.dev',
-    CRAN = 'https://cloud.r-project.org')
+options(
+    repos = c(
+        juba = 'https://juba.r-universe.dev',
+        CRAN = 'https://cloud.r-project.org'
+    )
 )
 install.packages('rainette')
 ```
