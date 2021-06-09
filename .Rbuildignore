@@ -16,3 +16,4 @@ pkgdown/
 \.github/
 src/*.INACTIVE
 ^\.github$
+\.lintr
