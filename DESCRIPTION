@@ -1,8 +1,8 @@
 Package: rainette
 Type: Package
 Title: The Reinert Method for Textual Data Clustering
-Version: 0.1.4
-Date: 2021-06-07
+Version: 0.2.0
+Date: 2021-06-09
 Authors@R: c(person("Julien", "Barnier", email="julien.barnier@cnrs.fr",
     role=c("aut","cre")), person("Florian", "Privé",
     email="florian.prive.21@gmail.com", role="ctb"))
@@ -16,7 +16,7 @@ URL: https://juba.github.io/rainette/
 BugReports: https://github.com/juba/rainette/issues
 Encoding: UTF-8
 Imports: 
-    dplyr (>= 0.8.3),
+    dplyr (>= 1.0.0),
     tidyr,
     purrr,
     ggplot2,

@@ -1,6 +1,6 @@
 # Changelog
 
-## rainette 0.1.4
+## rainette 0.2.0
 
 ## rainette 0.1.3
 
