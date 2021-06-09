@@ -4,6 +4,7 @@
 #'   result of [split_segments()]
 #' @param k maximum number of clusters to compute
 #' @param min_uc_size minimum number of forms by document
+#' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_split_members don't try to split groups with fewer members
 #' @param cc_test contingency coefficient value for feature selection
 #' @param tsj minimum frequency value for feature selection
@@ -14,6 +15,9 @@
 #' quite a bit, see the package vignettes for more details.
 #'
 #' The dtm object is automatically converted to boolean.
+#' 
+#' If `min_uc_size > 0` then `doc_id` must be provided unless the corpus comes from `split_segments`, 
+#' in this case `segment_source` is used by default.
 #'
 #' @return
 #' The result is a list of both class `hclust` and `rainette`. Besides the elements
@@ -44,7 +48,7 @@
 #' @export
 
 
-rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_test = 0.3, tsj = 3, min_members) {
+rainette <- function(dtm, k = 10, min_uc_size = 0, doc_id = NULL, min_split_members = 5, cc_test = 0.3, tsj = 3, min_members) {
 
   ## Check for deprecated min_members argument
   if (!missing(min_members)) {
@@ -52,6 +56,11 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
     if (missing(min_split_members)) {
       min_split_members <- min_members
     }
+  }
+
+  if (min_split_members < 3) {
+    warning("min_split_members has been set to 3, its smallest possible value.")
+    min_split_members <- 3
   }
 
   if (any(!(dtm@x %in% c(0, 1)))) {
@@ -63,7 +72,7 @@ rainette <- function(dtm, k = 10, min_uc_size = 10, min_split_members = 5, cc_te
     ## Compute uc from uces based on minimum size
     message("  Computing ucs from segments...")
   }
-  dtm <- rainette::compute_uc(dtm, min_uc_size = min_uc_size)
+  dtm <- rainette::compute_uc(dtm, min_uc_size = min_uc_size, doc_id = doc_id)
 
   ## Correspondance table between uce and uc
   corresp_uce_uc <- data.frame(
