@@ -18,7 +18,7 @@ Rainette is an R package which implements a variant of the Reinert textual clust
 - Plot functions and shiny gadgets to visualise and explore clustering results
 - Utility functions to split a corpus into segments or import a corpus in Iramuteq format
 
-## Installation and usage
+## Installation
 
 The package is installable from CRAN :
 
@@ -26,11 +26,17 @@ The package is installable from CRAN :
 install_packages("rainette")
 ```
 
-The development version is installable from Github :
+The development version is installable from R-universe :
 
 ```r
-remotes::install_github("juba/rainette")
+options(repos = c(
+    juba = 'https://juba.r-universe.dev',
+    CRAN = 'https://cloud.r-project.org')
+)
+install.packages('rainette')
 ```
+
+## Usage
 
 Let's start with an example corpus provided by the excellent [quanteda](https://quanteda.io) package :
 
@@ -45,10 +51,12 @@ First, we'll use `split_segments` to split each text in the corpus into segments
 corpus <- split_segments(data_corpus_inaugural, segment_size = 40)
 ```
 
-Next, we'll compute a document-term matrix and apply some treatments with `quanteda` functions :
+Next, we'll apply some preprocessing and compute a document-term matrix with `quanteda` functions :
 
 ```r
-dtm <- dfm(corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
+tok <- tokens(corpus, remove_punct = TRUE)
+tok <- tokens_remove(tok, stopwords("en"))
+dtm <- dfm(tok, tolower = TRUE)
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 ```
@@ -83,15 +91,15 @@ docvars(corpus)$group <- cutree_rainette(res, k = 5)
 In addition to this, you can also perform a double clustering, *ie* two simple clusterings produced with different `min_uc_size` which are then "crossed" to generate more solid clusters. To do this, use `rainette2` either on two `rainette` results :
 
 ```r
-res1 <- rainette(dtm, k = 10, min_uc_size = 10, min_split_members = 10)
-res2 <- rainette(dtm, k = 10, min_uc_size = 15, min_split_members = 10)
-res <- rainette2(res1, res2, max_k = 10, min_members = 20)
+res1 <- rainette(dtm, k = 8, min_uc_size = 10, min_split_members = 10)
+res2 <- rainette(dtm, k = 8, min_uc_size = 15, min_split_members = 10)
+res <- rainette2(res1, res2, max_k = 8, min_members = 20)
 ```
 
 Or directly on a dtm with `uc_size1` and `uc_size2` arguments :
 
 ```r
-rainette2(dtm, max_k = 10, uc_size1 = 10, uc_size2 = 15, min_members = 20)
+rainette2(dtm, max_k = 8, uc_size1 = 10, uc_size2 = 15, min_members = 20)
 ```
 
 You can then use `rainette2_explor`, `rainette2_plot` and `cutree_rainette2` to explore and visualise the results.
