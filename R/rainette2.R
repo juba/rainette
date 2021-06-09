@@ -163,6 +163,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 #' @param max_k maximum number of clusters to compute
 #' @param uc_size1 if `x` is a dfm, minimum uc size for first clustering
 #' @param uc_size2 if `x` is a dfm, minimum uc size for second clustering
+#' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_members minimum members of each cluster
 #' @param min_chi2 minimum chi2 for each cluster
 #' @param ... if `x` is a dfm object, parameters passed to [rainette()] for both
@@ -176,6 +177,9 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 #' If both clusterings have already been computed, you can pass them as `x` and `y` arguments
 #' and the function will only look for optimal partitions.
 #'
+#' `doc_id` must be provided unless the corpus comes from `split_segments`,
+#' in this case `segment_source` is used by default.
+#' 
 #' For more details on optimal partitions search algorithm, please see package vignettes.
 #'
 #' @return
@@ -214,19 +218,19 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 
 
 rainette2 <- function(x, y = NULL, max_k = 5, uc_size1 = 10, uc_size2 = 15,
-  min_members = 10, min_chi2 = 3.84, ...) {
+  doc_id = NULL, min_members = 10, min_chi2 = 3.84, ...) {
 
   ## If passed a dfm, compute both clustering
   if (inherits(x, "dfm")) {
     dtm <- x
     message("  Computing first clustering with uc_size1 = ", uc_size1)
     x <- rainette::rainette(
-      dtm, k = max_k, min_uc_size = uc_size1,
+      dtm, k = max_k, min_uc_size = uc_size1, doc_id = doc_id,
       min_split_members = min_members, ...
     )
     message("  Computing second clustering with uc_size2 = ", uc_size2)
     y <- rainette::rainette(
-      dtm, k = max_k, min_uc_size = uc_size2,
+      dtm, k = max_k, min_uc_size = uc_size2, doc_id = doc_id,
       min_split_members = min_members, ...
     )
   }
