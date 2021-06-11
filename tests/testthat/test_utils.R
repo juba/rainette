@@ -54,9 +54,9 @@ test_that("computed uc are ok with respect to doc_id", {
   dtm <- dfm_remove(dtm, stopwords("en"))
   dtm <- dfm_trim(dtm, min_termfreq = 3)
   expect_warning(dfm_uc <- rainette::compute_uc(dtm, min_uc_size = 500))
-  tmp <- docvars(dfm_uc) |>
-    group_by(rainette_uc_id) |>
-    summarise(nd = n_distinct(segment_source)) |>
+  tmp <- docvars(dfm_uc) %>%
+    group_by(rainette_uc_id) %>%
+    summarise(nd = n_distinct(segment_source)) %>%
     filter(nd > 1)
   expect_equal(nrow(tmp), 0)
 })
