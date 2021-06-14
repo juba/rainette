@@ -14,7 +14,7 @@ rainette2_plot(
   n_terms = 15,
   free_scales = FALSE,
   measure = c("chi2", "lr"),
-  show_negative = TRUE,
+  show_negative = FALSE,
   text_size = 10
 )
 }

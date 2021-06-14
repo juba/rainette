@@ -169,7 +169,7 @@ keyness_plots <- function(tabs, groups, type = "bar",
 rainette_plot <- function(res, dtm, k = NULL,
                           type = c("bar", "cloud"), n_terms = 15,
                           free_scales = FALSE, measure = c("chi2", "lr"),
-                          show_negative = TRUE,
+                          show_negative = FALSE,
                           text_size = NULL) {
 
   type <- match.arg(type)
@@ -276,7 +276,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   complete_groups = FALSE,
   type = c("bar", "cloud"), n_terms = 15,
   free_scales = FALSE, measure = c("chi2", "lr"),
-  show_negative = TRUE,
+  show_negative = FALSE,
   text_size = 10) {
 
   type <- match.arg(type)
