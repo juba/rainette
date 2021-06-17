@@ -91,18 +91,15 @@ keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "fireb
 
 groups_colors <- function(k, i = NULL) {
   ## Groups colors
-  if (k <= 5) {
-    col <- RColorBrewer::brewer.pal(9, "Set1")[1:k]
-  } else if (k <= 12) {
-    col <- RColorBrewer::brewer.pal(12, "Paired")[1:k]
-  } else {
-    col <- rep("firebrick3", k)
-  }
+  col <- palette.colors(n = 10, palette = "Tableau 10")
+  col <- rep_len(col, k)
 
   if (!is.null(i)) {
     return(col[i])
+  } else {
+    return(col)
   }
-  col
+
 }
 
 

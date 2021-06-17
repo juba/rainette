@@ -28,7 +28,6 @@ Imports:
     ggwordcloud,
     gridExtra,
     rlang,
-    RColorBrewer,
     shiny,
     miniUI,
     formatR,
