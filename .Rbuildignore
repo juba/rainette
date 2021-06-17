@@ -17,3 +17,4 @@ pkgdown/
 src/*.INACTIVE
 ^\.github$
 \.lintr
+.markdownlint.json
