@@ -55,5 +55,4 @@ test_that("split_segments input checking is ok", {
   expect_error(rainette:::split_segments.character(1:10))
   expect_error(rainette:::split_segments.corpus(1:10))
   expect_error(rainette:::split_segments.Corpus(1:10))
-  expect_error(rainette:::split_segments.character(c("a", "b")))
 })

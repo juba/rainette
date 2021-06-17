@@ -36,10 +36,19 @@ split_segments.character <- function(
   obj, segment_size = 40, segment_size_window = NULL
 ) {
 
-  text <- obj
+  ## Tokenize into words
+  words <- as.character(quanteda::tokens(obj, what = "fastestword"))
 
-  if (!(inherits(text, "character") && length(text) == 1)) {
-    stop("text must be a character vector of size 1")
+  split_segments_words(words,  segment_size,  segment_size_window)
+
+}
+
+
+## Split a single tokenized document
+split_segments_words <- function(words, segment_size = 40, segment_size_window = NULL) {
+
+  if (inherits(words, "tokens") && length(words) == 1) {
+    words <- as.character(words)
   }
 
   ## Default segment_size_window
@@ -47,12 +56,9 @@ split_segments.character <- function(
     segment_size_window <- 0.4 * segment_size
   }
 
-  ## Tokenize into words
-  words <- as.character(quanteda::tokens(text, what = "fastestword"))
-
   ## If string is shorter than segment_size, returns it
   if (length(words) <= segment_size) {
-    return(obj)
+    return(paste0(words, collapse = " "))
   }
 
   ## Compute "weight" for each word
@@ -69,7 +75,7 @@ split_segments.character <- function(
   last_index <- 1
   split_indices <- 1
   stop_index <- length(words) - (segment_size + segment_size_window) + 1
-  while(last_index < stop_index) {
+  while (last_index < stop_index) {
     indices <- last_index + slice_indices - 1
     tmpw <- weights[indices]
     split_index <- which.max(tmpw / (abs(slice_indices - segment_size) + 1))
@@ -104,7 +110,7 @@ split_segments.Corpus <- function(
   if (!inherits(corpus, "Corpus")) stop("corpus must be of class Corpus")
 
   corpus <- quanteda::corpus(corpus)
-  split_segments(corpus)
+  split_segments(corpus, segment_size, segment_size_window)
 
 }
 
@@ -119,27 +125,44 @@ split_segments.corpus <- function(
   obj, segment_size = 40, segment_size_window = NULL
 ) {
 
-  corpus <- obj
+  if (!inherits(obj, "corpus")) stop("obj must be of class corpus")
 
-  if (!inherits(corpus, "corpus")) stop("corpus must be of class corpus")
+  tokens <- quanteda::tokens(obj, what = "fastestword")
 
-  quanteda::docvars(corpus, "segment_source") <- quanteda::docnames(corpus)
+  split_segments(tokens, segment_size, segment_size_window)
+
+}
+
+
+##' @rdname split_segments
+##' @aliases split_segments.corpus
+##' @export
+##' @importFrom purrr map_int
+
+
+split_segments.tokens <- function(
+  obj, segment_size = 40, segment_size_window = NULL
+) {
+
+  if (!inherits(obj, "tokens")) stop("obj must be of class tokens")
+
+  quanteda::docvars(obj, "segment_source") <- quanteda::docnames(obj)
 
   message("  Splitting...")
 
   progressr::with_progress({
-    p <- progressr::progressor(along = as.character(corpus))
+    p <- progressr::progressor(steps = quanteda::ndoc(obj))
 
     texts <- lapply(
-      as.character(corpus),
-      function(text) {
+      obj,
+      function(words) {
         p()
-        split_segments(text, segment_size, segment_size_window)
+        split_segments_words(words, segment_size, segment_size_window)
       }
     )
   })
 
-  new_corpus <- docvars(corpus) %>%
+  new_corpus <- docvars(obj) %>%
     dplyr::mutate(text = texts) %>%
     tidyr::unnest(text) %>%
     dplyr::group_by(segment_source) %>%
@@ -154,4 +177,3 @@ split_segments.corpus <- function(
   new_corpus
 
 }
-
