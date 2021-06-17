@@ -5,6 +5,7 @@
 \alias{split_segments.character}
 \alias{split_segments.Corpus}
 \alias{split_segments.corpus}
+\alias{split_segments.tokens}
 \title{Split a character string or corpus into segments}
 \usage{
 split_segments(obj, segment_size = 40, segment_size_window = NULL)
@@ -14,6 +15,8 @@ split_segments(obj, segment_size = 40, segment_size_window = NULL)
 \method{split_segments}{Corpus}(obj, segment_size = 40, segment_size_window = NULL)
 
 \method{split_segments}{corpus}(obj, segment_size = 40, segment_size_window = NULL)
+
+\method{split_segments}{tokens}(obj, segment_size = 40, segment_size_window = NULL)
 }
 \arguments{
 \item{obj}{character string, quanteda or tm corpus object}
