@@ -19,6 +19,10 @@ rainette_explor_css <- function() {
   margin-bottom: 1em;
   padding: 1em;
 }
+.doc .name {
+  font-weight: bold;
+  color: #777;
+}
 .doc .highlight {
   background-color: #FF0;
 }
@@ -144,36 +148,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
       miniTabPanel(
         "Cluster documents", icon = shiny::icon("file-text"),
         miniContentPanel(
-          fillRow(
-            flex = c(1, 3),
-            fillCol(
-              flex = c(10, 1),
-              id = "side",
-              div(
-                uiOutput("group_ui"),
-                numericInput(
-                  "ndoc", "Maximum number of documents",
-                  value = 10, min = 1
-                ),
-                numericInput(
-                  "nchar", "Maximum number of characters",
-                  value = 1000, min = 10
-                ),
-                textInput(
-                  "filter_term", "Filter by term",
-                  value = ""
-                )
-              )
-            ),
-           fillCol(
-              flex = c(10, 1),
-              id = "docs",
-              div(
-                htmlOutput("docs_sample_intro"),
-                htmlOutput("docs_sample")
-              )
-            )
-          )
+          docs_sample_ui("rainette1")
         )
       )
     )
@@ -244,120 +219,8 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
       ))
     })
 
-    ## Cluster selection slider
-    output$group_ui <- renderUI({
-      sliderInput("cluster",
-        label = "Cluster",
-        value = 1,
-        min = 1, max = input$k, step = 1
-      )
-    })
-
-    ## Current clusters
-    groups <- reactive({
-      rainette::cutree_rainette(res, k = input$k)
-    })
-
-    ## Corpus from wanted cluster
-    corpus_cluster <- reactive({
-      if (is.null(corpus_src)) return(NULL)
-      ## Select only from wanted cluster
-      sel <- groups() == input$cluster & !is.na(groups())
-      corpus_src[sel]
-    })
-
-    ## Regex for filter term input
-    filter_regex <- reactive({
-      stringr::regex(
-        shiny::req(input$filter_term),
-        ignore_case = TRUE, multiline = TRUE
-      )
-    })
-
-    ## Corpus from cluster filtered by term
-    corpus_filtered <- reactive({
-      if (is.null(corpus_src)) return(NULL)
-      result <- corpus_cluster()
-      ## Filter by terms
-      filter_term <- stringr::str_trim(input$filter_term)
-      if (!is.null(filter_term) && filter_term != "") {
-        keep <- stringr::str_detect(
-          as.character(corpus_cluster()),
-          filter_regex()
-        )
-        result <- result[keep]
-        texts <- stringr::str_replace_all(
-          as.character(result),
-          filter_regex(),
-          "<span class='highlight'>\\0</span>"
-        )
-        result[] <- texts
-      }
-      result
-    })
-
-    ## Sample cluster documents introducation phrase
-    output$docs_sample_intro <- renderUI({
-      if (is.null(corpus_src)) {
-        return(
-          HTML("<p>Can't display documents : <tt>corpus_src</tt> is null.</p><p>Please rerun <tt>rainette_explor</tt> with your quanteda corpus object as third parameter : something like <tt>rainette_explor(res, dtm, corpus)</tt>.</p>")
-        )
-      }
-
-      nb_docs_cluster <- quanteda::ndoc(corpus_filtered())
-      out <- paste0(
-        "<p>Cluster <strong>",
-        input$cluster,
-        "</strong> of <strong>",
-        input$k,
-        "</strong> / Displayed : <strong>",
-        min(input$ndoc, nb_docs_cluster),
-        "</strong>"
-      )
-      if (quanteda::ndoc(corpus_cluster()) != quanteda::ndoc(corpus_filtered())) {
-        out <- paste0(out,
-          " - Filtered documents : <strong>",
-          quanteda::ndoc(corpus_filtered()),
-          "</strong>"
-        )
-      }
-      out <- paste0(
-        out,
-        " - Cluster size : <strong>",
-        quanteda::ndoc(corpus_cluster()),
-        "</strong>.</p>"
-      )
-      htmltools::HTML(out)
-    })
-
-    ## Sample cluster documents
-    output$docs_sample <- renderUI({
-      if (is.null(corpus_src)) return(NULL)
-
-      ## Sample docs
-      corp <- quanteda::corpus_sample(
-        corpus_filtered(),
-        size = min(quanteda::ndoc(corpus_filtered()), input$ndoc)
-      )
-
-      ## Truncate texts
-      txt <- as.character(corp)
-      txt <- ifelse(
-        nchar(txt) <= input$nchar,
-        txt,
-        paste(stringr::str_sub(txt, 1, input$nchar), "(...)")
-      )
-
-      ## Generate output
-      out <- paste(
-        "<div class='doc'><strong>",
-        quanteda::docnames(corp),
-        "</strong><br />",
-        txt, "</div>",
-        collapse = "\n"
-      )
-      htmltools::HTML(out)
-    })
+    current_k <- reactive({input$k})
+    docs_sample_server("rainette1", res, corpus_src, current_k)
 
     # Handle the Done button being pressed.
     observeEvent(input$done, {
@@ -378,3 +241,5 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
     viewer = shiny::dialogViewer("Clusters exploration", width = 1500, height = 1000)
   )
 }
+
+
