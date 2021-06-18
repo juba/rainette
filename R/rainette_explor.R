@@ -244,6 +244,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
       ))
     })
 
+    ## Cluster selection slider
     output$group_ui <- renderUI({
       sliderInput("cluster",
         label = "Cluster",
@@ -252,6 +253,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
       )
     })
 
+    ## Current clusters
     groups <- reactive({
       rainette::cutree_rainette(res, k = input$k)
     })
@@ -260,10 +262,11 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
     corpus_cluster <- reactive({
       if (is.null(corpus_src)) return(NULL)
       ## Select only from wanted cluster
-      sel <- groups() == input$cluster
+      sel <- groups() == input$cluster & !is.na(groups())
       corpus_src[sel]
     })
 
+    ## Regex for filter term input
     filter_regex <- reactive({
       stringr::regex(
         shiny::req(input$filter_term),
