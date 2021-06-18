@@ -184,7 +184,7 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                     quanteda::ndoc(corpus_cluster()),
                     "</strong>.</p><hr>"
                 )
-                htmltools::HTML(out)
+                shiny::HTML(out)
             })
 
             ## Sample cluster documents
@@ -223,7 +223,7 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                     "<hr>",
                     collapse = "\n"
                 )
-                htmltools::HTML(out)
+                shiny::HTML(out)
             })
         }
     )
