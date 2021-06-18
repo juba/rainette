@@ -4,7 +4,7 @@
 \alias{rainette2_explor}
 \title{Shiny gadget for rainette2 clustering exploration}
 \usage{
-rainette2_explor(res, dtm)
+rainette2_explor(res, dtm = NULL)
 }
 \arguments{
 \item{res}{result object of a \code{rainette2} clustering}
