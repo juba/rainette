@@ -74,6 +74,10 @@ rainette <- function(dtm, k = 10, min_uc_size = 0, doc_id = NULL, min_split_memb
   }
   dtm <- rainette::compute_uc(dtm, min_uc_size = min_uc_size, doc_id = doc_id)
 
+  if (any(rowSums(dtm) == 0)) {
+    warning("Some uc don't have any term, they won't be assigned to any cluster.")
+  }
+
   ## Correspondance table between uce and uc
   corresp_uce_uc <- data.frame(
     uce = docvars(dtm, "rainette_uce_id"),
