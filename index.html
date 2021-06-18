@@ -157,7 +157,7 @@
 <code class="sourceCode R"><span class="fu"><a href="reference/rainette_plot.html">rainette_plot</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"bar"</span>, n_terms <span class="op">=</span> <span class="fl">20</span>, free_scales <span class="op">=</span> <span class="cn">FALSE</span>,
     measure <span class="op">=</span> <span class="st">"chi2"</span>, show_negative <span class="op">=</span> <span class="st">"TRUE"</span>, text_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>Or cut the tree at chosen <code>k</code> and add a group membership variable to our corpus metadata :</p>
-<pre><code>docvars(corpus)$group &lt;- cutree_rainette(res, k = 5)</code></pre>
+<pre><code>docvars(corpus)$group &lt;- cutree(res, k = 5)</code></pre>
 <p>In addition to this, you can also perform a double clustering, <em>ie</em> two simple clusterings produced with different <code>min_uc_size</code> which are then “crossed” to generate more solid clusters. To do this, use <code>rainette2</code> either on two <code>rainette</code> results :</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">8</span>, min_uc_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
@@ -166,7 +166,7 @@
 <p>Or directly on a dtm with <code>uc_size1</code> and <code>uc_size2</code> arguments :</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, max_k <span class="op">=</span> <span class="fl">8</span>, uc_size1 <span class="op">=</span> <span class="fl">10</span>, uc_size2 <span class="op">=</span> <span class="fl">15</span>, min_members <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
-<p>You can then use <code>rainette2_explor</code>, <code>rainette2_plot</code> and <code>cutree_rainette2</code> to explore and visualise the results.</p>
+<p>You can then use <code>rainette2_explor</code>, <code>rainette2_plot</code> and <code>cutree</code> to explore and visualise the results.</p>
 <p><img src="reference/figures/rainette2_explor.png"></p>
 </div>
 <div id="tell-me-more" class="section level2">
