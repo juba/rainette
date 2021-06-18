@@ -47,6 +47,12 @@ span.hl.com { color: #888; font-style: italic;}
 
 rainette_explor <- function(res, dtm) {
 
+  ## If res is a rainette2 result, launch rainette2_explor
+  if (inherits(res, "rainette2")) {
+    rainette::rainette2_explor(res, dtm)
+    return()
+  }
+
   res_name <- deparse(substitute(res))
   dtm_name <- deparse(substitute(dtm))
   max_n_groups <- max(res$group, na.rm = TRUE)

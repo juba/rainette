@@ -12,6 +12,7 @@
 - color palettes for clusters changed to "Tableau 10"
 - Negative keyness values are not shown by default anymore in `rainette_explor`, `rainette2_explor`, `rainette_plot` and `rainette2_plot`.
 - Add warning when `min_split_members` < 3
+- Launch `rainette2_explor` if `rainette_explor` is called on a `rainette2` results object
 
 # rainette 0.1.3
 
