@@ -4,11 +4,12 @@
 
 rainette_explor_css <- function() {
   "
-#main, #docs {
+#main {
   padding: 0 1em;
 }
 #docs {
   height: 100%;
+  padding: 0 2em;
   max-height: 100%;
   overflow-y: scroll;
 }
@@ -16,16 +17,17 @@ rainette_explor_css <- function() {
   background-color: #EEEEEE;
   padding: 2em 3em;
 }
-.doc {
-  font-size: 90%;
-  background-color: #F6F6F6;
-  border-radius: 10px;
-  margin-bottom: 1em;
-  padding: 1em;
+.docname {
+  font-size: 80%;
+  color: #69B;
+  margin: 0 0 .8em 0;
 }
-.doc .name {
-  font-weight: bold;
-  color: #777;
+.doc {
+  font-size: 100%;
+  max-width: 50em;
+  border-left: 3px solid #9BE;
+  margin: 0;
+  padding: .5em 1em .2em 1em;
 }
 .doc .highlight {
   background-color: #FF0;
@@ -180,7 +182,7 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                     out,
                     " - Cluster size : <strong>",
                     quanteda::ndoc(corpus_cluster()),
-                    "</strong>.</p>"
+                    "</strong>.</p><hr>"
                 )
                 htmltools::HTML(out)
             })
@@ -212,10 +214,13 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
 
                 ## Generate output
                 out <- paste(
-                    "<div class='doc'><span class='name'>",
+                    "<div class='doc'>",
+                    "<div class='docname'>",
                     quanteda::docnames(corp),
-                    "</span><br />",
-                    txt, "</div>",
+                    "</div>",
+                    txt,
+                    "</div>",
+                    "<hr>",
                     collapse = "\n"
                 )
                 htmltools::HTML(out)
