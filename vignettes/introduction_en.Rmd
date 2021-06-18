@@ -201,11 +201,11 @@ It's also possible to display terms keyness as word clouds :
 At any time, you can click on the *Get R code* button to get the R code to
 reproduce the current plot and to compute cluster membership.
 
-You can also directly use `cutree_rainette` to get each document cluster at
+You can also directly use `cutree` to get each document cluster at
 level `k` :
 
 ```{r}
-groups <- cutree_rainette(res, k = 3)
+groups <- cutree(res, k = 3)
 ```
 
 This vector can be used, for example, as a new corpus metadata variable :
@@ -265,7 +265,7 @@ The interface is very similar to the previous one, except there is no
 dendrogram anymore, but a single barplot with each cluster size instead. Be
 careful of the number of `NA` (not assigned documents), as it can be quite
 high. You can still use the *Get R code* button to get the current plot code,
-and use `cutree_rainette` to get clusters membership.
+and use `cutree` to get clusters membership.
 
 `rainette_stats` can also be used to get keyness statistics for each cluster :
 

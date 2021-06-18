@@ -87,7 +87,7 @@ rainette_plot(res, dtm, k = 5, type = "bar", n_terms = 20, free_scales = FALSE,
 Or cut the tree at chosen `k` and add a group membership variable to our corpus metadata :
 
 ```    
-docvars(corpus)$group <- cutree_rainette(res, k = 5)
+docvars(corpus)$group <- cutree(res, k = 5)
 ```
 
 In addition to this, you can also perform a double clustering, *ie* two simple clusterings produced with different `min_uc_size` which are then "crossed" to generate more solid clusters. To do this, use `rainette2` either on two `rainette` results :
@@ -104,7 +104,7 @@ Or directly on a dtm with `uc_size1` and `uc_size2` arguments :
 rainette2(dtm, max_k = 8, uc_size1 = 10, uc_size2 = 15, min_members = 20)
 ```
 
-You can then use `rainette2_explor`, `rainette2_plot` and `cutree_rainette2` to explore and visualise the results.
+You can then use `rainette2_explor`, `rainette2_plot` and `cutree` to explore and visualise the results.
 
 ![](man/figures/rainette2_explor.png)
 

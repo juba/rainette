@@ -120,20 +120,20 @@ Vous pouvez modifier le nombre de classes, la statistique utilisée pour le calc
 
 ![](rainette_explor_pc_cloud.png)
 
-Cette interface vous permet d'expérimenter librement sur le nombre de classes et leur interprétation. Vous pouvez à tout moment cliquer sur le bouton *Get R code* pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande `cutree_rainette` qui vous permet de récupérer les groupes d'appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.
+Cette interface vous permet d'expérimenter librement sur le nombre de classes et leur interprétation. Vous pouvez à tout moment cliquer sur le bouton *Get R code* pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande `cutree` qui vous permet de récupérer les groupes d'appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.
 
 ```{r eval=FALSE}
 ## Clustering description plot
 rainette_plot(res, dtm, k = 5, type = "bar", n_terms = 20, free_scales = FALSE,
     measure = "chi2", show_negative = "TRUE", text_size = 11)
 ## Groups
-cutree_rainette(res, k = 5)
+cutree(res, k = 5)
 ```
 
-Vous pouvez par exemple utiliser l'appel de `cutree_rainette` pour ajouter comme nouvelle métadonnée du corpus le groupe d'appartenance pour la classification en 5 classes :
+Vous pouvez par exemple utiliser l'appel de `cutree` pour ajouter comme nouvelle métadonnée du corpus le groupe d'appartenance pour la classification en 5 classes :
 
 ```{r}
-corpus$group <- cutree_rainette(res, k = 5)
+corpus$group <- cutree(res, k = 5)
 head(docvars(corpus))
 ```
 
