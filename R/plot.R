@@ -15,8 +15,8 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
     geom_col(aes(fill = sign), color = "white", width = 1) +
     geom_text(y = stat_max / 15, aes(label = stats::reorder(feature, !!stat_col_tidy)), hjust = 0, size = text_size / 2.5) +
     coord_flip() +
-    scale_fill_manual("", guide = "none",
-      values = c("positive" = "#a1d8ff", "negative" = "#ff7d7e")) +
+    scale_fill_manual("", values = c("positive" = "#a1d8ff", "negative" = "#ff7d7e")) +
+    guides(fill = "none") +
     labs(title = title, x = "") +
     theme_minimal() +
     theme(
@@ -318,7 +318,8 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   colnames(freq) <- c("Group", "n")
   g <- ggplot(freq) +
     geom_col(aes(x = Group, y = n, fill = Group)) +
-    scale_fill_manual(guide = "none", values = c(groups_colors(k)), na.value = "grey20") +
+    scale_fill_manual(values = c(groups_colors(k)), na.value = "grey20") +
+    guides(fill = "none") +
     ggtitle(title) +
     theme(
       plot.title = element_text(size = 10, face = "bold", hjust = 0.5),
