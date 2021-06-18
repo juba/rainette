@@ -45,7 +45,12 @@ span.hl.com { color: #888; font-style: italic;}
 #' @import shiny
 #' @import miniUI
 
-rainette_explor <- function(res, dtm) {
+rainette_explor <- function(res, dtm = NULL) {
+
+  ## Error if no dtm
+  if (is.null(dtm)) {
+    stop("rainette_explor must be called with a result object and its associated dtm.")
+  }
 
   ## If res is a rainette2 result, launch rainette2_explor
   if (inherits(res, "rainette2")) {

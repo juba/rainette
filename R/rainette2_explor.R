@@ -13,8 +13,13 @@
 #' @import shiny
 #' @import miniUI
 
-rainette2_explor <- function(res, dtm) {
+rainette2_explor <- function(res, dtm = NULL) {
   
+  ## Error if no dtm
+  if (is.null(dtm)) {
+    stop("rainette2_explor must be called with a result object and its associated dtm.")
+  }
+
   res_name <- deparse(substitute(res))
   dtm_name <- deparse(substitute(dtm))
   max_n_groups <- max(res$k, na.rm = TRUE)
