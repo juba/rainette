@@ -2,6 +2,7 @@
 #'
 #' @param res result object of a `rainette2` clustering
 #' @param dtm the dfm object used to compute the clustering
+#' @param corpus_src the quanteda corpus object used to compute the dtm
 #'
 #' @seealso [rainette2_plot()]
 #'
@@ -13,7 +14,7 @@
 #' @import shiny
 #' @import miniUI
 
-rainette2_explor <- function(res, dtm = NULL) {
+rainette2_explor <- function(res, dtm = NULL, corpus_src = NULL) {
 
   ## Error if no dtm
   if (is.null(dtm)) {
@@ -28,46 +29,81 @@ rainette2_explor <- function(res, dtm = NULL) {
   ui <- miniPage(
     gadgetTitleBar("Clustering exploration", left = NULL),
     tags$head(tags$style(rainette_explor_css())),
-    fillRow(
-      flex = c(1,3),
-      fillCol(
-        flex = c(10, 1),
-        id = "side",
-        div(
-          sliderInput("k", label = "Number of clusters",
-            value = max_n_groups,
-            min = 2, max = max_n_groups, step = 1),
-          selectInput("criterion", "Partition criterion",
-            choices = c("Partition sum of chi-squared" = "chi2",
-              "Partition sum of sizes" = "n")),
-          checkboxInput("complete_km", label = "Complete with k-nearest neighbours", value = FALSE),
-          selectInput("measure", "Statistics",
-            choices = c("Chi-squared" = "chi2",
-                        "Likelihood ratio" = "lr")),
-          selectInput("type", "Plot type",
-            choices = c("Barplot" = "bar",
-                        "Word cloud" = "cloud")),
-          numericInput("n_terms", label = "Max number of terms to display",
-            value = 20, min = 5, max = 30, step = 1),
-          checkboxInput("same_scales", label = "Force same scales", value = TRUE),
-          conditionalPanel("input.type == 'bar'",
-            checkboxInput("show_negative", label = "Show negative values", value = FALSE),
-            sliderInput("text_size", label = "Text size",
-              value = 13, min = 6, max = 20, step = 1)
-          ),
-          conditionalPanel("input.type == 'cloud'",
-            sliderInput("max_size", label = "Max text size",
-              value = 15, min = 6, max = 30, step = 1)
+    miniTabstripPanel(
+      miniTabPanel(
+        "Summary",
+        icon = shiny::icon("bar-chart"),
+        miniContentPanel(
+          fillRow(
+            flex = c(1, 3),
+            fillCol(
+              flex = c(10, 1),
+              id = "side",
+              div(
+                sliderInput("k",
+                  label = "Number of clusters",
+                  value = max_n_groups,
+                  min = 2, max = max_n_groups, step = 1
+                ),
+                selectInput("criterion", "Partition criterion",
+                  choices = c(
+                    "Partition sum of chi-squared" = "chi2",
+                    "Partition sum of sizes" = "n"
+                  )
+                ),
+                checkboxInput("complete_km", label = "Complete with k-nearest neighbours", value = FALSE),
+                selectInput("measure", "Statistics",
+                  choices = c(
+                    "Chi-squared" = "chi2",
+                    "Likelihood ratio" = "lr"
+                  )
+                ),
+                selectInput("type", "Plot type",
+                  choices = c(
+                    "Barplot" = "bar",
+                    "Word cloud" = "cloud"
+                  )
+                ),
+                numericInput("n_terms",
+                  label = "Max number of terms to display",
+                  value = 20, min = 5, max = 30, step = 1
+                ),
+                checkboxInput("same_scales", label = "Force same scales", value = TRUE),
+                conditionalPanel(
+                  "input.type == 'bar'",
+                  checkboxInput("show_negative", label = "Show negative values", value = FALSE),
+                  sliderInput("text_size",
+                    label = "Text size",
+                    value = 13, min = 6, max = 20, step = 1
+                  )
+                ),
+                conditionalPanel(
+                  "input.type == 'cloud'",
+                  sliderInput("max_size",
+                    label = "Max text size",
+                    value = 15, min = 6, max = 30, step = 1
+                  )
+                )
+              ),
+              actionButton("get_r_code",
+                class = "btn-success",
+                icon = icon("code"),
+                label = gettext("Get R code")
+              )
+            ),
+            fillCol(
+              id = "main",
+              plotOutput("rainette2_plot", height = "100%")
+            )
           )
-        ),
-        actionButton("get_r_code",
-          class = "btn-success",
-          icon = icon("code"),
-          label = gettext("Get R code"))
+        )
       ),
-      fillCol(id = "main",
-        plotOutput("rainette2_plot", height = "100%")
-      )
+          miniTabPanel(
+        "Cluster documents", icon = shiny::icon("file-text"),
+        miniContentPanel(
+          docs_sample_ui("rainette2")
+        )
+      ) 
     )
   )
 
@@ -142,6 +178,9 @@ rainette2_explor <- function(res, dtm = NULL) {
           "</code></pre>")),
         easyClose = TRUE))
     })
+
+    current_k <- reactive({input$k})
+    docs_sample_server("rainette2", res, corpus_src, current_k)
 
     # Handle the Done button being pressed.
     observeEvent(input$done, {

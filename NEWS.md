@@ -7,7 +7,7 @@
 
 ## Other
 
-- A new graphical interface to visualise cluster documents has been added to `rainette_explor`.
+- A new graphical interface to visualise cluster documents has been added to `rainette_explor` and `rainette2_explor`.
 - When `rainette` is called with `min_uc_size` > 0, a `doc_id` argument must be given which is the name of a `dtm` docvar identifying the segments source. If the corpus has been produced by `split_segments`, the added `segment_source` docvar is used by default.
 - `split_segments` is now about 4 times faster.
 - Color palettes for clusters changed to "Tableau 10"
