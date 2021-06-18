@@ -4,12 +4,14 @@
 \alias{rainette_explor}
 \title{Shiny gadget for rainette clustering exploration}
 \usage{
-rainette_explor(res, dtm = NULL)
+rainette_explor(res, dtm = NULL, corpus_src = NULL)
 }
 \arguments{
 \item{res}{result object of a \code{rainette} clustering}
 
 \item{dtm}{the dfm object used to compute the clustering}
+
+\item{corpus_src}{the quanteda corpus object used to compute the dtm}
 }
 \value{
 No return value, called for side effects.
