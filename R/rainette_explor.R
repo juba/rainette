@@ -1,46 +1,8 @@
-rainette_explor_css <- function() {
-  "
-#main, #docs {
-  padding: 0 1em;
-}
-#docs {
-  height: 100%;
-  max-height: 100%;
-  overflow-y: scroll;
-}
-#side {
-  background-color: #EEEEEE;
-  padding: 2em 3em;
-}
-.doc {
-  font-size: 90%;
-  background-color: #F6F6F6;
-  border-radius: 10px;
-  margin-bottom: 1em;
-  padding: 1em;
-}
-.doc .name {
-  font-weight: bold;
-  color: #777;
-}
-.doc .highlight {
-  background-color: #FF0;
-}
-
-/* Syntax highlighting */
-span.hl.str { color: #d14;}
-span.hl.kwa { color: #099;}
-span.hl.num { color: #099;}
-span.hl.kwd { color: #333; font-weight: bold;}
-span.hl.com { color: #888; font-style: italic;}
-"
-}
-
-
 #' Shiny gadget for rainette clustering exploration
 #'
 #' @param res result object of a `rainette` clustering
 #' @param dtm the dfm object used to compute the clustering
+#' @param corpus_src the quanteda corpus object used to compute the dtm
 #'
 #' @seealso `rainette_plot`
 #'
