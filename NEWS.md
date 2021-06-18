@@ -7,9 +7,10 @@
 
 ## Other
 
+- A new graphical interface to visualise cluster documents has been added to `rainette_explor`.
 - When `rainette` is called with `min_uc_size` > 0, a `doc_id` argument must be given which is the name of a `dtm` docvar identifying the segments source. If the corpus has been produced by `split_segments`, the added `segment_source` docvar is used by default.
 - `split_segments` is now about 4 times faster.
-- color palettes for clusters changed to "Tableau 10"
+- Color palettes for clusters changed to "Tableau 10"
 - Negative keyness values are not shown by default anymore in `rainette_explor`, `rainette2_explor`, `rainette_plot` and `rainette2_plot`.
 - Add warning when `min_split_members` < 3
 - Launch `rainette2_explor` if `rainette_explor` is called on a `rainette2` results object
