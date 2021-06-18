@@ -173,7 +173,7 @@ rainette_explor <- function(res, dtm = NULL) {
 
   shiny::runGadget(
     ui, server,
-    viewer = dialogViewer("Clusters exploration", width = 1500, height = 1000)
+    viewer = shiny::dialogViewer("Clusters exploration", width = 1500, height = 1000)
   )
 
 }
