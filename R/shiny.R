@@ -9,9 +9,26 @@ rainette_explor_css <- function() {
 }
 #docs {
   height: 100%;
-  padding: 0 2em;
+  max-height: 100%;
+  overflow-y: hidden;
+  padding-left: 2em;
+}
+#docs_sample {
+  height: 100%;
   max-height: 100%;
   overflow-y: scroll;
+  padding-right: 2em;
+}
+#docs_sample_intro {
+  color: #369;
+  background-color: #F0F0F0;
+  border-radius: 5px;
+  padding: .6em 1em;
+  margin-bottom: 20px;
+}
+#docs_sample hr {
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 #side {
   background-color: #EEEEEE;
@@ -20,14 +37,14 @@ rainette_explor_css <- function() {
 .docname {
   font-size: 80%;
   color: #69B;
-  margin: 0 0 .8em 0;
+  margin: 0 0 .3em 0;
 }
 .doc {
   font-size: 100%;
   max-width: 50em;
   border-left: 3px solid #9BE;
   margin: 0;
-  padding: .5em 1em .2em 1em;
+  padding: .3em 1em .2em 1em;
 }
 .doc .highlight {
   background-color: #FF0;
@@ -57,7 +74,7 @@ docs_sample_ui <- function(id) {
                 uiOutput(ns("group_ui")),
                 numericInput(
                     ns("ndoc"), "Maximum number of documents",
-                    value = 10, min = 1
+                    value = 100, min = 1
                 ),
                 checkboxInput(ns("random_sample"), "Random sample", value = FALSE),
                 numericInput(
@@ -73,9 +90,14 @@ docs_sample_ui <- function(id) {
         fillCol(
             flex = c(10, 1),
             id = "docs",
-            div(
-                htmlOutput(ns("docs_sample_intro")),
-                htmlOutput(ns("docs_sample"))
+            fillCol(
+                flex = c(NA, 1),
+                div(id = "docs_sample_intro",
+                    htmlOutput(ns("docs_sample_intro"))
+                ),
+                div(id = "docs_sample",
+                    htmlOutput(ns("docs_sample"))
+                )
             )
         )
     )
@@ -182,7 +204,7 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                     out,
                     " - Cluster size : <strong>",
                     quanteda::ndoc(corpus_cluster()),
-                    "</strong>.</p><hr>"
+                    "</strong>."
                 )
                 shiny::HTML(out)
             })
