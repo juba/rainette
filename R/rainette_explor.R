@@ -35,7 +35,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
 
   ## If res is a rainette2 result, launch rainette2_explor
   if (inherits(res, "rainette2")) {
-    rainette::rainette2_explor(res, dtm)
+    rainette::rainette2_explor(res, dtm, corpus_src)
     return()
   }
 
