@@ -74,10 +74,6 @@ rainette <- function(dtm, k = 10, min_uc_size = 0, doc_id = NULL, min_split_memb
   }
   dtm <- rainette::compute_uc(dtm, min_uc_size = min_uc_size, doc_id = doc_id)
 
-  if (any(rowSums(dtm) == 0)) {
-    warning("Some uc don't have any term, they won't be assigned to any cluster.")
-  }
-
   ## Correspondance table between uce and uc
   corresp_uce_uc <- data.frame(
     uce = docvars(dtm, "rainette_uce_id"),
@@ -86,6 +82,9 @@ rainette <- function(dtm, k = 10, min_uc_size = 0, doc_id = NULL, min_split_memb
   ## Group dfm by uc
   dtm <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
   dtm <- quanteda::dfm_weight(dtm, scheme = "boolean")
+  if (any(rowSums(dtm) == 0)) {
+    warning("Some uc don't have any term, they won't be assigned to any cluster.")
+  }
 
   message("  Clustering...")
   ## Initialize results list with first dtm
@@ -199,7 +198,7 @@ order_docs <- function(m) {
   cm <- colSums(P)
   eP <- tcrossprod(rm, cm)
   S <- (P - eP) / sqrt(eP)
-  dec <- RSpectra::svds(S, 1)
+  dec <- RSpectra::svds(S, k = 1, nv = 0)
   coord <- dec$u[, 1] / sqrt(rm)
 
   ## Order documents by their first factor coordinates
