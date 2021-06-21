@@ -240,7 +240,7 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                     "<div class='docname'>",
                     quanteda::docnames(corp),
                     "</div>",
-                    txt,
+                    stringr::str_replace_all(txt, "\n", "<br>"),
                     "</div>",
                     "<hr>",
                     collapse = "\n"
