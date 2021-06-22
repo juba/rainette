@@ -112,9 +112,3 @@ test_that("corpus with partial meta is ok", {
   expect_equal(docvars(corpus_with_partial_meta, "bar"), c(NA, NA, NA, "bar"))
 })
 
-test_that("error if f is not a valid file path", {
-  skip_on_ci()
-  expect_error(expect_warning(import_corpus_iramuteq("doesnt/exist.txtt")))
-  expect_error(import_corpus_iramuteq(mtcars))
-})
-
