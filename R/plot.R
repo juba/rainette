@@ -114,7 +114,13 @@ keyness_plots <- function(tabs, groups, type = "bar",
   k <- length(tabs)
 
   purrr::map(1:k, function(i) {
-    title <- paste0("n = ", clust_n[i], "\n", clust_prop[i], "%")
+    if (k <= 6) {
+      title <- paste0("Cluster ", i, "\nn = ", clust_n[i], " (", clust_prop[i], "%)")
+    } else if (k <= 8) {
+      title <- paste0("Cluster ", i, "\nn = ", clust_n[i])
+    } else {
+      title <- paste0("Cl. ", i, "\nn = ", clust_n[i])
+    }
     if (type == "bar") {
       if (is.null(text_size)) text_size <- 10
       keyness_barplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i),
