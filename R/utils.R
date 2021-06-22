@@ -41,35 +41,50 @@ compute_uc <- function(dtm, min_uc_size = 10, doc_id = NULL) {
   ## Size of each uce
   terms_by_uce <- rowSums(dtm)
   doc_ids <- quanteda::docvars(dtm, doc_id)
-  if (any(terms_by_uce < min_uc_size)) {
-    uc_size_warning <- FALSE
-    index <- 1
-    uc_id <- quanteda::docvars(dtm, "rainette_uce_id")
-    while (index < length(terms_by_uce)) {
-      current_size <- terms_by_uce[index]
-      grouping_index <- index
-      ## While current uc size is smaller than min, regroup with following uce
-      while (current_size < min_uc_size) {
-        if ((grouping_index + 1) <= length(terms_by_uce) && 
-              doc_ids[grouping_index] == doc_ids[grouping_index + 1]) {
+
+  ## If all uce are already above the minimum size
+  if (all(terms_by_uce >= min_uc_size)) {
+    quanteda::docvars(dtm, "rainette_uc_id") <- quanteda::docvars(dtm, "rainette_uce_id")
+    return(dtm)
+  }
+
+  ## else
+  index <- 1
+  uc_id <- quanteda::docvars(dtm, "rainette_uce_id")
+  while (index <= length(terms_by_uce)) {
+    current_size <- terms_by_uce[index]
+    grouping_index <- index
+    ## While current uc size is smaller than min, regroup with following uce
+    while (current_size < min_uc_size) {
+      if (
+          (grouping_index + 1) <= length(terms_by_uce) &&
+          doc_ids[grouping_index] == doc_ids[grouping_index + 1]
+        ) {
           grouping_index <- grouping_index + 1
           current_size <- current_size + terms_by_uce[grouping_index]
           uc_id[grouping_index] <- index
-        } else {
-          ## If new index is out of bounds or in another document
-          uc_size_warning <- TRUE
-          break
+      } else {
+        ## If new index is out of bounds or in another document
+        ## replace current uc index with the previous one, if any
+        current_doc_id <- doc_ids[grouping_index ]
+        current_uc_id <- uc_id[grouping_index]
+        other_uc_ids <- uc_id[doc_ids == current_doc_id & uc_id < current_uc_id]
+        if (length(other_uc_ids) > 0) {
+          previous_uc_id <- max(other_uc_ids)
+          uc_id[uc_id == current_uc_id] <- previous_uc_id
         }
+        break
       }
-      index <- grouping_index + 1
     }
-    if (uc_size_warning) {
-      warning("some uc will have a size < min_uc_size")
-    }
-    ## Add computed uc ids to docvars
-    quanteda::docvars(dtm, "rainette_uc_id") <- uc_id
-  } else {
-    quanteda::docvars(dtm, "rainette_uc_id") <- quanteda::docvars(dtm, "rainette_uce_id")
+    index <- grouping_index + 1
+  }
+  ## Add computed uc ids to docvars
+  quanteda::docvars(dtm, "rainette_uc_id") <- uc_id
+
+  ## Test if any uc is below min_uc_size
+  dtm_uc_size <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
+  if (any(rowSums(dtm_uc_size) < min_uc_size)) {
+    warning("some uc will have a size < min_uc_size")
   }
 
   return(dtm)
