@@ -111,12 +111,12 @@ test_that("count_clusters_by_doc results", {
       25, 100), clust_2 = c(50, 50, 0), clust_NA = c(0, 25, 0)), row.names = c(NA,
       -3L), class = c("tbl_df", "tbl", "data.frame"))
   )
-  docvars(mini_dfm_count, "cluster") <- c("c1", "c2", "c2", "c1", "NA", NA, NA)
+  docvars(mini_dfm_count, "cluster") <- c("C1", "C2", "C2", "C1", "NA", NA, NA)
   expect_equal(
     count_clusters_by_doc(mini_dfm_count, clust_var = "cluster"),
-    structure(list(doc_id = c("doc1", "doc2", "doc3"), c1 = c(1L, 
-      1L, 0L), c2 = c(1L, 1L, 0L), `NA` = c(0L, 1L, 0L), NA_missing_ = c(0L, 
-      1L, 1L)), row.names = c(NA, -3L), class = c("tbl_df", "tbl", 
+    structure(list(doc_id = c("doc1", "doc2", "doc3"), C1 = c(1L,
+      1L, 0L), C2 = c(1L, 1L, 0L), `NA` = c(0L, 1L, 0L), NA_missing_ = c(0L,
+      1L, 1L)), row.names = c(NA, -3L), class = c("tbl_df", "tbl",
       "data.frame"))
   )
 })
@@ -126,15 +126,15 @@ test_that("count_docs_by_cluster results", {
   docvars(mini_dfm_count, "cluster") <- c(1, 2, 2, 1, 2, NA, 1)
   expect_equal(
     count_docs_by_cluster(mini_dfm_count, clust_var = "cluster"),
-    structure(list(cluster = c("clust_1", "clust_2", "clust_NA"), 
-      n = 3:1, `%` = c(100, 66.6666666666667, 33.3333333333333)), row.names = c(NA, 
+    structure(list(cluster = c("clust_1", "clust_2", "clust_NA"),
+      n = 3:1, `%` = c(100, 66.6666666666667, 33.3333333333333)), row.names = c(NA,
       -3L), class = c("tbl_df", "tbl", "data.frame"))
   )
-  docvars(mini_dfm_count, "cluster") <- c("c1", "c2", "c2", "c1", "NA", NA, NA)
+  docvars(mini_dfm_count, "cluster") <- c("C1", "C2", "C2", "C1", "NA", NA, NA)
   expect_equal(
     count_docs_by_cluster(mini_dfm_count, clust_var = "cluster", doc_id = "doc_id"),
-    structure(list(cluster = c("c1", "c2", "NA", "NA_missing_"), 
-      n = c(2L, 2L, 1L, 2L), `%` = c(66.6666666666667, 66.6666666666667, 
+    structure(list(cluster = c("C1", "C2", "NA", "NA_missing_"),
+      n = c(2L, 2L, 1L, 2L), `%` = c(66.6666666666667, 66.6666666666667,
       33.3333333333333, 66.6666666666667)), row.names = c(NA, -4L
       ), class = c("tbl_df", "tbl", "data.frame"))
   )
