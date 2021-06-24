@@ -204,7 +204,7 @@ count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' dtm <- dfm_trim(dtm, min_docfreq = 2)
 #' res <- rainette(dtm, k = 3, min_uc_size = 15)
 #' corpus$cluster <- cutree(res, k = 3)
-#' count_docs_by_cluster(corpus, clust_var = "cluster", prop = TRUE)
+#' count_docs_by_cluster(corpus, clust_var = "cluster")
 #' }
 #' @export
 
