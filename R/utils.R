@@ -91,6 +91,86 @@ compute_uc <- function(dtm, min_uc_size = 10, doc_id = NULL) {
 }
 
 
+#' Returns the number of segment by clusters for each source document
+#'
+#' @param obj a corpus, tokens or dtm object
+#' @param clust_var name of the docvar with the clusters
+#' @param doc_id docvar identifying the source document
+#' @param prop if TRUE, returns the percentage of each cluster by document
+#'
+#' @details
+#' If `doc_id` is NULL and there is a `sement_source` docvar, it will be used instead.
+#'
+#' @examples
+#' \donttest{
+#' require(quanteda)
+#' corpus <- data_corpus_inaugural
+#' corpus <- head(corpus, n = 10)
+#' corpus <- split_segments(corpus)
+#' tok <- tokens(corpus, remove_punct = TRUE)
+#' tok <- tokens_remove(tok, stopwords("en"))
+#' dtm <- dfm(tok, tolower = TRUE)
+#' dtm <- dfm_trim(dtm, min_docfreq = 2)
+#' res <- rainette(dtm, k = 3, min_uc_size = 15)
+#' corpus$cluster <- cutree(res, k = 3)
+#' count_clusters_by_doc(corpus, clust_var = "cluster", prop = TRUE)
+#' }
+#' @export
+
+count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = FALSE) {
+
+  if (!inherits(obj, "corpus") && !inherits(obj, "dfm") && !inherits(obj, "tokens")) {
+    stop("obj must be a corpus, a tokens or a dfm object.")
+  }
+
+  if (is.null(doc_id) && "segment_source" %in% names(docvars(obj))) {
+    doc_id <- "segment_source"
+  }
+
+  res <- dplyr::tibble(
+    doc_id = docvars(obj, doc_id),
+    cluster = docvars(obj, clust_var)
+  )
+
+  names_prefix <- ""
+  if (is.numeric(res$cluster)) {
+    res$cluster <- as.character(res$cluster)
+    names_prefix <- "clust_"
+  }
+
+  ## Convert NA to "NA" to keep them if there is not already "NA" values
+  if (any(is.na(res$cluster))) {
+    if (!("NA" %in% res$cluster)) {
+      res$cluster[is.na(res$cluster)] <- "NA"
+    } else {
+      res$cluster[is.na(res$cluster)] <- "NA_missing_"
+    }
+  }
+
+  ## Count clusters
+  res <- res %>%
+    dplyr::count(doc_id, cluster)
+
+  ## Compute percenteages
+  if (prop) {
+    res <- res %>%
+      group_by(doc_id) %>%
+      mutate(n = n / sum(n) * 100) %>%
+      ungroup()
+  }
+
+  ## Pivoting
+  res %>%
+    tidyr::pivot_wider(
+      id_cols = doc_id,
+      names_from = cluster,
+      values_from = n,
+      names_prefix = names_prefix,
+      values_fill = 0
+    )
+}
+
+
 #' @importFrom rlang sym
 
 stat_col <- function(measure) {
