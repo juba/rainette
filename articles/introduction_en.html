@@ -98,7 +98,7 @@
       <h1 data-toc-skip>[en] Introduction to rainette</h1>
                         <h4 class="author">Julien Barnier</h4>
             
-            <h4 class="date">2021-06-21</h4>
+            <h4 class="date">2021-06-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/master/vignettes/introduction_en.Rmd"><code>vignettes/introduction_en.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_en.Rmd</code></div>
@@ -254,12 +254,12 @@
 <code class="sourceCode R"><span class="va">corpus</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="va">groups</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##   Year  President FirstName Party  segment_source group
-## 1 1789 Washington    George  none 1789-Washington     2
-## 2 1789 Washington    George  none 1789-Washington     2
-## 3 1789 Washington    George  none 1789-Washington     2
-## 4 1789 Washington    George  none 1789-Washington     2
-## 5 1789 Washington    George  none 1789-Washington     3
-## 6 1789 Washington    George  none 1789-Washington     3</code></pre>
+## 1 1789 Washington    George  none 1789-Washington     3
+## 2 1789 Washington    George  none 1789-Washington     3
+## 3 1789 Washington    George  none 1789-Washington     3
+## 4 1789 Washington    George  none 1789-Washington     3
+## 5 1789 Washington    George  none 1789-Washington     2
+## 6 1789 Washington    George  none 1789-Washington     2</code></pre>
 <p>Finally, you can also directly compute each cluster keyness statistics with the <code>rainette_stats</code> function :</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette_stats.html">rainette_stats</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">$</span><span class="va">group</span>, <span class="va">dtm</span>, n_terms <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
@@ -267,31 +267,31 @@
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 us       222.     0      375         130 positive
-## 2 world    199.     0      257          62 positive
-## 3 america  187.     0      180          22 positive
-## 4 new      145.     0      198          52 positive
-## 5 let      138.     0      140          20 positive
+## 1 us       217.     0      376         129 positive
+## 2 world    197.     0      258          61 positive
+## 3 america  183.     0      180          22 positive
+## 4 new      141.     0      198          52 positive
+## 5 let      139.     0      141          19 positive
 ## 
 ## [[2]]
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 us      -177.     0      124         381 negative
-## 2 world   -159.     0       60         259 negative
-## 3 america -154.     0       21         181 negative
-## 4 new     -127.     0       46         204 negative
-## 5 let     -117.     0       18         142 negative
+## 1 duties   263.     0       37          55 positive
+## 2 office   227.     0       31          44 positive
+## 3 trust    183.     0       25          35 positive
+## 4 station  168.     0       12           4 positive
+## 5 solemn   152.     0       17          17 positive
 ## 
 ## [[3]]
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 duties   242.     0       35          57 positive
-## 2 office   237.     0       31          44 positive
-## 3 station  174.     0       12           4 positive
-## 4 oath     165.     0       23          35 positive
-## 5 solemn   159.     0       17          17 positive</code></pre>
+## 1 us      -171.     0      123         382 negative
+## 2 world   -156.     0       59         260 negative
+## 3 america -150.     0       21         181 negative
+## 4 new     -123.     0       46         204 negative
+## 5 let     -117.     0       17         143 negative</code></pre>
 </div>
 <div id="double-clustering-1" class="section level2">
 <h2 class="hasAnchor">
@@ -320,21 +320,21 @@
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 us      -234.     0      111         394 negative
-## 2 world   -198.     0       53         266 negative
-## 3 america -179.     0       18         184 negative
-## 4 let     -143.     0       14         146 negative
-## 5 new     -138.     0       47         203 negative
+## 1 us      -235.     0      107         398 negative
+## 2 world   -191.     0       53         266 negative
+## 3 america -174.     0       18         184 negative
+## 4 let     -142.     0       13         147 negative
+## 5 states   133.     0      288          46 positive
 ## 
 ## [[2]]
 ## # A tibble: 5 x 6
 ##   feature  chi2     p n_target n_reference sign    
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 us       234.     0      362         143 positive
-## 2 america  200.     0      176          26 positive
-## 3 world    199.     0      246          73 positive
-## 4 new      160.     0      194          56 positive
-## 5 let      157.     0      139          21 positive
+## 1 us       224.     0      362         143 positive
+## 2 world    202.     0      249          70 positive
+## 3 america  194.     0      176          26 positive
+## 4 let      156.     0      140          20 positive
+## 5 new      154.     0      194          56 positive
 ## 
 ## [[3]]
 ## # A tibble: 5 x 6

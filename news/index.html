@@ -152,14 +152,22 @@
 <li>Merging of segments based on <code>min_uc_size</code> was not handled correctly in the previous versions regarding the segment sources : segments from different documents could be merged together. This should now be fixed.</li>
 </ul>
 </div>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New features</h2>
+<ul>
+<li>A new graphical interface to visualise cluster documents has been added to <code>rainette_explor</code> and <code>rainette2_explor</code>.</li>
+<li>New function <code>count_clusters_by_doc</code> which gives the number of segments of each cluster for each document.</li>
+<li>New function <code>count_docs_by_cluster</code> which gives, for each cluster, the number of documents with at least one segment in this cluster.</li>
+<li>
+<code>split_segments</code> is now about 4 times faster.</li>
+</ul>
+</div>
 <div id="other" class="section level2">
 <h2 class="hasAnchor">
 <a href="#other" class="anchor"></a>Other</h2>
 <ul>
-<li>A new graphical interface to visualise cluster documents has been added to <code>rainette_explor</code> and <code>rainette2_explor</code>.</li>
 <li>When <code>rainette</code> is called with <code>min_uc_size</code> &gt; 0, a <code>doc_id</code> argument must be given which is the name of a <code>dtm</code> docvar identifying the segments source. If the corpus has been produced by <code>split_segments</code>, the added <code>segment_source</code> docvar is used by default.</li>
-<li>
-<code>split_segments</code> is now about 4 times faster.</li>
 <li>Color palettes for clusters changed to “Tableau 10”</li>
 <li>Negative keyness values are not shown by default anymore in <code>rainette_explor</code>, <code>rainette2_explor</code>, <code>rainette_plot</code> and <code>rainette2_plot</code>.</li>
 <li>Add warning when <code>min_split_members</code> &lt; 3</li>

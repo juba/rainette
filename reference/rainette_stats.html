@@ -194,74 +194,76 @@ n_terms features.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://quanteda.io'>quanteda</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://quanteda.io'>quanteda</a></span><span class='op'>)</span>
 <span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='va'>data_corpus_inaugural</span>
 <span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>corpus</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 <span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='split_segments.html'>split_segments</a></span><span class='op'>(</span><span class='va'>corpus</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>  Splitting...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span><span class='op'>(</span><span class='va'>corpus</span>, remove <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/stopwords/man/stopwords.html'>stopwords</a></span><span class='op'>(</span><span class='st'>"en"</span><span class='op'>)</span>, tolower <span class='op'>=</span> <span class='cn'>TRUE</span>, remove_punct <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: 'dfm.corpus()' is deprecated. Use 'tokens()' first.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: '...' should not be used for tokens() arguments; use 'tokens()' first.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: 'remove' is deprecated; use dfm_remove() instead</span></div><div class='input'><span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_termfreq <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Some uc don't have any term, they won't be assigned to any cluster.</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>groups</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutree_rainette.html'>cutree_rainette</a></span><span class='op'>(</span><span class='va'>res</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Splitting...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>tok</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens.html'>tokens</a></span><span class='op'>(</span><span class='va'>corpus</span>, remove_punct <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>tok</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_select.html'>tokens_remove</a></span><span class='op'>(</span><span class='va'>tok</span>, <span class='fu'><a href='https://rdrr.io/pkg/stopwords/man/stopwords.html'>stopwords</a></span><span class='op'>(</span><span class='st'>"en"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span><span class='op'>(</span><span class='va'>tok</span>, tolower <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_docfreq <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span>, min_uc_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>groups</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutree_rainette.html'>cutree_rainette</a></span><span class='op'>(</span><span class='va'>res</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 <span class='fu'>rainette_stats</span><span class='op'>(</span><span class='va'>groups</span>, <span class='va'>dtm</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; <span style='color: #949494;'># A tibble: 15 x 6</span>
-#&gt;    feature         chi2        p n_target n_reference sign    
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>          <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>   
-#&gt; <span style='color: #BCBCBC;'> 1</span> force           37.7 8.37<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-10</span>       22           3 positive
-#&gt; <span style='color: #BCBCBC;'> 2</span> commerce        30.5 3.41<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 8</span>       20           4 positive
-#&gt; <span style='color: #BCBCBC;'> 3</span> revenue         26.4 2.84<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 7</span>       15           1 positive
-#&gt; <span style='color: #BCBCBC;'> 4</span> states          23.0 1.66<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 6</span>       39          28 positive
-#&gt; <span style='color: #BCBCBC;'> 5</span> naval           21.2 4.20<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 6</span>       11           0 positive
-#&gt; <span style='color: #BCBCBC;'> 6</span> progress        21.2 4.20<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 6</span>       11           0 positive
-#&gt; <span style='color: #BCBCBC;'> 7</span> defense         19.9 8.28<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 6</span>       12           1 positive
-#&gt; <span style='color: #BCBCBC;'> 8</span> shall          -<span style='color: #BB0000;'>15.0</span> 1.07<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        1          38 negative
-#&gt; <span style='color: #BCBCBC;'> 9</span> limits          14.5 1.43<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>       12           3 positive
-#&gt; <span style='color: #BCBCBC;'>10</span> united          14.1 1.73<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>       27          21 positive
-#&gt; <span style='color: #BCBCBC;'>11</span> agriculture     12.4 4.30<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        7           0 positive
-#&gt; <span style='color: #BCBCBC;'>12</span> coast           12.4 4.30<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        7           0 positive
-#&gt; <span style='color: #BCBCBC;'>13</span> fortifications  12.4 4.30<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        7           0 positive
-#&gt; <span style='color: #BCBCBC;'>14</span> provide         12.4 4.30<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        7           0 positive
-#&gt; <span style='color: #BCBCBC;'>15</span> soil            12.4 4.30<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        7           0 positive
+#&gt;    feature     chi2           p n_target n_reference sign    
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>   
+#&gt; <span style='color: #BCBCBC;'> 1</span> commerce    28.2 0.000<span style='text-decoration: underline;'>000</span>107       23           1 positive
+#&gt; <span style='color: #BCBCBC;'> 2</span> states      26.3 0.000<span style='text-decoration: underline;'>000</span>290       49          18 positive
+#&gt; <span style='color: #BCBCBC;'> 3</span> force       25.4 0.000<span style='text-decoration: underline;'>000</span>475       23           2 positive
+#&gt; <span style='color: #BCBCBC;'> 4</span> revenue     21.9 0.000<span style='text-decoration: underline;'>002</span>94        16           0 positive
+#&gt; <span style='color: #BCBCBC;'> 5</span> made        18.1 0.000<span style='text-decoration: underline;'>021</span>4         26           7 positive
+#&gt; <span style='color: #BCBCBC;'> 6</span> shall      -<span style='color: #BB0000;'>16.5</span> 0.000<span style='text-decoration: underline;'>047</span>9          4          35 negative
+#&gt; <span style='color: #BCBCBC;'> 7</span> good       -<span style='color: #BB0000;'>15.1</span> 0.000<span style='text-decoration: underline;'>102</span>           1          24 negative
+#&gt; <span style='color: #BCBCBC;'> 8</span> powers      14.6 0.000<span style='text-decoration: underline;'>134</span>          20           5 positive
+#&gt; <span style='color: #BCBCBC;'> 9</span> within      13.7 0.000<span style='text-decoration: underline;'>215</span>          16           3 positive
+#&gt; <span style='color: #BCBCBC;'>10</span> confidence -<span style='color: #BB0000;'>13.6</span> 0.000<span style='text-decoration: underline;'>222</span>           1          22 negative
+#&gt; <span style='color: #BCBCBC;'>11</span> defense     13.3 0.000<span style='text-decoration: underline;'>261</span>          12           1 positive
+#&gt; <span style='color: #BCBCBC;'>12</span> naval       12.7 0.000<span style='text-decoration: underline;'>358</span>          11           0 positive
+#&gt; <span style='color: #BCBCBC;'>13</span> united      11.7 0.000<span style='text-decoration: underline;'>614</span>          32          16 positive
+#&gt; <span style='color: #BCBCBC;'>14</span> fellow     -<span style='color: #BB0000;'>11.5</span> 0.000<span style='text-decoration: underline;'>692</span>           3          25 negative
+#&gt; <span style='color: #BCBCBC;'>15</span> war         11.4 0.000<span style='text-decoration: underline;'>729</span>          34          18 positive
 #&gt; 
 #&gt; [[2]]
 #&gt; <span style='color: #949494;'># A tibble: 15 x 6</span>
 #&gt;    feature     chi2        p n_target n_reference sign    
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>   
-#&gt; <span style='color: #BCBCBC;'> 1</span> shall       45.3 1.72<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-11</span>       33           6 positive
-#&gt; <span style='color: #BCBCBC;'> 2</span> confidence  29.1 6.72<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 8</span>       20           3 positive
-#&gt; <span style='color: #BCBCBC;'> 3</span> trust       18.0 2.26<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span>       14           3 positive
-#&gt; <span style='color: #BCBCBC;'> 4</span> fellow      17.8 2.46<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span>       20           8 positive
-#&gt; <span style='color: #BCBCBC;'> 5</span> high        17.4 3.10<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span>       15           4 positive
-#&gt; <span style='color: #BCBCBC;'> 6</span> station     16.8 4.23<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span>       10           0 positive
-#&gt; <span style='color: #BCBCBC;'> 7</span> citizens    16.4 5.25<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span>       28          17 positive
-#&gt; <span style='color: #BCBCBC;'> 8</span> duties      16.2 5.69<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span>       19           8 positive
-#&gt; <span style='color: #BCBCBC;'> 9</span> whose       13.9 1.96<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>       13           4 positive
-#&gt; <span style='color: #BCBCBC;'>10</span> rights     -<span style='color: #BB0000;'>13.5</span> 2.36<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        1          31 negative
-#&gt; <span style='color: #BCBCBC;'>11</span> country     12.6 3.82<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>       31          24 positive
-#&gt; <span style='color: #BCBCBC;'>12</span> sense       11.1 8.83<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>       10           2 positive
-#&gt; <span style='color: #BCBCBC;'>13</span> proof       10.9 9.50<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        7           0 positive
-#&gt; <span style='color: #BCBCBC;'>14</span> term        10.9 9.50<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        7           0 positive
-#&gt; <span style='color: #BCBCBC;'>15</span> called      10.5 1.19<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span>       11           4 positive
+#&gt; <span style='color: #BCBCBC;'> 1</span> shall       40.9 1.57<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-10</span>       28          11 positive
+#&gt; <span style='color: #BCBCBC;'> 2</span> confidence  37.0 1.18<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 9</span>       19           4 positive
+#&gt; <span style='color: #BCBCBC;'> 3</span> high        21.6 3.39<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 6</span>       14           5 positive
+#&gt; <span style='color: #BCBCBC;'> 4</span> fellow      20.4 6.29<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 6</span>       18          10 positive
+#&gt; <span style='color: #BCBCBC;'> 5</span> duties      18.3 1.88<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span>       17          10 positive
+#&gt; <span style='color: #BCBCBC;'> 6</span> station     17.5 2.94<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 5</span>        9           1 positive
+#&gt; <span style='color: #BCBCBC;'> 7</span> future      14.5 1.43<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>       11           4 positive
+#&gt; <span style='color: #BCBCBC;'> 8</span> good        14.3 1.56<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>       15          10 positive
+#&gt; <span style='color: #BCBCBC;'> 9</span> fervent     13.0 3.12<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        6           0 positive
+#&gt; <span style='color: #BCBCBC;'>10</span> indulgence  13.0 3.12<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        6           0 positive
+#&gt; <span style='color: #BCBCBC;'>11</span> presence    13.0 3.12<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        6           0 positive
+#&gt; <span style='color: #BCBCBC;'>12</span> states     -<span style='color: #BB0000;'>12.7</span> 3.60<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 4</span>        5          62 negative
+#&gt; <span style='color: #BCBCBC;'>13</span> conscious   10.3 1.34<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span>        5           0 positive
+#&gt; <span style='color: #BCBCBC;'>14</span> derive      10.3 1.34<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span>        5           0 positive
+#&gt; <span style='color: #BCBCBC;'>15</span> endeavor    10.3 1.34<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span>        5           0 positive
 #&gt; 
 #&gt; [[3]]
 #&gt; <span style='color: #949494;'># A tibble: 15 x 6</span>
-#&gt;    feature     chi2           p n_target n_reference sign    
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>   
-#&gt; <span style='color: #BCBCBC;'> 1</span> happiness  24.9  0.000<span style='text-decoration: underline;'>000</span>610       17           2 positive
-#&gt; <span style='color: #BCBCBC;'> 2</span> can        21.4  0.000<span style='text-decoration: underline;'>003</span>73        31          15 positive
-#&gt; <span style='color: #BCBCBC;'> 3</span> government 18.2  0.000<span style='text-decoration: underline;'>020</span>1         52          41 positive
-#&gt; <span style='color: #BCBCBC;'> 4</span> upon       16.7  0.000<span style='text-decoration: underline;'>044</span>7         19           7 positive
-#&gt; <span style='color: #BCBCBC;'> 5</span> freedom    14.6  0.000<span style='text-decoration: underline;'>134</span>          11           1 positive
-#&gt; <span style='color: #BCBCBC;'> 6</span> let        14.6  0.000<span style='text-decoration: underline;'>134</span>          11           1 positive
-#&gt; <span style='color: #BCBCBC;'> 7</span> principle  12.9  0.000<span style='text-decoration: underline;'>328</span>          13           4 positive
-#&gt; <span style='color: #BCBCBC;'> 8</span> far        12.8  0.000<span style='text-decoration: underline;'>348</span>          10           1 positive
-#&gt; <span style='color: #BCBCBC;'> 9</span> reason     12.8  0.000<span style='text-decoration: underline;'>348</span>          10           1 positive
-#&gt; <span style='color: #BCBCBC;'>10</span> respect    12.8  0.000<span style='text-decoration: underline;'>348</span>          10           1 positive
-#&gt; <span style='color: #BCBCBC;'>11</span> truth      12.2  0.000<span style='text-decoration: underline;'>487</span>           8           0 positive
-#&gt; <span style='color: #BCBCBC;'>12</span> harmony    11.0  0.000<span style='text-decoration: underline;'>902</span>           9           1 positive
-#&gt; <span style='color: #BCBCBC;'>13</span> desire     10.3  0.001<span style='text-decoration: underline;'>31</span>            7           0 positive
-#&gt; <span style='color: #BCBCBC;'>14</span> press      10.3  0.001<span style='text-decoration: underline;'>31</span>            7           0 positive
-#&gt; <span style='color: #BCBCBC;'>15</span> political   9.72 0.001<span style='text-decoration: underline;'>82</span>           11           4 positive
+#&gt;    feature      chi2          p n_target n_reference sign    
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>   
+#&gt; <span style='color: #BCBCBC;'> 1</span> can         22.2  0.000<span style='text-decoration: underline;'>002</span>50       29          17 positive
+#&gt; <span style='color: #BCBCBC;'> 2</span> happiness   20.4  0.000<span style='text-decoration: underline;'>006</span>17       15           4 positive
+#&gt; <span style='color: #BCBCBC;'> 3</span> let         17.9  0.000<span style='text-decoration: underline;'>023</span>2        11           1 positive
+#&gt; <span style='color: #BCBCBC;'> 4</span> truth       14.7  0.000<span style='text-decoration: underline;'>125</span>          8           0 positive
+#&gt; <span style='color: #BCBCBC;'> 5</span> upon        14.4  0.000<span style='text-decoration: underline;'>149</span>         17           9 positive
+#&gt; <span style='color: #BCBCBC;'> 6</span> man         13.6  0.000<span style='text-decoration: underline;'>223</span>          9           1 positive
+#&gt; <span style='color: #BCBCBC;'> 7</span> government  13.3  0.000<span style='text-decoration: underline;'>271</span>         45          48 positive
+#&gt; <span style='color: #BCBCBC;'> 8</span> order       12.7  0.000<span style='text-decoration: underline;'>372</span>         11           3 positive
+#&gt; <span style='color: #BCBCBC;'> 9</span> republican  11.5  0.000<span style='text-decoration: underline;'>690</span>          8           1 positive
+#&gt; <span style='color: #BCBCBC;'>10</span> force      -<span style='color: #BB0000;'>11.3</span>  0.000<span style='text-decoration: underline;'>778</span>          0          25 negative
+#&gt; <span style='color: #BCBCBC;'>11</span> love        11.0  0.000<span style='text-decoration: underline;'>909</span>          9           2 positive
+#&gt; <span style='color: #BCBCBC;'>12</span> made        -<span style='color: #BB0000;'>9.67</span> 0.001<span style='text-decoration: underline;'>88</span>           2          31 negative
+#&gt; <span style='color: #BCBCBC;'>13</span> freedom      8.89 0.002<span style='text-decoration: underline;'>86</span>           9           3 positive
+#&gt; <span style='color: #BCBCBC;'>14</span> choice       8.13 0.004<span style='text-decoration: underline;'>36</span>           5           0 positive
+#&gt; <span style='color: #BCBCBC;'>15</span> false        8.13 0.004<span style='text-decoration: underline;'>36</span>           5           0 positive
 #&gt; </div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>

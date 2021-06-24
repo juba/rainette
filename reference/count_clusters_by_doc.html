@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Corpus clustering based on the Reinert method - Simple clustering — rainette • rainette</title>
+<title>Returns the number of segment of each cluster for each source document — count_clusters_by_doc • rainette</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Corpus clustering based on the Reinert method - Simple clustering — rainette" />
-<meta property="og:description" content="Corpus clustering based on the Reinert method - Simple clustering" />
+<meta property="og:title" content="Returns the number of segment of each cluster for each source document — count_clusters_by_doc" />
+<meta property="og:description" content="Returns the number of segment of each cluster for each source document" />
 <meta property="og:image" content="https://juba.github.io/rainette/logo.png" />
 
 
@@ -137,104 +137,74 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Corpus clustering based on the Reinert method - Simple clustering</h1>
-    <small class="dont-index">Source: <a href='https://github.com/juba/rainette/blob/master/R/rainette.R'><code>R/rainette.R</code></a></small>
-    <div class="hidden name"><code>rainette.Rd</code></div>
+    <h1>Returns the number of segment of each cluster for each source document</h1>
+    <small class="dont-index">Source: <a href='https://github.com/juba/rainette/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>count_clusters_by_doc.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Corpus clustering based on the Reinert method - Simple clustering</p>
+    <p>Returns the number of segment of each cluster for each source document</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rainette</span><span class='op'>(</span>
-  <span class='va'>dtm</span>,
-  k <span class='op'>=</span> <span class='fl'>10</span>,
-  min_uc_size <span class='op'>=</span> <span class='fl'>0</span>,
-  doc_id <span class='op'>=</span> <span class='cn'>NULL</span>,
-  min_split_members <span class='op'>=</span> <span class='fl'>5</span>,
-  cc_test <span class='op'>=</span> <span class='fl'>0.3</span>,
-  tsj <span class='op'>=</span> <span class='fl'>3</span>,
-  <span class='va'>min_members</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>count_clusters_by_doc</span><span class='op'>(</span><span class='va'>obj</span>, clust_var <span class='op'>=</span> <span class='cn'>NULL</span>, doc_id <span class='op'>=</span> <span class='cn'>NULL</span>, prop <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>dtm</th>
-      <td><p>quanteda dfm object of documents to cluster, usually the
-result of <code><a href='split_segments.html'>split_segments()</a></code></p></td>
+      <th>obj</th>
+      <td><p>a corpus, tokens or dtm object</p></td>
     </tr>
     <tr>
-      <th>k</th>
-      <td><p>maximum number of clusters to compute</p></td>
-    </tr>
-    <tr>
-      <th>min_uc_size</th>
-      <td><p>minimum number of forms by document</p></td>
+      <th>clust_var</th>
+      <td><p>name of the docvar with the clusters</p></td>
     </tr>
     <tr>
       <th>doc_id</th>
-      <td><p>character name of a dtm docvar which identifies source documents.</p></td>
+      <td><p>docvar identifying the source document</p></td>
     </tr>
     <tr>
-      <th>min_split_members</th>
-      <td><p>don't try to split groups with fewer members</p></td>
-    </tr>
-    <tr>
-      <th>cc_test</th>
-      <td><p>contingency coefficient value for feature selection</p></td>
-    </tr>
-    <tr>
-      <th>tsj</th>
-      <td><p>minimum frequency value for feature selection</p></td>
-    </tr>
-    <tr>
-      <th>min_members</th>
-      <td><p>deprecated, use <code>min_split_members</code> instead</p></td>
+      <th>prop</th>
+      <td><p>if TRUE, returns the percentage of each cluster by document</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>The result is a list of both class <code>hclust</code> and <code>rainette</code>. Besides the elements
-of an <code>hclust</code> object, two more results are available :</p><ul>
-<li><p><code>uce_groups</code> give the group of each document for each k</p></li>
-<li><p><code>group</code> give the group of each document for the maximum value of k available</p></li>
-</ul>
-
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>See the references for original articles on the method. Computations and results may differ
-quite a bit, see the package vignettes for more details.</p>
-<p>The dtm object is automatically converted to boolean.</p>
-<p>If <code>min_uc_size &gt; 0</code> then <code>doc_id</code> must be provided unless the corpus comes from <code>split_segments</code>,
-in this case <code>segment_source</code> is used by default.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    
-<ul>
-<li><p>Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <a href='http://www.numdam.org/item/?id=CAD_1983__8_2_187_0'>http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a></p></li>
-<li><p>Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. doi: <a href='https://doi.org/10.1177/075910639002600103'>10.1177/075910639002600103</a></p></li>
-</ul>
-
+    <p>This function is only useful for previously segmented corpus. If <code>doc_id</code>
+is NULL and there is a <code>sement_source</code> docvar, it will be used instead.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='split_segments.html'>split_segments()</a></code>, <code><a href='rainette2.html'>rainette2()</a></code>, <code><a href='cutree_rainette.html'>cutree_rainette()</a></code>, <code><a href='rainette_plot.html'>rainette_plot()</a></code>, <code><a href='rainette_explor.html'>rainette_explor()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='count_docs_by_cluster.html'>count_docs_by_cluster()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://quanteda.io'>quanteda</a></span><span class='op'>)</span>
-<span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='va'>data_corpus_inaugural</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required package: quanteda</span></div><div class='output co'>#&gt; <span class='message'>Package version: 3.0.0</span>
+#&gt; <span class='message'>Unicode version: 13.0</span>
+#&gt; <span class='message'>ICU version: 69.1</span></div><div class='output co'>#&gt; <span class='message'>Parallel computing: 3 of 3 threads used.</span></div><div class='output co'>#&gt; <span class='message'>See https://quanteda.io for tutorials and examples.</span></div><div class='input'><span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='va'>data_corpus_inaugural</span>
 <span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>corpus</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 <span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='split_segments.html'>split_segments</a></span><span class='op'>(</span><span class='va'>corpus</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>  Splitting...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>tok</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens.html'>tokens</a></span><span class='op'>(</span><span class='va'>corpus</span>, remove_punct <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>tok</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_select.html'>tokens_remove</a></span><span class='op'>(</span><span class='va'>tok</span>, <span class='fu'><a href='https://rdrr.io/pkg/stopwords/man/stopwords.html'>stopwords</a></span><span class='op'>(</span><span class='st'>"en"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span><span class='op'>(</span><span class='va'>tok</span>, tolower <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_docfreq <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>rainette</span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span>, min_uc_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='co'># }</span>
-
+<span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_docfreq <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span>, min_uc_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>corpus</span><span class='op'>$</span><span class='va'>cluster</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutree.html'>cutree</a></span><span class='op'>(</span><span class='va'>res</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+<span class='fu'>count_clusters_by_doc</span><span class='op'>(</span><span class='va'>corpus</span>, clust_var <span class='op'>=</span> <span class='st'>"cluster"</span>, prop <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 x 4</span>
+#&gt;    doc_id          clust_1 clust_2 clust_3
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>             <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> 1789-Washington   29.7     56.8    13.5
+#&gt; <span style='color: #BCBCBC;'> 2</span> 1793-Washington  100        0       0  
+#&gt; <span style='color: #BCBCBC;'> 3</span> 1797-Adams        13.6     64.4    22.0
+#&gt; <span style='color: #BCBCBC;'> 4</span> 1801-Jefferson     9.09    72.7    18.2
+#&gt; <span style='color: #BCBCBC;'> 5</span> 1805-Jefferson    10.5     52.6    36.8
+#&gt; <span style='color: #BCBCBC;'> 6</span> 1809-Madison      25       32.1    42.9
+#&gt; <span style='color: #BCBCBC;'> 7</span> 1813-Madison      21.2     33.3    45.5
+#&gt; <span style='color: #BCBCBC;'> 8</span> 1817-Monroe       18.2     22.7    59.1
+#&gt; <span style='color: #BCBCBC;'> 9</span> 1821-Monroe       14.8     13.9    71.3
+#&gt; <span style='color: #BCBCBC;'>10</span> 1825-Adams        19.5     31.2    49.4</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
