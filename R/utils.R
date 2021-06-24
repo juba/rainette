@@ -127,8 +127,10 @@ count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
     doc_id <- "segment_source"
   }
 
+
+  ids <- quanteda::docvars(obj, doc_id)
   res <- dplyr::tibble(
-    doc_id = docvars(obj, doc_id),
+    doc_id = factor(ids, levels = unique(ids)),
     cluster = docvars(obj, clust_var)
   )
 
@@ -162,12 +164,14 @@ count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
   ## Pivoting
   res %>%
     tidyr::pivot_wider(
-      id_cols = doc_id,
-      names_from = cluster,
+      id_cols = .data$doc_id,
+      names_from = .data$cluster,
       values_from = n,
       names_prefix = names_prefix,
       values_fill = 0
-    )
+    ) %>%
+    mutate(doc_id = as.character(doc_id)) %>%
+    select(doc_id, sort(colnames(.)))
 }
 
 
