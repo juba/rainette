@@ -99,7 +99,8 @@ compute_uc <- function(dtm, min_uc_size = 10, doc_id = NULL) {
 #' @param prop if TRUE, returns the percentage of each cluster by document
 #'
 #' @details
-#' If `doc_id` is NULL and there is a `sement_source` docvar, it will be used instead.
+#' This function is only useful for previously segmented corpus. If `doc_id` 
+#' is NULL and there is a `sement_source` docvar, it will be used instead.
 #' 
 #' @seealso [count_docs_by_cluster()]
 #'
@@ -188,7 +189,9 @@ count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' @param doc_id docvar identifying the source document
 #'
 #' @details
-#' If `doc_id` is NULL and there is a `sement_source` docvar, it will be used instead.
+#' 
+#' This function is only useful for previously segmented corpus. If `doc_id` is NULL
+#' and there is a `sement_source` docvar, it will be used instead.
 #'
 #' @seealso [count_clusters_by_doc()]
 #' 
