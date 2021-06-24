@@ -11,14 +11,16 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(quanteda)
+#' require(quanteda)
 #' corpus <- data_corpus_inaugural
 #' corpus <- head(corpus, n = 10)
 #' corpus <- split_segments(corpus)
-#' dtm <- dfm(corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
-#' dtm <- dfm_trim(dtm, min_termfreq = 3)
-#' res <- rainette(dtm, k = 3)
-#' rainette_explor(dtm, res)
+#' tok <- tokens(corpus, remove_punct = TRUE)
+#' tok <- tokens_remove(tok, stopwords("en"))
+#' dtm <- dfm(tok, tolower = TRUE)
+#' dtm <- dfm_trim(dtm, min_docfreq = 3)
+#' res <- rainette(dtm, k = 3, min_uc_size = 15)
+#' rainette_explor(res, dtm, corpus)
 #' }
 #'
 #' @export
@@ -181,7 +183,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
       ))
     })
 
-    current_k <- reactive({input$k})
+    current_k <- shiny::reactive({input$k})
     docs_sample_server("rainette1", res, corpus_src, current_k)
 
     # Handle the Done button being pressed.
