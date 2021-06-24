@@ -9,7 +9,7 @@ cutree_rainette(hres, k = NULL, h = NULL, ...)
 \arguments{
 \item{hres}{the \code{rainette} result object to be cut}
 
-\item{k}{the desired number of groups}
+\item{k}{the desired number of clusters}
 
 \item{h}{unsupported}
 

@@ -43,13 +43,15 @@ Generate a clustering description plot from a rainette result
 }
 \examples{
 \donttest{
-library(quanteda)
+require(quanteda)
 corpus <- data_corpus_inaugural
 corpus <- head(corpus, n = 10)
 corpus <- split_segments(corpus)
-dtm <- dfm(corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
-dtm <- dfm_trim(dtm, min_termfreq = 3)
-res <- rainette(dtm, k = 3)
+tok <- tokens(corpus, remove_punct = TRUE)
+tok <- tokens_remove(tok, stopwords("en"))
+dtm <- dfm(tok, tolower = TRUE)
+dtm <- dfm_trim(dtm, min_docfreq = 3)
+res <- rainette(dtm, k = 3, min_uc_size = 15)
 rainette_plot(res, dtm)
 }
 

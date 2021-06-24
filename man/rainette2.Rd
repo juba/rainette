@@ -67,16 +67,18 @@ For more details on optimal partitions search algorithm, please see package vign
 \examples{
 \donttest{
 require(quanteda)
-mini_corpus <- head(data_corpus_inaugural, n = 2)
-mini_corpus <- split_segments(mini_corpus, 5)
-dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
-dtm <- dfm_wordstem(dtm, language = "english")
-dtm <- dfm_trim(dtm, min_termfreq = 3)
+corpus <- data_corpus_inaugural
+corpus <- head(corpus, n = 10)
+corpus <- split_segments(corpus)
+tok <- tokens(corpus, remove_punct = TRUE)
+tok <- tokens_remove(tok, stopwords("en"))
+dtm <- dfm(tok, tolower = TRUE)
+dtm <- dfm_trim(dtm, min_docfreq = 3)
 
-res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 3)
-res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 3)
+res1 <- rainette(dtm, k = 5, min_uc_size = 10)
+res2 <- rainette(dtm, k = 5, min_uc_size = 15)
 
-res <- rainette2(res1, res2, min_members = 2)
+res <- rainette2(res1, res2, max_k = 4)
 }
 }
 \references{

@@ -9,7 +9,7 @@ cutree_rainette2(res, k, criterion = c("chi2", "n"), ...)
 \arguments{
 \item{res}{the \code{rainette2} result object to be cut}
 
-\item{k}{the desired number of groups}
+\item{k}{the desired number of clusters}
 
 \item{criterion}{criterion to use to choose the best partition. \code{chi2} means
 the partition with the maximum sum of chi2, \code{n} the partition with the
