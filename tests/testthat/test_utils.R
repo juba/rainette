@@ -121,6 +121,25 @@ test_that("count_clusters_by_doc results", {
   )
 })
 
+# count_docs_by_cluster
+test_that("count_docs_by_cluster results", {
+  docvars(mini_dfm_count, "cluster") <- c(1, 2, 2, 1, 2, NA, 1)
+  expect_equal(
+    count_docs_by_cluster(mini_dfm_count, clust_var = "cluster"),
+    structure(list(cluster = c("clust_1", "clust_2", "clust_NA"), 
+      n = 3:1, `%` = c(100, 66.6666666666667, 33.3333333333333)), row.names = c(NA, 
+      -3L), class = c("tbl_df", "tbl", "data.frame"))
+  )
+  docvars(mini_dfm_count, "cluster") <- c("c1", "c2", "c2", "c1", "NA", NA, NA)
+  expect_equal(
+    count_docs_by_cluster(mini_dfm_count, clust_var = "cluster", doc_id = "doc_id"),
+    structure(list(cluster = c("c1", "c2", "NA", "NA_missing_"), 
+      n = c(2L, 2L, 1L, 2L), `%` = c(66.6666666666667, 66.6666666666667, 
+      33.3333333333333, 66.6666666666667)), row.names = c(NA, -4L
+      ), class = c("tbl_df", "tbl", "data.frame"))
+  )
+})
+
 # stat_col
 
 test_that("stat_col is ok", {

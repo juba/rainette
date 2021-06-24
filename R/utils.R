@@ -91,7 +91,7 @@ compute_uc <- function(dtm, min_uc_size = 10, doc_id = NULL) {
 }
 
 
-#' Returns the number of segment by clusters for each source document
+#' Returns the number of segment of each cluster for each source document
 #'
 #' @param obj a corpus, tokens or dtm object
 #' @param clust_var name of the docvar with the clusters
@@ -100,6 +100,8 @@ compute_uc <- function(dtm, min_uc_size = 10, doc_id = NULL) {
 #'
 #' @details
 #' If `doc_id` is NULL and there is a `sement_source` docvar, it will be used instead.
+#' 
+#' @seealso [count_docs_by_cluster()]
 #'
 #' @examples
 #' \donttest{
@@ -151,18 +153,18 @@ count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 
   ## Count clusters
   res <- res %>%
-    dplyr::count(doc_id, cluster)
+    dplyr::count(.data$doc_id, .data$cluster)
 
   ## Compute percenteages
   if (prop) {
     res <- res %>%
-      group_by(doc_id) %>%
-      mutate(n = n / sum(n) * 100) %>%
-      ungroup()
+      dplyr::group_by(.data$doc_id) %>%
+      dplyr::mutate(n = n / sum(n) * 100) %>%
+      dplyr::ungroup()
   }
 
   ## Pivoting
-  res %>%
+  res <- res %>%
     tidyr::pivot_wider(
       id_cols = .data$doc_id,
       names_from = .data$cluster,
@@ -170,8 +172,54 @@ count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
       names_prefix = names_prefix,
       values_fill = 0
     ) %>%
-    mutate(doc_id = as.character(doc_id)) %>%
-    select(doc_id, sort(colnames(.)))
+    dplyr::mutate(doc_id = as.character(.data$doc_id))
+
+  cols <- sort(colnames(res))
+  cols <- cols[cols != "doc_id"]
+  dplyr::relocate(res, .data$doc_id, cols)
+}
+
+
+#' Returns, for each cluster, the number of source documents with at least one
+#' segment of this cluster
+#'
+#' @param obj a corpus, tokens or dtm object
+#' @param clust_var name of the docvar with the clusters
+#' @param doc_id docvar identifying the source document
+#'
+#' @details
+#' If `doc_id` is NULL and there is a `sement_source` docvar, it will be used instead.
+#'
+#' @seealso [count_clusters_by_doc()]
+#' 
+#' @examples
+#' \donttest{
+#' require(quanteda)
+#' corpus <- data_corpus_inaugural
+#' corpus <- head(corpus, n = 10)
+#' corpus <- split_segments(corpus)
+#' tok <- tokens(corpus, remove_punct = TRUE)
+#' tok <- tokens_remove(tok, stopwords("en"))
+#' dtm <- dfm(tok, tolower = TRUE)
+#' dtm <- dfm_trim(dtm, min_docfreq = 2)
+#' res <- rainette(dtm, k = 3, min_uc_size = 15)
+#' corpus$cluster <- cutree(res, k = 3)
+#' count_docs_by_cluster(corpus, clust_var = "cluster", prop = TRUE)
+#' }
+#' @export
+
+count_docs_by_cluster <- function(obj, clust_var = NULL, doc_id = NULL) {
+
+  count <- count_clusters_by_doc(obj, clust_var = clust_var, doc_id = doc_id, prop = FALSE)
+  n_docs <- nrow(count)
+
+  count %>%
+    dplyr::select(-.data$doc_id) %>%
+    dplyr::mutate(dplyr::across(.fns = function(v) v > 0)) %>%
+    dplyr::summarise(dplyr::across(.fns = sum)) %>%
+    tidyr::pivot_longer(cols = everything(), names_to = "cluster", values_to = "n") %>%
+    dplyr::mutate(`%` = .data$n / n_docs * 100)
+
 }
 
 

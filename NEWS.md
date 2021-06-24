@@ -8,7 +8,8 @@
 ## New features
 
 - A new graphical interface to visualise cluster documents has been added to `rainette_explor` and `rainette2_explor`.
-- New function `count_clusters_by_doc` which computes a cross tabulation of the corpus documents by their segments clusters.
+- New function `count_clusters_by_doc` which gives the number of segments of each cluster for each document.
+- New function `count_docs_by_cluster` which gives, for each cluster, the number of documents with at least one segment in this cluster.
 - `split_segments` is now about 4 times faster.
 
 ## Other
