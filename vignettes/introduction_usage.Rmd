@@ -82,7 +82,7 @@ dtm <- dfm(tok, tolower = TRUE)
 On va ensuite supprimer les termes apparaissant dans moins de 3 segments :
 
 ```{r}
-dtm <- dfm_trim(dtm, min_termfreq = 3)
+dtm <- dfm_trim(dtm, min_docfreq = 3)
 ```
 
 De nombreux autres traitements seraient possibles, mais on se contentera de cette matrice pour cet exemple.
@@ -107,20 +107,22 @@ res
 Pour faciliter l'exploration des résultats, `rainette` propose une interface interactive sous la forme d'un *gadget shiny*, qui peut être lancée avec la fonction `rainette_explor` :
 
 ```{r eval = FALSE}
-rainette_explor(res, dtm)
+rainette_explor(res, dtm, corpus)
 ```
 
 L'interface devrait ressembler à quelque chose comme ça :
 
-![](rainette_explor_pc.png)
+![](rainette_explor_plot_fr.png)
 
-Vous pouvez modifier le nombre de classes, la statistique utilisée pour le calcul des termes caractéristiques, etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case *Show negative values*) selon la statistique considérée.
+Il est possible de modifier le nombre de classes, la statistique utilisée dans les graphiques (spécificité, termes les plus fréquents), etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case *Show negative values*).
 
-À noter que vous pouvez aussi opter pour des graphiques sous forme de nuages de mots (plutôt déconseillés cependant car moins lisibles) :
+Cette interface vous permet d'expérimenter librement sur le nombre de classes et leur interprétation. 
 
-![](rainette_explor_pc_cloud.png)
+L'onglet *Cluster documents* permet à tout moment de visualiser les documents d'une classe. Vous pouvez également filtrer ces documents en saisissant un mot ou une expression régulière dans le champ *Filter by term* :
 
-Cette interface vous permet d'expérimenter librement sur le nombre de classes et leur interprétation. Vous pouvez à tout moment cliquer sur le bouton *Get R code* pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande `cutree` qui vous permet de récupérer les groupes d'appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.
+![](rainette_explor_docs_fr.png)
+
+Dans l'onglet *Summary*, vous pouvez également cliquer sur le bouton *Get R code* pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande `cutree` qui vous permet de récupérer les groupes d'appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.
 
 ```{r eval=FALSE}
 ## Clustering description plot
@@ -133,14 +135,26 @@ cutree(res, k = 5)
 Vous pouvez par exemple utiliser l'appel de `cutree` pour ajouter comme nouvelle métadonnée du corpus le groupe d'appartenance pour la classification en 5 classes :
 
 ```{r}
-corpus$group <- cutree(res, k = 5)
+corpus$groupe <- cutree(res, k = 5)
 head(docvars(corpus))
 ```
 
-Vous pouvez aussi récupérer directement les statistiques de spécificité de chaque groupe à l'aide de `rainette_stats` :
+Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction `clusters_by_doc_table` permet d'afficher, pour chaque document, le nombre de segments de chaque groupe :
 
 ```{r}
-rainette_stats(corpus$group, dtm, n_terms = 5)
+clusters_by_doc_table(corpus, clust_var = "groupe")
+```
+
+En ajoutant `prop = TRUE`, cette répartition peut être visualisée en pourcentages :
+
+```{r}
+clusters_by_doc_table(corpus, clust_var = "groupe", prop = TRUE)
+```
+
+À l'inverse, `docs_by_cluster_table` permet de visualiser, pour chaque groupe, le nombre et la proportion de documents d'origine comportant au moins un segment de ce groupe :
+
+```{r}
+docs_by_cluster_table(corpus, clust_var = "groupe")
 ```
 
 
@@ -174,23 +188,15 @@ L'objet résultat est un *tibble* contenant, pour chaque valeur de `k`, les part
 rainette2_explor(res, dtm)
 ```
 
-![](rainette2_explor.png)
+![](rainette2_explor_fr.png)
 
 L'interface est très semblable à la précédente, sauf qu'il n'y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux `NA`, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent être assez nombreux ici.
-
-Là encore, vous pouvez utiliser le bouton *Get R code* pour récupérer et copier/coller le code R permettant de reproduire le graphique affiché, et récupérer les groupes d'appartenance des segments du corpus.
-
-Vous pouvez également utiliser `rainette_stats` pour récupérer les statistiques de spécificité des groupes :
-
-```{r}
-groups <- cutree(res, 3)
-rainette_stats(groups, dtm, n_terms = 5)
-```
 
 Si certains points n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups` pour les assigner au groupe le plus proche selon une méthode _k-nearest neighbors_  (avec k=1) :
 
 ```{r}
-groups_completed <- rainette2_complete_groups(dtm, groups)
+groupes <- cutree(res, k = 5)
+groupes_complets <- rainette2_complete_groups(dtm, groupes)
 ```
 
 

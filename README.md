@@ -7,8 +7,7 @@
 
 <img src="man/figures/logo.png" width=200 align="right" />
 
-
-The package website can be found at : https://juba.github.io/rainette/.
+The package website can be found at : [https://juba.github.io/rainette/](https://juba.github.io/rainette/).
 
 Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other software such as [Iramuteq](http://www.iramuteq.org/) (free software) or [Alceste](https://www.image-zafar.com/Logiciel.html) (commercial, closed source).
 
@@ -59,23 +58,26 @@ Next, we'll apply some preprocessing and compute a document-term matrix with `qu
 tok <- tokens(corpus, remove_punct = TRUE)
 tok <- tokens_remove(tok, stopwords("en"))
 dtm <- dfm(tok, tolower = TRUE)
-dtm <- dfm_wordstem(dtm, language = "english")
-dtm <- dfm_trim(dtm, min_termfreq = 3)
+dtm <- dfm_trim(dtm, min_docfreq = 10)
 ```
 
 We can then apply a simple clustering on this dtm with the `rainette` function. We specify the number of clusters (`k`), the minimum size for a cluster to be splitted at next step (`min_split_members`) and the minimum number of forms in each segment (`min_segment_size`) :
 
 ```r
-res <- rainette(dtm, k = 6, min_segment_size = 15, min_split_members = 20)
+res <- rainette(dtm, k = 6, min_segment_size = 15)
 ```
 
 We can use the `rainette_explor` shiny interface to visualise and explore the different clusterings at each `k` :
 
 ```r
-rainette_explor(res, dtm)
+rainette_explor(res, dtm, corpus)
 ```
 
-![](man/figures/rainette_explor.png)
+![rainette_explor_plot](man/figures/rainette_explor_plot_en.png)
+
+The *Cluster documents* tab allows to browse and filter the documents in each cluster :
+
+![rainette_explor_docs](man/figures/rainette_explor_docs_en.png)
 
 We can then use the generated R code to reproduce the displayed clustering visualisation plot :
 
@@ -86,34 +88,31 @@ rainette_plot(res, dtm, k = 5, type = "bar", n_terms = 20, free_scales = FALSE,
 
 Or cut the tree at chosen `k` and add a group membership variable to our corpus metadata :
 
-```    
-docvars(corpus)$group <- cutree(res, k = 5)
+```r
+docvars(corpus)$cluster <- cutree(res, k = 5)
 ```
 
-In addition to this, you can also perform a double clustering, *ie* two simple clusterings produced with different `min_segment_size` which are then "crossed" to generate more solid clusters. To do this, use `rainette2` either on two `rainette` results :
+In addition to this, we can also perform a double clustering, *ie* two simple clusterings produced with different `min_segment_size` which are then "crossed" to generate more robust clusters. To do this, use `rainette2` on two `rainette` results :
 
 ```r
-res1 <- rainette(dtm, k = 8, min_segment_size = 10, min_split_members = 10)
-res2 <- rainette(dtm, k = 8, min_segment_size = 15, min_split_members = 10)
-res <- rainette2(res1, res2, max_k = 8, min_members = 20)
-```
-
-Or directly on a dtm with `min_segment_size1` and `min_segment_size2` arguments :
-
-```r
-rainette2(dtm, max_k = 8, min_segment_size1 = 10, min_segment_size2 = 15, min_members = 20)
+res1 <- rainette(dtm, k = 5, min_segment_size = 10, min_split_members = 10)
+res2 <- rainette(dtm, k = 5, min_segment_size = 15, min_split_members = 10)
+res <- rainette2(res1, res2, max_k = 5, min_members = 10)
 ```
 
 You can then use `rainette2_explor`, `rainette2_plot` and `cutree` to explore and visualise the results.
 
-![](man/figures/rainette2_explor.png)
+```r
+rainette2_explor(res, dtm, corpus)
+```
+
+![rainette2_explor](man/figures/rainette2_explor.png)
 
 ## Tell me more
 
 Three vignettes are available, an introduction in english :
 
 - [Introduction to rainette](https://juba.github.io/rainette/articles/introduction_en.html)
-
 
 And an introduction and an algorithm description, in french :
 

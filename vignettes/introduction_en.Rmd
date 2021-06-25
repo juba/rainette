@@ -24,9 +24,8 @@ This is not a new algorithm, as the first articles describing it date back
 to 1983. Here are some features of the method :
 
 - each text is only assigned to one cluster, unlike methods like LDA.
-- it is better suited to cluster small "homogeneous" documents : for long texts the
-  good practice is first to split them into segments before applying the
-  method.
+- it is better suited for small "homogeneous" documents : for long texts the
+  good practice is first to split them into segments.
 - as the algorithm uses a singular value decomposition of a document-term
   matrix, it may not work on very large corpus. In this case, as only the smaller 
   dimension of the matrix is taken into account for the decomposition, a 
@@ -45,7 +44,7 @@ include enough terms, it can be merged with the following one into an `uc`
 presence/absence of terms are taken into account, not their frequencies.
 
 The aim is to split this matrix into two clusters by maximizing the
-Chi-squared distance between those. As an exhaustive search would be too
+Chi-squared distance between those. As an exaustive search would be too
 compute-intensive, the following method is used to get a good approximation :
 
 - first, `uc` are ordered according to their coordinates on the first axis of
@@ -156,7 +155,7 @@ dtm <- dfm(tok, tolower = TRUE)
 We only keep the terms that appear at least in 10 segments by using `dfm_trim` :
 
 ```{r}
-dtm <- dfm_trim(dtm, min_termfreq = 10)
+dtm <- dfm_trim(dtm, min_docfreq = 10)
 ```
 
 ## Simple clustering
@@ -182,45 +181,56 @@ To help exploring the clustering results, `rainette` offers a small *shiny
 gadget* which can be launched with `rainette_explor` :
 
 ```{r eval = FALSE}
-rainette_explor(res, dtm)
+rainette_explor(res, dtm, corpus)
 ```
 
 The interactive interface should look something like this :
 
-![](rainette_explor_en.png)
+![](rainette_explor_plot_en.png)
 
-You can change the number of clusters, the keyness statistic used, etc., and
-see the result in real time. The most characteristics terms are displayed with
+You can change the number of clusters, the displayed statistic, etc., and
+see the result in real time. By default the most specific terms are displayed with
 a blue bar or a red one for those with a negative keyness (if *Show negative values* 
 has been checked).
 
-It's also possible to display terms keyness as word clouds :
+The *Cluster documents* tab allows to browse the documents of a given cluster. You can filter them by giving a term or a regular expression in the *Filter by term* field :
 
-![](rainette_explor_en_cloud.png)
+![](rainette_explor_plot_en.png)
 
-At any time, you can click on the *Get R code* button to get the R code to
-reproduce the current plot and to compute cluster membership.
+In the *Summary* tab, you can click on the *Get R code* button to get the R code to reproduce the current plot and to compute cluster membership.
 
 You can also directly use `cutree` to get each document cluster at
 level `k` :
 
 ```{r}
-groups <- cutree(res, k = 3)
+cluster <- cutree(res, k = 5)
 ```
 
 This vector can be used, for example, as a new corpus metadata variable :
 
 ```{r}
-corpus$group <- groups
+corpus$cluster <- cutree(res, k = 5)
 head(docvars(corpus))
 ```
 
-Finally, you can also directly compute each cluster keyness statistics with the
-`rainette_stats` function :
+Here, the clusters have been assigned to the segments, not to the original documents as a whole. The `clusters_by_doc_table` allows to display, for each original document, the number of segment belonging to each cluster :
 
 ```{r}
-rainette_stats(corpus$group, dtm, n_terms = 5)
+clusters_by_doc_table(corpus, clust_var = "cluster")
 ```
+
+By adding `prop = TRUE`, the same table is displayed with row percentages :
+
+```{r}
+clusters_by_doc_table(corpus, clust_var = "cluster", prop = TRUE)
+```
+
+Conversely, the `docs_by_cluster_table` allows to display, for each cluster, the number and proportion of original document including at least one segment of this cluster :
+
+```{r}
+docs_by_cluster_table(corpus, clust_var = "cluster")
+```
+
 
 ## Double clustering
 
@@ -256,7 +266,7 @@ partitions and their characteristics. Another interactive interface is
 available to explore the results. It is launched with `rainette2_explor` :
 
 ```{r eval=FALSE}
-rainette2_explor(res, dtm)
+rainette2_explor(res, dtm, corpus)
 ```
 
 ![](rainette2_explor_en.png)
@@ -264,20 +274,13 @@ rainette2_explor(res, dtm)
 The interface is very similar to the previous one, except there is no
 dendrogram anymore, but a single barplot with each cluster size instead. Be
 careful of the number of `NA` (not assigned documents), as it can be quite
-high. You can still use the *Get R code* button to get the current plot code,
-and use `cutree` to get clusters membership.
+high. 
 
-`rainette_stats` can also be used to get keyness statistics for each cluster :
-
-```{r}
-groups <- cutree(res, 3)
-rainette_stats(groups, dtm, n_terms = 5)
-```
-
-Finally, if some points are not assigned to any cluster, you can use
+If some points are not assigned to any cluster, you can use
 `rainette2_complete_groups` to assign them to the nearest one by using a
 *k-nearest-neighbors* algorithm (with k=1) :
 
 ```{r}
-groups_completed <- rainette2_complete_groups(dtm, groups)
+clusters <- cutree(res, k = 5)
+clusters_completed <- rainette2_complete_groups(dtm, clusters)
 ```
