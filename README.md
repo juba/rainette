@@ -106,7 +106,7 @@ You can then use `rainette2_explor`, `rainette2_plot` and `cutree` to explore an
 rainette2_explor(res, dtm, corpus)
 ```
 
-![rainette2_explor](man/figures/rainette2_explor.png)
+![rainette2_explor](man/figures/rainette2_explor_en.png)
 
 ## Tell me more
 
