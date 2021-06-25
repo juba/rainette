@@ -18,47 +18,47 @@ docvars(mini_dfm, "rainette_uce_id") <- seq_len(nrow(mini_dfm))
 docvars(mini_dfm, "doc_id") <- "doc1"
 
 
-# compute_uc
+# merge_segments
 
 test_that("computed uc are ok when min_uc_size == 0", {
-  dfm_uc <- rainette::compute_uc(mini_dfm, min_uc_size = 0)
+  dfm_uc <- rainette::merge_segments(mini_dfm, min_uc_size = 0)
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 2, 3, 4, 5, 6, 7))
 })
 
 test_that("computed uc are ok when min_uc_size == 1", {
-  dfm_uc <- rainette::compute_uc(mini_dfm, min_uc_size = 1)
+  dfm_uc <- rainette::merge_segments(mini_dfm, min_uc_size = 1)
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 2, 3, 4, 5, 6, 7))
 })
 
 test_that("error when min_uc_size > 1 and no doc_id", {
-  expect_error(compute_uc(mini_dfm, min_uc_size = 3))
+  expect_error(merge_segments(mini_dfm, min_uc_size = 3))
 })
 
 test_that("computed uc are ok when min_uc_size > 0", {
-  dfm_uc <- rainette::compute_uc(mini_dfm, min_uc_size = 3, doc_id = "doc_id")
+  dfm_uc <- rainette::merge_segments(mini_dfm, min_uc_size = 3, doc_id = "doc_id")
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 2, 2, 4, 5, 6, 6))
 })
 
 test_that("warning if uc can't be computed", {
-  expect_warning(compute_uc(mini_dfm, min_uc_size = 20, doc_id = "doc_id"))
+  expect_warning(merge_segments(mini_dfm, min_uc_size = 20, doc_id = "doc_id"))
 })
 
 mini_dfm_docs <- mini_dfm
 test_that("computed uc are ok with respect to doc_id", {
   docvars(mini_dfm_docs, "doc_id") <- c("doc1", "doc1", "doc1", "doc2", "doc2", "doc2", "doc3")
-  dfm_uc <- rainette::compute_uc(mini_dfm_docs, min_uc_size = 3, doc_id = "doc_id")
+  dfm_uc <- rainette::merge_segments(mini_dfm_docs, min_uc_size = 3, doc_id = "doc_id")
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 2, 2, 4, 5, 5, 7))
 
   docvars(mini_dfm_docs, "doc_id") <- c("doc1", "doc1", "doc1", "doc2", "doc3", "doc3", "doc3")
-  dfm_uc <- rainette::compute_uc(mini_dfm_docs, min_uc_size = 4, doc_id = "doc_id")
+  dfm_uc <- rainette::merge_segments(mini_dfm_docs, min_uc_size = 4, doc_id = "doc_id")
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 1, 1, 4, 5, 6, 6))
 
   docvars(mini_dfm_docs, "doc_id") <- c("doc1", "doc1", "doc1", "doc1", "doc3", "doc3", "doc3")
-  dfm_uc <- rainette::compute_uc(mini_dfm_docs, min_uc_size = 6, doc_id = "doc_id")
+  dfm_uc <- rainette::merge_segments(mini_dfm_docs, min_uc_size = 6, doc_id = "doc_id")
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 1, 1, 1, 5, 5, 5))
 
   docvars(mini_dfm_docs, "doc_id") <- c("doc1", "doc2", "doc3", "doc4", "doc4", "doc5", "doc5")
-  expect_warning(dfm_uc <- rainette::compute_uc(mini_dfm_docs, min_uc_size = 3, doc_id = "doc_id"))
+  expect_warning(dfm_uc <- rainette::merge_segments(mini_dfm_docs, min_uc_size = 3, doc_id = "doc_id"))
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 2, 3, 4, 5, 6, 6))
 
   corpus <- head(data_corpus_inaugural, n = 10)
@@ -66,7 +66,7 @@ test_that("computed uc are ok with respect to doc_id", {
   dtm <- dfm(tokens(corpus, remove_punct = TRUE), tolower = TRUE)
   dtm <- dfm_remove(dtm, stopwords("en"))
   dtm <- dfm_trim(dtm, min_termfreq = 3)
-  expect_warning(dfm_uc <- rainette::compute_uc(dtm, min_uc_size = 500))
+  expect_warning(dfm_uc <- rainette::merge_segments(dtm, min_uc_size = 500))
   tmp <- docvars(dfm_uc) %>%
     group_by(rainette_uc_id) %>%
     summarise(nd = n_distinct(segment_source)) %>%
@@ -76,13 +76,13 @@ test_that("computed uc are ok with respect to doc_id", {
 
 test_that("warning if uc can't be computed with respect to doc_id", {
   docvars(mini_dfm_docs, "doc_id") <- c("doc1", "doc1", "doc1", "doc2", "doc2", "doc2", "doc3")
-  expect_warning(compute_uc(mini_dfm_docs, min_uc_size = 4, doc_id = "doc_id"))
+  expect_warning(merge_segments(mini_dfm_docs, min_uc_size = 4, doc_id = "doc_id"))
 })
 
 mini_dfm_segsource <- mini_dfm
 docvars(mini_dfm_segsource, "segment_source") <- "doc1"
 test_that("segment_source used by default when min_uc_size > 0", {
-  dfm_uc <- rainette::compute_uc(mini_dfm_segsource, min_uc_size = 3)
+  dfm_uc <- rainette::merge_segments(mini_dfm_segsource, min_uc_size = 3)
   expect_equal(docvars(dfm_uc, "rainette_uc_id"), c(1, 2, 2, 4, 5, 6, 6))
 })
 

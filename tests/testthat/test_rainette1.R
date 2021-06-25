@@ -111,7 +111,7 @@ test_that("Stopping if no more group > min_split_members", {
 
 test_that("all uce belong to the same group", {
   res <- rainette(dtm, k = 3, min_uc_size = 5)
-  dtm_uc <- rainette:::compute_uc(dtm, min_uc_size = 5)
+  dtm_uc <- rainette:::merge_segments(dtm, min_uc_size = 5)
   expect_equal(anyDuplicated(unique(cbind(docvars(dtm_uc, "rainette_uc_id"), res$group))), 0)
   expect_equal(anyDuplicated(unique(cbind(docvars(dtm_uc, "rainette_uce_id"), res$group))), 0)
 })

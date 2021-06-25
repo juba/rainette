@@ -73,7 +73,7 @@ rainette <- function(
     ## Compute uc from uces based on minimum size
     message("  Merging segments to respect min_uc_size...")
   }
-  dtm <- rainette::compute_uc(dtm, min_uc_size = min_uc_size, doc_id = doc_id)
+  dtm <- rainette::merge_segments(dtm, min_uc_size = min_uc_size, doc_id = doc_id)
 
   ## Correspondance table between uce and uc
   corresp_uce_uc <- data.frame(

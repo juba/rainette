@@ -21,7 +21,7 @@ if (getRversion() >= "2.15.1")
 #' @return the original dtm with a new `rainette_uc_id` docvar.
 #' @export
 
-compute_uc <- function(dtm, min_uc_size = 10, doc_id = NULL) {
+merge_segments <- function(dtm, min_uc_size = 10, doc_id = NULL) {
 
   ## Add id to documents
   quanteda::docvars(dtm, field = "rainette_uce_id") <- seq_len(nrow(dtm))
