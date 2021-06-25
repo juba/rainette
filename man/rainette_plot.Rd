@@ -11,7 +11,7 @@ rainette_plot(
   type = c("bar", "cloud"),
   n_terms = 15,
   free_scales = FALSE,
-  measure = c("chi2", "lr"),
+  measure = c("chi2", "lr", "frequency", "docprop"),
   show_negative = FALSE,
   text_size = NULL
 )
