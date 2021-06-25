@@ -71,12 +71,6 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
                     "Frequency - Documents proportion" = "docprop"
                   )
                 ),
-                selectInput("type", "Plot type",
-                  choices = c(
-                    "Barplot" = "bar",
-                    "Word cloud" = "cloud"
-                  )
-                ),
                 numericInput("n_terms",
                   label = "Max number of terms to display",
                   value = 20, min = 5, max = 30, step = 1
@@ -85,20 +79,10 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
                   "input.measure != 'docprop'",
                   checkboxInput("same_scales", label = "Force same scales", value = TRUE)
                 ),
-                conditionalPanel(
-                  "input.type == 'bar'",
-                  checkboxInput("show_negative", label = "Show negative values", value = FALSE),
-                  sliderInput("text_size",
-                    label = "Text size",
-                    value = 13, min = 6, max = 20, step = 1
-                  )
-                ),
-                conditionalPanel(
-                  "input.type == 'cloud'",
-                  sliderInput("max_size",
-                    label = "Max text size",
-                    value = 15, min = 6, max = 30, step = 1
-                  )
+                checkboxInput("show_negative", label = "Show negative values", value = FALSE),
+                sliderInput("text_size",
+                  label = "Text size",
+                  value = 13, min = 6, max = 20, step = 1
                 )
               ),
               actionButton("get_r_code",
@@ -125,8 +109,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
 
   server <- function(input, output, session) {
     plot_code <- reactive({
-      if (input$type == "bar") {
-        code <- paste0(
+      code <- paste0(
           "rainette_plot(", res_name, ",", dtm_name, ", k = ", input$k,
           ", type = \"bar\"",
           ", n_terms = ", input$n_terms,
@@ -134,18 +117,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
           ", measure = \"", input$measure, "\"",
           ", show_negative = \"", input$show_negative, "\"",
           ", text_size = ", input$text_size, ")"
-        )
-      }
-      if (input$type == "cloud") {
-        code <- paste0(
-          "rainette_plot(", res_name, ",", dtm_name, ", k = ", input$k,
-          ", type = \"cloud\"",
-          ", n_terms = ", input$n_terms,
-          ", free_scales = ", !input$same_scales,
-          ", measure = \"", input$measure, "\"",
-          ", text_size = ", input$max_size, ")"
-        )
-      }
+      )
       code
     })
 
