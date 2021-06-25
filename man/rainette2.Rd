@@ -8,11 +8,13 @@ rainette2(
   x,
   y = NULL,
   max_k = 5,
-  uc_size1 = 10,
-  uc_size2 = 15,
+  min_segment_size1 = 10,
+  min_segment_size2 = 15,
   doc_id = NULL,
   min_members = 10,
   min_chi2 = 3.84,
+  uc_size1,
+  uc_size2,
   ...
 )
 }
@@ -24,15 +26,19 @@ result from same dfm but with different uc size.}
 
 \item{max_k}{maximum number of clusters to compute}
 
-\item{uc_size1}{if \code{x} is a dfm, minimum uc size for first clustering}
+\item{min_segment_size1}{if \code{x} is a dfm, minimum uc size for first clustering}
 
-\item{uc_size2}{if \code{x} is a dfm, minimum uc size for second clustering}
+\item{min_segment_size2}{if \code{x} is a dfm, minimum uc size for second clustering}
 
 \item{doc_id}{character name of a dtm docvar which identifies source documents.}
 
 \item{min_members}{minimum members of each cluster}
 
 \item{min_chi2}{minimum chi2 for each cluster}
+
+\item{uc_size1}{deprecated, use min_segment_size1 instead}
+
+\item{uc_size2}{deprecated, use min_segment_size2 instead}
 
 \item{...}{if \code{x} is a dfm object, parameters passed to \code{\link[=rainette]{rainette()}} for both
 simple clusterings}
@@ -75,8 +81,8 @@ tok <- tokens_remove(tok, stopwords("en"))
 dtm <- dfm(tok, tolower = TRUE)
 dtm <- dfm_trim(dtm, min_docfreq = 3)
 
-res1 <- rainette(dtm, k = 5, min_uc_size = 10)
-res2 <- rainette(dtm, k = 5, min_uc_size = 15)
+res1 <- rainette(dtm, k = 5, min_segment_size = 10)
+res2 <- rainette(dtm, k = 5, min_segment_size = 15)
 
 res <- rainette2(res1, res2, max_k = 4)
 }

@@ -165,17 +165,17 @@ We are now ready to compute a simple Reinert clustering by using the
 `rainette` function. Its main arguments are :
 
 - `k` : the number of clusters to compute.
-- `min_uc_size` : the minimum number of terms in each context unit at startup. 
+- `min_segment_size` : the minimum number of terms in each context unit at startup. 
   If a `dfm` segment contains less than this number of terms, it will be merged 
   with the following one (if they come from the same source document). The default 
   value is 0, *ie* no merging is done.
 - `min_split_members` : if a cluster is smaller than this value, it won't be
   split afterwards (default : 5).
   
-Here we will compute 5 clusters with a `min_uc_size` of 15 :
+Here we will compute 5 clusters with a `min_segment_size` of 15 :
 
 ```{r message = FALSE, warning = FALSE}
-res <- rainette(dtm, k = 5, min_uc_size = 15)
+res <- rainette(dtm, k = 5, min_segment_size = 15)
 ```
 
 To help exploring the clustering results, `rainette` offers a small *shiny
@@ -225,15 +225,15 @@ rainette_stats(corpus$group, dtm, n_terms = 5)
 ## Double clustering
 
 `rainette` also offers a "double clustering" algorithm, as described above : two
-simple clusterings are computed with varying `min_uc_size`, and then combined
+simple clusterings are computed with varying `min_segment_size`, and then combined
 to get a better partition and more robust clusters.
 
 This can be done with the `rainette2` function. It can be applied to two already 
-computed simple clusterings. Here, we compute them with `min_uc_size` at 10 and 15 :
+computed simple clusterings. Here, we compute them with `min_segment_size` at 10 and 15 :
 
 ```{r message=FALSE, warning=FALSE}
-res1 <- rainette(dtm, k = 5, min_uc_size = 10, min_split_members = 10)
-res2 <- rainette(dtm, k = 5, min_uc_size = 15, min_split_members = 10)
+res1 <- rainette(dtm, k = 5, min_segment_size = 10, min_split_members = 10)
+res2 <- rainette(dtm, k = 5, min_segment_size = 15, min_split_members = 10)
 ```
 
 We then use `rainette2` to combine them. The main function arguments are
@@ -245,10 +245,10 @@ res <- rainette2(res1, res2, max_k = 5, min_members = 10)
 ```
 
 Another way is to call `rainette2` directly on our `dtm` matrix by giving it
-two `uc_size1` and `uc_size2` arguments :
+two `min_segment_size1` and `min_segment_size2` arguments :
 
 ```{r eval=FALSE, warning=FALSE}
-res <- rainette2(dtm, uc_size1 = 10, uc_size2 = 15, max_k = 5, min_members = 10)
+res <- rainette2(dtm, min_segment_size1 = 10, min_segment_size2 = 15, max_k = 5, min_members = 10)
 ```
 
 The resulting object is a *tibble* with, for each level *k*, the optimal

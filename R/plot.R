@@ -164,7 +164,7 @@ keyness_plots <- function(tabs, groups, type = "bar",
 #' tok <- tokens_remove(tok, stopwords("en"))
 #' dtm <- dfm(tok, tolower = TRUE)
 #' dtm <- dfm_trim(dtm, min_docfreq = 3)
-#' res <- rainette(dtm, k = 3, min_uc_size = 15)
+#' res <- rainette(dtm, k = 3, min_segment_size = 15)
 #' rainette_plot(res, dtm)
 #' }
 #'

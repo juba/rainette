@@ -92,10 +92,10 @@ De nombreux autres traitements seraient possibles, mais on se contentera de cett
 
 Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction `rainette`. On va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (`k = 5`) et le nombre minimal de termes pour qu'une classe soit découpée en deux à l'étape suivante de la classification (`min_split_members = 10`).
 
-L'argument `min_uc_size`, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec `min_uc_size = 10`, les segments comportant moins de 10 formes sont regroupés avec le segment suivant (si possible) jusqu'à atteindre la taille minimale souhaitée.
+L'argument `min_segment_size`, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec `min_segment_size = 10`, les segments comportant moins de 10 formes sont regroupés avec le segment suivant (si possible) jusqu'à atteindre la taille minimale souhaitée.
 
 ```{r message=FALSE}
-res <- rainette(dtm, k = 5, min_uc_size = 10, min_split_members = 10)
+res <- rainette(dtm, k = 5, min_segment_size = 10, min_split_members = 10)
 ```
 
 L'objet résultat ne nous dit pas grand chose en lui-même :
@@ -152,8 +152,8 @@ Le deuxième type de classification proposé est une classification double : se
 Une classification double utilise la fonction `rainette2`. Celle-ci peut se faire de deux manières. On peut d'abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :
 
 ```{r message=FALSE, warning=FALSE}
-res1 <- rainette(dtm, k = 7, min_uc_size = 10, min_split_members = 10)
-res2 <- rainette(dtm, k = 7, min_uc_size = 15, min_split_members = 10)
+res1 <- rainette(dtm, k = 7, min_segment_size = 10, min_split_members = 10)
+res2 <- rainette(dtm, k = 7, min_segment_size = 15, min_split_members = 10)
 ```
 
 Puis on utilise `rainette2` sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument `max_k`) et le nombre minimal de segments par classe (argument `min_members`) :
@@ -162,10 +162,10 @@ Puis on utilise `rainette2` sur ces deux objets résultats, en lui indiquant le 
 res <- rainette2(res1, res2, max_k = 7, min_members = 10)
 ```
 
-L'autre manière est d'appeler directement `rainette2` sur notre matrice dtm, en lui indiquant avec les arguments `uc_size1` et `uc_size2` les deux tailles de segments souhaitées :
+L'autre manière est d'appeler directement `rainette2` sur notre matrice dtm, en lui indiquant avec les arguments `min_segment_size1` et `min_segment_size2` les deux tailles de segments souhaitées :
 
 ```{r eval=FALSE}
-res <- rainette2(dtm, uc_size1 = 10, uc_size2 = 15, max_k = 7, min_members = 10)
+res <- rainette2(dtm, min_segment_size1 = 10, min_segment_size2 = 15, max_k = 7, min_members = 10)
 ```
 
 L'objet résultat est un *tibble* contenant, pour chaque valeur de `k`, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction `rainette2_explor` :

@@ -2,8 +2,9 @@
 
 ## Important and breaking changes
 
-- The default value of `min_uc_size` in `rainette` is now 0, which means that no merging is done between segments by default. Results could be different from previous versions when `min_uc_size` was not specified.
-- Merging of segments based on `min_uc_size` was not handled correctly in the previous versions regarding the segment sources : segments from different documents could be merged together. This should now be fixed.
+- `min_uc_size`, `uc_size1` and `uc_size2` arguments to `rainette` and `rainette2` have been renamed to `min_segment_size`, `min_segment_size1` and `min_segment_size2`
+- The default value of `min_segment_size` in `rainette` is now 0, which means that no merging is done between segments by default. Results could be different from previous versions when `min_uc_size` was not specified.
+- Merging of segments based on `min_segment_size` was not handled correctly in the previous versions regarding the segment sources : segments from different documents could be merged together. This should now be fixed.
 
 ## New features
 
@@ -15,7 +16,7 @@
 
 ## Other
 
-- When `rainette` is called with `min_uc_size` > 0, a `doc_id` argument must be given which is the name of a `dtm` docvar identifying the segments source. If the corpus has been produced by `split_segments`, the added `segment_source` docvar is used by default.
+- When `rainette` is called with `min_segment_size` > 0, a `doc_id` argument must be given which is the name of a `dtm` docvar identifying the segments source. If the corpus has been produced by `split_segments`, the added `segment_source` docvar is used by default.
 - Color palettes for clusters changed to "Tableau 10"
 - Negative keyness values are not shown by default anymore in `rainette_explor`, `rainette2_explor`, `rainette_plot` and `rainette2_plot`
 - Wordcloud plots have been removed from explor interfaces

@@ -7,7 +7,7 @@ dtm <- dfm(tokens(mini_corpus, remove_punct = TRUE), tolower = TRUE)
 dtm <- dfm_remove(dtm, stopwords("en"))
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
-res <- rainette(dtm, k = 3, min_uc_size = 10)
+res <- rainette(dtm, k = 3, min_segment_size = 10)
 
 ## cutree
 
@@ -24,8 +24,8 @@ test_that("cutree_rainette is ok", {
 })
 
 test_that("rainette2_complete_groups", {
-  res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 3)
-  res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 3)
+  res1 <- rainette(dtm, k = 5, min_segment_size = 2, min_split_members = 3)
+  res2 <- rainette(dtm, k = 5, min_segment_size = 3, min_split_members = 3)
   res_double <- rainette2(res1, res2, min_members = 2)
 
   groups <- cutree(res_double, k = 4)

@@ -79,7 +79,7 @@ test_that("select_features", {
 ## rainette
 
 test_that("rainette on mini_dfm", {
-  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 3)
+  res <- rainette(mini_dfm, k = 2, min_segment_size = 1, min_split_members = 3)
   expect_is(res, c("rainette", "hclust"))
   expect_equal(res$group, c(2, 2, 1, 2, 2, 1, 2))
   expect_equal(which(res$group == 1), indices[1:which(indices == res_split$max_index)])
@@ -95,23 +95,23 @@ dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
 test_that("Stopping if tab too small", {
-  expect_message(res <- rainette(dtm, k = 12, min_uc_size = 10, min_split_members = 3),
+  expect_message(res <- rainette(dtm, k = 12, min_segment_size = 10, min_split_members = 3),
     "! Tab to be splitted is not big enough. Stopping after iteration")
   expect_equal(max(res$group), 9)
 })
 
 test_that("Stopping if no more group > min_split_members", {
-  expect_message(res <- rainette(dtm, k = 3, min_uc_size = 10, min_split_members = 12),
+  expect_message(res <- rainette(dtm, k = 3, min_segment_size = 10, min_split_members = 12),
     "^! No more group bigger than min_split_members. Stopping after iteration")
   expect_equal(max(res$group), 2)
-  expect_message(res <- rainette(dtm, k = 3, min_uc_size = 10, min_split_members = 15),
+  expect_message(res <- rainette(dtm, k = 3, min_segment_size = 10, min_split_members = 15),
     "! No computed clusters. Returning NULL.")
   expect_null(res)
 })
 
 test_that("all uce belong to the same group", {
-  res <- rainette(dtm, k = 3, min_uc_size = 5)
-  dtm_uc <- rainette:::merge_segments(dtm, min_uc_size = 5)
+  res <- rainette(dtm, k = 3, min_segment_size = 5)
+  dtm_uc <- rainette:::merge_segments(dtm, min_segment_size = 5)
   expect_equal(anyDuplicated(unique(cbind(docvars(dtm_uc, "rainette_uc_id"), res$group))), 0)
   expect_equal(anyDuplicated(unique(cbind(docvars(dtm_uc, "rainette_uce_id"), res$group))), 0)
 })
@@ -123,7 +123,7 @@ dtm <- dfm_remove(dtm, stopwords("en"))
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
 test_that("groups correspondance is ok", {
-  res <- rainette(dtm, k = 6, min_uc_size = 5)
+  res <- rainette(dtm, k = 6, min_segment_size = 5)
   df <- data.frame(res$uce_groups)
   tab <- table(df[,4], df[,5])
   expect_equal(sum(tab > 0), 6)
@@ -138,8 +138,8 @@ test_that("dfm with 'document' feature is ok", {
   m_document <- m
   colnames(m_document) <- c("document", "éé", "ùù", "feat4", "feat5")
   dfm_document <- as.dfm(m_document)
-  res_document <- rainette(dfm_document, k = 2, min_uc_size = 1, min_split_members = 3)
-  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 3)
+  res_document <- rainette(dfm_document, k = 2, min_segment_size = 1, min_split_members = 3)
+  res <- rainette(mini_dfm, k = 2, min_segment_size = 1, min_split_members = 3)
   expect_equal(res$group, res_document$group)
   expect_equal(res$height, res_document$height)
 })
@@ -149,11 +149,11 @@ test_that("dfm with 'document' feature is ok", {
 
 test_that("min_members is deprecated", {
   expect_warning(
-    res_deprecated <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_members = 3),
+    res_deprecated <- rainette(mini_dfm, k = 2, min_segment_size = 1, min_members = 3),
     "min_members is deprecated. Use min_split_members instead."
   )
   res_deprecated$call <- NULL
-  res <- rainette(mini_dfm, k = 2, min_uc_size = 1, min_split_members = 3)
+  res <- rainette(mini_dfm, k = 2, min_segment_size = 1, min_split_members = 3)
   res$call <- NULL
   expect_equal(
     res,

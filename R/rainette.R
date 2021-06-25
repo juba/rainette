@@ -3,12 +3,13 @@
 #' @param dtm quanteda dfm object of documents to cluster, usually the
 #'   result of [split_segments()]
 #' @param k maximum number of clusters to compute
-#' @param min_uc_size minimum number of forms by document
+#' @param min_segment_size minimum number of forms by document
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_split_members don't try to split groups with fewer members
 #' @param cc_test contingency coefficient value for feature selection
 #' @param tsj minimum frequency value for feature selection
 #' @param min_members deprecated, use `min_split_members` instead
+#' @param min_uc_size deprecated, use `min_segment_size` instead
 #'
 #' @details
 #' See the references for original articles on the method. Computations and results may differ
@@ -16,7 +17,7 @@
 #'
 #' The dtm object is automatically converted to boolean.
 #' 
-#' If `min_uc_size > 0` then `doc_id` must be provided unless the corpus comes from `split_segments`, 
+#' If `min_segment_size > 0` then `doc_id` must be provided unless the corpus comes from `split_segments`, 
 #' in this case `segment_source` is used by default.
 #'
 #' @return
@@ -43,15 +44,16 @@
 #' tok <- tokens_remove(tok, stopwords("en"))
 #' dtm <- dfm(tok, tolower = TRUE)
 #' dtm <- dfm_trim(dtm, min_docfreq = 3)
-#' res <- rainette(dtm, k = 3, min_uc_size = 15)
+#' res <- rainette(dtm, k = 3, min_segment_size = 15)
 #' }
 #'
 #' @export
 
 rainette <- function(
-  dtm, k = 10, min_uc_size = 0,
+  dtm, k = 10, min_segment_size = 0,
   doc_id = NULL, min_split_members = 5,
-  cc_test = 0.3, tsj = 3, min_members
+  cc_test = 0.3, tsj = 3, 
+  min_members, min_uc_size
   ) {
 
   ## Check for deprecated min_members argument
@@ -59,6 +61,13 @@ rainette <- function(
     warning("min_members is deprecated. Use min_split_members instead.")
     if (missing(min_split_members)) {
       min_split_members <- min_members
+    }
+  }
+  ## Check for deprecated min_uc_size argument
+  if (!missing(min_uc_size)) {
+    warning("min_uc_size is deprecated. Use min_segment_size instead.")
+    if (missing(min_segment_size)) {
+      min_segment_size <- min_uc_size
     }
   }
 
@@ -69,11 +78,11 @@ rainette <- function(
 
   dtm <- quanteda::dfm_weight(dtm, scheme = "boolean")
 
-  if (min_uc_size > 1) {
+  if (min_segment_size > 1) {
     ## Compute uc from uces based on minimum size
-    message("  Merging segments to respect min_uc_size...")
+    message("  Merging segments to respect min_segment_size...")
   }
-  dtm <- rainette::merge_segments(dtm, min_uc_size = min_uc_size, doc_id = doc_id)
+  dtm <- rainette::merge_segments(dtm, min_segment_size = min_segment_size, doc_id = doc_id)
 
   ## Correspondance table between uce and uc
   corresp_uce_uc <- data.frame(

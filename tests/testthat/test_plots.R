@@ -10,7 +10,7 @@ mini_corpus <- split_segments(mini_corpus)
 dtm <- dfm(mini_corpus, remove = stopwords("en"), tolower = TRUE, remove_punct = TRUE)
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
-res <- rainette(dtm, k = 5, min_uc_size = 5, min_split_members = 3, verbose = TRUE)
+res <- rainette(dtm, k = 5, min_segment_size = 5, min_split_members = 3, verbose = TRUE)
 
 plot1 <- rainette_plot(res, dtm)
 plot2 <- rainette_plot(res, dtm, free_scales = TRUE)

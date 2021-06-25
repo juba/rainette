@@ -8,9 +8,9 @@ dtm <- dfm_remove(dtm, stopwords("en"))
 dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
-res1 <- rainette(dtm, k = 5, min_uc_size = 2, min_split_members = 3)
-res2 <- rainette(dtm, k = 5, min_uc_size = 3, min_split_members = 3)
-res12 <- rainette2(dtm, max_k = 5, uc_size1 = 2, uc_size2 = 3, min_members = 3)
+res1 <- rainette(dtm, k = 5, min_segment_size = 2, min_split_members = 3)
+res2 <- rainette(dtm, k = 5, min_segment_size = 3, min_split_members = 3)
+res12 <- rainette2(dtm, max_k = 5, min_segment_size1 = 2, min_segment_size2 = 3, min_members = 3)
 
 res <- rainette2(res1, res2, min_members = 2)
 
@@ -120,8 +120,8 @@ test_that("rainette2 gives the same result on dtm and on two clustering results"
 })
 
 test_that("rainette2 is ok when stopping before max_k", {
-  res1 <- rainette(dtm, k = 4, min_uc_size = 2, min_split_members = 30)
-  res2 <- rainette(dtm, k = 4, min_uc_size = 3, min_split_members = 30)
+  res1 <- rainette(dtm, k = 4, min_segment_size = 2, min_split_members = 30)
+  res2 <- rainette(dtm, k = 4, min_segment_size = 3, min_split_members = 30)
   expect_message(res <- rainette2(res1, res2, max_k = 4, min_members = 50),
     "^! No more partitions found, stopping at k=2")
   expect_equal(max(res$k), 2)

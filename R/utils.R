@@ -9,33 +9,33 @@ if (getRversion() >= "2.15.1")
 #' `rainette_uc_index` docvar
 #'
 #' @param dtm dtm of uces, with a `rainette_uce_id` docvar
-#' @param min_uc_size minimum number of forms by uc
+#' @param min_segment_size minimum number of forms by uc
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #'
 #' @details
-#' If `min_uc_size == 0`, different uc ids are added to the dtm docvars
-#' (ie no uce are merged together). If `min_uc_size > 0` then `doc_id` must be provided
+#' If `min_segment_size == 0`, different uc ids are added to the dtm docvars
+#' (ie no uce are merged together). If `min_segment_size > 0` then `doc_id` must be provided
 #' unless the corpus comes from `split_segments`, in this case
 #' `segment_source` is used by default.
 #'
 #' @return the original dtm with a new `rainette_uc_id` docvar.
 #' @export
 
-merge_segments <- function(dtm, min_uc_size = 10, doc_id = NULL) {
+merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
 
   ## Add id to documents
   quanteda::docvars(dtm, field = "rainette_uce_id") <- seq_len(nrow(dtm))
 
-  if (min_uc_size <= 1) {
+  if (min_segment_size <= 1) {
     ## Do nothing
     quanteda::docvars(dtm, field = "rainette_uc_id") <- quanteda::docvars(dtm, "rainette_uce_id")
     return(dtm)
   }
 
-  ## Check for min_uc_size and doc_id values
+  ## Check for min_segment_size and doc_id values
   if (is.null(doc_id)) {
     if ("segment_source" %in% names(docvars(dtm))) doc_id <- "segment_source"
-    else stop("If min_uc_size > 0, you must provide a doc_id value.")
+    else stop("If min_segment_size > 0, you must provide a doc_id value.")
   }
 
   ## Size of each uce
@@ -43,7 +43,7 @@ merge_segments <- function(dtm, min_uc_size = 10, doc_id = NULL) {
   doc_ids <- quanteda::docvars(dtm, doc_id)
 
   ## If all uce are already above the minimum size
-  if (all(terms_by_uce >= min_uc_size)) {
+  if (all(terms_by_uce >= min_segment_size)) {
     quanteda::docvars(dtm, "rainette_uc_id") <- quanteda::docvars(dtm, "rainette_uce_id")
     return(dtm)
   }
@@ -55,7 +55,7 @@ merge_segments <- function(dtm, min_uc_size = 10, doc_id = NULL) {
     current_size <- terms_by_uce[index]
     grouping_index <- index
     ## While current uc size is smaller than min, regroup with following uce
-    while (current_size < min_uc_size) {
+    while (current_size < min_segment_size) {
       if (
           (grouping_index + 1) <= length(terms_by_uce) &&
           doc_ids[grouping_index] == doc_ids[grouping_index + 1]
@@ -81,10 +81,10 @@ merge_segments <- function(dtm, min_uc_size = 10, doc_id = NULL) {
   ## Add computed uc ids to docvars
   quanteda::docvars(dtm, "rainette_uc_id") <- uc_id
 
-  ## Test if any uc is below min_uc_size
+  ## Test if any uc is below min_segment_size
   dtm_uc_size <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
-  if (any(rowSums(dtm_uc_size) < min_uc_size)) {
-    warning("some uc will have a size < min_uc_size")
+  if (any(rowSums(dtm_uc_size) < min_segment_size)) {
+    warning("some uc will have a size < min_segment_size")
   }
 
   return(dtm)
@@ -114,7 +114,7 @@ merge_segments <- function(dtm, min_uc_size = 10, doc_id = NULL) {
 #' tok <- tokens_remove(tok, stopwords("en"))
 #' dtm <- dfm(tok, tolower = TRUE)
 #' dtm <- dfm_trim(dtm, min_docfreq = 2)
-#' res <- rainette(dtm, k = 3, min_uc_size = 15)
+#' res <- rainette(dtm, k = 3, min_segment_size = 15)
 #' corpus$cluster <- cutree(res, k = 3)
 #' clusters_by_doc_table(corpus, clust_var = "cluster", prop = TRUE)
 #' }
@@ -205,7 +205,7 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' tok <- tokens_remove(tok, stopwords("en"))
 #' dtm <- dfm(tok, tolower = TRUE)
 #' dtm <- dfm_trim(dtm, min_docfreq = 2)
-#' res <- rainette(dtm, k = 3, min_uc_size = 15)
+#' res <- rainette(dtm, k = 3, min_segment_size = 15)
 #' corpus$cluster <- cutree(res, k = 3)
 #' docs_by_cluster_table(corpus, clust_var = "cluster")
 #' }

@@ -22,7 +22,7 @@ L'objectif de ce document est de décrire les algorithmes utilisés pour les cla
 
 La classification simple est une classification descendante hiérarchique (CDH). 
 
-Le tableau de départ est la matrice termes-documents croisant les segments de texte (unités de contexte élémentaires, *uce*), éventuellement regroupés en unités de contexte (*uc*) s'ils ne comportent pas suffisamment de formes différentes (selon la valeur de l'argument `min_uc_size`), et les termes. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d'effectifs. 
+Le tableau de départ est la matrice termes-documents croisant les segments de texte (unités de contexte élémentaires, *uce*), éventuellement regroupés en unités de contexte (*uc*) s'ils ne comportent pas suffisamment de formes différentes (selon la valeur de l'argument `min_segment_size`), et les termes. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d'effectifs. 
 
 On a donc un tableau de ce type :
 
@@ -80,7 +80,7 @@ L'avantage de l'implémentation dans `rainette` est qu'on ne "casse" pas la logi
 
 # Algorithme de double classification
 
-La double classification consiste à effectuer deux classifications simples, mais avec des tailles d'*uc* différentes (valeurs distinctes de `min_uc_size`). L'idée est alors de "croiser" les résultats de ces deux CDH pour déterminer des classes plus "robustes".
+La double classification consiste à effectuer deux classifications simples, mais avec des tailles d'*uc* différentes (valeurs distinctes de `min_segment_size`). L'idée est alors de "croiser" les résultats de ces deux CDH pour déterminer des classes plus "robustes".
 
 ## Calcul des classes croisées
 

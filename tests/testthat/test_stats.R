@@ -8,7 +8,7 @@ dtm <- dfm(tokens(mini_corpus, remove_punct = TRUE), tolower = TRUE)
 dtm <- dfm_remove(dtm, stopwords("en"))
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
-res <- rainette(dtm, k = 5, min_uc_size = 5, min_split_members = 3)
+res <- rainette(dtm, k = 5, min_segment_size = 5, min_split_members = 3)
 
 test_that("rainette_stats", {
 

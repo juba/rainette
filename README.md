@@ -63,10 +63,10 @@ dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 ```
 
-We can then apply a simple clustering on this dtm with the `rainette` function. We specify the number of clusters (`k`), the minimum size for a cluster to be splitted at next step (`min_split_members`) and the minimum number of forms in each segment (`min_uc_size`) :
+We can then apply a simple clustering on this dtm with the `rainette` function. We specify the number of clusters (`k`), the minimum size for a cluster to be splitted at next step (`min_split_members`) and the minimum number of forms in each segment (`min_segment_size`) :
 
 ```r
-res <- rainette(dtm, k = 6, min_uc_size = 15, min_split_members = 20)
+res <- rainette(dtm, k = 6, min_segment_size = 15, min_split_members = 20)
 ```
 
 We can use the `rainette_explor` shiny interface to visualise and explore the different clusterings at each `k` :
@@ -90,18 +90,18 @@ Or cut the tree at chosen `k` and add a group membership variable to our corpus 
 docvars(corpus)$group <- cutree(res, k = 5)
 ```
 
-In addition to this, you can also perform a double clustering, *ie* two simple clusterings produced with different `min_uc_size` which are then "crossed" to generate more solid clusters. To do this, use `rainette2` either on two `rainette` results :
+In addition to this, you can also perform a double clustering, *ie* two simple clusterings produced with different `min_segment_size` which are then "crossed" to generate more solid clusters. To do this, use `rainette2` either on two `rainette` results :
 
 ```r
-res1 <- rainette(dtm, k = 8, min_uc_size = 10, min_split_members = 10)
-res2 <- rainette(dtm, k = 8, min_uc_size = 15, min_split_members = 10)
+res1 <- rainette(dtm, k = 8, min_segment_size = 10, min_split_members = 10)
+res2 <- rainette(dtm, k = 8, min_segment_size = 15, min_split_members = 10)
 res <- rainette2(res1, res2, max_k = 8, min_members = 20)
 ```
 
-Or directly on a dtm with `uc_size1` and `uc_size2` arguments :
+Or directly on a dtm with `min_segment_size1` and `min_segment_size2` arguments :
 
 ```r
-rainette2(dtm, max_k = 8, uc_size1 = 10, uc_size2 = 15, min_members = 20)
+rainette2(dtm, max_k = 8, min_segment_size1 = 10, min_segment_size2 = 15, min_members = 20)
 ```
 
 You can then use `rainette2_explor`, `rainette2_plot` and `cutree` to explore and visualise the results.

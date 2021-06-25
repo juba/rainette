@@ -7,12 +7,13 @@
 rainette(
   dtm,
   k = 10,
-  min_uc_size = 0,
+  min_segment_size = 0,
   doc_id = NULL,
   min_split_members = 5,
   cc_test = 0.3,
   tsj = 3,
-  min_members
+  min_members,
+  min_uc_size
 )
 }
 \arguments{
@@ -21,7 +22,7 @@ result of \code{\link[=split_segments]{split_segments()}}}
 
 \item{k}{maximum number of clusters to compute}
 
-\item{min_uc_size}{minimum number of forms by document}
+\item{min_segment_size}{minimum number of forms by document}
 
 \item{doc_id}{character name of a dtm docvar which identifies source documents.}
 
@@ -32,6 +33,8 @@ result of \code{\link[=split_segments]{split_segments()}}}
 \item{tsj}{minimum frequency value for feature selection}
 
 \item{min_members}{deprecated, use \code{min_split_members} instead}
+
+\item{min_uc_size}{deprecated, use \code{min_segment_size} instead}
 }
 \value{
 The result is a list of both class \code{hclust} and \code{rainette}. Besides the elements
@@ -50,7 +53,7 @@ quite a bit, see the package vignettes for more details.
 
 The dtm object is automatically converted to boolean.
 
-If \code{min_uc_size > 0} then \code{doc_id} must be provided unless the corpus comes from \code{split_segments},
+If \code{min_segment_size > 0} then \code{doc_id} must be provided unless the corpus comes from \code{split_segments},
 in this case \code{segment_source} is used by default.
 }
 \examples{
@@ -63,7 +66,7 @@ tok <- tokens(corpus, remove_punct = TRUE)
 tok <- tokens_remove(tok, stopwords("en"))
 dtm <- dfm(tok, tolower = TRUE)
 dtm <- dfm_trim(dtm, min_docfreq = 3)
-res <- rainette(dtm, k = 3, min_uc_size = 15)
+res <- rainette(dtm, k = 3, min_segment_size = 15)
 }
 
 }
