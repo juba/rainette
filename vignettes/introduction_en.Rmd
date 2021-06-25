@@ -17,20 +17,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 `rainette` is an R implementation of the Reinert textual clustering algorithm.
 This algorithm is already available in softwares like
-[Iramuteq](http://www.iramuteq.org/) or Alceste, the goal of `rainette` is
+[Iramuteq](http://www.iramuteq.org/) or Alceste, the goal of `rainette` being
 to provide it as an R package.
 
 This is not a new algorithm, as the first articles describing it date back
-to 1983. Here are some features of the method :
+to 1983. Here are some characteristics of the method :
 
 - each text is only assigned to one cluster, unlike methods like LDA.
-- it is better suited for small "homogeneous" documents : for long texts the
+- it is then better suited for small "homogeneous" documents : for long texts the
   good practice is first to split them into segments.
 - as the algorithm uses a singular value decomposition of a document-term
-  matrix, it may not work on very large corpus. In this case, as only the smaller 
-  dimension of the matrix is taken into account for the decomposition, a 
-  workaround can be to reduce the number of features by removing
-  the less frequent terms.
+  matrix, it is relatively fast but may not work on very large corpus. In this case, 
+  as only the smaller dimension of the matrix is taken into account for the decomposition, 
+  a workaround can be to reduce the number of features by removing the less frequent terms.
 
 ## Description of the algorithm
 
@@ -39,7 +38,7 @@ is to maximise the inter-cluster Chi-squared distance.
 
 The algorithm is applied to the document-term matrix computed on the corpus.
 Documents are called `uce` (elementary context units). If an `uce` doesn't
-include enough terms, it can be merged with the following one into an `uc`
+include enough terms, it can be merged with the following or previous one into an `uc`
 (context unit). The resulting matrix is then weighted as binary, so only the
 presence/absence of terms are taken into account, not their frequencies.
 
@@ -108,7 +107,7 @@ As explained before, as it doesn't take into account terms frequencies and
 assign each document to only one cluster, the Reinert method must be applied
 to short and "homogeneous" documents. It could be ok if you work on tweets or short
 answers to a specific question, but on longer documents the corpus must first be split
-into small textual segments.
+into short textual segments.
 
 The `split_segments` function does just that, and can be applied on a `tm` or
 `quanteda` corpus.
@@ -123,7 +122,7 @@ corpus <- split_segments(data_corpus_inaugural, segment_size = 40)
 ```
 
 `split_segments` will split the original texts into smaller chunks, attempting to
-respect sentences and punctuation when possible. The function takes three
+respect sentences and punctuation when possible. The function takes two
 arguments :
 
 - `segment_size` : the preferred segment size, in words
@@ -177,8 +176,7 @@ Here we will compute 5 clusters with a `min_segment_size` of 15 :
 res <- rainette(dtm, k = 5, min_segment_size = 15)
 ```
 
-To help exploring the clustering results, `rainette` offers a small *shiny
-gadget* which can be launched with `rainette_explor` :
+To help exploring the clustering results, `rainette` offers an interactive interface which can be launched with `rainette_explor` :
 
 ```{r eval = FALSE}
 rainette_explor(res, dtm, corpus)

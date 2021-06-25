@@ -46,7 +46,7 @@ library(quanteda)
 data_corpus_inaugural
 ```
 
-First, we'll use `split_segments` to split each text in the corpus into segments of about 40 words (punctuation is taken into account) :
+First, we'll use `split_segments` to split each document into segments of about 40 words (punctuation is taken into account) :
 
 ```r
 corpus <- split_segments(data_corpus_inaugural, segment_size = 40)
@@ -61,7 +61,7 @@ dtm <- dfm(tok, tolower = TRUE)
 dtm <- dfm_trim(dtm, min_docfreq = 10)
 ```
 
-We can then apply a simple clustering on this dtm with the `rainette` function. We specify the number of clusters (`k`), the minimum size for a cluster to be splitted at next step (`min_split_members`) and the minimum number of forms in each segment (`min_segment_size`) :
+We can then apply a simple clustering on this matrix with the `rainette` function. We specify the number of clusters (`k`), and the minimum number of forms in each segment (`min_segment_size`). Segments which do not include enough forms will be merged with the following or previous one when possible.
 
 ```r
 res <- rainette(dtm, k = 6, min_segment_size = 15)
@@ -92,7 +92,7 @@ Or cut the tree at chosen `k` and add a group membership variable to our corpus 
 docvars(corpus)$cluster <- cutree(res, k = 5)
 ```
 
-In addition to this, we can also perform a double clustering, *ie* two simple clusterings produced with different `min_segment_size` which are then "crossed" to generate more robust clusters. To do this, use `rainette2` on two `rainette` results :
+In addition to this, we can also perform a double clustering, *ie* two simple clusterings produced with different `min_segment_size` which are then "crossed" to generate more robust clusters. To do this, we use `rainette2` on two `rainette` results :
 
 ```r
 res1 <- rainette(dtm, k = 5, min_segment_size = 10, min_split_members = 10)
@@ -100,7 +100,7 @@ res2 <- rainette(dtm, k = 5, min_segment_size = 15, min_split_members = 10)
 res <- rainette2(res1, res2, max_k = 5, min_members = 10)
 ```
 
-You can then use `rainette2_explor`, `rainette2_plot` and `cutree` to explore and visualise the results.
+We can then use `rainette2_explor` to explore and visualise the results.
 
 ```r
 rainette2_explor(res, dtm, corpus)
@@ -110,14 +110,11 @@ rainette2_explor(res, dtm, corpus)
 
 ## Tell me more
 
-Three vignettes are available, an introduction in english :
+Three vignettes are available :
 
-- [Introduction to rainette](https://juba.github.io/rainette/articles/introduction_en.html)
-
-And an introduction and an algorithm description, in french :
-
-- [Introduction à rainette](https://juba.github.io/rainette/articles/introduction_usage.html)
-- [Description des algorithmes](https://juba.github.io/rainette/articles/algorithmes.html)
+- An introduction in english : [Introduction to rainette](https://juba.github.io/rainette/articles/introduction_en.html)
+- An introduction in french : [Introduction à rainette](https://juba.github.io/rainette/articles/introduction_usage.html)
+- An algorithm description in french : [Description des algorithmes](https://juba.github.io/rainette/articles/algorithmes.html)
 
 ## Credits
 

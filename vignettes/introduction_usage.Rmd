@@ -25,7 +25,7 @@ fichier <- system.file("extdata", "manifeste_pc.txt", package = "rainette")
 corpus <- import_corpus_iramuteq(fichier)
 ```
 
-On peut vérifier que notre corpus est bien constitué de 4 documents (l'introduction et les trois parties principales), et d'une variable de métadonnée :
+On peut vérifier que notre corpus est bien constitué de quatre documents (l'introduction et les trois parties principales), et d'une variable de métadonnée :
 
 ```{r}
 corpus
@@ -40,13 +40,13 @@ docvars(corpus)
 
 ## Découpage en segments
 
-La méthode Reinert de classification s'applique en général à des segments de texte relativement courts (appelés *uce*, unités de contexte élémentaires), et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction `split_segments`. Ici on découpe en segments d'environ 40 mots (l'algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d'une virgule).
+La méthode Reinert de classification s'applique plutôt à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction `split_segments`. Ici on découpe en segments d'environ 40 mots (l'algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d'une virgule).
 
 ```{r message=FALSE}
 corpus <- split_segments(corpus, segment_size = 40)
 ```
 
-Notre corpus est désormais constitué de 318 segments et 2 variables de métadonnées :
+Notre corpus est désormais constitué de 278 segments et 2 variables de métadonnées :
 
 ```{r}
 corpus
@@ -67,9 +67,9 @@ as.character(corpus)[1:2]
 
 ## Calcul et traitement de la matrice termes-documents
 
-L'étape suivante est de calculer la matrice termes-documents (*dtm*), grand tableau numérique avec les documents en lignes, les mots en colonnes, et le nombre d'occurrences de chaque mot dans chaque document comme valeurs.
+L'étape suivante est de calculer la matrice termes-documents (*dtm*), grand tableau numérique avec les documents en lignes, les mots en colonnes, et comme valeurs le nombre d'occurrences de chaque mot dans chaque document.
 
-Notre corpus étant au format `quanteda`, on va utiliser les fonction de cette extension.
+Notre corpus étant au format `quanteda`, on va utiliser les fonctions de cette extension.
 
 D'abord on calcule la *dtm* en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :
 
@@ -92,7 +92,7 @@ De nombreux autres traitements seraient possibles, mais on se contentera de cett
 
 Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction `rainette`. On va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (`k = 5`) et le nombre minimal de termes pour qu'une classe soit découpée en deux à l'étape suivante de la classification (`min_split_members = 10`).
 
-L'argument `min_segment_size`, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec `min_segment_size = 10`, les segments comportant moins de 10 formes sont regroupés avec le segment suivant (si possible) jusqu'à atteindre la taille minimale souhaitée.
+L'argument `min_segment_size`, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec `min_segment_size = 10`, les segments comportant moins de 10 formes sont regroupés avec le segment suivant ou précédent (si possible) jusqu'à atteindre la taille minimale souhaitée.
 
 ```{r message=FALSE}
 res <- rainette(dtm, k = 5, min_segment_size = 10, min_split_members = 10)
@@ -104,7 +104,7 @@ L'objet résultat ne nous dit pas grand chose en lui-même :
 res
 ```
 
-Pour faciliter l'exploration des résultats, `rainette` propose une interface interactive sous la forme d'un *gadget shiny*, qui peut être lancée avec la fonction `rainette_explor` :
+Pour faciliter l'exploration des résultats, `rainette` propose une interface interactive qui peut être lancée avec la fonction `rainette_explor` :
 
 ```{r eval = FALSE}
 rainette_explor(res, dtm, corpus)
@@ -114,7 +114,7 @@ L'interface devrait ressembler à quelque chose comme ça :
 
 ![](rainette_explor_plot_fr.png)
 
-Il est possible de modifier le nombre de classes, la statistique utilisée dans les graphiques (spécificité, termes les plus fréquents), etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case *Show negative values*).
+Il est possible de modifier le nombre de classes, la statistique utilisée dans les graphiques (spécificité, termes les plus fréquents), etc. Par défaut, les graphiques sous chaque classe indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case *Show negative values*).
 
 Cette interface vous permet d'expérimenter librement sur le nombre de classes et leur interprétation. 
 
@@ -122,7 +122,7 @@ L'onglet *Cluster documents* permet à tout moment de visualiser les documents d
 
 ![](rainette_explor_docs_fr.png)
 
-Dans l'onglet *Summary*, vous pouvez également cliquer sur le bouton *Get R code* pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande `cutree` qui vous permet de récupérer les groupes d'appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.
+Dans l'onglet *Summary*, vous pouvez également cliquer sur *Get R code* pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande `cutree` qui vous permet de récupérer les groupes d'appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.
 
 ```{r eval=FALSE}
 ## Clustering description plot
@@ -132,14 +132,14 @@ rainette_plot(res, dtm, k = 5, type = "bar", n_terms = 20, free_scales = FALSE,
 cutree(res, k = 5)
 ```
 
-Vous pouvez par exemple utiliser l'appel de `cutree` pour ajouter comme nouvelle métadonnée du corpus le groupe d'appartenance pour la classification en 5 classes :
+Vous pouvez par exemple utiliser l'appel de `cutree` pour ajouter comme nouvelle métadonnée du corpus le groupe d'appartenance de chaque segment pour la classification en 5 classes :
 
 ```{r}
 corpus$groupe <- cutree(res, k = 5)
 head(docvars(corpus))
 ```
 
-Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction `clusters_by_doc_table` permet d'afficher, pour chaque document, le nombre de segments de chaque groupe :
+Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction `clusters_by_doc_table` permet d'afficher, pour chaque document (ici chacune des quatre parties du texte), le nombre de segments de chaque groupe :
 
 ```{r}
 clusters_by_doc_table(corpus, clust_var = "groupe")
@@ -182,17 +182,17 @@ L'autre manière est d'appeler directement `rainette2` sur notre matrice dtm, en
 res <- rainette2(dtm, min_segment_size1 = 10, min_segment_size2 = 15, max_k = 7, min_members = 10)
 ```
 
-L'objet résultat est un *tibble* contenant, pour chaque valeur de `k`, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction `rainette2_explor` :
+L'objet résultat est contient, pour chaque valeur de `k`, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction `rainette2_explor` :
 
 ```{r eval=FALSE}
-rainette2_explor(res, dtm)
+rainette2_explor(res, dtm, corpus)
 ```
 
 ![](rainette2_explor_fr.png)
 
-L'interface est très semblable à la précédente, sauf qu'il n'y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux `NA`, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent être assez nombreux ici.
+L'interface est très semblable à la précédente, sauf qu'il n'y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux `NA`, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent ici être assez nombreux.
 
-Si certains points n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups` pour les assigner au groupe le plus proche selon une méthode _k-nearest neighbors_  (avec k=1) :
+Si certains segments n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups` pour les assigner au groupe le plus proche selon une méthode _k-nearest neighbors_  (avec k=1) :
 
 ```{r}
 groupes <- cutree(res, k = 5)
