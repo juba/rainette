@@ -30,15 +30,22 @@
 
 rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
 
-  ## Error if no dtm
+  ## Check for res, dtm and corpus_src values and consistency
   if (is.null(dtm)) {
     stop("rainette_explor must be called with a result object and its associated dtm.")
+  }
+  if (!is.null(corpus_src) && ndoc(corpus_src) != ndoc(dtm)) {
+      stop("corpus_src and dtm must have the same number of documents.")
   }
 
   ## If res is a rainette2 result, launch rainette2_explor
   if (inherits(res, "rainette2")) {
     rainette::rainette2_explor(res, dtm, corpus_src)
     return()
+  }
+
+  if (length(res$group) != ndoc(dtm)) {
+    stop("res and dtm must have the same number of documents.")
   }
 
   res_name <- deparse(substitute(res))

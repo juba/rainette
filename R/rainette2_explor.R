@@ -21,6 +21,11 @@ rainette2_explor <- function(res, dtm = NULL, corpus_src = NULL) {
     stop("rainette2_explor must be called with a result object and its associated dtm.")
   }
 
+  ## Stop if res comes from rainette instead of rainette2
+  if (inherits(res, "rainette")) {
+    stop("trying to run rainette2_explor on a rainette result object.")
+  }
+
   res_name <- deparse(substitute(res))
   dtm_name <- deparse(substitute(dtm))
   max_n_groups <- max(res$k, na.rm = TRUE)
