@@ -49,8 +49,8 @@
 #' @export
 
 rainette <- function(
-  dtm, k = 10, min_uc_size = 0, 
-  doc_id = NULL, min_split_members = 5, 
+  dtm, k = 10, min_uc_size = 0,
+  doc_id = NULL, min_split_members = 5,
   cc_test = 0.3, tsj = 3, min_members
   ) {
 
@@ -68,10 +68,10 @@ rainette <- function(
   }
 
   dtm <- quanteda::dfm_weight(dtm, scheme = "boolean")
-  
+
   if (min_uc_size > 1) {
     ## Compute uc from uces based on minimum size
-    message("  Computing ucs from segments...")
+    message("  Merging segments to respect min_uc_size...")
   }
   dtm <- rainette::compute_uc(dtm, min_uc_size = min_uc_size, doc_id = doc_id)
 
