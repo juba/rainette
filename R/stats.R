@@ -64,7 +64,7 @@ rainette_stats <- function(
     if (measure %in% c("frequency", "docprop")) {
       tmp_dtm <- quanteda::dfm_subset(dtm, select)
       tab <- quanteda.textstats::textstat_frequency(tmp_dtm) %>%
-        as_tibble() %>%
+          as_tibble() %>%
           mutate(docprop = .data$docfreq / ndoc(tmp_dtm)) %>%
           arrange(desc(!!stat_col)) %>%
           slice(1:n_terms) %>%
