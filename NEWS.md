@@ -1,3 +1,5 @@
+# rainette 0.2.1
+
 # rainette 0.2.0
 
 ## Important and breaking changes
