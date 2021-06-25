@@ -110,18 +110,18 @@
 <div id="reinert-textual-clustering-method" class="section level1">
 <h1 class="hasAnchor">
 <a href="#reinert-textual-clustering-method" class="anchor"></a>Reinert textual clustering method</h1>
-<p><code>rainette</code> is an R implementation of the Reinert textual clustering algorithm. This algorithm is already available in softwares like <a href="http://www.iramuteq.org/">Iramuteq</a> or Alceste, the goal of <code>rainette</code> is to provide it as an R package.</p>
-<p>This is not a new algorithm, as the first articles describing it date back to 1983. Here are some features of the method :</p>
+<p><code>rainette</code> is an R implementation of the Reinert textual clustering algorithm. This algorithm is already available in softwares like <a href="http://www.iramuteq.org/">Iramuteq</a> or Alceste, the goal of <code>rainette</code> being to provide it as an R package.</p>
+<p>This is not a new algorithm, as the first articles describing it date back to 1983. Here are some characteristics of the method :</p>
 <ul>
 <li>each text is only assigned to one cluster, unlike methods like LDA.</li>
-<li>it is better suited for small “homogeneous” documents : for long texts the good practice is first to split them into segments.</li>
-<li>as the algorithm uses a singular value decomposition of a document-term matrix, it may not work on very large corpus. In this case, as only the smaller dimension of the matrix is taken into account for the decomposition, a workaround can be to reduce the number of features by removing the less frequent terms.</li>
+<li>it is then better suited for small “homogeneous” documents : for long texts the good practice is first to split them into segments.</li>
+<li>as the algorithm uses a singular value decomposition of a document-term matrix, it is relatively fast but may not work on very large corpus. In this case, as only the smaller dimension of the matrix is taken into account for the decomposition, a workaround can be to reduce the number of features by removing the less frequent terms.</li>
 </ul>
 <div id="description-of-the-algorithm" class="section level2">
 <h2 class="hasAnchor">
 <a href="#description-of-the-algorithm" class="anchor"></a>Description of the algorithm</h2>
 <p>The Reinert method is a divisive hierarchical clustering algorithm whose aim is to maximise the inter-cluster Chi-squared distance.</p>
-<p>The algorithm is applied to the document-term matrix computed on the corpus. Documents are called <code>uce</code> (elementary context units). If an <code>uce</code> doesn’t include enough terms, it can be merged with the following one into an <code>uc</code> (context unit). The resulting matrix is then weighted as binary, so only the presence/absence of terms are taken into account, not their frequencies.</p>
+<p>The algorithm is applied to the document-term matrix computed on the corpus. Documents are called <code>uce</code> (elementary context units). If an <code>uce</code> doesn’t include enough terms, it can be merged with the following or previous one into an <code>uc</code> (context unit). The resulting matrix is then weighted as binary, so only the presence/absence of terms are taken into account, not their frequencies.</p>
 <p>The aim is to split this matrix into two clusters by maximizing the Chi-squared distance between those. As an exaustive search would be too compute-intensive, the following method is used to get a good approximation :</p>
 <ul>
 <li>first, <code>uc</code> are ordered according to their coordinates on the first axis of the correspondance analysis of the binary matrix.</li>
@@ -162,14 +162,14 @@
 <h3 class="hasAnchor">
 <a href="#split_segments" class="anchor"></a><code>split_segments</code>
 </h3>
-<p>As explained before, as it doesn’t take into account terms frequencies and assign each document to only one cluster, the Reinert method must be applied to short and “homogeneous” documents. It could be ok if you work on tweets or short answers to a specific question, but on longer documents the corpus must first be split into small textual segments.</p>
+<p>As explained before, as it doesn’t take into account terms frequencies and assign each document to only one cluster, the Reinert method must be applied to short and “homogeneous” documents. It could be ok if you work on tweets or short answers to a specific question, but on longer documents the corpus must first be split into short textual segments.</p>
 <p>The <code>split_segments</code> function does just that, and can be applied on a <code>tm</code> or <code>quanteda</code> corpus.</p>
 <p>On this article we will apply it to the sample <code>data_corpus_inaugural</code> <code>quanteda</code> corpus :</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io">quanteda</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://juba.github.io/rainette/">rainette</a></span><span class="op">)</span>
 <span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">data_corpus_inaugural</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
-<p><code>split_segments</code> will split the original texts into smaller chunks, attempting to respect sentences and punctuation when possible. The function takes three arguments :</p>
+<p><code>split_segments</code> will split the original texts into smaller chunks, attempting to respect sentences and punctuation when possible. The function takes two arguments :</p>
 <ul>
 <li>
 <code>segment_size</code> : the preferred segment size, in words</li>
@@ -237,7 +237,7 @@
 <p>Here we will compute 5 clusters with a <code>min_segment_size</code> of 15 :</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
-<p>To help exploring the clustering results, <code>rainette</code> offers a small <em>shiny gadget</em> which can be launched with <code>rainette_explor</code> :</p>
+<p>To help exploring the clustering results, <code>rainette</code> offers an interactive interface which can be launched with <code>rainette_explor</code> :</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
 <p>The interactive interface should look something like this :</p>

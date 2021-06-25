@@ -121,7 +121,7 @@
 <span class="co">## Import du corpus</span>
 <span class="va">fichier</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"manifeste_pc.txt"</span>, package <span class="op">=</span> <span class="st">"rainette"</span><span class="op">)</span>
 <span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_corpus_iramuteq.html">import_corpus_iramuteq</a></span><span class="op">(</span><span class="va">fichier</span><span class="op">)</span></code></pre></div>
-<p>On peut vérifier que notre corpus est bien constitué de 4 documents (l’introduction et les trois parties principales), et d’une variable de métadonnée :</p>
+<p>On peut vérifier que notre corpus est bien constitué de quatre documents (l’introduction et les trois parties principales), et d’une variable de métadonnée :</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span></code></pre></div>
 <pre><code>## Corpus consisting of 4 documents and 1 docvar.
@@ -148,10 +148,10 @@
 <div id="découpage-en-segments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#d%C3%A9coupage-en-segments" class="anchor"></a>Découpage en segments</h2>
-<p>La méthode Reinert de classification s’applique en général à des segments de texte relativement courts (appelés <em>uce</em>, unités de contexte élémentaires), et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction <code>split_segments</code>. Ici on découpe en segments d’environ 40 mots (l’algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d’une virgule).</p>
+<p>La méthode Reinert de classification s’applique plutôt à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction <code>split_segments</code>. Ici on découpe en segments d’environ 40 mots (l’algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d’une virgule).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">corpus</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
-<p>Notre corpus est désormais constitué de 318 segments et 2 variables de métadonnées :</p>
+<p>Notre corpus est désormais constitué de 278 segments et 2 variables de métadonnées :</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span></code></pre></div>
 <pre><code>## Corpus consisting of 278 documents and 2 docvars.
@@ -195,8 +195,8 @@
 <div id="calcul-et-traitement-de-la-matrice-termes-documents" class="section level2">
 <h2 class="hasAnchor">
 <a href="#calcul-et-traitement-de-la-matrice-termes-documents" class="anchor"></a>Calcul et traitement de la matrice termes-documents</h2>
-<p>L’étape suivante est de calculer la matrice termes-documents (<em>dtm</em>), grand tableau numérique avec les documents en lignes, les mots en colonnes, et le nombre d’occurrences de chaque mot dans chaque document comme valeurs.</p>
-<p>Notre corpus étant au format <code>quanteda</code>, on va utiliser les fonction de cette extension.</p>
+<p>L’étape suivante est de calculer la matrice termes-documents (<em>dtm</em>), grand tableau numérique avec les documents en lignes, les mots en colonnes, et comme valeurs le nombre d’occurrences de chaque mot dans chaque document.</p>
+<p>Notre corpus étant au format <code>quanteda</code>, on va utiliser les fonctions de cette extension.</p>
 <p>D’abord on calcule la <em>dtm</em> en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span>, remove_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -212,7 +212,7 @@
 <h1 class="hasAnchor">
 <a href="#classification-simple" class="anchor"></a>Classification simple</h1>
 <p>Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction <code>rainette</code>. On va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (<code>k = 5</code>) et le nombre minimal de termes pour qu’une classe soit découpée en deux à l’étape suivante de la classification (<code>min_split_members = 10</code>).</p>
-<p>L’argument <code>min_segment_size</code>, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec <code>min_segment_size = 10</code>, les segments comportant moins de 10 formes sont regroupés avec le segment suivant (si possible) jusqu’à atteindre la taille minimale souhaitée.</p>
+<p>L’argument <code>min_segment_size</code>, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec <code>min_segment_size = 10</code>, les segments comportant moins de 10 formes sont regroupés avec le segment suivant ou précédent (si possible) jusqu’à atteindre la taille minimale souhaitée.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>L’objet résultat ne nous dit pas grand chose en lui-même :</p>
@@ -224,23 +224,23 @@
 ## 
 ## Cluster method   : reinert 
 ## Number of objects: 5</code></pre>
-<p>Pour faciliter l’exploration des résultats, <code>rainette</code> propose une interface interactive sous la forme d’un <em>gadget shiny</em>, qui peut être lancée avec la fonction <code>rainette_explor</code> :</p>
+<p>Pour faciliter l’exploration des résultats, <code>rainette</code> propose une interface interactive qui peut être lancée avec la fonction <code>rainette_explor</code> :</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
 <p>L’interface devrait ressembler à quelque chose comme ça :</p>
 <p><img src="rainette_explor_plot_fr.png"></p>
-<p>Il est possible de modifier le nombre de classes, la statistique utilisée dans les graphiques (spécificité, termes les plus fréquents), etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case <em>Show negative values</em>).</p>
+<p>Il est possible de modifier le nombre de classes, la statistique utilisée dans les graphiques (spécificité, termes les plus fréquents), etc. Par défaut, les graphiques sous chaque classe indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case <em>Show negative values</em>).</p>
 <p>Cette interface vous permet d’expérimenter librement sur le nombre de classes et leur interprétation.</p>
 <p>L’onglet <em>Cluster documents</em> permet à tout moment de visualiser les documents d’une classe. Vous pouvez également filtrer ces documents en saisissant un mot ou une expression régulière dans le champ <em>Filter by term</em> :</p>
 <p><img src="rainette_explor_docs_fr.png"></p>
-<p>Dans l’onglet <em>Summary</em>, vous pouvez également cliquer sur le bouton <em>Get R code</em> pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande <code>cutree</code> qui vous permet de récupérer les groupes d’appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.</p>
+<p>Dans l’onglet <em>Summary</em>, vous pouvez également cliquer sur <em>Get R code</em> pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande <code>cutree</code> qui vous permet de récupérer les groupes d’appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Clustering description plot</span>
 <span class="fu"><a href="../reference/rainette_plot.html">rainette_plot</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"bar"</span>, n_terms <span class="op">=</span> <span class="fl">20</span>, free_scales <span class="op">=</span> <span class="cn">FALSE</span>,
     measure <span class="op">=</span> <span class="st">"chi2"</span>, show_negative <span class="op">=</span> <span class="st">"TRUE"</span>, text_size <span class="op">=</span> <span class="fl">11</span><span class="op">)</span>
 <span class="co">## Groups</span>
 <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
-<p>Vous pouvez par exemple utiliser l’appel de <code>cutree</code> pour ajouter comme nouvelle métadonnée du corpus le groupe d’appartenance pour la classification en 5 classes :</p>
+<p>Vous pouvez par exemple utiliser l’appel de <code>cutree</code> pour ajouter comme nouvelle métadonnée du corpus le groupe d’appartenance de chaque segment pour la classification en 5 classes :</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span><span class="op">$</span><span class="va">groupe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -251,7 +251,7 @@
 ## 4      I          text2      1
 ## 5      I          text2      1
 ## 6      I          text2      1</code></pre>
-<p>Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction <code>clusters_by_doc_table</code> permet d’afficher, pour chaque document, le nombre de segments de chaque groupe :</p>
+<p>Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction <code>clusters_by_doc_table</code> permet d’afficher, pour chaque document (ici chacune des quatre parties du texte), le nombre de segments de chaque groupe :</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 6
@@ -297,12 +297,12 @@
 <p>L’autre manière est d’appeler directement <code>rainette2</code> sur notre matrice dtm, en lui indiquant avec les arguments <code>min_segment_size1</code> et <code>min_segment_size2</code> les deux tailles de segments souhaitées :</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, min_segment_size1 <span class="op">=</span> <span class="fl">10</span>, min_segment_size2 <span class="op">=</span> <span class="fl">15</span>, max_k <span class="op">=</span> <span class="fl">7</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p>L’objet résultat est un <em>tibble</em> contenant, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code>rainette2_explor</code> :</p>
+<p>L’objet résultat est contient, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code>rainette2_explor</code> :</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
 <p><img src="rainette2_explor_fr.png"></p>
-<p>L’interface est très semblable à la précédente, sauf qu’il n’y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux <code>NA</code>, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent être assez nombreux ici.</p>
-<p>Si certains points n’ont pas été affecté à un groupe, vous pouvez utiliser <code>rainette2_complete_groups</code> pour les assigner au groupe le plus proche selon une méthode <em>k-nearest neighbors</em> (avec k=1) :</p>
+<p>L’interface est très semblable à la précédente, sauf qu’il n’y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux <code>NA</code>, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent ici être assez nombreux.</p>
+<p>Si certains segments n’ont pas été affecté à un groupe, vous pouvez utiliser <code>rainette2_complete_groups</code> pour les assigner au groupe le plus proche selon une méthode <em>k-nearest neighbors</em> (avec k=1) :</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">groupes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="va">groupes_complets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span><span class="op">(</span><span class="va">dtm</span>, <span class="va">groupes</span><span class="op">)</span></code></pre></div>
