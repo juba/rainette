@@ -232,8 +232,10 @@ stat_col <- function(measure) {
 
   stat_col <- switch(measure,
     "chi2" = "chi2",
-    "lr" = "G2"
+    "lr" = "G2",
+    "frequency" = "frequency",
+    "docprop" = "docprop"
   )
-  stat_col <- rlang::sym(stat_col)
+  rlang::sym(stat_col)
 
 }

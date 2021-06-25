@@ -65,8 +65,10 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
                 ),
                 selectInput("measure", "Statistics",
                   choices = c(
-                    "Chi-squared" = "chi2",
-                    "Likelihood ratio" = "lr"
+                    "Keyness - Chi-squared" = "chi2",
+                    "Keyness - Likelihood ratio" = "lr",
+                    "Frequency - Terms" = "frequency",
+                    "Frequency - Documents proportion" = "docprop"
                   )
                 ),
                 selectInput("type", "Plot type",
@@ -79,7 +81,10 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
                   label = "Max number of terms to display",
                   value = 20, min = 5, max = 30, step = 1
                 ),
-                checkboxInput("same_scales", label = "Force same scales", value = TRUE),
+                conditionalPanel(
+                  "input.measure != 'docprop'",
+                  checkboxInput("same_scales", label = "Force same scales", value = TRUE)
+                ),
                 conditionalPanel(
                   "input.type == 'bar'",
                   checkboxInput("show_negative", label = "Show negative values", value = FALSE),

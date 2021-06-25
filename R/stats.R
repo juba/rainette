@@ -31,7 +31,7 @@
 
 rainette_stats <- function(
   groups, dtm,
-  measure = c("chi2", "lr"),
+  measure = c("chi2", "lr", "frequency", "docprop"),
   n_terms = 15,
   show_negative = TRUE,
   max_p = 0.05) {
@@ -43,21 +43,34 @@ rainette_stats <- function(
   groups_list <- groups_list[!is.na(groups_list)]
   tabs <- purrr::map(groups_list, function(group) {
     select <- (groups == group & !is.na(groups))
-    tab <- quanteda.textstats::textstat_keyness(dtm, select, measure = measure) %>%
-      as_tibble() %>%
-      arrange(desc(abs(!!stat_col)))
-    if (show_negative) {
-      tab %>%
-        filter(p <= max_p) %>%
-        slice(1:n_terms) %>%
-        mutate(sign = if_else(!!stat_col > 0, "positive", "negative"),
-          sign = factor(sign, levels = c("positive", "negative")))
-    } else {
-      tab %>%
-        filter(!!stat_col > 0, p <= max_p) %>%
-        slice(1:n_terms) %>%
-        mutate(sign = "positive")
+    ## Keyness
+    if (measure %in% c("chi2", "lr")) {
+      tab <- quanteda.textstats::textstat_keyness(dtm, select, measure = measure) %>%
+        as_tibble() %>%
+        arrange(desc(abs(!!stat_col)))
+      if (show_negative) {
+        tab <- tab %>%
+          filter(p <= max_p) %>%
+          slice(1:n_terms) %>%
+          mutate(sign = if_else(!!stat_col > 0, "positive", "negative"),
+            sign = factor(sign, levels = c("positive", "negative")))
+      } else {
+        tab <- tab %>%
+          filter(!!stat_col > 0, p <= max_p) %>%
+          slice(1:n_terms) %>%
+          mutate(sign = "positive")
+      }
     }
+    if (measure %in% c("frequency", "docprop")) {
+      tmp_dtm <- quanteda::dfm_subset(dtm, select)
+      tab <- quanteda.textstats::textstat_frequency(tmp_dtm) %>%
+        as_tibble() %>%
+          mutate(docprop = .data$docfreq / ndoc(tmp_dtm)) %>%
+          arrange(desc(!!stat_col)) %>%
+          slice(1:n_terms) %>%
+          mutate(sign = "positive")
+    }
+    return(tab)
   })
 
   tabs

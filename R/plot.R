@@ -29,21 +29,21 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
         colour = "transparent"))
   ## Fix x limits if necessary and remove horizontal axis values
   if (!is.null(range)) {
-    g <- g + scale_y_continuous(stat_col, limits = range, breaks = NULL)
+    g <- g + ggplot2::scale_y_continuous(stat_col, limits = range, breaks = NULL)
   } else {
-    g <- g + scale_y_continuous(stat_col, breaks = NULL)
+    g <- g + ggplot2::scale_y_continuous(stat_col, breaks = NULL)
   }
   ## Adjust vertical scale if necessary
   if (nrow(tab) < n_terms) {
     limits <- levels(stats::reorder(tab$feature, tab[[stat_col]]))
     limits <- c(rep("", n_terms - length(limits)), limits)
-    g <- g + scale_x_discrete(limits = limits, breaks = NULL)
+    g <- g + ggplot2::scale_x_discrete(limits = limits, breaks = NULL)
   } else {
-    g <- g + scale_x_discrete(breaks = NULL)
+    g <- g + ggplot2::scale_x_discrete(breaks = NULL)
   }
 
   ## Align title element to the left to center it with hjust
-  g <- ggplotGrob(g)
+  g <- ggplot2::ggplotGrob(g)
   g$layout$l[g$layout$name == "title"] <- 1
   g
 }
@@ -74,13 +74,13 @@ keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "fireb
         colour = "transparent"))
   ## Fix x limits if necessary and remove horizontal axis values
   if (!is.null(range)) {
-    g <- g + scale_size_area(limits = range, max_size = max_size)
+    g <- g + ggplot2::scale_size_area(limits = range, max_size = max_size)
   } else {
-    g <- g + scale_size_area(max_size = max_size)
+    g <- g + ggplot2::scale_size_area(max_size = max_size)
   }
 
   ## Align title element to the left to center it with hjust
-  g <- ggplotGrob(g)
+  g <- ggplot2::ggplotGrob(g)
   g$layout$l[g$layout$name == "title"] <- 1
   g
 }
@@ -173,7 +173,8 @@ keyness_plots <- function(tabs, groups, type = "bar",
 
 rainette_plot <- function(res, dtm, k = NULL,
                           type = c("bar", "cloud"), n_terms = 15,
-                          free_scales = FALSE, measure = c("chi2", "lr"),
+                          free_scales = FALSE, 
+                          measure = c("chi2", "lr", "frequency", "docprop"),
                           show_negative = FALSE,
                           text_size = NULL) {
 
@@ -193,31 +194,35 @@ rainette_plot <- function(res, dtm, k = NULL,
     k <- max_k
   } else {
     if (k < 2 || k > max_k) stop("k must be between 2 and ", max_k)
-    groups <- cutree_rainette(res, k)
+    groups <- rainette::cutree_rainette(res, k)
   }
 
   ## Keyness statistics
-  tabs <- rainette_stats(groups, dtm, measure, n_terms, show_negative)
+  tabs <- rainette::rainette_stats(groups, dtm, measure, n_terms, show_negative)
 
   ## Number of NA
   na_n <- sum(is.na(groups))
   na_prop <- round(na_n / length(groups) * 100, 1)
 
   ## Min and max statistics to fix x axis in terms plots
-  range <- NULL
-  if (!free_scales) {
-    max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
-    range <- c(0, max_stat)
+  if (measure == "docprop") {
+    range <- c(0, 1)
+  } else {
+    range <- NULL
+    if (!free_scales) {
+      max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
+      range <- c(0, max_stat)
+    }
   }
   ## Graph layout
-  lay <- matrix(c(rep(1, k), rep(2:(k+1), 2)), nrow = 3, ncol = k, byrow = TRUE)
+  lay <- matrix(c(rep(1, k), rep(2:(k + 1), 2)), nrow = 3, ncol = k, byrow = TRUE)
   plots <- list()
 
   ## Dendrogram
   dend <- stats::as.dendrogram(res)
   max_k <- max(res$group, na.rm = TRUE)
   ## Cut the dendrogram if necessary
-  if( k < max_k) {
+  if(k < max_k) {
     dend <- cut(dend, res$height[max_k - k])$upper
     ## Double conversion to "balance" the dendrogram
     dend <- stats::as.dendrogram(stats::as.hclust(dend))
@@ -230,12 +235,12 @@ rainette_plot <- function(res, dtm, k = NULL,
     dendextend::set("branches_lwd", 0.4)
   ## Generate plot
   dend <- dendextend::as.ggdend(dend)
-  margin <- ifelse(k>=7, 0, 0.175 - k * 0.025)
+  margin <- ifelse(k >= 7, 0, 0.175 - k * 0.025)
   title_size <- ifelse(is.null(text_size), 10, text_size)
   g <- ggplot(dend, nodes = FALSE) +
     scale_y_continuous(breaks = NULL) +
     ggtitle(paste0("NA : ", na_n, " (", na_prop, "%)")) +
-    theme(plot.margin = grid::unit(c(0.05,margin,0,margin), "npc"),
+    theme(plot.margin = grid::unit(c(0.05, margin, 0, margin), "npc"),
           plot.title = element_text(hjust = 0.5, size = title_size))
   plots[[1]] <- g
 
@@ -280,7 +285,7 @@ rainette_plot <- function(res, dtm, k = NULL,
 rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   complete_groups = FALSE,
   type = c("bar", "cloud"), n_terms = 15,
-  free_scales = FALSE, measure = c("chi2", "lr"),
+  free_scales = FALSE, measure = c("chi2", "lr", "frequency", "docprop"),
   show_negative = FALSE,
   text_size = 10) {
 
@@ -293,19 +298,23 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   max_k <- max(res$k, na.rm = TRUE)
 
   if (k < 2 || k > max_k) stop("k must be between 2 and ", max_k)
-  groups <- cutree_rainette2(res, k, criterion)
+  groups <- rainette::cutree_rainette2(res, k, criterion)
   if (complete_groups) {
-    groups <- rainette2_complete_groups(dtm, groups)
+    groups <- rainette::rainette2_complete_groups(dtm, groups)
   }
 
   ## Keyness statistics
-  tabs <- rainette_stats(groups, dtm, measure, n_terms, show_negative)
+  tabs <- rainette::rainette_stats(groups, dtm, measure, n_terms, show_negative)
 
   ## Min and max statistics to fix x axis in terms plots
-  range <- NULL
-  if (!free_scales) {
-    max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
-    range <- c(0, max_stat)
+   if (measure == "docprop") {
+    range <- c(0, 1)
+  } else {
+    range <- NULL
+    if (!free_scales) {
+      max_stat <- max(purrr::map_dbl(tabs, ~ max(.x %>% pull(!!stat_col))))
+      range <- c(0, max_stat)
+    }
   }
   ## Graph layout
   if (k <= 5) {
