@@ -195,7 +195,7 @@ has been checked).
 
 The *Cluster documents* tab allows to browse the documents of a given cluster. You can filter them by giving a term or a regular expression in the *Filter by term* field :
 
-![](rainette_explor_plot_en.png)
+![](rainette_explor_docs_en.png)
 
 In the *Summary* tab, you can click on the *Get R code* button to get the R code to reproduce the current plot and to compute cluster membership.
 
