@@ -130,6 +130,12 @@ test_that("docs_by_cluster_table results", {
       n = 3:1, `%` = c(100, 66.6666666666667, 33.3333333333333)), row.names = c(NA,
       -3L), class = c("tbl_df", "tbl", "data.frame"))
   )
+  expect_equal(
+    docs_by_cluster_table(mini_dfm_count, clust_var = "cluster", threshold = 2),
+    structure(list(cluster = c("clust_1", "clust_2", "clust_NA"),
+      n = c(0, 1, 0), `%` = c(0, 33.3333333333333, 0)), row.names = c(NA,
+      -3L), class = c("tbl_df", "tbl", "data.frame"))
+  )
   docvars(mini_dfm_count, "cluster") <- c("C1", "C2", "C2", "C1", "NA", NA, NA)
   expect_equal(
     docs_by_cluster_table(mini_dfm_count, clust_var = "cluster", doc_id = "doc_id"),

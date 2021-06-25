@@ -2,10 +2,10 @@
 % Please edit documentation in R/utils.R
 \name{docs_by_cluster_table}
 \alias{docs_by_cluster_table}
-\title{Returns, for each cluster, the number of source documents with at least one
-segment of this cluster}
+\title{Returns, for each cluster, the number of source documents with at least n
+segments of this cluster}
 \usage{
-docs_by_cluster_table(obj, clust_var = NULL, doc_id = NULL)
+docs_by_cluster_table(obj, clust_var = NULL, doc_id = NULL, threshold = 1)
 }
 \arguments{
 \item{obj}{a corpus, tokens or dtm object}
@@ -13,10 +13,13 @@ docs_by_cluster_table(obj, clust_var = NULL, doc_id = NULL)
 \item{clust_var}{name of the docvar with the clusters}
 
 \item{doc_id}{docvar identifying the source document}
+
+\item{threshold}{the minimal number of segments of a given cluster that a document
+must include to be counted}
 }
 \description{
-Returns, for each cluster, the number of source documents with at least one
-segment of this cluster
+Returns, for each cluster, the number of source documents with at least n
+segments of this cluster
 }
 \details{
 This function is only useful for previously segmented corpus. If \code{doc_id} is NULL

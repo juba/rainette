@@ -181,15 +181,16 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 }
 
 
-#' Returns, for each cluster, the number of source documents with at least one
-#' segment of this cluster
+#' Returns, for each cluster, the number of source documents with at least n
+#' segments of this cluster
 #'
 #' @param obj a corpus, tokens or dtm object
 #' @param clust_var name of the docvar with the clusters
 #' @param doc_id docvar identifying the source document
+#' @param threshold the minimal number of segments of a given cluster that a document
+#'   must include to be counted
 #'
 #' @details
-#' 
 #' This function is only useful for previously segmented corpus. If `doc_id` is NULL
 #' and there is a `sement_source` docvar, it will be used instead.
 #'
@@ -211,14 +212,14 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' }
 #' @export
 
-docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL) {
+docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL, threshold = 1) {
 
   count <- clusters_by_doc_table(obj, clust_var = clust_var, doc_id = doc_id, prop = FALSE)
   n_docs <- nrow(count)
 
   count %>%
     dplyr::select(-.data$doc_id) %>%
-    dplyr::mutate(dplyr::across(.fns = function(v) v > 0)) %>%
+    dplyr::mutate(dplyr::across(.fns = function(v) v >= threshold)) %>%
     dplyr::summarise(dplyr::across(.fns = sum)) %>%
     tidyr::pivot_longer(cols = everything(), names_to = "cluster", values_to = "n") %>%
     dplyr::mutate(`%` = .data$n / n_docs * 100)
