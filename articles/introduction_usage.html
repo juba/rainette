@@ -204,7 +204,7 @@
 <span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>On va ensuite supprimer les termes apparaissant dans moins de 3 segments :</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_termfreq <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p>De nombreux autres traitements seraient possibles, mais on se contentera de cette matrice pour cet exemple.</p>
 </div>
 </div>
@@ -226,13 +226,14 @@
 ## Number of objects: 5</code></pre>
 <p>Pour faciliter l’exploration des résultats, <code>rainette</code> propose une interface interactive sous la forme d’un <em>gadget shiny</em>, qui peut être lancée avec la fonction <code>rainette_explor</code> :</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
 <p>L’interface devrait ressembler à quelque chose comme ça :</p>
-<p><img src="rainette_explor_pc.png"></p>
-<p>Vous pouvez modifier le nombre de classes, la statistique utilisée pour le calcul des termes caractéristiques, etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case <em>Show negative values</em>) selon la statistique considérée.</p>
-<p>À noter que vous pouvez aussi opter pour des graphiques sous forme de nuages de mots (plutôt déconseillés cependant car moins lisibles) :</p>
-<p><img src="rainette_explor_pc_cloud.png"></p>
-<p>Cette interface vous permet d’expérimenter librement sur le nombre de classes et leur interprétation. Vous pouvez à tout moment cliquer sur le bouton <em>Get R code</em> pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande <code>cutree</code> qui vous permet de récupérer les groupes d’appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.</p>
+<p><img src="rainette_explor_plot_fr.png"></p>
+<p>Il est possible de modifier le nombre de classes, la statistique utilisée dans les graphiques (spécificité, termes les plus fréquents), etc. Par défaut, les graphiques sous chaque classe vous indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case <em>Show negative values</em>).</p>
+<p>Cette interface vous permet d’expérimenter librement sur le nombre de classes et leur interprétation.</p>
+<p>L’onglet <em>Cluster documents</em> permet à tout moment de visualiser les documents d’une classe. Vous pouvez également filtrer ces documents en saisissant un mot ou une expression régulière dans le champ <em>Filter by term</em> :</p>
+<p><img src="rainette_explor_docs_fr.png"></p>
+<p>Dans l’onglet <em>Summary</em>, vous pouvez également cliquer sur le bouton <em>Get R code</em> pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande <code>cutree</code> qui vous permet de récupérer les groupes d’appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Clustering description plot</span>
 <span class="fu"><a href="../reference/rainette_plot.html">rainette_plot</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"bar"</span>, n_terms <span class="op">=</span> <span class="fl">20</span>, free_scales <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -241,124 +242,70 @@
 <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
 <p>Vous pouvez par exemple utiliser l’appel de <code>cutree</code> pour ajouter comme nouvelle métadonnée du corpus le groupe d’appartenance pour la classification en 5 classes :</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">corpus</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">corpus</span><span class="op">$</span><span class="va">groupe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>##   partie segment_source group
-## 1  intro          text1     2
-## 2  intro          text1     2
-## 3  intro          text1     2
-## 4      I          text2     3
-## 5      I          text2     3
-## 6      I          text2     3</code></pre>
-<p>Vous pouvez aussi récupérer directement les statistiques de spécificité de chaque groupe à l’aide de <code>rainette_stats</code> :</p>
+<pre><code>##   partie segment_source groupe
+## 1  intro          text1      3
+## 2  intro          text1      3
+## 3  intro          text1      3
+## 4      I          text2      1
+## 5      I          text2      1
+## 6      I          text2      1</code></pre>
+<p>Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction <code>clusters_by_doc_table</code> permet d’afficher, pour chaque document, le nombre de segments de chaque groupe :</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/rainette_stats.html">rainette_stats</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">$</span><span class="va">group</span>, <span class="va">dtm</span>, n_terms <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
-<pre><code>## [[1]]
-## # A tibble: 5 x 6
-##   feature        chi2        p n_target n_reference sign    
-##   &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 française      81.2 0              12           0 positive
-## 2 littérature    45.2 1.80e-11        9           2 positive
-## 3 allemands      36.9 1.22e- 9        7           1 positive
-## 4 philosophique  29.3 6.34e- 8        5           0 positive
-## 5 socialisme     23.0 1.59e- 6       12          16 positive
-## 
-## [[2]]
-## # A tibble: 5 x 6
-##   feature      chi2        p n_target n_reference sign    
-##   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 prolétariat  41.2 1.34e-10       41          16 positive
-## 2 politique    31.4 2.07e- 8       20           3 positive
-## 3 classe       31.4 2.09e- 8       43          24 positive
-## 4 a           -21.9 2.93e- 6        1          50 negative
-## 5 travail     -18.0 2.26e- 5        1          42 negative
-## 
-## [[3]]
-## # A tibble: 5 x 6
-##   feature       chi2          p n_target n_reference sign    
-##   &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 formes        22.6 0.00000203        5           1 positive
-## 2 féodalité     21.6 0.00000336        4           0 positive
-## 3 jours         21.6 0.00000336        4           0 positive
-## 4 partie        20.6 0.00000570        6           3 positive
-## 5 antagonismes  17.5 0.0000281         6           4 positive
-## 
-## [[4]]
-## # A tibble: 5 x 6
-##   feature      chi2           p n_target n_reference sign    
-##   &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 forces       27.9 0.000000126       10           1 positive
-## 2 a            27.3 0.000000177       26          25 positive
-## 3 productives  24.3 0.000000810        9           1 positive
-## 4 moyens       22.6 0.00000198        13           6 positive
-## 5 production   21.5 0.00000354        26          30 positive
-## 
-## [[5]]
-## # A tibble: 5 x 6
-##   feature    chi2        p n_target n_reference sign    
-##   &lt;chr&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 capital    45.4 1.60e-11       17           2 positive
-## 2 travail    40.6 1.90e-10       27          16 positive
-## 3 propriété  36.8 1.33e- 9       31          24 positive
-## 4 femmes     26.8 2.23e- 7        9           0 positive
-## 5 abolir     23.4 1.33e- 6        8           0 positive</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 6
+##   doc_id clust_1 clust_2 clust_3 clust_4 clust_5
+##   &lt;chr&gt;    &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
+## 1 text1        0       0       3       0       0
+## 2 text2       14      28       5      36      20
+## 3 text3        8      10       6       7      44
+## 4 text4       23      32      29       5       8</code></pre>
+<p>En ajoutant <code>prop = TRUE</code>, cette répartition peut être visualisée en pourcentages :</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span>, prop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 6
+##   doc_id clust_1 clust_2 clust_3 clust_4 clust_5
+##   &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 text1      0       0    100       0       0   
+## 2 text2     13.6    27.2    4.85   35.0    19.4 
+## 3 text3     10.7    13.3    8       9.33   58.7 
+## 4 text4     23.7    33.0   29.9     5.15    8.25</code></pre>
+<p>À l’inverse, <code>docs_by_cluster_table</code> permet de visualiser, pour chaque groupe, le nombre et la proportion de documents d’origine comportant au moins un segment de ce groupe :</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 5 x 3
+##   cluster     n   `%`
+##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
+## 1 clust_1     3    75
+## 2 clust_2     3    75
+## 3 clust_3     4   100
+## 4 clust_4     3    75
+## 5 clust_5     3    75</code></pre>
 </div>
 <div id="classification-double" class="section level1">
 <h1 class="hasAnchor">
 <a href="#classification-double" class="anchor"></a>Classification double</h1>
 <p>Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on “croise” les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes.</p>
 <p>Une classification double utilise la fonction <code>rainette2</code>. Celle-ci peut se faire de deux manières. On peut d’abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>Puis on utilise <code>rainette2</code> sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument <code>max_k</code>) et le nombre minimal de segments par classe (argument <code>min_members</code>) :</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">7</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>L’autre manière est d’appeler directement <code>rainette2</code> sur notre matrice dtm, en lui indiquant avec les arguments <code>min_segment_size1</code> et <code>min_segment_size2</code> les deux tailles de segments souhaitées :</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, min_segment_size1 <span class="op">=</span> <span class="fl">10</span>, min_segment_size2 <span class="op">=</span> <span class="fl">15</span>, max_k <span class="op">=</span> <span class="fl">7</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>L’objet résultat est un <em>tibble</em> contenant, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code>rainette2_explor</code> :</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>
-<p><img src="rainette2_explor.png"></p>
+<p><img src="rainette2_explor_fr.png"></p>
 <p>L’interface est très semblable à la précédente, sauf qu’il n’y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux <code>NA</code>, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent être assez nombreux ici.</p>
-<p>Là encore, vous pouvez utiliser le bouton <em>Get R code</em> pour récupérer et copier/coller le code R permettant de reproduire le graphique affiché, et récupérer les groupes d’appartenance des segments du corpus.</p>
-<p>Vous pouvez également utiliser <code>rainette_stats</code> pour récupérer les statistiques de spécificité des groupes :</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, <span class="fl">3</span><span class="op">)</span>
-<span class="fu"><a href="../reference/rainette_stats.html">rainette_stats</a></span><span class="op">(</span><span class="va">groups</span>, <span class="va">dtm</span>, n_terms <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
-<pre><code>## [[1]]
-## # A tibble: 5 x 6
-##   feature      chi2        p n_target n_reference sign    
-##   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 a           -41.7 1.08e-10        3          48 negative
-## 2 travail     -37.0 1.17e- 9        2          41 negative
-## 3 production  -36.5 1.53e- 9        6          50 negative
-## 4 prolétariat  25.9 3.68e- 7       48           9 positive
-## 5 contre       19.8 8.49e- 6       35           6 positive
-## 
-## [[2]]
-## # A tibble: 5 x 6
-##   feature     chi2            p n_target n_reference sign    
-##   &lt;chr&gt;      &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 moyens      28.5 0.0000000942       13           6 positive
-## 2 a           28.2 0.000000111        24          27 positive
-## 3 forces      25.4 0.000000463         9           2 positive
-## 4 production  22.6 0.00000204         24          32 positive
-## 5 trop        21.4 0.00000365          6           0 positive
-## 
-## [[3]]
-## # A tibble: 5 x 6
-##   feature     chi2        p n_target n_reference sign    
-##   &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   
-## 1 propriété   57.4 3.64e-14       27          28 positive
-## 2 femmes      48.7 3.02e-12        9           0 positive
-## 3 travail     44.1 3.18e-11       21          22 positive
-## 4 abolir      42.5 7.02e-11        8           0 positive
-## 5 communauté  36.4 1.64e- 9        7           0 positive</code></pre>
 <p>Si certains points n’ont pas été affecté à un groupe, vous pouvez utiliser <code>rainette2_complete_groups</code> pour les assigner au groupe le plus proche selon une méthode <em>k-nearest neighbors</em> (avec k=1) :</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">groups_completed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span><span class="op">(</span><span class="va">dtm</span>, <span class="va">groups</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">groupes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
+<span class="va">groupes_complets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span><span class="op">(</span><span class="va">dtm</span>, <span class="va">groupes</span><span class="op">)</span></code></pre></div>
 </div>
   </div>
 

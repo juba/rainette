@@ -121,7 +121,7 @@
 <h2 class="hasAnchor">
 <a href="#matrice-de-d%C3%A9part" class="anchor"></a>Matrice de départ</h2>
 <p>La classification simple est une classification descendante hiérarchique (CDH).</p>
-<p>Le tableau de départ est la matrice termes-documents croisant les segments de texte (unités de contexte élémentaires, <em>uce</em>), éventuellement regroupés en unités de contexte (<em>uc</em>) s’ils ne comportent pas suffisamment de formes différentes (selon la valeur de l’argument <code>min_segment_size</code>), et les termes. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d’effectifs.</p>
+<p>Le tableau de départ est la matrice termes-documents croisant les segments de texte (unités de contexte élémentaires, <em>uce</em>), éventuellement regroupés en unités de contexte (<em>uc</em>) s’ils ne comportent pas suffisamment de formes différentes (selon la valeur de l’argument <code>min_segment_size</code> passé à <code>rainette</code>), et les termes. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d’effectifs.</p>
 <p>On a donc un tableau de ce type :</p>
 <pre><code>##     partir un jour sans retour
 ## uc1      1  1    0    1      0

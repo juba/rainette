@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns, for each cluster, the number of source documents with at least one
-segment of this cluster — docs_by_cluster_table • rainette</title>
+<title>Returns, for each cluster, the number of source documents with at least n
+segments of this cluster — docs_by_cluster_table • rainette</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,10 +47,10 @@ segment of this cluster — docs_by_cluster_table • rainette</title>
 
 
 
-<meta property="og:title" content="Returns, for each cluster, the number of source documents with at least one
-segment of this cluster — docs_by_cluster_table" />
-<meta property="og:description" content="Returns, for each cluster, the number of source documents with at least one
-segment of this cluster" />
+<meta property="og:title" content="Returns, for each cluster, the number of source documents with at least n
+segments of this cluster — docs_by_cluster_table" />
+<meta property="og:description" content="Returns, for each cluster, the number of source documents with at least n
+segments of this cluster" />
 <meta property="og:image" content="https://juba.github.io/rainette/logo.png" />
 
 
@@ -140,18 +140,18 @@ segment of this cluster" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns, for each cluster, the number of source documents with at least one
-segment of this cluster</h1>
+    <h1>Returns, for each cluster, the number of source documents with at least n
+segments of this cluster</h1>
     <small class="dont-index">Source: <a href='https://github.com/juba/rainette/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>docs_by_cluster_table.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns, for each cluster, the number of source documents with at least one
-segment of this cluster</p>
+    <p>Returns, for each cluster, the number of source documents with at least n
+segments of this cluster</p>
     </div>
 
-    <pre class="usage"><span class='fu'>docs_by_cluster_table</span><span class='op'>(</span><span class='va'>obj</span>, clust_var <span class='op'>=</span> <span class='cn'>NULL</span>, doc_id <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>docs_by_cluster_table</span><span class='op'>(</span><span class='va'>obj</span>, clust_var <span class='op'>=</span> <span class='cn'>NULL</span>, doc_id <span class='op'>=</span> <span class='cn'>NULL</span>, threshold <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,6 +167,11 @@ segment of this cluster</p>
     <tr>
       <th>doc_id</th>
       <td><p>docvar identifying the source document</p></td>
+    </tr>
+    <tr>
+      <th>threshold</th>
+      <td><p>the minimal number of segments of a given cluster that a document
+must include to be counted</p></td>
     </tr>
     </table>
 

@@ -101,7 +101,7 @@
 <a href="#rainette" class="anchor"></a>Rainette</h1></div>
 
 <p><img src="reference/figures/logo.png" width="200" align="right"></p>
-<p>The package website can be found at : <a href="https://juba.github.io/rainette/" class="uri">https://juba.github.io/rainette/</a>.</p>
+<p>The package website can be found at : <a href="https://juba.github.io/rainette/">https://juba.github.io/rainette/</a>.</p>
 <p>Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other software such as <a href="http://www.iramuteq.org/">Iramuteq</a> (free software) or <a href="https://www.image-zafar.com/Logiciel.html">Alceste</a> (commercial, closed source).</p>
 <div id="features" class="section level2">
 <h2 class="hasAnchor">
@@ -143,31 +143,32 @@
 <code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_wordstem.html">dfm_wordstem</a></span><span class="op">(</span><span class="va">dtm</span>, language <span class="op">=</span> <span class="st">"english"</span><span class="op">)</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_termfreq <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
+<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>We can then apply a simple clustering on this dtm with the <code>rainette</code> function. We specify the number of clusters (<code>k</code>), the minimum size for a cluster to be splitted at next step (<code>min_split_members</code>) and the minimum number of forms in each segment (<code>min_segment_size</code>) :</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">6</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">6</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
 <p>We can use the <code>rainette_explor</code> shiny interface to visualise and explore the different clusterings at each <code>k</code> :</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/rainette_explor.png"></p>
+<code class="sourceCode R"><span class="fu"><a href="reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/rainette_explor_plot_en.png" alt="rainette_explor_plot"></p>
+<p>The <em>Cluster documents</em> tab allows to browse and filter the documents in each cluster :</p>
+<p><img src="reference/figures/rainette_explor_docs_en.png" alt="rainette_explor_docs"></p>
 <p>We can then use the generated R code to reproduce the displayed clustering visualisation plot :</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rainette_plot.html">rainette_plot</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"bar"</span>, n_terms <span class="op">=</span> <span class="fl">20</span>, free_scales <span class="op">=</span> <span class="cn">FALSE</span>,
     measure <span class="op">=</span> <span class="st">"chi2"</span>, show_negative <span class="op">=</span> <span class="st">"TRUE"</span>, text_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>Or cut the tree at chosen <code>k</code> and add a group membership variable to our corpus metadata :</p>
-<pre><code>docvars(corpus)$group &lt;- cutree(res, k = 5)</code></pre>
-<p>In addition to this, you can also perform a double clustering, <em>ie</em> two simple clusterings produced with different <code>min_segment_size</code> which are then “crossed” to generate more solid clusters. To do this, use <code>rainette2</code> either on two <code>rainette</code> results :</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<p>In addition to this, we can also perform a double clustering, <em>ie</em> two simple clusterings produced with different <code>min_segment_size</code> which are then “crossed” to generate more robust clusters. To do this, use <code>rainette2</code> on two <code>rainette</code> results :</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">8</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">8</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">8</span>, min_members <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
-<p>Or directly on a dtm with <code>min_segment_size1</code> and <code>min_segment_size2</code> arguments :</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, max_k <span class="op">=</span> <span class="fl">8</span>, min_segment_size1 <span class="op">=</span> <span class="fl">10</span>, min_segment_size2 <span class="op">=</span> <span class="fl">15</span>, min_members <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">5</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>You can then use <code>rainette2_explor</code>, <code>rainette2_plot</code> and <code>cutree</code> to explore and visualise the results.</p>
-<p><img src="reference/figures/rainette2_explor.png"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/rainette2_explor.png" alt="rainette2_explor"></p>
 </div>
 <div id="tell-me-more" class="section level2">
 <h2 class="hasAnchor">
