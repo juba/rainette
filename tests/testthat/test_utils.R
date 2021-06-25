@@ -87,33 +87,33 @@ test_that("segment_source used by default when min_uc_size > 0", {
 })
 
 
-# count_clusters_by_doc
+# clusters_by_doc_table
 mini_dfm_count <- mini_dfm
 docvars(mini_dfm_count, "segment_source") <- c("doc1", "doc1", "doc2", "doc2", "doc2", "doc2", "doc3")
 docvars(mini_dfm_count, "doc_id") <- docvars(mini_dfm_count, "segment_source")
-test_that("count_clusters_by_doc results", {
+test_that("clusters_by_doc_table results", {
   docvars(mini_dfm_count, "cluster") <- c(1, 2, 2, 1, 2, NA, 1)
   expect_equal(
-    count_clusters_by_doc(mini_dfm_count, clust_var = "cluster"),
+    clusters_by_doc_table(mini_dfm_count, clust_var = "cluster"),
     structure(list(doc_id = c("doc1", "doc2", "doc3"), clust_1 = c(1L,
       1L, 1L), clust_2 = c(1L, 2L, 0L), clust_NA = c(0L, 1L, 0L)), row.names = c(NA,
       -3L), class = c("tbl_df", "tbl", "data.frame"))
   )
   expect_equal(
-    count_clusters_by_doc(mini_dfm_count, clust_var = "cluster", prop = TRUE),
+    clusters_by_doc_table(mini_dfm_count, clust_var = "cluster", prop = TRUE),
     structure(list(doc_id = c("doc1", "doc2", "doc3"), clust_1 = c(50,
       25, 100), clust_2 = c(50, 50, 0), clust_NA = c(0, 25, 0)), row.names = c(NA,
       -3L), class = c("tbl_df", "tbl", "data.frame"))
   )
   expect_equal(
-    count_clusters_by_doc(mini_dfm_count, clust_var = "cluster", doc_id = "doc_id", prop = TRUE),
+    clusters_by_doc_table(mini_dfm_count, clust_var = "cluster", doc_id = "doc_id", prop = TRUE),
     structure(list(doc_id = c("doc1", "doc2", "doc3"), clust_1 = c(50,
       25, 100), clust_2 = c(50, 50, 0), clust_NA = c(0, 25, 0)), row.names = c(NA,
       -3L), class = c("tbl_df", "tbl", "data.frame"))
   )
   docvars(mini_dfm_count, "cluster") <- c("C1", "C2", "C2", "C1", "NA", NA, NA)
   expect_equal(
-    count_clusters_by_doc(mini_dfm_count, clust_var = "cluster"),
+    clusters_by_doc_table(mini_dfm_count, clust_var = "cluster"),
     structure(list(doc_id = c("doc1", "doc2", "doc3"), C1 = c(1L,
       1L, 0L), C2 = c(1L, 1L, 0L), `NA` = c(0L, 1L, 0L), NA_missing_ = c(0L,
       1L, 1L)), row.names = c(NA, -3L), class = c("tbl_df", "tbl",
@@ -121,18 +121,18 @@ test_that("count_clusters_by_doc results", {
   )
 })
 
-# count_docs_by_cluster
-test_that("count_docs_by_cluster results", {
+# docs_by_cluster_table
+test_that("docs_by_cluster_table results", {
   docvars(mini_dfm_count, "cluster") <- c(1, 2, 2, 1, 2, NA, 1)
   expect_equal(
-    count_docs_by_cluster(mini_dfm_count, clust_var = "cluster"),
+    docs_by_cluster_table(mini_dfm_count, clust_var = "cluster"),
     structure(list(cluster = c("clust_1", "clust_2", "clust_NA"),
       n = 3:1, `%` = c(100, 66.6666666666667, 33.3333333333333)), row.names = c(NA,
       -3L), class = c("tbl_df", "tbl", "data.frame"))
   )
   docvars(mini_dfm_count, "cluster") <- c("C1", "C2", "C2", "C1", "NA", NA, NA)
   expect_equal(
-    count_docs_by_cluster(mini_dfm_count, clust_var = "cluster", doc_id = "doc_id"),
+    docs_by_cluster_table(mini_dfm_count, clust_var = "cluster", doc_id = "doc_id"),
     structure(list(cluster = c("C1", "C2", "NA", "NA_missing_"),
       n = c(2L, 2L, 1L, 2L), `%` = c(66.6666666666667, 66.6666666666667,
       33.3333333333333, 66.6666666666667)), row.names = c(NA, -4L

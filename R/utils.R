@@ -102,7 +102,7 @@ compute_uc <- function(dtm, min_uc_size = 10, doc_id = NULL) {
 #' This function is only useful for previously segmented corpus. If `doc_id` 
 #' is NULL and there is a `sement_source` docvar, it will be used instead.
 #' 
-#' @seealso [count_docs_by_cluster()]
+#' @seealso [docs_by_cluster_table()]
 #'
 #' @examples
 #' \donttest{
@@ -116,11 +116,11 @@ compute_uc <- function(dtm, min_uc_size = 10, doc_id = NULL) {
 #' dtm <- dfm_trim(dtm, min_docfreq = 2)
 #' res <- rainette(dtm, k = 3, min_uc_size = 15)
 #' corpus$cluster <- cutree(res, k = 3)
-#' count_clusters_by_doc(corpus, clust_var = "cluster", prop = TRUE)
+#' clusters_by_doc_table(corpus, clust_var = "cluster", prop = TRUE)
 #' }
 #' @export
 
-count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = FALSE) {
+clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = FALSE) {
 
   if (!inherits(obj, "corpus") && !inherits(obj, "dfm") && !inherits(obj, "tokens")) {
     stop("obj must be a corpus, a tokens or a dfm object.")
@@ -193,7 +193,7 @@ count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' This function is only useful for previously segmented corpus. If `doc_id` is NULL
 #' and there is a `sement_source` docvar, it will be used instead.
 #'
-#' @seealso [count_clusters_by_doc()]
+#' @seealso [clusters_by_doc_table()]
 #' 
 #' @examples
 #' \donttest{
@@ -207,13 +207,13 @@ count_clusters_by_doc <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' dtm <- dfm_trim(dtm, min_docfreq = 2)
 #' res <- rainette(dtm, k = 3, min_uc_size = 15)
 #' corpus$cluster <- cutree(res, k = 3)
-#' count_docs_by_cluster(corpus, clust_var = "cluster")
+#' docs_by_cluster_table(corpus, clust_var = "cluster")
 #' }
 #' @export
 
-count_docs_by_cluster <- function(obj, clust_var = NULL, doc_id = NULL) {
+docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL) {
 
-  count <- count_clusters_by_doc(obj, clust_var = clust_var, doc_id = doc_id, prop = FALSE)
+  count <- clusters_by_doc_table(obj, clust_var = clust_var, doc_id = doc_id, prop = FALSE)
   n_docs <- nrow(count)
 
   count %>%
