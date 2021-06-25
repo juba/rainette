@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate a clustering description plot from a rainette2 result — rainette2_plot • rainette</title>
+<title>Returns, for each cluster, the number of source documents with at least one
+segment of this cluster — docs_by_cluster_table • rainette</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +47,10 @@
 
 
 
-<meta property="og:title" content="Generate a clustering description plot from a rainette2 result — rainette2_plot" />
-<meta property="og:description" content="Generate a clustering description plot from a rainette2 result" />
+<meta property="og:title" content="Returns, for each cluster, the number of source documents with at least one
+segment of this cluster — docs_by_cluster_table" />
+<meta property="og:description" content="Returns, for each cluster, the number of source documents with at least one
+segment of this cluster" />
 <meta property="og:image" content="https://juba.github.io/rainette/logo.png" />
 
 
@@ -137,88 +140,64 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate a clustering description plot from a rainette2 result</h1>
-    <small class="dont-index">Source: <a href='https://github.com/juba/rainette/blob/master/R/plot.R'><code>R/plot.R</code></a></small>
-    <div class="hidden name"><code>rainette2_plot.Rd</code></div>
+    <h1>Returns, for each cluster, the number of source documents with at least one
+segment of this cluster</h1>
+    <small class="dont-index">Source: <a href='https://github.com/juba/rainette/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>docs_by_cluster_table.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate a clustering description plot from a rainette2 result</p>
+    <p>Returns, for each cluster, the number of source documents with at least one
+segment of this cluster</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rainette2_plot</span><span class='op'>(</span>
-  <span class='va'>res</span>,
-  <span class='va'>dtm</span>,
-  k <span class='op'>=</span> <span class='cn'>NULL</span>,
-  criterion <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"chi2"</span>, <span class='st'>"n"</span><span class='op'>)</span>,
-  complete_groups <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bar"</span>, <span class='st'>"cloud"</span><span class='op'>)</span>,
-  n_terms <span class='op'>=</span> <span class='fl'>15</span>,
-  free_scales <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  measure <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"chi2"</span>, <span class='st'>"lr"</span>, <span class='st'>"frequency"</span>, <span class='st'>"docprop"</span><span class='op'>)</span>,
-  show_negative <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  text_size <span class='op'>=</span> <span class='fl'>10</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>docs_by_cluster_table</span><span class='op'>(</span><span class='va'>obj</span>, clust_var <span class='op'>=</span> <span class='cn'>NULL</span>, doc_id <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>res</th>
-      <td><p>result object of a <code>rainette2</code> clustering</p></td>
+      <th>obj</th>
+      <td><p>a corpus, tokens or dtm object</p></td>
     </tr>
     <tr>
-      <th>dtm</th>
-      <td><p>the dfm object used to compute the clustering</p></td>
+      <th>clust_var</th>
+      <td><p>name of the docvar with the clusters</p></td>
     </tr>
     <tr>
-      <th>k</th>
-      <td><p>number of groups. If NULL, use the biggest number possible</p></td>
-    </tr>
-    <tr>
-      <th>criterion</th>
-      <td><p>criterion to use to choose the best partition. <code>chi2</code> means
-the partition with the maximum sum of chi2, <code>n</code> the partition with the
-maximum size.</p></td>
-    </tr>
-    <tr>
-      <th>complete_groups</th>
-      <td><p>if TRUE, documents with NA cluster are reaffected by
-k-means clustering initialised with current groups centers.</p></td>
-    </tr>
-    <tr>
-      <th>type</th>
-      <td><p>type of term plots : barplot or wordcloud</p></td>
-    </tr>
-    <tr>
-      <th>n_terms</th>
-      <td><p>number of terms to display in keyness plots</p></td>
-    </tr>
-    <tr>
-      <th>free_scales</th>
-      <td><p>if TRUE, all the keyness plots will have the same scale</p></td>
-    </tr>
-    <tr>
-      <th>measure</th>
-      <td><p>statistics to compute</p></td>
-    </tr>
-    <tr>
-      <th>show_negative</th>
-      <td><p>if TRUE, show negative keyness features</p></td>
-    </tr>
-    <tr>
-      <th>text_size</th>
-      <td><p>font size for barplots, max word size for wordclouds</p></td>
+      <th>doc_id</th>
+      <td><p>docvar identifying the source document</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A gtable object.</p>
+    <p>This function is only useful for previously segmented corpus. If <code>doc_id</code> is NULL
+and there is a <code>sement_source</code> docvar, it will be used instead.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://quanteda.io/reference/textstat_keyness.html'>quanteda.textstats::textstat_keyness()</a></code>, <code><a href='rainette2_explor.html'>rainette2_explor()</a></code>, <code><a href='rainette2_complete_groups.html'>rainette2_complete_groups()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='clusters_by_doc_table.html'>clusters_by_doc_table()</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://quanteda.io'>quanteda</a></span><span class='op'>)</span>
+<span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='va'>data_corpus_inaugural</span>
+<span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>corpus</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='va'>corpus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='split_segments.html'>split_segments</a></span><span class='op'>(</span><span class='va'>corpus</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Splitting...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>tok</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens.html'>tokens</a></span><span class='op'>(</span><span class='va'>corpus</span>, remove_punct <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>tok</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_select.html'>tokens_remove</a></span><span class='op'>(</span><span class='va'>tok</span>, <span class='fu'><a href='https://rdrr.io/pkg/stopwords/man/stopwords.html'>stopwords</a></span><span class='op'>(</span><span class='st'>"en"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span><span class='op'>(</span><span class='va'>tok</span>, tolower <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_docfreq <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span>, min_segment_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Merging segments to respect min_segment_size...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>corpus</span><span class='op'>$</span><span class='va'>cluster</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutree.html'>cutree</a></span><span class='op'>(</span><span class='va'>res</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+<span class='fu'>docs_by_cluster_table</span><span class='op'>(</span><span class='va'>corpus</span>, clust_var <span class='op'>=</span> <span class='st'>"cluster"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 3</span>
+#&gt;   cluster     n   `%`
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> clust_1    10   100
+#&gt; <span style='color: #BCBCBC;'>2</span> clust_2     9    90
+#&gt; <span style='color: #BCBCBC;'>3</span> clust_3     9    90</div><div class='input'><span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

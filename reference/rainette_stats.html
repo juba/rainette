@@ -138,7 +138,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate cluster keyness statistics from a rainette result</h1>
-    <small class="dont-index">Source: <a href='https://github.com/juba/rainette/blob/master/R/keyness.R'><code>R/keyness.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/juba/rainette/blob/master/R/stats.R'><code>R/stats.R</code></a></small>
     <div class="hidden name"><code>rainette_stats.Rd</code></div>
     </div>
 
@@ -149,7 +149,7 @@
     <pre class="usage"><span class='fu'>rainette_stats</span><span class='op'>(</span>
   <span class='va'>groups</span>,
   <span class='va'>dtm</span>,
-  measure <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"chi2"</span>, <span class='st'>"lr"</span><span class='op'>)</span>,
+  measure <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"chi2"</span>, <span class='st'>"lr"</span>, <span class='st'>"frequency"</span>, <span class='st'>"docprop"</span><span class='op'>)</span>,
   n_terms <span class='op'>=</span> <span class='fl'>15</span>,
   show_negative <span class='op'>=</span> <span class='cn'>TRUE</span>,
   max_p <span class='op'>=</span> <span class='fl'>0.05</span>
@@ -202,8 +202,8 @@ n_terms features.</p>
 <span class='va'>tok</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_select.html'>tokens_remove</a></span><span class='op'>(</span><span class='va'>tok</span>, <span class='fu'><a href='https://rdrr.io/pkg/stopwords/man/stopwords.html'>stopwords</a></span><span class='op'>(</span><span class='st'>"en"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span><span class='op'>(</span><span class='va'>tok</span>, tolower <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_docfreq <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span>, min_uc_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>groups</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutree_rainette.html'>cutree_rainette</a></span><span class='op'>(</span><span class='va'>res</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span>, min_segment_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Merging segments to respect min_segment_size...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>groups</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutree_rainette.html'>cutree_rainette</a></span><span class='op'>(</span><span class='va'>res</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 <span class='fu'>rainette_stats</span><span class='op'>(</span><span class='va'>groups</span>, <span class='va'>dtm</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; <span style='color: #949494;'># A tibble: 15 x 6</span>

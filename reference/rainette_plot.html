@@ -153,7 +153,7 @@
   type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bar"</span>, <span class='st'>"cloud"</span><span class='op'>)</span>,
   n_terms <span class='op'>=</span> <span class='fl'>15</span>,
   free_scales <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  measure <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"chi2"</span>, <span class='st'>"lr"</span><span class='op'>)</span>,
+  measure <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"chi2"</span>, <span class='st'>"lr"</span>, <span class='st'>"frequency"</span>, <span class='st'>"docprop"</span><span class='op'>)</span>,
   show_negative <span class='op'>=</span> <span class='cn'>FALSE</span>,
   text_size <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
@@ -216,8 +216,8 @@
 <span class='va'>tok</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/tokens_select.html'>tokens_remove</a></span><span class='op'>(</span><span class='va'>tok</span>, <span class='fu'><a href='https://rdrr.io/pkg/stopwords/man/stopwords.html'>stopwords</a></span><span class='op'>(</span><span class='st'>"en"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span><span class='op'>(</span><span class='va'>tok</span>, tolower <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_docfreq <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span>, min_uc_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='fu'>rainette_plot</span><span class='op'>(</span><span class='va'>res</span>, <span class='va'>dtm</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>3</span>, min_segment_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Merging segments to respect min_segment_size...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='fu'>rainette_plot</span><span class='op'>(</span><span class='va'>res</span>, <span class='va'>dtm</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; = "none")` instead.</span></div><div class='img'><img src='rainette_plot-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 
 </div></pre>

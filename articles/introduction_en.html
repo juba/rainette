@@ -98,7 +98,7 @@
       <h1 data-toc-skip>[en] Introduction to rainette</h1>
                         <h4 class="author">Julien Barnier</h4>
             
-            <h4 class="date">2021-06-24</h4>
+            <h4 class="date">2021-06-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/master/vignettes/introduction_en.Rmd"><code>vignettes/introduction_en.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_en.Rmd</code></div>
@@ -230,13 +230,13 @@
 <li>
 <code>k</code> : the number of clusters to compute.</li>
 <li>
-<code>min_uc_size</code> : the minimum number of terms in each context unit at startup. If a <code>dfm</code> segment contains less than this number of terms, it will be merged with the following one (if they come from the same source document). The default value is 0, <em>ie</em> no merging is done.</li>
+<code>min_segment_size</code> : the minimum number of terms in each context unit at startup. If a <code>dfm</code> segment contains less than this number of terms, it will be merged with the following one (if they come from the same source document). The default value is 0, <em>ie</em> no merging is done.</li>
 <li>
 <code>min_split_members</code> : if a cluster is smaller than this value, it won’t be split afterwards (default : 5).</li>
 </ul>
-<p>Here we will compute 5 clusters with a <code>min_uc_size</code> of 15 :</p>
+<p>Here we will compute 5 clusters with a <code>min_segment_size</code> of 15 :</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_uc_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
 <p>To help exploring the clustering results, <code>rainette</code> offers a small <em>shiny gadget</em> which can be launched with <code>rainette_explor</code> :</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>
@@ -296,17 +296,17 @@
 <div id="double-clustering-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#double-clustering-1" class="anchor"></a>Double clustering</h2>
-<p><code>rainette</code> also offers a “double clustering” algorithm, as described above : two simple clusterings are computed with varying <code>min_uc_size</code>, and then combined to get a better partition and more robust clusters.</p>
-<p>This can be done with the <code>rainette2</code> function. It can be applied to two already computed simple clusterings. Here, we compute them with <code>min_uc_size</code> at 10 and 15 :</p>
+<p><code>rainette</code> also offers a “double clustering” algorithm, as described above : two simple clusterings are computed with varying <code>min_segment_size</code>, and then combined to get a better partition and more robust clusters.</p>
+<p>This can be done with the <code>rainette2</code> function. It can be applied to two already computed simple clusterings. Here, we compute them with <code>min_segment_size</code> at 10 and 15 :</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_uc_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_uc_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>We then use <code>rainette2</code> to combine them. The main function arguments are <code>max_k</code>, the maximum number of clusters, and <code>min_members</code>, the minimum cluster size :</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">5</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p>Another way is to call <code>rainette2</code> directly on our <code>dtm</code> matrix by giving it two <code>uc_size1</code> and <code>uc_size2</code> arguments :</p>
+<p>Another way is to call <code>rainette2</code> directly on our <code>dtm</code> matrix by giving it two <code>min_segment_size1</code> and <code>min_segment_size2</code> arguments :</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, uc_size1 <span class="op">=</span> <span class="fl">10</span>, uc_size2 <span class="op">=</span> <span class="fl">15</span>, max_k <span class="op">=</span> <span class="fl">5</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, min_segment_size1 <span class="op">=</span> <span class="fl">10</span>, min_segment_size2 <span class="op">=</span> <span class="fl">15</span>, max_k <span class="op">=</span> <span class="fl">5</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>The resulting object is a <em>tibble</em> with, for each level <em>k</em>, the optimal partitions and their characteristics. Another interactive interface is available to explore the results. It is launched with <code>rainette2_explor</code> :</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>

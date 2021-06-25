@@ -98,7 +98,7 @@
       <h1 data-toc-skip>[fr] Utilisation de rainette</h1>
                         <h4 class="author">Julien Barnier</h4>
             
-            <h4 class="date">2021-06-24</h4>
+            <h4 class="date">2021-06-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/master/vignettes/introduction_usage.Rmd"><code>vignettes/introduction_usage.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_usage.Rmd</code></div>
@@ -212,15 +212,15 @@
 <h1 class="hasAnchor">
 <a href="#classification-simple" class="anchor"></a>Classification simple</h1>
 <p>Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction <code>rainette</code>. On va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (<code>k = 5</code>) et le nombre minimal de termes pour qu’une classe soit découpée en deux à l’étape suivante de la classification (<code>min_split_members = 10</code>).</p>
-<p>L’argument <code>min_uc_size</code>, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec <code>min_uc_size = 10</code>, les segments comportant moins de 10 formes sont regroupés avec le segment suivant (si possible) jusqu’à atteindre la taille minimale souhaitée.</p>
+<p>L’argument <code>min_segment_size</code>, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec <code>min_segment_size = 10</code>, les segments comportant moins de 10 formes sont regroupés avec le segment suivant (si possible) jusqu’à atteindre la taille minimale souhaitée.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_uc_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>L’objet résultat ne nous dit pas grand chose en lui-même :</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## rainette(dtm = dtm, k = 5, min_uc_size = 10, min_split_members = 10)
+## rainette(dtm = dtm, k = 5, min_segment_size = 10, min_split_members = 10)
 ## 
 ## Cluster method   : reinert 
 ## Number of objects: 5</code></pre>
@@ -309,14 +309,14 @@
 <p>Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on “croise” les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes.</p>
 <p>Une classification double utilise la fonction <code>rainette2</code>. Celle-ci peut se faire de deux manières. On peut d’abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_uc_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_uc_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>Puis on utilise <code>rainette2</code> sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument <code>max_k</code>) et le nombre minimal de segments par classe (argument <code>min_members</code>) :</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">7</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p>L’autre manière est d’appeler directement <code>rainette2</code> sur notre matrice dtm, en lui indiquant avec les arguments <code>uc_size1</code> et <code>uc_size2</code> les deux tailles de segments souhaitées :</p>
+<p>L’autre manière est d’appeler directement <code>rainette2</code> sur notre matrice dtm, en lui indiquant avec les arguments <code>min_segment_size1</code> et <code>min_segment_size2</code> les deux tailles de segments souhaitées :</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, uc_size1 <span class="op">=</span> <span class="fl">10</span>, uc_size2 <span class="op">=</span> <span class="fl">15</span>, max_k <span class="op">=</span> <span class="fl">7</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">dtm</span>, min_segment_size1 <span class="op">=</span> <span class="fl">10</span>, min_segment_size2 <span class="op">=</span> <span class="fl">15</span>, max_k <span class="op">=</span> <span class="fl">7</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>L’objet résultat est un <em>tibble</em> contenant, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code>rainette2_explor</code> :</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span><span class="op">)</span></code></pre></div>

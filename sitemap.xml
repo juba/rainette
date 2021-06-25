@@ -7,13 +7,7 @@
     <loc>https://juba.github.io/rainette//reference/cluster_tab.html</loc>
   </url>
   <url>
-    <loc>https://juba.github.io/rainette//reference/compute_uc.html</loc>
-  </url>
-  <url>
-    <loc>https://juba.github.io/rainette//reference/count_clusters_by_doc.html</loc>
-  </url>
-  <url>
-    <loc>https://juba.github.io/rainette//reference/count_docs_by_cluster.html</loc>
+    <loc>https://juba.github.io/rainette//reference/clusters_by_doc_table.html</loc>
   </url>
   <url>
     <loc>https://juba.github.io/rainette//reference/cutree.html</loc>
@@ -25,7 +19,13 @@
     <loc>https://juba.github.io/rainette//reference/cutree_rainette2.html</loc>
   </url>
   <url>
+    <loc>https://juba.github.io/rainette//reference/docs_by_cluster_table.html</loc>
+  </url>
+  <url>
     <loc>https://juba.github.io/rainette//reference/import_corpus_iramuteq.html</loc>
+  </url>
+  <url>
+    <loc>https://juba.github.io/rainette//reference/merge_segments.html</loc>
   </url>
   <url>
     <loc>https://juba.github.io/rainette//reference/order_docs.html</loc>

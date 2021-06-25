@@ -150,11 +150,13 @@
   <span class='va'>x</span>,
   y <span class='op'>=</span> <span class='cn'>NULL</span>,
   max_k <span class='op'>=</span> <span class='fl'>5</span>,
-  uc_size1 <span class='op'>=</span> <span class='fl'>10</span>,
-  uc_size2 <span class='op'>=</span> <span class='fl'>15</span>,
+  min_segment_size1 <span class='op'>=</span> <span class='fl'>10</span>,
+  min_segment_size2 <span class='op'>=</span> <span class='fl'>15</span>,
   doc_id <span class='op'>=</span> <span class='cn'>NULL</span>,
   min_members <span class='op'>=</span> <span class='fl'>10</span>,
   min_chi2 <span class='op'>=</span> <span class='fl'>3.84</span>,
+  <span class='va'>uc_size1</span>,
+  <span class='va'>uc_size2</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -175,11 +177,11 @@ result from same dfm but with different uc size.</p></td>
       <td><p>maximum number of clusters to compute</p></td>
     </tr>
     <tr>
-      <th>uc_size1</th>
+      <th>min_segment_size1</th>
       <td><p>if <code>x</code> is a dfm, minimum uc size for first clustering</p></td>
     </tr>
     <tr>
-      <th>uc_size2</th>
+      <th>min_segment_size2</th>
       <td><p>if <code>x</code> is a dfm, minimum uc size for second clustering</p></td>
     </tr>
     <tr>
@@ -193,6 +195,14 @@ result from same dfm but with different uc size.</p></td>
     <tr>
       <th>min_chi2</th>
       <td><p>minimum chi2 for each cluster</p></td>
+    </tr>
+    <tr>
+      <th>uc_size1</th>
+      <td><p>deprecated, use min_segment_size1 instead</p></td>
+    </tr>
+    <tr>
+      <th>uc_size2</th>
+      <td><p>deprecated, use min_segment_size2 instead</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -245,9 +255,9 @@ in this case <code>segment_source</code> is used by default.</p>
 <span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm.html'>dfm</a></span><span class='op'>(</span><span class='va'>tok</span>, tolower <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>dtm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://quanteda.io/reference/dfm_trim.html'>dfm_trim</a></span><span class='op'>(</span><span class='va'>dtm</span>, min_docfreq <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 
-<span class='va'>res1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>5</span>, min_uc_size <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>res2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>5</span>, min_uc_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>  Computing ucs from segments...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'>
+<span class='va'>res1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>5</span>, min_segment_size <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Merging segments to respect min_segment_size...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>res2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rainette.html'>rainette</a></span><span class='op'>(</span><span class='va'>dtm</span>, k <span class='op'>=</span> <span class='fl'>5</span>, min_segment_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>  Merging segments to respect min_segment_size...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'>
 <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>rainette2</span><span class='op'>(</span><span class='va'>res1</span>, <span class='va'>res2</span>, max_k <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>  Searching for best partitions...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='co'># }</span>
 </div></pre>
