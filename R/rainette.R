@@ -80,7 +80,7 @@ rainette <- function(
 
   if (min_segment_size > 1) {
     ## Compute uc from uces based on minimum size
-    message("  Merging segments to respect min_segment_size...")
+    message("  Merging segments to comply with min_segment_size...")
   }
   dtm <- rainette::merge_segments(dtm, min_segment_size = min_segment_size, doc_id = doc_id)
 
