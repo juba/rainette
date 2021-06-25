@@ -67,11 +67,8 @@ rainette <- function(
     min_split_members <- 3
   }
 
-  if (any(!(dtm@x %in% c(0, 1)))) {
-    ## We don't use dfm_weight here because of https://github.com/quanteda/quanteda/issues/1545
-    dtm@x <- as.numeric(dtm@x != 0)
-  }
-
+  dtm <- quanteda::dfm_weight(dtm, scheme = "boolean")
+  
   if (min_uc_size > 1) {
     ## Compute uc from uces based on minimum size
     message("  Computing ucs from segments...")
@@ -85,7 +82,7 @@ rainette <- function(
   )
   ## Group dfm by uc
   dtm <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
-  dtm <- quanteda::dfm_weight(dtm, scheme = "boolean")
+  dtm <- quanteda::dfm_weight(dtm, scheme = "boolean", force = TRUE)
   if (any(rowSums(dtm) == 0)) {
     warning("Some uc don't have any term, they won't be assigned to any cluster.")
   }
