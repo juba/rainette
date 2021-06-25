@@ -84,7 +84,7 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
   ## Test if any uc is below min_segment_size
   dtm_uc_size <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
   if (any(rowSums(dtm_uc_size) < min_segment_size)) {
-    warning("some uc will have a size < min_segment_size")
+    warning("some segments will have a size < min_segment_size")
   }
 
   return(dtm)

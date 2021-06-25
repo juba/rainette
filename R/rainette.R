@@ -93,7 +93,7 @@ rainette <- function(
   dtm <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
   dtm <- quanteda::dfm_weight(dtm, scheme = "boolean", force = TRUE)
   if (any(rowSums(dtm) == 0)) {
-    warning("Some uc don't have any term, they won't be assigned to any cluster.")
+    warning("some documents don't have any term, they won't be assigned to any cluster.")
   }
 
   message("  Clustering...")
