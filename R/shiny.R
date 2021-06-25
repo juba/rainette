@@ -33,6 +33,7 @@ rainette_explor_css <- function() {
 #side {
   background-color: #EEEEEE;
   padding: 2em 3em;
+  font-size: 12px;
 }
 .docname {
   font-size: 80%;
@@ -73,12 +74,12 @@ docs_sample_ui <- function(id) {
             div(
                 uiOutput(ns("group_ui")),
                 numericInput(
-                    ns("ndoc"), "Maximum number of documents",
+                    ns("ndoc"), "Documents displayed",
                     value = 100, min = 1
                 ),
                 checkboxInput(ns("random_sample"), "Random sample", value = FALSE),
                 numericInput(
-                    ns("nchar"), "Maximum length",
+                    ns("nchar"), "Maximum text length",
                     value = 1000, min = 10
                 ),
                 textInput(

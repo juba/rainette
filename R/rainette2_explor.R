@@ -66,7 +66,7 @@ rainette2_explor <- function(res, dtm = NULL, corpus_src = NULL) {
                   )
                 ),
                 numericInput("n_terms",
-                  label = "Max number of terms to display",
+                  label = "Number of terms to display",
                   value = 20, min = 5, max = 30, step = 1
                 ),
                 conditionalPanel(
@@ -76,7 +76,7 @@ rainette2_explor <- function(res, dtm = NULL, corpus_src = NULL) {
                 checkboxInput("show_negative", label = "Show negative values", value = FALSE),
                 sliderInput("text_size",
                   label = "Text size",
-                  value = 13, min = 6, max = 20, step = 1
+                  value = 12, min = 6, max = 20, step = 1
                 )
               ),
               actionButton("get_r_code",
