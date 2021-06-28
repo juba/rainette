@@ -43,11 +43,20 @@ rainette_stats <- function(
   groups_list <- groups_list[!is.na(groups_list)]
   tabs <- purrr::map(groups_list, function(group) {
     select <- (groups == group & !is.na(groups))
+
+    empty_tab <- tibble(
+      feature = character(0),
+      col = double(0),
+      sign = character(0)
+    )
+    names(empty_tab) <- c("feature", stat_col(measure), "sign")
+
     ## Keyness
     if (measure %in% c("chi2", "lr")) {
       tab <- quanteda.textstats::textstat_keyness(dtm, select, measure = measure) %>%
         as_tibble() %>%
         arrange(desc(abs(!!stat_col)))
+      if (all(is.nan(tab$p))) return(empty_tab)
       if (show_negative) {
         tab <- tab %>%
           filter(p <= max_p) %>%
@@ -63,6 +72,7 @@ rainette_stats <- function(
     }
     if (measure %in% c("frequency", "docprop")) {
       tmp_dtm <- quanteda::dfm_subset(dtm, select)
+      if (all(colSums(tmp_dtm) == 0)) return(empty_tab)
       tab <- quanteda.textstats::textstat_frequency(tmp_dtm) %>%
           as_tibble() %>%
           mutate(docprop = .data$docfreq / ndoc(tmp_dtm)) %>%

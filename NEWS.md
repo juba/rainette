@@ -1,5 +1,7 @@
 # rainette 0.2.1
 
+* Fix warning and error in `rainette_explor` and `rainette2_explor` when a cluster dtm is empty.
+
 # rainette 0.2.0
 
 ## Important and breaking changes
