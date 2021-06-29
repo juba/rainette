@@ -211,7 +211,7 @@ rainette_plot <- function(res, dtm, k = NULL,
     range <- NULL
     if (!free_scales) {
       max_stat <- max(purrr::map_dbl(tabs, function(tab) {
-         v <- tab %>% pull(!!stat_col)
+         v <- dplyr::pull(tab, !!stat_col)
          if (length(v) == 0) return(0)
          max(v)
       }))
@@ -317,7 +317,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
     range <- NULL
     if (!free_scales) {
       max_stat <- max(purrr::map_dbl(tabs, function(tab) {
-         v <- tab %>% pull(!!stat_col)
+         v <- dplyr::pull(tab, !!stat_col)
          if (length(v) == 0) return(0)
          max(v)
       }))
