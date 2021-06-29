@@ -108,7 +108,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
       miniTabPanel(
         "Cluster documents", icon = shiny::icon("file-text"),
         miniContentPanel(
-          docs_sample_ui("rainette1")
+          docs_sample_ui("rainette1", res)
         )
       )
     )

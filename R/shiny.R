@@ -64,7 +64,10 @@ span.hl.com { color: #888; font-style: italic;}
 
 ## Cluster documents sample UI
 
-docs_sample_ui <- function(id) {
+docs_sample_ui <- function(id, res) {
+
+    show_merged_segments <- !is.null(res$call$min_segment_size) && res$call$min_segment_size > 1
+
     ns <- shiny::NS(id)
     fillRow(
         flex = c(1, 3),
@@ -85,7 +88,10 @@ docs_sample_ui <- function(id) {
                 textInput(
                     ns("filter_term"), "Filter by term",
                     value = ""
-                )
+                ),
+                if (show_merged_segments) {
+                    checkboxInput(ns("show_merged"), "Show merged segments", value = FALSE)
+                }
             )
         ),
         fillCol(
@@ -133,8 +139,24 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                     return(NULL)
                 }
                 ## Select only from wanted cluster
-                sel <- groups() == input$cluster & !is.na(groups())
-                corpus_src[sel]
+                if (!is.null(input$show_merged) && input$show_merged) {
+                    corpus_src$group <- groups()
+                    corpus_src$doc_name <- quanteda::docnames(corpus_src)
+                    corpus_src$uc_id <- res$corresp_uce_uc$uc
+                    docvars(corpus_src) <- docvars(corpus_src) %>%
+                        group_by(.data$uc_id) %>%
+                        mutate(doc_name = paste(doc_name, collapse = " | ")) %>%
+                        ungroup()
+                    result <- quanteda::corpus_group(corpus_src, groups = corpus_src$doc_name)
+                    sel <- quanteda::docvars(result, "group") == input$cluster &
+                        !is.na(quanteda::docvars(result, "group"))
+                    result <- result[sel]
+                    print(quanteda::docvars(result))
+                } else {
+                    sel <- groups() == input$cluster & !is.na(groups())
+                    result <- corpus_src[sel]
+                }
+                result
             })
 
             ## Regex for filter term input

@@ -182,7 +182,8 @@ rainette <- function(
     labels = as.character(1:k),
     merge = merge,
     group = group,
-    uce_groups = uce_groups
+    uce_groups = uce_groups,
+    corresp_uce_uc = corresp_uce_uc
   )
 
   class(hres) <- c("rainette", "hclust")
