@@ -66,7 +66,8 @@ span.hl.com { color: #888; font-style: italic;}
 
 docs_sample_ui <- function(id, res) {
 
-    show_merged_segments <- !is.null(res$call$min_segment_size) && res$call$min_segment_size > 1
+    show_merged_segments <- !inherits(res, "rainette2") &&
+        !is.null(res$call$min_segment_size) && res$call$min_segment_size > 1
 
     ns <- shiny::NS(id)
     fillRow(
@@ -151,7 +152,6 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                     sel <- quanteda::docvars(result, "group") == input$cluster &
                         !is.na(quanteda::docvars(result, "group"))
                     result <- result[sel]
-                    print(quanteda::docvars(result))
                 } else {
                     sel <- groups() == input$cluster & !is.na(groups())
                     result <- corpus_src[sel]
