@@ -1,7 +1,8 @@
 # rainette 0.2.1
 
 - Add option to show merged segments in document browser
-- Fix warning and error in `rainette_explor` and `rainette2_explor` when a cluster dtm is empty.
+- Fix warning and error in `rainette_explor` and `rainette2_explor` when a cluster dfm is empty
+- Fix error when the the dfm contains empty string as feature
 
 # rainette 0.2.0
 
