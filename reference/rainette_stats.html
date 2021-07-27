@@ -206,7 +206,7 @@ n_terms features.</p>
 </div><div class='output co'>#&gt; <span class='message'>  Merging segments to comply with min_segment_size...</span></div><div class='output co'>#&gt; <span class='message'>  Clustering...</span></div><div class='output co'>#&gt; <span class='message'>  Done.</span></div><div class='input'><span class='va'>groups</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutree_rainette.html'>cutree_rainette</a></span><span class='op'>(</span><span class='va'>res</span>, k <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 <span class='fu'>rainette_stats</span><span class='op'>(</span><span class='va'>groups</span>, <span class='va'>dtm</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
-#&gt; <span style='color: #949494;'># A tibble: 15 x 6</span>
+#&gt; <span style='color: #949494;'># A tibble: 15 × 6</span>
 #&gt;    feature     chi2           p n_target n_reference sign    
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>   
 #&gt; <span style='color: #BCBCBC;'> 1</span> commerce    28.2 0.000<span style='text-decoration: underline;'>000</span>107       23           1 positive
@@ -226,7 +226,7 @@ n_terms features.</p>
 #&gt; <span style='color: #BCBCBC;'>15</span> war         11.4 0.000<span style='text-decoration: underline;'>729</span>          34          18 positive
 #&gt; 
 #&gt; [[2]]
-#&gt; <span style='color: #949494;'># A tibble: 15 x 6</span>
+#&gt; <span style='color: #949494;'># A tibble: 15 × 6</span>
 #&gt;    feature     chi2        p n_target n_reference sign    
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>   
 #&gt; <span style='color: #BCBCBC;'> 1</span> shall       40.9 1.57<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-10</span>       28          11 positive
@@ -246,7 +246,7 @@ n_terms features.</p>
 #&gt; <span style='color: #BCBCBC;'>15</span> endeavor    10.3 1.34<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span>        5           0 positive
 #&gt; 
 #&gt; [[3]]
-#&gt; <span style='color: #949494;'># A tibble: 15 x 6</span>
+#&gt; <span style='color: #949494;'># A tibble: 15 × 6</span>
 #&gt;    feature      chi2          p n_target n_reference sign    
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>   
 #&gt; <span style='color: #BCBCBC;'> 1</span> can         22.2  0.000<span style='text-decoration: underline;'>002</span>50       29          17 positive

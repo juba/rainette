@@ -98,7 +98,7 @@
       <h1 data-toc-skip>[en] Introduction to rainette</h1>
                         <h4 class="author">Julien Barnier</h4>
             
-            <h4 class="date">2021-06-30</h4>
+            <h4 class="date">2021-07-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/master/vignettes/introduction_en.Rmd"><code>vignettes/introduction_en.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_en.Rmd</code></div>
@@ -263,7 +263,7 @@
 <p>Here, the clusters have been assigned to the segments, not to the original documents as a whole. The <code>clusters_by_doc_table</code> allows to display, for each original document, the number of segment belonging to each cluster :</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 59 x 6
+<pre><code>## # A tibble: 59 × 6
 ##    doc_id          clust_1 clust_2 clust_3 clust_4 clust_5
 ##    &lt;chr&gt;             &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
 ##  1 1789-Washington       0       0       4      27       6
@@ -280,7 +280,7 @@
 <p>By adding <code>prop = TRUE</code>, the same table is displayed with row percentages :</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"cluster"</span>, prop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 59 x 6
+<pre><code>## # A tibble: 59 × 6
 ##    doc_id          clust_1 clust_2 clust_3 clust_4 clust_5
 ##    &lt;chr&gt;             &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
 ##  1 1789-Washington    0       0      10.8     73.0   16.2 
@@ -297,7 +297,7 @@
 <p>Conversely, the <code>docs_by_cluster_table</code> allows to display, for each cluster, the number and proportion of original document including at least one segment of this cluster :</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 3
+<pre><code>## # A tibble: 5 × 3
 ##   cluster     n   `%`
 ##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
 ## 1 clust_1    52  88.1
