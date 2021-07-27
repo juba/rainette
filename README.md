@@ -28,13 +28,7 @@ install_packages("rainette")
 The development version is installable from [R-universe](https://r-universe.dev) :
 
 ```r
-options(
-    repos = c(
-        juba = 'https://juba.r-universe.dev',
-        CRAN = 'https://cloud.r-project.org'
-    )
-)
-install.packages('rainette')
+install.packages("rainette", repos = "https://juba.r-universe.dev")
 ```
 
 ## Usage
