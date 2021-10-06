@@ -1,3 +1,5 @@
+# rainette (development version)
+
 # rainette 0.2.1
 
 - Add option to show merged segments in document browser
