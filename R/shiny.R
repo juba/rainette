@@ -146,7 +146,7 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                     corpus_src$uc_id <- res$corresp_uce_uc$uc
                     docvars(corpus_src) <- docvars(corpus_src) %>%
                         group_by(.data$uc_id) %>%
-                        mutate(doc_name = paste(doc_name, collapse = " | ")) %>%
+                        mutate(doc_name = paste(.data$doc_name, collapse = " | ")) %>%
                         ungroup()
                     result <- quanteda::corpus_group(corpus_src, groups = corpus_src$doc_name)
                     sel <- quanteda::docvars(result, "group") == input$cluster &
