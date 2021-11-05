@@ -1,5 +1,7 @@
 # rainette (development version)
 
+- Fix warnings in Font Awesome icon names
+
 # rainette 0.2.1
 
 - Add option to show merged segments in document browser

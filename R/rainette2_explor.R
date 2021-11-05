@@ -37,7 +37,7 @@ rainette2_explor <- function(res, dtm = NULL, corpus_src = NULL) {
     miniTabstripPanel(
       miniTabPanel(
         "Summary",
-        icon = shiny::icon("bar-chart"),
+        icon = shiny::icon("chart-bar"),
         miniContentPanel(
           fillRow(
             flex = c(1, 3),
@@ -93,7 +93,7 @@ rainette2_explor <- function(res, dtm = NULL, corpus_src = NULL) {
         )
       ),
           miniTabPanel(
-        "Cluster documents", icon = shiny::icon("file-text"),
+        "Cluster documents", icon = shiny::icon("file-alt"),
         miniContentPanel(
           docs_sample_ui("rainette2", res)
         )
