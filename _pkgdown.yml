@@ -1,7 +1,6 @@
 url: https://juba.github.io/rainette/
 template:
-  params:
-    bootswatch: cosmo
+  bootswatch: cosmo
 reference:
 - title: Simple clustering
   desc: Simple clustering computation and visualisation
@@ -27,11 +26,16 @@ reference:
   contents:
   - '`import_corpus_iramuteq`'
   - '`split_segments`'
+  - '`merge_segments`'
+- title: Documents-clusters tables
+  desc: Functions to describe relationships between documents and clusters when clustering on a segmented corpus
+  contents:
+  - '`clusters_by_doc_table`'
+  - '`docs_by_cluster_table`'
 - title: Utility functions
   desc: Functions used internally for computation
   contents:
   - '`cluster_tab`'
-  - '`compute_uc`'
   - '`cutree`'
   - '`order_docs`'
   - '`select_features`'
