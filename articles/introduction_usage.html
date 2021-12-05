@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,18 +40,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rainette</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -77,7 +73,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/juba/rainette/">
+  <a href="https://github.com/juba/rainette/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -96,129 +92,129 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>[fr] Utilisation de rainette</h1>
-                        <h4 class="author">Julien Barnier</h4>
+                        <h4 data-toc-skip class="author">Julien Barnier</h4>
             
-            <h4 class="date">2021-10-06</h4>
+            <h4 data-toc-skip class="date">2021-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/master/vignettes/introduction_usage.Rmd"><code>vignettes/introduction_usage.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_usage.Rmd" class="external-link"><code>vignettes/introduction_usage.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_usage.Rmd</code></div>
 
     </div>
 
     
     
-<div id="préparation-du-corpus" class="section level1">
-<h1 class="hasAnchor">
-<a href="#pr%C3%A9paration-du-corpus" class="anchor"></a>Préparation du corpus</h1>
-<div id="importation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#importation" class="anchor"></a>Importation</h2>
-<p>La première étape consiste à importer votre corpus dans R. Vous pouvez utiliser un corpus au format <code>tm</code> ou <code>quanteda</code> par exemple, ou bien utiliser la fonction <code>import_corpus_iramuteq</code> pour importer directement un corpus depuis un fichier texte <a href="http://www.iramuteq.org/documentation/formatage-des-corpus-texte">au format Iramuteq</a>. Dans ce cas vous obtiendrez un objet de type corpus du package <a href="https://quanteda.io">quanteda</a>. Les métadonnées éventuelles présentes dans le fichier (<em>variables étoilées</em>) sont importées en tant que métadonnées du corpus (variables de <code><a href="https://quanteda.io/reference/docvars.html">docvars(corpus)</a></code>).</p>
-<p>Pour ce document, on va importer le texte du <em>Manifeste du parti communiste</em> (Karl Marx et Friedrich Engels, 1848, source <a href="https://fr.wikisource.org/wiki/Manifeste_du_parti_communiste/Lafargue">wikisource</a>). Celui-ci est placé dans un fichier texte au format Iramuteq fourni avec <code>rainette</code>. Le corpus est composé de quatre documents, un document par partie de l’ouvrage.</p>
+<div class="section level1">
+<h1 id="préparation-du-corpus">Préparation du corpus<a class="anchor" aria-label="anchor" href="#pr%C3%A9paration-du-corpus"></a>
+</h1>
+<div class="section level2">
+<h2 id="importation">Importation<a class="anchor" aria-label="anchor" href="#importation"></a>
+</h2>
+<p>La première étape consiste à importer votre corpus dans R. Vous pouvez utiliser un corpus au format <code>tm</code> ou <code>quanteda</code> par exemple, ou bien utiliser la fonction <code>import_corpus_iramuteq</code> pour importer directement un corpus depuis un fichier texte <a href="http://www.iramuteq.org/documentation/formatage-des-corpus-texte" class="external-link">au format Iramuteq</a>. Dans ce cas vous obtiendrez un objet de type corpus du package <a href="https://quanteda.io" class="external-link">quanteda</a>. Les métadonnées éventuelles présentes dans le fichier (<em>variables étoilées</em>) sont importées en tant que métadonnées du corpus (variables de <code>docvars(corpus)</code>).</p>
+<p>Pour ce document, on va importer le texte du <em>Manifeste du parti communiste</em> (Karl Marx et Friedrich Engels, 1848, source <a href="https://fr.wikisource.org/wiki/Manifeste_du_parti_communiste/Lafargue" class="external-link">wikisource</a>). Celui-ci est placé dans un fichier texte au format Iramuteq fourni avec <code>rainette</code>. Le corpus est composé de quatre documents, un document par partie de l’ouvrage.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://juba.github.io/rainette/">rainette</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io">quanteda</a></span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in stringi::stri_info(): Your current locale is not in the list
-## of available locales. Some functions may not work properly. Refer to
-## stri_locale_list() for more details on known locale specifiers.
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://juba.github.io/rainette/">rainette</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io" class="external-link">quanteda</a></span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Warning in stringi::stri_info(): Your current locale is not in the list</span>
+<span class="co">## of available locales. Some functions may not work properly. Refer to</span>
+<span class="co">## stri_locale_list() for more details on known locale specifiers.</span>
 
-## Warning in stringi::stri_info(): Your current locale is not in the list
-## of available locales. Some functions may not work properly. Refer to
-## stri_locale_list() for more details on known locale specifiers.</code></pre>
+<span class="co">## Warning in stringi::stri_info(): Your current locale is not in the list</span>
+<span class="co">## of available locales. Some functions may not work properly. Refer to</span>
+<span class="co">## stri_locale_list() for more details on known locale specifiers.</span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Import du corpus</span>
-<span class="va">fichier</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"manifeste_pc.txt"</span>, package <span class="op">=</span> <span class="st">"rainette"</span><span class="op">)</span>
+<span class="va">fichier</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"manifeste_pc.txt"</span>, package <span class="op">=</span> <span class="st">"rainette"</span><span class="op">)</span>
 <span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_corpus_iramuteq.html">import_corpus_iramuteq</a></span><span class="op">(</span><span class="va">fichier</span><span class="op">)</span></code></pre></div>
 <p>On peut vérifier que notre corpus est bien constitué de quatre documents (l’introduction et les trois parties principales), et d’une variable de métadonnée :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span></code></pre></div>
-<pre><code>## Corpus consisting of 4 documents and 1 docvar.
-## text1 :
-## "Un spectre hante l’Europe, le spectre du communisme. Toutes ..."
-## 
-## text2 :
-## "L’histoire de toute société jusqu’à nos jours n’a été que l’..."
-## 
-## text3 :
-## "Quelle est la position des communistes vis-à-vis des proléta..."
-## 
-## text4 :
-## "Par leur position historique, les aristocraties françaises e..."</code></pre>
+<pre><code><span class="co">## Corpus consisting of 4 documents and 1 docvar.</span>
+<span class="co">## text1 :</span>
+<span class="co">## "Un spectre hante l’Europe, le spectre du communisme. Toutes ..."</span>
+<span class="co">## </span>
+<span class="co">## text2 :</span>
+<span class="co">## "L’histoire de toute société jusqu’à nos jours n’a été que l’..."</span>
+<span class="co">## </span>
+<span class="co">## text3 :</span>
+<span class="co">## "Quelle est la position des communistes vis-à-vis des proléta..."</span>
+<span class="co">## </span>
+<span class="co">## text4 :</span>
+<span class="co">## "Par leur position historique, les aristocraties françaises e..."</span></code></pre>
 <p>Cette variable de métadonnée est justement la partie correspondant au texte :</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span></code></pre></div>
-<pre><code>##   partie
-## 1  intro
-## 2      I
-## 3     II
-## 4    III</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##   partie</span>
+<span class="co">## 1  intro</span>
+<span class="co">## 2      I</span>
+<span class="co">## 3     II</span>
+<span class="co">## 4    III</span></code></pre>
 </div>
-<div id="découpage-en-segments" class="section level2">
-<h2 class="hasAnchor">
-<a href="#d%C3%A9coupage-en-segments" class="anchor"></a>Découpage en segments</h2>
+<div class="section level2">
+<h2 id="découpage-en-segments">Découpage en segments<a class="anchor" aria-label="anchor" href="#d%C3%A9coupage-en-segments"></a>
+</h2>
 <p>La méthode Reinert de classification s’applique plutôt à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction <code>split_segments</code>. Ici on découpe en segments d’environ 40 mots (l’algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d’une virgule).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">corpus</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
 <p>Notre corpus est désormais constitué de 278 segments et 2 variables de métadonnées :</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span></code></pre></div>
-<pre><code>## Corpus consisting of 278 documents and 2 docvars.
-## text1_1 :
-## "Un spectre hante l'Europe, le spectre du communisme. Toutes ..."
-## 
-## text1_2 :
-## "Quelle est l'opposition qui, à son tour, n'a pas relancé à s..."
-## 
-## text1_3 :
-## "à la face du monde entier, leur manière de voir, leurs buts ..."
-## 
-## text2_1 :
-## "L'histoire de toute société jusqu'à nos jours n'a été que l'..."
-## 
-## text2_2 :
-## "une guerre qui finissait toujours, ou par une transformation..."
-## 
-## text2_3 :
-## "Dans la Rome antique, nous trouvons des patriciens, des chev..."
-## 
-## [ reached max_ndoc ... 272 more documents ]</code></pre>
+<pre><code><span class="co">## Corpus consisting of 278 documents and 2 docvars.</span>
+<span class="co">## text1_1 :</span>
+<span class="co">## "Un spectre hante l'Europe, le spectre du communisme. Toutes ..."</span>
+<span class="co">## </span>
+<span class="co">## text1_2 :</span>
+<span class="co">## "Quelle est l'opposition qui, à son tour, n'a pas relancé à s..."</span>
+<span class="co">## </span>
+<span class="co">## text1_3 :</span>
+<span class="co">## "à la face du monde entier, leur manière de voir, leurs buts ..."</span>
+<span class="co">## </span>
+<span class="co">## text2_1 :</span>
+<span class="co">## "L'histoire de toute société jusqu'à nos jours n'a été que l'..."</span>
+<span class="co">## </span>
+<span class="co">## text2_2 :</span>
+<span class="co">## "une guerre qui finissait toujours, ou par une transformation..."</span>
+<span class="co">## </span>
+<span class="co">## text2_3 :</span>
+<span class="co">## "Dans la Rome antique, nous trouvons des patriciens, des chev..."</span>
+<span class="co">## </span>
+<span class="co">## [ reached max_ndoc ... 272 more documents ]</span></code></pre>
 <p>Si on regarde les nouvelles métadonnées, on peut voir que la variable <code>partie</code> a été dupliquée pour chaque segment correspondant, et une nouvelle variable <code>segment_source</code> indique le document d’origine du segment.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>##   partie segment_source
-## 1  intro          text1
-## 2  intro          text1
-## 3  intro          text1
-## 4      I          text2
-## 5      I          text2
-## 6      I          text2</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##   partie segment_source</span>
+<span class="co">## 1  intro          text1</span>
+<span class="co">## 2  intro          text1</span>
+<span class="co">## 3  intro          text1</span>
+<span class="co">## 4      I          text2</span>
+<span class="co">## 5      I          text2</span>
+<span class="co">## 6      I          text2</span></code></pre>
 <p>On peut aussi visualiser les premiers segments de texte calculés :</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></code></pre></div>
-<pre><code>##                                                                                                                                                                                                                                                                                                                                                   text1_1 
-## "Un spectre hante l'Europe, le spectre du communisme. Toutes les puissances de la vieille Europe se sont unies en une Sainte-Alliance pour traquer ce spectre : le Pape et le Czar, Metternich et Guizot, les radicaux de France et les policiers d'Allemagne.\nQuelle est l'opposition que n'ont pas accusée de communisme ses adversaires au pouvoir ?" 
-##                                                                                                                                                                                                                                                                                                                                                   text1_2 
-##                       "Quelle est l'opposition qui, à son tour, n'a pas relancé à ses adversaires de droite ou de gauche l'épithète flétrissante de communiste ?\nDeux choses ressortent de ces faits :\n1° Déjà le communisme est reconnu par toutes les puissances d'Europe comme une puissance ;\n2° Il est grand temps que les communistes exposent,"</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></code></pre></div>
+<pre><code><span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_1 </span>
+<span class="co">## "Un spectre hante l'Europe, le spectre du communisme. Toutes les puissances de la vieille Europe se sont unies en une Sainte-Alliance pour traquer ce spectre : le Pape et le Czar, Metternich et Guizot, les radicaux de France et les policiers d'Allemagne.\nQuelle est l'opposition que n'ont pas accusée de communisme ses adversaires au pouvoir ?" </span>
+<span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_2 </span>
+<span class="co">##                       "Quelle est l'opposition qui, à son tour, n'a pas relancé à ses adversaires de droite ou de gauche l'épithète flétrissante de communiste ?\nDeux choses ressortent de ces faits :\n1° Déjà le communisme est reconnu par toutes les puissances d'Europe comme une puissance ;\n2° Il est grand temps que les communistes exposent,"</span></code></pre>
 </div>
-<div id="calcul-et-traitement-de-la-matrice-termes-documents" class="section level2">
-<h2 class="hasAnchor">
-<a href="#calcul-et-traitement-de-la-matrice-termes-documents" class="anchor"></a>Calcul et traitement de la matrice termes-documents</h2>
+<div class="section level2">
+<h2 id="calcul-et-traitement-de-la-matrice-termes-documents">Calcul et traitement de la matrice termes-documents<a class="anchor" aria-label="anchor" href="#calcul-et-traitement-de-la-matrice-termes-documents"></a>
+</h2>
 <p>L’étape suivante est de calculer la matrice termes-documents (<em>dtm</em>), grand tableau numérique avec les documents en lignes, les mots en colonnes, et comme valeurs le nombre d’occurrences de chaque mot dans chaque document.</p>
 <p>Notre corpus étant au format <code>quanteda</code>, on va utiliser les fonctions de cette extension.</p>
 <p>D’abord on calcule la <em>dtm</em> en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span>, remove_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"fr"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span>, remove_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html" class="external-link">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span><span class="st">"fr"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>On va ensuite supprimer les termes apparaissant dans moins de 3 segments :</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html" class="external-link">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p>De nombreux autres traitements seraient possibles, mais on se contentera de cette matrice pour cet exemple.</p>
 </div>
 </div>
-<div id="classification-simple" class="section level1">
-<h1 class="hasAnchor">
-<a href="#classification-simple" class="anchor"></a>Classification simple</h1>
+<div class="section level1">
+<h1 id="classification-simple">Classification simple<a class="anchor" aria-label="anchor" href="#classification-simple"></a>
+</h1>
 <p>Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction <code>rainette</code>. On va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (<code>k = 5</code>) et le nombre minimal de termes pour qu’une classe soit découpée en deux à l’étape suivante de la classification (<code>min_split_members = 10</code>).</p>
 <p>L’argument <code>min_segment_size</code>, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec <code>min_segment_size = 10</code>, les segments comportant moins de 10 formes sont regroupés avec le segment suivant ou précédent (si possible) jusqu’à atteindre la taille minimale souhaitée.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -226,12 +222,12 @@
 <p>L’objet résultat ne nous dit pas grand chose en lui-même :</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span></code></pre></div>
-<pre><code>## 
-## Call:
-## rainette(dtm = dtm, k = 5, min_segment_size = 10, min_split_members = 10)
-## 
-## Cluster method   : reinert 
-## Number of objects: 5</code></pre>
+<pre><code><span class="co">## </span>
+<span class="co">## Call:</span>
+<span class="co">## rainette(dtm = dtm, k = 5, min_segment_size = 10, min_split_members = 10)</span>
+<span class="co">## </span>
+<span class="co">## Cluster method   : reinert </span>
+<span class="co">## Number of objects: 5</span></code></pre>
 <p>Pour faciliter l’exploration des résultats, <code>rainette</code> propose une interface interactive qui peut être lancée avec la fonction <code>rainette_explor</code> :</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
@@ -251,49 +247,49 @@
 <p>Vous pouvez par exemple utiliser l’appel de <code>cutree</code> pour ajouter comme nouvelle métadonnée du corpus le groupe d’appartenance de chaque segment pour la classification en 5 classes :</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span><span class="op">$</span><span class="va">groupe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>##   partie segment_source groupe
-## 1  intro          text1      3
-## 2  intro          text1      3
-## 3  intro          text1      3
-## 4      I          text2      1
-## 5      I          text2      1
-## 6      I          text2      1</code></pre>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##   partie segment_source groupe</span>
+<span class="co">## 1  intro          text1      3</span>
+<span class="co">## 2  intro          text1      3</span>
+<span class="co">## 3  intro          text1      3</span>
+<span class="co">## 4      I          text2      1</span>
+<span class="co">## 5      I          text2      1</span>
+<span class="co">## 6      I          text2      1</span></code></pre>
 <p>Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction <code>clusters_by_doc_table</code> permet d’afficher, pour chaque document (ici chacune des quatre parties du texte), le nombre de segments de chaque groupe :</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 4 × 6
-##   doc_id clust_1 clust_2 clust_3 clust_4 clust_5
-##   &lt;chr&gt;    &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
-## 1 text1        0       0       3       0       0
-## 2 text2       14      28       5      36      20
-## 3 text3        8      10       6       7      44
-## 4 text4       23      32      29       5       8</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 4 × 6</span></span>
+<span class="co">##   doc_id clust_1 clust_2 clust_3 clust_4 clust_5</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> text1        0       0       3       0       0</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> text2       14      28       5      36      20</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> text3        8      10       6       7      44</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> text4       23      32      29       5       8</span></code></pre>
 <p>En ajoutant <code>prop = TRUE</code>, cette répartition peut être visualisée en pourcentages :</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span>, prop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 4 × 6
-##   doc_id clust_1 clust_2 clust_3 clust_4 clust_5
-##   &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-## 1 text1      0       0    100       0       0   
-## 2 text2     13.6    27.2    4.85   35.0    19.4 
-## 3 text3     10.7    13.3    8       9.33   58.7 
-## 4 text4     23.7    33.0   29.9     5.15    8.25</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 4 × 6</span></span>
+<span class="co">##   doc_id clust_1 clust_2 clust_3 clust_4 clust_5</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> text1      0       0    100       0       0   </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> text2     13.6    27.2    4.85   35.0    19.4 </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> text3     10.7    13.3    8       9.33   58.7 </span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> text4     23.7    33.0   29.9     5.15    8.25</span></code></pre>
 <p>À l’inverse, <code>docs_by_cluster_table</code> permet de visualiser, pour chaque groupe, le nombre et la proportion de documents d’origine comportant au moins un segment de ce groupe :</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 5 × 3
-##   cluster     n   `%`
-##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
-## 1 clust_1     3    75
-## 2 clust_2     3    75
-## 3 clust_3     4   100
-## 4 clust_4     3    75
-## 5 clust_5     3    75</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 5 × 3</span></span>
+<span class="co">##   cluster     n   `%`</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> clust_1     3    75</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> clust_2     3    75</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> clust_3     4   100</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> clust_4     3    75</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> clust_5     3    75</span></code></pre>
 </div>
-<div id="classification-double" class="section level1">
-<h1 class="hasAnchor">
-<a href="#classification-double" class="anchor"></a>Classification double</h1>
+<div class="section level1">
+<h1 id="classification-double">Classification double<a class="anchor" aria-label="anchor" href="#classification-double"></a>
+</h1>
 <p>Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on “croise” les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes.</p>
 <p>Une classification double utilise la fonction <code>rainette2</code>. Celle-ci peut se faire de deux manières. On peut d’abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -328,11 +324,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Julien Barnier.</p>
+  <p></p>
+<p>Developed by Julien Barnier.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -340,6 +338,8 @@
 
   
 
+
+  
 
   </body>
 </html>

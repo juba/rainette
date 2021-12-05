@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,18 +40,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rainette</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -77,7 +73,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/juba/rainette/">
+  <a href="https://github.com/juba/rainette/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -96,30 +92,30 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>[en] Introduction to rainette</h1>
-                        <h4 class="author">Julien Barnier</h4>
+                        <h4 data-toc-skip class="author">Julien Barnier</h4>
             
-            <h4 class="date">2021-10-06</h4>
+            <h4 data-toc-skip class="date">2021-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/master/vignettes/introduction_en.Rmd"><code>vignettes/introduction_en.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_en.Rmd" class="external-link"><code>vignettes/introduction_en.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_en.Rmd</code></div>
 
     </div>
 
     
     
-<div id="reinert-textual-clustering-method" class="section level1">
-<h1 class="hasAnchor">
-<a href="#reinert-textual-clustering-method" class="anchor"></a>Reinert textual clustering method</h1>
-<p><code>rainette</code> is an R implementation of the Reinert textual clustering algorithm. This algorithm is already available in softwares like <a href="http://www.iramuteq.org/">Iramuteq</a> or Alceste, the goal of <code>rainette</code> being to provide it as an R package.</p>
+<div class="section level1">
+<h1 id="reinert-textual-clustering-method">Reinert textual clustering method<a class="anchor" aria-label="anchor" href="#reinert-textual-clustering-method"></a>
+</h1>
+<p><code>rainette</code> is an R implementation of the Reinert textual clustering algorithm. This algorithm is already available in softwares like <a href="http://www.iramuteq.org/" class="external-link">Iramuteq</a> or Alceste, the goal of <code>rainette</code> being to provide it as an R package.</p>
 <p>This is not a new algorithm, as the first articles describing it date back to 1983. Here are some characteristics of the method :</p>
 <ul>
 <li>each text is only assigned to one cluster, unlike methods like LDA.</li>
 <li>it is then better suited for small “homogeneous” documents : for long texts the good practice is first to split them into segments.</li>
 <li>as the algorithm uses a singular value decomposition of a document-term matrix, it is relatively fast but may not work on very large corpus. In this case, as only the smaller dimension of the matrix is taken into account for the decomposition, a workaround can be to reduce the number of features by removing the less frequent terms.</li>
 </ul>
-<div id="description-of-the-algorithm" class="section level2">
-<h2 class="hasAnchor">
-<a href="#description-of-the-algorithm" class="anchor"></a>Description of the algorithm</h2>
+<div class="section level2">
+<h2 id="description-of-the-algorithm">Description of the algorithm<a class="anchor" aria-label="anchor" href="#description-of-the-algorithm"></a>
+</h2>
 <p>The Reinert method is a divisive hierarchical clustering algorithm whose aim is to maximise the inter-cluster Chi-squared distance.</p>
 <p>The algorithm is applied to the document-term matrix computed on the corpus. Documents are called <code>uce</code> (elementary context units). If an <code>uce</code> doesn’t include enough terms, it can be merged with the following or previous one into an <code>uc</code> (context unit). The resulting matrix is then weighted as binary, so only the presence/absence of terms are taken into account, not their frequencies.</p>
 <p>The aim is to split this matrix into two clusters by maximizing the Chi-squared distance between those. As an exaustive search would be too compute-intensive, the following method is used to get a good approximation :</p>
@@ -132,50 +128,51 @@
 <li>the biggest of the two resulting clusters is then split with the same algorithm.</li>
 </ul>
 </div>
-<div id="double-clustering" class="section level2">
-<h2 class="hasAnchor">
-<a href="#double-clustering" class="anchor"></a>Double clustering</h2>
+<div class="section level2">
+<h2 id="double-clustering">Double clustering<a class="anchor" aria-label="anchor" href="#double-clustering"></a>
+</h2>
 <p>The Reinert method suggests to do a double clustering to get more robust clusters. This method is also implemented in <code>rainette</code>.</p>
 <p>The principle is to run two simple clusterings by varying the minimum <code>uc</code> size. For example, the first one will be run with a minimum size of 10 terms, and the second one with a minimum size of 15.</p>
 <p>The two sets of clusters are then “crossed” : every pair of clusters of each clustering are crossed together, even if they are not on the same hierarchical level. We then compute the number of <code>uc</code> present in both clusters, and a Chi-squared value of association between them.</p>
 <p>Only a subset of all these “crossed-clusters” are kept : those with different elements, with a minimum number of <code>uc</code> or with a minimum association value. Then, for a given number of clusters <code>k</code>, the algorithm looks for the optimal partition of crossed-clusters, <em>ie</em> it keeps the set of crossed-clusters with no common elements, and with either the higher total number of elements, or the higher sum of Chi-squared association coefficients.</p>
 <p>Then, this optimal partition is used either as the final clustering (with potentially quite a high proportion of <code>NA</code>), or as a starting point for a k-nearest-neighbour clustering for non-assigned documents.</p>
 </div>
-<div id="references-in-french" class="section level2">
-<h2 class="hasAnchor">
-<a href="#references-in-french" class="anchor"></a>References (in french)</h2>
+<div class="section level2">
+<h2 id="references-in-french">References (in french)<a class="anchor" aria-label="anchor" href="#references-in-french"></a>
+</h2>
 <ul>
-<li>Reinert M, Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte, Cahiers de l’analyse des données, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
+<li>Reinert M, Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte, Cahiers de l’analyse des données, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
 </li>
-<li>Reinert M., Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="uri">https://doi.org/10.1177/075910639002600103</a>
+<li>Reinert M., Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="external-link uri">https://doi.org/10.1177/075910639002600103</a>
 </li>
 </ul>
 </div>
 </div>
-<div id="rainette-usage" class="section level1">
-<h1 class="hasAnchor">
-<a href="#rainette-usage" class="anchor"></a><code>rainette</code> usage</h1>
-<div id="corpus-preparation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#corpus-preparation" class="anchor"></a>Corpus preparation</h2>
-<div id="split_segments" class="section level3">
-<h3 class="hasAnchor">
-<a href="#split_segments" class="anchor"></a><code>split_segments</code>
+<div class="section level1">
+<h1 id="rainette-usage">
+<code>rainette</code> usage<a class="anchor" aria-label="anchor" href="#rainette-usage"></a>
+</h1>
+<div class="section level2">
+<h2 id="corpus-preparation">Corpus preparation<a class="anchor" aria-label="anchor" href="#corpus-preparation"></a>
+</h2>
+<div class="section level3">
+<h3 id="split_segments">
+<code>split_segments</code><a class="anchor" aria-label="anchor" href="#split_segments"></a>
 </h3>
 <p>As explained before, as it doesn’t take into account terms frequencies and assign each document to only one cluster, the Reinert method must be applied to short and “homogeneous” documents. It could be ok if you work on tweets or short answers to a specific question, but on longer documents the corpus must first be split into short textual segments.</p>
 <p>The <code>split_segments</code> function does just that, and can be applied on a <code>tm</code> or <code>quanteda</code> corpus.</p>
 <p>On this article we will apply it to the sample <code>data_corpus_inaugural</code> <code>quanteda</code> corpus :</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io">quanteda</a></span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in stringi::stri_info(): Your current locale is not in the list
-## of available locales. Some functions may not work properly. Refer to
-## stri_locale_list() for more details on known locale specifiers.
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io" class="external-link">quanteda</a></span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Warning in stringi::stri_info(): Your current locale is not in the list</span>
+<span class="co">## of available locales. Some functions may not work properly. Refer to</span>
+<span class="co">## stri_locale_list() for more details on known locale specifiers.</span>
 
-## Warning in stringi::stri_info(): Your current locale is not in the list
-## of available locales. Some functions may not work properly. Refer to
-## stri_locale_list() for more details on known locale specifiers.</code></pre>
+<span class="co">## Warning in stringi::stri_info(): Your current locale is not in the list</span>
+<span class="co">## of available locales. Some functions may not work properly. Refer to</span>
+<span class="co">## stri_locale_list() for more details on known locale specifiers.</span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://juba.github.io/rainette/">rainette</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://juba.github.io/rainette/">rainette</a></span><span class="op">)</span>
 <span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">data_corpus_inaugural</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
 <p><code>split_segments</code> will split the original texts into smaller chunks, attempting to respect sentences and punctuation when possible. The function takes two arguments :</p>
 <ul>
@@ -187,52 +184,52 @@
 <p>The result of the function is a <code>quanteda</code> corpus, which keeps the original corpus metadata with an additional <code>segment_source</code> variable :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span></code></pre></div>
-<pre><code>## Corpus consisting of 3,584 documents and 5 docvars.
-## 1789-Washington_1 :
-## "Fellow-Citizens of the Senate and of the House of Representa..."
-## 
-## 1789-Washington_2 :
-## "On the one hand, I was summoned by my Country, whose voice I..."
-## 
-## 1789-Washington_3 :
-## "as the asylum of my declining years - a retreat which was re..."
-## 
-## 1789-Washington_4 :
-## "On the other hand, the magnitude and difficulty of the trust..."
-## 
-## 1789-Washington_5 :
-## "could not but overwhelm with despondence one who (inheriting..."
-## 
-## 1789-Washington_6 :
-## "In this conflict of emotions all I dare aver is that it has ..."
-## 
-## [ reached max_ndoc ... 3,578 more documents ]</code></pre>
+<pre><code><span class="co">## Corpus consisting of 3,584 documents and 5 docvars.</span>
+<span class="co">## 1789-Washington_1 :</span>
+<span class="co">## "Fellow-Citizens of the Senate and of the House of Representa..."</span>
+<span class="co">## </span>
+<span class="co">## 1789-Washington_2 :</span>
+<span class="co">## "On the one hand, I was summoned by my Country, whose voice I..."</span>
+<span class="co">## </span>
+<span class="co">## 1789-Washington_3 :</span>
+<span class="co">## "as the asylum of my declining years - a retreat which was re..."</span>
+<span class="co">## </span>
+<span class="co">## 1789-Washington_4 :</span>
+<span class="co">## "On the other hand, the magnitude and difficulty of the trust..."</span>
+<span class="co">## </span>
+<span class="co">## 1789-Washington_5 :</span>
+<span class="co">## "could not but overwhelm with despondence one who (inheriting..."</span>
+<span class="co">## </span>
+<span class="co">## 1789-Washington_6 :</span>
+<span class="co">## "In this conflict of emotions all I dare aver is that it has ..."</span>
+<span class="co">## </span>
+<span class="co">## [ reached max_ndoc ... 3,578 more documents ]</span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>##   Year  President FirstName Party  segment_source
-## 1 1789 Washington    George  none 1789-Washington
-## 2 1789 Washington    George  none 1789-Washington
-## 3 1789 Washington    George  none 1789-Washington
-## 4 1789 Washington    George  none 1789-Washington
-## 5 1789 Washington    George  none 1789-Washington
-## 6 1789 Washington    George  none 1789-Washington</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##   Year  President FirstName Party  segment_source</span>
+<span class="co">## 1 1789 Washington    George  none 1789-Washington</span>
+<span class="co">## 2 1789 Washington    George  none 1789-Washington</span>
+<span class="co">## 3 1789 Washington    George  none 1789-Washington</span>
+<span class="co">## 4 1789 Washington    George  none 1789-Washington</span>
+<span class="co">## 5 1789 Washington    George  none 1789-Washington</span>
+<span class="co">## 6 1789 Washington    George  none 1789-Washington</span></code></pre>
 </div>
-<div id="dfm-computation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#dfm-computation" class="anchor"></a>dfm computation</h3>
+<div class="section level3">
+<h3 id="dfm-computation">dfm computation<a class="anchor" aria-label="anchor" href="#dfm-computation"></a>
+</h3>
 <p>Next step is to compute the document-feature matrix. As our <code>corpus</code> object is a <code>quanteda</code> corpus, we can tokenize it and then use the <code>dfm</code> function :</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html" class="external-link">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>We only keep the terms that appear at least in 10 segments by using <code>dfm_trim</code> :</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html" class="external-link">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="simple-clustering" class="section level2">
-<h2 class="hasAnchor">
-<a href="#simple-clustering" class="anchor"></a>Simple clustering</h2>
+<div class="section level2">
+<h2 id="simple-clustering">Simple clustering<a class="anchor" aria-label="anchor" href="#simple-clustering"></a>
+</h2>
 <p>We are now ready to compute a simple Reinert clustering by using the <code>rainette</code> function. Its main arguments are :</p>
 <ul>
 <li>
@@ -260,63 +257,63 @@
 <p>This vector can be used, for example, as a new corpus metadata variable :</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>##   Year  President FirstName Party  segment_source cluster
-## 1 1789 Washington    George  none 1789-Washington       4
-## 2 1789 Washington    George  none 1789-Washington       4
-## 3 1789 Washington    George  none 1789-Washington       3
-## 4 1789 Washington    George  none 1789-Washington       3
-## 5 1789 Washington    George  none 1789-Washington       5
-## 6 1789 Washington    George  none 1789-Washington       5</code></pre>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##   Year  President FirstName Party  segment_source cluster</span>
+<span class="co">## 1 1789 Washington    George  none 1789-Washington       4</span>
+<span class="co">## 2 1789 Washington    George  none 1789-Washington       4</span>
+<span class="co">## 3 1789 Washington    George  none 1789-Washington       3</span>
+<span class="co">## 4 1789 Washington    George  none 1789-Washington       3</span>
+<span class="co">## 5 1789 Washington    George  none 1789-Washington       5</span>
+<span class="co">## 6 1789 Washington    George  none 1789-Washington       5</span></code></pre>
 <p>Here, the clusters have been assigned to the segments, not to the original documents as a whole. The <code>clusters_by_doc_table</code> allows to display, for each original document, the number of segment belonging to each cluster :</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 59 × 6
-##    doc_id          clust_1 clust_2 clust_3 clust_4 clust_5
-##    &lt;chr&gt;             &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
-##  1 1789-Washington       0       0       4      27       6
-##  2 1793-Washington       0       0       0       0       4
-##  3 1797-Adams            8       0       5      44       2
-##  4 1801-Jefferson       18       0       3      21       2
-##  5 1805-Jefferson        2       3       6      43       3
-##  6 1809-Madison          0       0       4      17       7
-##  7 1813-Madison          0       5       5      20       3
-##  8 1817-Monroe           2       0      27      47      12
-##  9 1821-Monroe           2       0      37      66      10
-## 10 1825-Adams            8       2      13      46       8
-## # … with 49 more rows</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 59 × 6</span></span>
+<span class="co">##    doc_id          clust_1 clust_2 clust_3 clust_4 clust_5</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 1789-Washington       0       0       4      27       6</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 1793-Washington       0       0       0       0       4</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 1797-Adams            8       0       5      44       2</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 1801-Jefferson       18       0       3      21       2</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 1805-Jefferson        2       3       6      43       3</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 1809-Madison          0       0       4      17       7</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 1813-Madison          0       5       5      20       3</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 1817-Monroe           2       0      27      47      12</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 1821-Monroe           2       0      37      66      10</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 1825-Adams            8       2      13      46       8</span>
+<span class="co">## <span style="color: #949494;"># … with 49 more rows</span></span></code></pre>
 <p>By adding <code>prop = TRUE</code>, the same table is displayed with row percentages :</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"cluster"</span>, prop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 59 × 6
-##    doc_id          clust_1 clust_2 clust_3 clust_4 clust_5
-##    &lt;chr&gt;             &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1 1789-Washington    0       0      10.8     73.0   16.2 
-##  2 1793-Washington    0       0       0        0    100   
-##  3 1797-Adams        13.6     0       8.47    74.6    3.39
-##  4 1801-Jefferson    40.9     0       6.82    47.7    4.55
-##  5 1805-Jefferson     3.51    5.26   10.5     75.4    5.26
-##  6 1809-Madison       0       0      14.3     60.7   25   
-##  7 1813-Madison       0      15.2    15.2     60.6    9.09
-##  8 1817-Monroe        2.27    0      30.7     53.4   13.6 
-##  9 1821-Monroe        1.74    0      32.2     57.4    8.70
-## 10 1825-Adams        10.4     2.60   16.9     59.7   10.4 
-## # … with 49 more rows</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 59 × 6</span></span>
+<span class="co">##    doc_id          clust_1 clust_2 clust_3 clust_4 clust_5</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 1789-Washington    0       0      10.8     73.0   16.2 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 1793-Washington    0       0       0        0    100   </span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 1797-Adams        13.6     0       8.47    74.6    3.39</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 1801-Jefferson    40.9     0       6.82    47.7    4.55</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 1805-Jefferson     3.51    5.26   10.5     75.4    5.26</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 1809-Madison       0       0      14.3     60.7   25   </span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 1813-Madison       0      15.2    15.2     60.6    9.09</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 1817-Monroe        2.27    0      30.7     53.4   13.6 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 1821-Monroe        1.74    0      32.2     57.4    8.70</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 1825-Adams        10.4     2.60   16.9     59.7   10.4 </span>
+<span class="co">## <span style="color: #949494;"># … with 49 more rows</span></span></code></pre>
 <p>Conversely, the <code>docs_by_cluster_table</code> allows to display, for each cluster, the number and proportion of original document including at least one segment of this cluster :</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 5 × 3
-##   cluster     n   `%`
-##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
-## 1 clust_1    52  88.1
-## 2 clust_2    40  67.8
-## 3 clust_3    40  67.8
-## 4 clust_4    44  74.6
-## 5 clust_5    34  57.6</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 5 × 3</span></span>
+<span class="co">##   cluster     n   `%`</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> clust_1    52  88.1</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> clust_2    40  67.8</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> clust_3    40  67.8</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> clust_4    44  74.6</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> clust_5    34  57.6</span></code></pre>
 </div>
-<div id="double-clustering-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#double-clustering-1" class="anchor"></a>Double clustering</h2>
+<div class="section level2">
+<h2 id="double-clustering-1">Double clustering<a class="anchor" aria-label="anchor" href="#double-clustering-1"></a>
+</h2>
 <p><code>rainette</code> also offers a “double clustering” algorithm, as described above : two simple clusterings are computed with varying <code>min_segment_size</code>, and then combined to get a better partition and more robust clusters.</p>
 <p>This can be done with the <code>rainette2</code> function. It can be applied to two already computed simple clusterings. Here, we compute them with <code>min_segment_size</code> at 10 and 15 :</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
@@ -352,11 +349,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Julien Barnier.</p>
+  <p></p>
+<p>Developed by Julien Barnier.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -364,6 +363,8 @@
 
   
 
+
+  
 
   </body>
 </html>

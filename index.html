@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,18 +42,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rainette</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -79,7 +75,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/juba/rainette/">
+  <a href="https://github.com/juba/rainette/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -96,64 +92,68 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="rainette" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rainette" class="anchor"></a>Rainette</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="rainette">Rainette<a class="anchor" aria-label="anchor" href="#rainette"></a>
+</h1></div>
 
 <p><img src="reference/figures/logo.png" width="200" align="right"></p>
 <p>The package website can be found at : <a href="https://juba.github.io/rainette/">https://juba.github.io/rainette/</a>.</p>
-<p>Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other software such as <a href="http://www.iramuteq.org/">Iramuteq</a> (free software) or <a href="https://www.image-zafar.com/Logiciel.html">Alceste</a> (commercial, closed source).</p>
-<div id="features" class="section level2">
-<h2 class="hasAnchor">
-<a href="#features" class="anchor"></a>Features</h2>
+<p>Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other software such as <a href="http://www.iramuteq.org/" class="external-link">Iramuteq</a> (free software) or <a href="https://www.image-zafar.com/Logiciel.html" class="external-link">Alceste</a> (commercial, closed source).</p>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h2>
 <ul>
 <li>Simple or double clustering algorithms</li>
 <li>Plot functions and shiny gadgets to visualise and explore clustering results</li>
 <li>Utility functions to split a corpus into segments or import a corpus in Iramuteq format</li>
 </ul>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>The package is installable from CRAN :</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">install_packages</span><span class="op">(</span><span class="st">"rainette"</span><span class="op">)</span></code></pre></div>
-<p>The development version is installable from <a href="https://r-universe.dev">R-universe</a> :</p>
+<p>The development version is installable from <a href="https://r-universe.dev" class="external-link">R-universe</a> :</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"rainette"</span>, repos <span class="op">=</span> <span class="st">"https://juba.r-universe.dev"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rainette"</span>, repos <span class="op">=</span> <span class="st">"https://juba.r-universe.dev"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
-<p>Let’s start with an example corpus provided by the excellent <a href="https://quanteda.io">quanteda</a> package :</p>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>Let’s start with an example corpus provided by the excellent <a href="https://quanteda.io" class="external-link">quanteda</a> package :</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io">quanteda</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io" class="external-link">quanteda</a></span><span class="op">)</span>
 <span class="va">data_corpus_inaugural</span></code></pre></div>
 <p>First, we’ll use <code>split_segments</code> to split each document into segments of about 40 words (punctuation is taken into account) :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">data_corpus_inaugural</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
 <p>Next, we’ll apply some preprocessing and compute a document-term matrix with <code>quanteda</code> functions :</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html" class="external-link">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html" class="external-link">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>We can then apply a simple clustering on this matrix with the <code>rainette</code> function. We specify the number of clusters (<code>k</code>), and the minimum number of forms in each segment (<code>min_segment_size</code>). Segments which do not include enough forms will be merged with the following or previous one when possible.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">6</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
 <p>We can use the <code>rainette_explor</code> shiny interface to visualise and explore the different clusterings at each <code>k</code> :</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/rainette_explor_plot_en.png" alt="rainette_explor_plot"></p>
+<div class="figure">
+<img src="reference/figures/rainette_explor_plot_en.png" alt=""><p class="caption">rainette_explor_plot</p>
+</div>
 <p>The <em>Cluster documents</em> tab allows to browse and filter the documents in each cluster :</p>
-<p><img src="reference/figures/rainette_explor_docs_en.png" alt="rainette_explor_docs"></p>
+<div class="figure">
+<img src="reference/figures/rainette_explor_docs_en.png" alt=""><p class="caption">rainette_explor_docs</p>
+</div>
 <p>We can then use the generated R code to reproduce the displayed clustering visualisation plot :</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rainette_plot.html">rainette_plot</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"bar"</span>, n_terms <span class="op">=</span> <span class="fl">20</span>, free_scales <span class="op">=</span> <span class="cn">FALSE</span>,
     measure <span class="op">=</span> <span class="st">"chi2"</span>, show_negative <span class="op">=</span> <span class="st">"TRUE"</span>, text_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <p>Or cut the tree at chosen <code>k</code> and add a group membership variable to our corpus metadata :</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://quanteda.io/reference/docvars.html">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
 <p>In addition to this, we can also perform a double clustering, <em>ie</em> two simple clusterings produced with different <code>min_segment_size</code> which are then “crossed” to generate more robust clusters. To do this, we use <code>rainette2</code> on two <code>rainette</code> results :</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
@@ -162,11 +162,13 @@
 <p>We can then use <code>rainette2_explor</code> to explore and visualise the results.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/rainette2_explor_en.png" alt="rainette2_explor"></p>
+<div class="figure">
+<img src="reference/figures/rainette2_explor_en.png" alt=""><p class="caption">rainette2_explor</p>
 </div>
-<div id="tell-me-more" class="section level2">
-<h2 class="hasAnchor">
-<a href="#tell-me-more" class="anchor"></a>Tell me more</h2>
+</div>
+<div class="section level2">
+<h2 id="tell-me-more">Tell me more<a class="anchor" aria-label="anchor" href="#tell-me-more"></a>
+</h2>
 <p>Three vignettes are available :</p>
 <ul>
 <li>An introduction in english : <a href="https://juba.github.io/rainette/articles/introduction_en.html">Introduction to rainette</a>
@@ -177,66 +179,76 @@
 </li>
 </ul>
 </div>
-<div id="credits" class="section level2">
-<h2 class="hasAnchor">
-<a href="#credits" class="anchor"></a>Credits</h2>
+<div class="section level2">
+<h2 id="credits">Credits<a class="anchor" aria-label="anchor" href="#credits"></a>
+</h2>
 <p>This classification method has been created by Max Reinert, and is described in several articles. Here are two references :</p>
 <ul>
-<li>Reinert M, Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte, Cahiers de l’analyse des données, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
+<li>Reinert M, Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte, Cahiers de l’analyse des données, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
 </li>
-<li>Reinert M., Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="uri">https://doi.org/10.1177/075910639002600103</a>
+<li>Reinert M., Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="external-link uri">https://doi.org/10.1177/075910639002600103</a>
 </li>
 </ul>
-<p>Thanks to Pierre Ratineau, the author of <a href="http://www.iramuteq.org/">Iramuteq</a>, for providing it as free software and open source. Even if the R code has been almost entirely rewritten, it has been a precious resource to understand the algorithms.</p>
-<p>Many thanks to <a href="https://github.com/statnmap">Sébastien Rochette</a> for the creation of the hex logo.</p>
-<p>Many thanks to <a href="https://github.com/privefl/">Florian Privé</a> for his work on rewriting and optimizing Rcpp code.</p>
+<p>Thanks to Pierre Ratineau, the author of <a href="http://www.iramuteq.org/" class="external-link">Iramuteq</a>, for providing it as free software and open source. Even if the R code has been almost entirely rewritten, it has been a precious resource to understand the algorithms.</p>
+<p>Many thanks to <a href="https://github.com/statnmap" class="external-link">Sébastien Rochette</a> for the creation of the hex logo.</p>
+<p>Many thanks to <a href="https://github.com/privefl/" class="external-link">Florian Privé</a> for his work on rewriting and optimizing Rcpp code.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=rainette">https://​cloud.r-project.org/​package=rainette</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/juba/rainette/">https://​github.com/​juba/​rainette/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/juba/rainette/issues">https://​github.com/​juba/​rainette/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=rainette" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/juba/rainette/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/juba/rainette/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 3)</li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Julien Barnier <br><small class="roles"> Author, maintainer </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing rainette</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=rainette"><img src="https://www.r-pkg.org/badges/version-ago/rainette" alt="CRAN status"></a></li>
-<li><a href="https://github.com/juba/rainette/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/juba/rainette/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li>Julien Barnier <br><small class="roles"> Author, maintainer </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=rainette" class="external-link"><img src="https://www.r-pkg.org/badges/version-ago/rainette" alt="CRAN status"></a></li>
+<li><a href="https://github.com/juba/rainette/actions?query=workflow%3AR-CMD-check" class="external-link"><img src="https://github.com/juba/rainette/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Julien Barnier.</p>
+  <p></p>
+<p>Developed by Julien Barnier.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -244,6 +256,8 @@
 
   
 
+
+  
 
   </body>
 </html>
