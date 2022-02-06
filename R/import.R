@@ -10,7 +10,7 @@ extract_texts <- function(docs, thematics) {
       text <- stringr::str_replace_all(text, "(^|\n)-\\*[^ ].*?\n", "\\1")
     }
     text
-  }) 
+  })
 }
 
 ## Extract metadata from a list of documents in Iramuteq format
@@ -20,19 +20,19 @@ extract_metadata <- function(docs) {
   meta <- purrr::map_dfr(docs, function(text) {
     first_line <- stringr::str_extract(text, "^.*?\n")
     vars_line <- stringr::str_extract_all(first_line, "\\*(.*?)[ \n$]")
-    
+
     # No metadata for this doc
-    if(identical(vars_line[[1]], NA_character_)) {
+    if (identical(vars_line[[1]], NA_character_)) {
       # FIXME : doesn't work !
       return(data.frame(rainette_nometa = NA))
     }
-   
+
      res <- purrr::map(vars_line, function(vars) {
       vars <- stringr::str_replace(vars, "^\\*", "")
       vars <- stringr::str_trim(vars)
       vars <- stringr::str_split_fixed(vars, "_", n = 2)
-      values <- as.list(vars[,2])
-      names(values) <- vars[,1]
+      values <- as.list(vars[, 2])
+      names(values) <- vars[, 1]
       values
     })
     purrr::flatten_dfr(res)
@@ -49,18 +49,18 @@ extract_metadata <- function(docs) {
 #' @param thematics if "remove", thematics lines are removed. If "split", texts as splitted at each thematic, and metadata duplicated accordingly
 #' @param ... arguments passed to \code{\link[base:connections]{file}} if `f` is a file name.
 #'
-#' @details 
+#' @details
 #' A description of the Iramuteq corpus format can be found here : \url{http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages}
-#' 
+#'
 #' @return
 #' A quanteda corpus object. Note that metadata variables in docvars are all imported as characters.
-#' 
+#'
 #' @export
 #' @import stringr
 #' @importFrom rlang sym
 
 import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "split"), ...) {
-  
+
   thematics <- match.arg(thematics)
 
   ## Open as a filename or a connection
@@ -72,7 +72,7 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
   if (!inherits(f, "connection")) {
     stop("f must be either a connection or a file path")
   }
-  
+
   ## Read text
   lines <- readLines(f)
   if (close_con) {
@@ -85,21 +85,21 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
   has_metadata <- stringr::str_detect(text, "(^|\n)\\*\\*\\*\\* +\\*\\w+_")
   ## Detect if corpus has thematics
   has_thematic <- stringr::str_detect(text, "(^|\n)-\\*[^ ]")
-  
+
   ## Split into documents
   docs <- stringr::str_split(text, "(^|\n)\\*\\*\\*\\*(\n| +)", simplify = TRUE)
   docs <- docs[docs != ""]
-  
+
   ## Extract texts
   texts <- extract_texts(docs, thematics)
   ## Extract metadata
   if (has_metadata) {
     metadata <- extract_metadata(docs)
   }
-  
+
   ## Split by thematics
   if (has_thematic && thematics == "split") {
-    thems <- purrr::map(stringr::str_match_all(docs, "(^|\n)-\\*(.+)\n"), ~.x[,3])
+    thems <- purrr::map(stringr::str_match_all(docs, "(^|\n)-\\*(.+)\n"), ~.x[, 3])
     thems <- purrr::flatten_chr(thems)
     texts <- stringr::str_split(texts, "(^|\n)-\\*(.+)\n")
     texts <- purrr::imap_dfr(texts, function(text, i) {
@@ -107,14 +107,14 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
     })
     ## Duplicate metadata and add thematics variable
     if (has_metadata) {
-      metadata <- metadata[texts$id,]
+      metadata <- metadata[texts$id, ]
       metadata <- data.frame(metadata, thematics = thems, stringsAsFactors = FALSE)
       ## Generate id by thematic if necessary
       if (!is.null(id_var)) {
         id_var_tidy <- rlang::sym(id_var)
-        metadata <- metadata %>% 
-          dplyr::group_by(!!id_var_tidy) %>% 
-          dplyr::mutate(rainette_split_id = paste(!!id_var_tidy, 1:n(), sep="_"))
+        metadata <- metadata %>%
+          dplyr::group_by(!!id_var_tidy) %>%
+          dplyr::mutate(rainette_split_id = paste(!!id_var_tidy, 1:n(), sep = "_"))
       }
       id_var <- "rainette_split_id"
     } else {
@@ -134,7 +134,7 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
     ## Remove computed id by thematic if present
     corpus[["rainette_split_id"]] <- NULL
   }
-  
+
   quanteda::corpus(corpus, text_field = "text")
-  
+
 }
