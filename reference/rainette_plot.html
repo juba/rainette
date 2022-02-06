@@ -78,7 +78,10 @@
   free_scales <span class="op">=</span> <span class="cn">FALSE</span>,
   measure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chi2"</span>, <span class="st">"lr"</span>, <span class="st">"frequency"</span>, <span class="st">"docprop"</span><span class="op">)</span>,
   show_negative <span class="op">=</span> <span class="cn">FALSE</span>,
-  text_size <span class="op">=</span> <span class="cn">NULL</span>
+  text_size <span class="op">=</span> <span class="cn">NULL</span>,
+  show_na_title <span class="op">=</span> <span class="cn">TRUE</span>,
+  cluster_label <span class="op">=</span> <span class="cn">NULL</span>,
+  keyness_plot_xlab <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -102,6 +105,13 @@
 <dd><p>if TRUE, show negative keyness features</p></dd>
 <dt>text_size</dt>
 <dd><p>font size for barplots, max word size for wordclouds</p></dd>
+<dt>show_na_title</dt>
+<dd><p>if TRUE, show number of NA as plot title</p></dd>
+<dt>cluster_label</dt>
+<dd><p>define a specific term for clusters identification in keyness plots.
+Default is "Cluster" or "Cl." depending on the number of groups.</p></dd>
+<dt>keyness_plot_xlab</dt>
+<dd><p>define a specific x label for keyness plots.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -147,7 +157,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>

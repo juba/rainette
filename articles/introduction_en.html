@@ -94,7 +94,7 @@
       <h1 data-toc-skip>[en] Introduction to rainette</h1>
                         <h4 data-toc-skip class="author">Julien Barnier</h4>
             
-            <h4 data-toc-skip class="date">2021-12-05</h4>
+            <h4 data-toc-skip class="date">2022-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_en.Rmd" class="external-link"><code>vignettes/introduction_en.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_en.Rmd</code></div>
@@ -103,9 +103,9 @@
 
     
     
-<div class="section level1">
-<h1 id="reinert-textual-clustering-method">Reinert textual clustering method<a class="anchor" aria-label="anchor" href="#reinert-textual-clustering-method"></a>
-</h1>
+<div class="section level2">
+<h2 id="reinert-textual-clustering-method">Reinert textual clustering method<a class="anchor" aria-label="anchor" href="#reinert-textual-clustering-method"></a>
+</h2>
 <p><code>rainette</code> is an R implementation of the Reinert textual clustering algorithm. This algorithm is already available in softwares like <a href="http://www.iramuteq.org/" class="external-link">Iramuteq</a> or Alceste, the goal of <code>rainette</code> being to provide it as an R package.</p>
 <p>This is not a new algorithm, as the first articles describing it date back to 1983. Here are some characteristics of the method :</p>
 <ul>
@@ -113,9 +113,9 @@
 <li>it is then better suited for small “homogeneous” documents : for long texts the good practice is first to split them into segments.</li>
 <li>as the algorithm uses a singular value decomposition of a document-term matrix, it is relatively fast but may not work on very large corpus. In this case, as only the smaller dimension of the matrix is taken into account for the decomposition, a workaround can be to reduce the number of features by removing the less frequent terms.</li>
 </ul>
-<div class="section level2">
-<h2 id="description-of-the-algorithm">Description of the algorithm<a class="anchor" aria-label="anchor" href="#description-of-the-algorithm"></a>
-</h2>
+<div class="section level3">
+<h3 id="description-of-the-algorithm">Description of the algorithm<a class="anchor" aria-label="anchor" href="#description-of-the-algorithm"></a>
+</h3>
 <p>The Reinert method is a divisive hierarchical clustering algorithm whose aim is to maximise the inter-cluster Chi-squared distance.</p>
 <p>The algorithm is applied to the document-term matrix computed on the corpus. Documents are called <code>uce</code> (elementary context units). If an <code>uce</code> doesn’t include enough terms, it can be merged with the following or previous one into an <code>uc</code> (context unit). The resulting matrix is then weighted as binary, so only the presence/absence of terms are taken into account, not their frequencies.</p>
 <p>The aim is to split this matrix into two clusters by maximizing the Chi-squared distance between those. As an exaustive search would be too compute-intensive, the following method is used to get a good approximation :</p>
@@ -128,18 +128,18 @@
 <li>the biggest of the two resulting clusters is then split with the same algorithm.</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="double-clustering">Double clustering<a class="anchor" aria-label="anchor" href="#double-clustering"></a>
-</h2>
+<div class="section level3">
+<h3 id="double-clustering">Double clustering<a class="anchor" aria-label="anchor" href="#double-clustering"></a>
+</h3>
 <p>The Reinert method suggests to do a double clustering to get more robust clusters. This method is also implemented in <code>rainette</code>.</p>
 <p>The principle is to run two simple clusterings by varying the minimum <code>uc</code> size. For example, the first one will be run with a minimum size of 10 terms, and the second one with a minimum size of 15.</p>
 <p>The two sets of clusters are then “crossed” : every pair of clusters of each clustering are crossed together, even if they are not on the same hierarchical level. We then compute the number of <code>uc</code> present in both clusters, and a Chi-squared value of association between them.</p>
 <p>Only a subset of all these “crossed-clusters” are kept : those with different elements, with a minimum number of <code>uc</code> or with a minimum association value. Then, for a given number of clusters <code>k</code>, the algorithm looks for the optimal partition of crossed-clusters, <em>ie</em> it keeps the set of crossed-clusters with no common elements, and with either the higher total number of elements, or the higher sum of Chi-squared association coefficients.</p>
 <p>Then, this optimal partition is used either as the final clustering (with potentially quite a high proportion of <code>NA</code>), or as a starting point for a k-nearest-neighbour clustering for non-assigned documents.</p>
 </div>
-<div class="section level2">
-<h2 id="references-in-french">References (in french)<a class="anchor" aria-label="anchor" href="#references-in-french"></a>
-</h2>
+<div class="section level3">
+<h3 id="references-in-french">References (in french)<a class="anchor" aria-label="anchor" href="#references-in-french"></a>
+</h3>
 <ul>
 <li>Reinert M, Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte, Cahiers de l’analyse des données, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
 </li>
@@ -148,17 +148,17 @@
 </ul>
 </div>
 </div>
-<div class="section level1">
-<h1 id="rainette-usage">
-<code>rainette</code> usage<a class="anchor" aria-label="anchor" href="#rainette-usage"></a>
-</h1>
 <div class="section level2">
-<h2 id="corpus-preparation">Corpus preparation<a class="anchor" aria-label="anchor" href="#corpus-preparation"></a>
+<h2 id="rainette-usage">
+<code>rainette</code> usage<a class="anchor" aria-label="anchor" href="#rainette-usage"></a>
 </h2>
 <div class="section level3">
-<h3 id="split_segments">
-<code>split_segments</code><a class="anchor" aria-label="anchor" href="#split_segments"></a>
+<h3 id="corpus-preparation">Corpus preparation<a class="anchor" aria-label="anchor" href="#corpus-preparation"></a>
 </h3>
+<div class="section level4">
+<h4 id="split_segments">
+<code>split_segments</code><a class="anchor" aria-label="anchor" href="#split_segments"></a>
+</h4>
 <p>As explained before, as it doesn’t take into account terms frequencies and assign each document to only one cluster, the Reinert method must be applied to short and “homogeneous” documents. It could be ok if you work on tweets or short answers to a specific question, but on longer documents the corpus must first be split into short textual segments.</p>
 <p>The <code>split_segments</code> function does just that, and can be applied on a <code>tm</code> or <code>quanteda</code> corpus.</p>
 <p>On this article we will apply it to the sample <code>data_corpus_inaugural</code> <code>quanteda</code> corpus :</p>
@@ -214,9 +214,9 @@
 <span class="co">## 5 1789 Washington    George  none 1789-Washington</span>
 <span class="co">## 6 1789 Washington    George  none 1789-Washington</span></code></pre>
 </div>
-<div class="section level3">
-<h3 id="dfm-computation">dfm computation<a class="anchor" aria-label="anchor" href="#dfm-computation"></a>
-</h3>
+<div class="section level4">
+<h4 id="dfm-computation">dfm computation<a class="anchor" aria-label="anchor" href="#dfm-computation"></a>
+</h4>
 <p>Next step is to compute the document-feature matrix. As our <code>corpus</code> object is a <code>quanteda</code> corpus, we can tokenize it and then use the <code>dfm</code> function :</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -227,9 +227,9 @@
 <code class="sourceCode R"><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html" class="external-link">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="simple-clustering">Simple clustering<a class="anchor" aria-label="anchor" href="#simple-clustering"></a>
-</h2>
+<div class="section level3">
+<h3 id="simple-clustering">Simple clustering<a class="anchor" aria-label="anchor" href="#simple-clustering"></a>
+</h3>
 <p>We are now ready to compute a simple Reinert clustering by using the <code>rainette</code> function. Its main arguments are :</p>
 <ul>
 <li>
@@ -311,9 +311,9 @@
 <span class="co">## <span style="color: #BCBCBC;">4</span> clust_4    44  74.6</span>
 <span class="co">## <span style="color: #BCBCBC;">5</span> clust_5    34  57.6</span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="double-clustering-1">Double clustering<a class="anchor" aria-label="anchor" href="#double-clustering-1"></a>
-</h2>
+<div class="section level3">
+<h3 id="double-clustering-1">Double clustering<a class="anchor" aria-label="anchor" href="#double-clustering-1"></a>
+</h3>
 <p><code>rainette</code> also offers a “double clustering” algorithm, as described above : two simple clusterings are computed with varying <code>min_segment_size</code>, and then combined to get a better partition and more robust clusters.</p>
 <p>This can be done with the <code>rainette2</code> function. It can be applied to two already computed simple clusterings. Here, we compute them with <code>min_segment_size</code> at 10 and 15 :</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
@@ -355,7 +355,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>

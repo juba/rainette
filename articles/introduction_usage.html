@@ -94,7 +94,7 @@
       <h1 data-toc-skip>[fr] Utilisation de rainette</h1>
                         <h4 data-toc-skip class="author">Julien Barnier</h4>
             
-            <h4 data-toc-skip class="date">2021-12-05</h4>
+            <h4 data-toc-skip class="date">2022-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_usage.Rmd" class="external-link"><code>vignettes/introduction_usage.Rmd</code></a></small>
       <div class="hidden name"><code>introduction_usage.Rmd</code></div>
@@ -103,12 +103,12 @@
 
     
     
-<div class="section level1">
-<h1 id="préparation-du-corpus">Préparation du corpus<a class="anchor" aria-label="anchor" href="#pr%C3%A9paration-du-corpus"></a>
-</h1>
 <div class="section level2">
-<h2 id="importation">Importation<a class="anchor" aria-label="anchor" href="#importation"></a>
+<h2 id="préparation-du-corpus">Préparation du corpus<a class="anchor" aria-label="anchor" href="#pr%C3%A9paration-du-corpus"></a>
 </h2>
+<div class="section level3">
+<h3 id="importation">Importation<a class="anchor" aria-label="anchor" href="#importation"></a>
+</h3>
 <p>La première étape consiste à importer votre corpus dans R. Vous pouvez utiliser un corpus au format <code>tm</code> ou <code>quanteda</code> par exemple, ou bien utiliser la fonction <code>import_corpus_iramuteq</code> pour importer directement un corpus depuis un fichier texte <a href="http://www.iramuteq.org/documentation/formatage-des-corpus-texte" class="external-link">au format Iramuteq</a>. Dans ce cas vous obtiendrez un objet de type corpus du package <a href="https://quanteda.io" class="external-link">quanteda</a>. Les métadonnées éventuelles présentes dans le fichier (<em>variables étoilées</em>) sont importées en tant que métadonnées du corpus (variables de <code>docvars(corpus)</code>).</p>
 <p>Pour ce document, on va importer le texte du <em>Manifeste du parti communiste</em> (Karl Marx et Friedrich Engels, 1848, source <a href="https://fr.wikisource.org/wiki/Manifeste_du_parti_communiste/Lafargue" class="external-link">wikisource</a>). Celui-ci est placé dans un fichier texte au format Iramuteq fourni avec <code>rainette</code>. Le corpus est composé de quatre documents, un document par partie de l’ouvrage.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -149,9 +149,9 @@
 <span class="co">## 3     II</span>
 <span class="co">## 4    III</span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="découpage-en-segments">Découpage en segments<a class="anchor" aria-label="anchor" href="#d%C3%A9coupage-en-segments"></a>
-</h2>
+<div class="section level3">
+<h3 id="découpage-en-segments">Découpage en segments<a class="anchor" aria-label="anchor" href="#d%C3%A9coupage-en-segments"></a>
+</h3>
 <p>La méthode Reinert de classification s’applique plutôt à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction <code>split_segments</code>. Ici on découpe en segments d’environ 40 mots (l’algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d’une virgule).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">corpus</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
@@ -196,9 +196,9 @@
 <span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_2 </span>
 <span class="co">##                       "Quelle est l'opposition qui, à son tour, n'a pas relancé à ses adversaires de droite ou de gauche l'épithète flétrissante de communiste ?\nDeux choses ressortent de ces faits :\n1° Déjà le communisme est reconnu par toutes les puissances d'Europe comme une puissance ;\n2° Il est grand temps que les communistes exposent,"</span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="calcul-et-traitement-de-la-matrice-termes-documents">Calcul et traitement de la matrice termes-documents<a class="anchor" aria-label="anchor" href="#calcul-et-traitement-de-la-matrice-termes-documents"></a>
-</h2>
+<div class="section level3">
+<h3 id="calcul-et-traitement-de-la-matrice-termes-documents">Calcul et traitement de la matrice termes-documents<a class="anchor" aria-label="anchor" href="#calcul-et-traitement-de-la-matrice-termes-documents"></a>
+</h3>
 <p>L’étape suivante est de calculer la matrice termes-documents (<em>dtm</em>), grand tableau numérique avec les documents en lignes, les mots en colonnes, et comme valeurs le nombre d’occurrences de chaque mot dans chaque document.</p>
 <p>Notre corpus étant au format <code>quanteda</code>, on va utiliser les fonctions de cette extension.</p>
 <p>D’abord on calcule la <em>dtm</em> en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :</p>
@@ -212,9 +212,9 @@
 <p>De nombreux autres traitements seraient possibles, mais on se contentera de cette matrice pour cet exemple.</p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="classification-simple">Classification simple<a class="anchor" aria-label="anchor" href="#classification-simple"></a>
-</h1>
+<div class="section level2">
+<h2 id="classification-simple">Classification simple<a class="anchor" aria-label="anchor" href="#classification-simple"></a>
+</h2>
 <p>Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction <code>rainette</code>. On va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (<code>k = 5</code>) et le nombre minimal de termes pour qu’une classe soit découpée en deux à l’étape suivante de la classification (<code>min_split_members = 10</code>).</p>
 <p>L’argument <code>min_segment_size</code>, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec <code>min_segment_size = 10</code>, les segments comportant moins de 10 formes sont regroupés avec le segment suivant ou précédent (si possible) jusqu’à atteindre la taille minimale souhaitée.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -287,9 +287,9 @@
 <span class="co">## <span style="color: #BCBCBC;">4</span> clust_4     3    75</span>
 <span class="co">## <span style="color: #BCBCBC;">5</span> clust_5     3    75</span></code></pre>
 </div>
-<div class="section level1">
-<h1 id="classification-double">Classification double<a class="anchor" aria-label="anchor" href="#classification-double"></a>
-</h1>
+<div class="section level2">
+<h2 id="classification-double">Classification double<a class="anchor" aria-label="anchor" href="#classification-double"></a>
+</h2>
 <p>Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on “croise” les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes.</p>
 <p>Une classification double utilise la fonction <code>rainette2</code>. Celle-ci peut se faire de deux manières. On peut d’abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -330,7 +330,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
