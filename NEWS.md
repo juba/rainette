@@ -1,6 +1,7 @@
 # rainette (development version)
 
 - Fix warnings in Font Awesome icon names
+- Add `show_na_title`, `cluster_label` and `keyness_plot_xlab` arguments to `rainette_plot` to customize graphics output
 
 # rainette 0.2.1
 

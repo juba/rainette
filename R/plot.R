@@ -1,7 +1,12 @@
 ## Generate a "terms bar plot", based on terms keyness for a group
 
 keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebrick3",
-                       stat_col = "chi2", n_terms = NULL, text_size = 10, top_margin = 0) {
+                       stat_col = "chi2", n_terms = NULL, text_size = 10, top_margin = 0,
+                       keyness_plot_xlab = NULL) {
+
+  if (is.null(keyness_plot_xlab)) {
+    keyness_plot_xlab <- stat_col
+  }
 
   ## Column with statistic values
   stat_col_tidy <- rlang::sym(stat_col)
@@ -29,9 +34,9 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
         colour = "transparent"))
   ## Fix x limits if necessary and remove horizontal axis values
   if (!is.null(range)) {
-    g <- g + ggplot2::scale_y_continuous(stat_col, limits = range, breaks = NULL)
+    g <- g + ggplot2::scale_y_continuous(keyness_plot_xlab, limits = range, breaks = NULL)
   } else {
-    g <- g + ggplot2::scale_y_continuous(stat_col, breaks = NULL)
+    g <- g + ggplot2::scale_y_continuous(keyness_plot_xlab, breaks = NULL)
   }
   ## Adjust vertical scale if necessary
   if (nrow(tab) < n_terms) {
@@ -106,7 +111,8 @@ groups_colors <- function(k, i = NULL) {
 ## Generate a list of terms plots from a list of keyness statistic tables
 
 keyness_plots <- function(tabs, groups, type = "bar",
-  range = NULL, stat_col = "chi2", n_terms, text_size, top_margin = 0) {
+  range = NULL, stat_col = "chi2", n_terms, text_size, top_margin = 0,
+  cluster_label = NULL, keyness_plot_xlab = NULL) {
 
   ## Frequency and proportion of each cluster
   clust_n <- table(groups)
@@ -115,16 +121,20 @@ keyness_plots <- function(tabs, groups, type = "bar",
 
   purrr::map(1:k, function(i) {
     if (k <= 6) {
-      title <- paste0("Cluster ", i, "\nn = ", clust_n[i], " (", clust_prop[i], "%)")
+      label <- ifelse(is.null(cluster_label), "Cluster", cluster_label)
+      title <- paste0(label, " ", i, "\nn = ", clust_n[i], " (", clust_prop[i], "%)")
     } else if (k <= 8) {
-      title <- paste0("Cluster ", i, "\nn = ", clust_n[i])
+      label <- ifelse(is.null(cluster_label), "Cluster", cluster_label)
+      title <- paste0(label, " ", i, "\nn = ", clust_n[i])
     } else {
-      title <- paste0("Cl. ", i, "\nn = ", clust_n[i])
+      label <- ifelse(is.null(cluster_label), "Cl.", cluster_label)
+      title <- paste0(label, " ", i, "\nn = ", clust_n[i])
     }
     if (type == "bar") {
       if (is.null(text_size)) text_size <- 10
       keyness_barplot(tabs[[i]], range, title = title, title_color = groups_colors(k, i),
-               stat_col = stat_col, n_terms, text_size = text_size, top_margin)
+               stat_col = stat_col, n_terms, text_size = text_size, top_margin, 
+               keyness_plot_xlab = keyness_plot_xlab)
     } else {
       if (is.null(text_size)) text_size <- 15
       keyness_worcloud(tabs[[i]], range, title = title, title_color = groups_colors(k, i),
@@ -147,6 +157,10 @@ keyness_plots <- function(tabs, groups, type = "bar",
 #' @param measure statistics to compute
 #' @param show_negative if TRUE, show negative keyness features
 #' @param text_size font size for barplots, max word size for wordclouds
+#' @param show_na_title if TRUE, show number of NA as plot title
+#' @param cluster_label define a specific term for clusters identification in keyness plots.
+#'   Default is "Cluster" or "Cl." depending on the number of groups.
+#' @param keyness_plot_xlab define a specific x label for keyness plots.
 #'
 #' @seealso [quanteda.textstats::textstat_keyness()], [rainette_explor()], [rainette_stats()]
 #'
@@ -176,7 +190,10 @@ rainette_plot <- function(res, dtm, k = NULL,
                           free_scales = FALSE, 
                           measure = c("chi2", "lr", "frequency", "docprop"),
                           show_negative = FALSE,
-                          text_size = NULL) {
+                          text_size = NULL,
+                          show_na_title = TRUE,
+                          cluster_label = NULL,
+                          keyness_plot_xlab = NULL) {
 
   type <- match.arg(type)
   measure <- match.arg(measure)
@@ -226,7 +243,7 @@ rainette_plot <- function(res, dtm, k = NULL,
   dend <- stats::as.dendrogram(res)
   max_k <- max(res$group, na.rm = TRUE)
   ## Cut the dendrogram if necessary
-  if(k < max_k) {
+  if (k < max_k) {
     dend <- cut(dend, res$height[max_k - k])$upper
     ## Double conversion to "balance" the dendrogram
     dend <- stats::as.dendrogram(stats::as.hclust(dend))
@@ -243,15 +260,25 @@ rainette_plot <- function(res, dtm, k = NULL,
   title_size <- ifelse(is.null(text_size), 10, text_size)
   g <- ggplot(dend, nodes = FALSE) +
     scale_y_continuous(breaks = NULL) +
-    ggtitle(paste0("NA : ", na_n, " (", na_prop, "%)")) +
     theme(plot.margin = grid::unit(c(0.05, margin, 0, margin), "npc"),
           plot.title = element_text(hjust = 0.5, size = title_size))
+  if (show_na_title) {
+    g <- g +
+        ggtitle(paste0("NA : ", na_n, " (", na_prop, "%)"))
+  }
   plots[[1]] <- g
 
 
   ## Add terms plots
-  plots <- c(plots, keyness_plots(tabs, groups, type, range,
-    stat_col, n_terms, text_size))
+  plots <- c(
+    plots, 
+    keyness_plots(
+      tabs, groups, type, range,
+      stat_col, n_terms, text_size, 
+      cluster_label = cluster_label,
+      keyness_plot_xlab = keyness_plot_xlab
+    )
+  )
 
   ## Generate grid
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
