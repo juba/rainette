@@ -13,7 +13,10 @@ rainette_plot(
   free_scales = FALSE,
   measure = c("chi2", "lr", "frequency", "docprop"),
   show_negative = FALSE,
-  text_size = NULL
+  text_size = NULL,
+  show_na_title = TRUE,
+  cluster_label = NULL,
+  keyness_plot_xlab = NULL
 )
 }
 \arguments{
@@ -34,6 +37,13 @@ rainette_plot(
 \item{show_negative}{if TRUE, show negative keyness features}
 
 \item{text_size}{font size for barplots, max word size for wordclouds}
+
+\item{show_na_title}{if TRUE, show number of NA as plot title}
+
+\item{cluster_label}{define a specific term for clusters identification in keyness plots.
+Default is "Cluster" or "Cl." depending on the number of groups.}
+
+\item{keyness_plot_xlab}{define a specific x label for keyness plots.}
 }
 \value{
 A gtable object.
