@@ -65,7 +65,7 @@ groups_crosstab <- function(groups1, groups2) {
     dplyr::right_join(g2_count, by = c("level2", "g2")) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
-      chi2 = compute_chi2(n_both, n1, n2, n_tot)
+      chi2 = compute_chi2(n_both, n1, n2, n_tot) %>% unname()
     ) %>%
     ungroup()
 }

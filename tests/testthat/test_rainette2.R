@@ -15,7 +15,7 @@ res12 <- rainette2(dtm, max_k = 5, min_segment_size1 = 2, min_segment_size2 = 3,
 res <- rainette2(res1, res2, min_members = 2)
 
 test_that("compute_chi2 is ok", {
-  tab <- matrix(c(45, 121 - 45, 257 - 45, 1213 - 121 - 257 +45), nrow = 2)
+  tab <- matrix(c(45, 121 - 45, 257 - 45, 1213 - 121 - 257 + 45), nrow = 2)
   expect_equal(rainette:::compute_chi2(45, 121, 257, 1213),
     chisq.test(tab)$statistic)
   tab <- matrix(c(0, 12, 25, 121 - 12 - 25), nrow = 2)
@@ -43,7 +43,7 @@ test_that("groups_crosstab is ok", {
   expect_equal(tmp$n_both, 1)
   expect_equal(tmp$n1, 1)
   expect_equal(tmp$n2, 1)
-  expect_equal(tmp$chi2, rainette:::compute_chi2(tmp$n_both, tmp$n1, tmp$n2, n_tot))
+  expect_equal(tmp$chi2, unname(rainette:::compute_chi2(tmp$n_both, tmp$n1, tmp$n2, n_tot)))
 })
 
 test_that("filter_groups_crosstab is ok", {
@@ -60,8 +60,8 @@ test_that("filter_groups_crosstab is ok", {
   expect_equal(ftab$g2, 1)
   expect_equal(ftab$n_both, 4)
   expect_equal(ftab$interclass, "1x1")
-   expect_equal(ftab$chi2,
-    suppressWarnings(chisq.test(matrix(c(4,0,0,1), nrow=2))$statistic))
+  expect_equal(ftab$chi2,
+    suppressWarnings(unname(chisq.test(matrix(c(4,0,0,1), nrow=2))$statistic)))
   expect_equal(ftab$members, list(1:4))
 })
 
