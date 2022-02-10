@@ -276,6 +276,9 @@ rainette2 <- function(
     groups1 <- get_groups(x)
     groups2 <- get_groups(y)
     ## Total number of documents
+    if (nrow(groups1) != nrow(groups2)) {
+      stop("⚠ Number of documents in both clustering results must be the same")
+    }
     n_tot <- nrow(groups1)
 
     ## Compute sizes and chi2 of every crossing between classes
