@@ -38,13 +38,13 @@ groups_crosstab <- function(groups1, groups2) {
     tidyr::pivot_longer(
       everything(), names_to = "level1", values_to = "g1"
     ) %>%
-    dplyr::count(g1, name = "n1")
+    dplyr::count(level1, g1, name = "n1")
   # Frequencies of each group in second clustering
   g2_count <- groups2 %>%
     tidyr::pivot_longer(
       everything(), names_to = "level2", values_to = "g2"
     ) %>%
-    dplyr::count(g2, name = "n2")
+    dplyr::count(level2, g2, name = "n2")
   # Compute frequencies of all groups combinations  
   res <- purrr::map_dfr(names(groups1), function(level1) {
     purrr::map_dfr(names(groups2), function(level2) {
@@ -61,8 +61,8 @@ groups_crosstab <- function(groups1, groups2) {
   })
   # Add group count and chi-squared statistic
   res %>%
-    dplyr::right_join(g1_count, by = "g1") %>%
-    dplyr::right_join(g2_count, by = "g2") %>%
+    dplyr::right_join(g1_count, by = c("level1", "g1")) %>%
+    dplyr::right_join(g2_count, by = c("level2", "g2")) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
       chi2 = compute_chi2(n_both, n1, n2, n_tot)
@@ -251,14 +251,14 @@ rainette2 <- function(
 
   ## Check for deprecated uc_size1 argument
   if (!missing(uc_size1)) {
-    warning("⚠ uc_size1 is deprecated. Use min_segment_size1 instead.")
+    warning("! uc_size1 is deprecated. Use min_segment_size1 instead.")
     if (missing(min_segment_size1)) {
       min_segment_size1 <- uc_size1
     }
   }
   ## Check for deprecated uc_size2 argument
   if (!missing(uc_size2)) {
-    warning("⚠ uc_size2 is deprecated. Use min_segment_size2 instead.")
+    warning("! uc_size2 is deprecated. Use min_segment_size2 instead.")
     if (missing(min_segment_size2)) {
       min_segment_size2 <- uc_size2
     }
@@ -282,7 +282,7 @@ rainette2 <- function(
   ## max_k should not be higher than the smallest k in both clustering
   max_k_res <- min(max(x$group, na.rm = TRUE), max(y$group, na.rm = TRUE))
   if (max_k_res < max_k) {
-    message("⚠ Lowering max_k from ", max_k, " to ", max_k_res)
+    message("! Lowering max_k from ", max_k, " to ", max_k_res)
     max_k <- max_k_res
   }
 
@@ -298,7 +298,7 @@ rainette2 <- function(
     groups2 <- get_groups(y)
     ## Check if both clusterings have same ndoc
     if (nrow(groups1) != nrow(groups2)) {
-      stop("⚠ Number of documents in both clustering results must be the same")
+      stop("! Number of documents in both clustering results must be the same")
     }
     ## Total number of documents
     n_tot <- nrow(groups1)
@@ -313,7 +313,7 @@ rainette2 <- function(
     )
 
     if (nrow(valid) < 2) {
-      stop("⚠ Not enough valid classes to continue. You may try a lower min_members value.")
+      stop("! Not enough valid classes to continue. You may try a lower min_members value.")
     }
 
     ## Matrix of sizes of intersection classes crossing
@@ -331,7 +331,7 @@ rainette2 <- function(
         p()
       } else {
         p()
-        message("⚠ No more partitions found, stopping at k=", k - 1)
+        message("! No more partitions found, stopping at k=", k - 1)
         break;
       }
     }
