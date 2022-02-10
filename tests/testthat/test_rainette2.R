@@ -82,13 +82,12 @@ test_that("next_partitions is ok", {
     members = list(c(1,2,3), c(4,5,6), c(1,2), 7), id = 1:4)
   sizes <- rainette:::cross_sizes(tab)
   partitions <- list(tab$id)
+  partitions[[2]] <- which(sizes == 0, arr.ind = TRUE) %>%
+      apply(1, unname, simplify = FALSE)
 
-  partitions[[2]] <- rainette:::next_partitions(partitions, sizes)
-  expect_equal(partitions[[2]], list(c(1, 2), c(1, 4), c(2, 3), c(2, 4), c(3, 4)))
-
-  partitions[[3]] <- rainette:::next_partitions(partitions, sizes)
+  partitions[[3]] <- rainette:::next_partitions(partitions[[2]], sizes)
   expect_equal(partitions[[3]], list(c(1, 2, 4), c(2, 3, 4)))
-  expect_equal(rainette:::next_partitions(partitions, sizes), NULL)
+  expect_equal(rainette:::next_partitions(partitions[[3]], sizes), NULL)
 })
 
 
@@ -124,7 +123,7 @@ test_that("rainette2 gives the same result on dtm and on two clustering results"
 test_that("rainette2 is ok when stopping before max_k", {
   res1 <- rainette(dtm, k = 4, min_segment_size = 2, min_split_members = 30)
   res2 <- rainette(dtm, k = 4, min_segment_size = 3, min_split_members = 30)
-  expect_message(res <- rainette2(res1, res2, max_k = 4, min_members = 50),
+  expect_message(res <- rainette::rainette2(res1, res2, max_k = 4, min_members = 50),
     "^! No more partitions found, stopping at k=2")
   expect_equal(max(res$k), 2)
 })

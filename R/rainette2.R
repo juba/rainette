@@ -101,7 +101,7 @@ crosstab_add_members <- function(tab, groups1, groups2) {
 
 cross_sizes <- function(crosstab) {
   sizes <- matrix(1, nrow = nrow(crosstab), ncol = nrow(crosstab))
-  for (i in 1:(nrow(crosstab) - 1)) {
+  for (i in 1:(nrow (crosstab) - 1)) {
     for (j in (i + 1):nrow(crosstab)) {
       sizes[i, j] <- length(
         intersect(crosstab$members[[i]], crosstab$members[[j]])
@@ -115,26 +115,27 @@ cross_sizes <- function(crosstab) {
 
 next_partitions <- function(partitions, sizes) {
 
-  k <- length(partitions)
-  interclasses <- partitions[[1]]
+  res <- list()
 
-  ## for each previous partition
-  res <- lapply(partitions[[k]], function(partition) {
-    size_inter <- sizes[partition, ]
-    if (k > 1) {
-      size_inter <- colSums(size_inter)
+  progressr::with_progress({
+    p <- progressr::progressor(along = seq_along(partitions))
+
+    ## for each previous partition
+    for (partition in partitions) {
+      size_inter <- colSums(sizes[partition, ])
+      classes_ok <- which(size_inter == 0)
+      for (classe in classes_ok) {
+        res <- c(res, list(c(partition, classe)))
+      }
+      p()
     }
-    ## add new class if intersection is empty
-    classes_ok <- size_inter == 0
-    lapply(interclasses[classes_ok], function(x) c(partition, x))
   })
-  res <- res[lapply(res, length) > 0]
 
   if (length(res) == 0) {
     return(NULL)
   }
 
-  do.call(c, res)
+  res
 }
 
 ## From computed partitions, filter out the optimal ones and add group
@@ -248,11 +249,10 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 #' }
 
 
-rainette2 <- function(
-  x, y = NULL, max_k = 5,
-  min_segment_size1 = 10, min_segment_size2 = 15,
-  doc_id = NULL, min_members = 10, min_chi2 = 3.84,
-  uc_size1, uc_size2, ...) {
+rainette2 <- function(x, y = NULL, max_k = 5,
+                      min_segment_size1 = 10, min_segment_size2 = 15,
+                      doc_id = NULL, min_members = 10, min_chi2 = 3.84,
+                      uc_size1, uc_size2, ...) {
 
   ## Check for deprecated uc_size1 argument
   if (!missing(uc_size1)) {
@@ -274,12 +274,14 @@ rainette2 <- function(
     dtm <- x
     message("  Computing first clustering with min_segment_size1 = ", min_segment_size1)
     x <- rainette::rainette(
-      dtm, k = max_k, min_segment_size = min_segment_size1, doc_id = doc_id,
+      dtm,
+      k = max_k, min_segment_size = min_segment_size1, doc_id = doc_id,
       min_split_members = min_members, ...
     )
     message("  Computing second clustering with min_segment_size2 = ", min_segment_size2)
     y <- rainette::rainette(
-      dtm, k = max_k, min_segment_size = min_segment_size2, doc_id = doc_id,
+      dtm,
+      k = max_k, min_segment_size = min_segment_size2, doc_id = doc_id,
       min_split_members = min_members, ...
     )
   }
@@ -291,58 +293,53 @@ rainette2 <- function(
     max_k <- max_k_res
   }
 
-  ## Progress bar
   message("  Searching for best partitions...")
-  pb_max <- max_k + 4
+  message("  Computing size 2 partitions...")
 
-  progressr::with_progress({
-    p <- progressr::progressor(along = seq_len(pb_max))
+  ## Compute data frame of groups at each k for both clusterings
+  groups1 <- get_groups(x)
+  groups2 <- get_groups(y)
+  ## Check if both clusterings have same ndoc
+  if (nrow(groups1) != nrow(groups2)) {
+    stop("! Number of documents in both clustering results must be the same")
+  }
+  ## Total number of documents
+  n_tot <- nrow(groups1)
 
-    ## Compute data frame of groups at each k for both clusterings
-    groups1 <- get_groups(x)
-    groups2 <- get_groups(y)
-    ## Check if both clusterings have same ndoc
-    if (nrow(groups1) != nrow(groups2)) {
-      stop("! Number of documents in both clustering results must be the same")
-    }
-    ## Total number of documents
-    n_tot <- nrow(groups1)
+  ## Compute sizes and chi2 of every crossing between classes
+  ## of both clusterings (intersection classes)
+  cross_groups <- groups_crosstab(groups1, groups2, min_members, min_chi2)
+  ## Add members list to each crossing group
+  cross_groups <- crosstab_add_members(cross_groups, groups1, groups2)
 
-    ## Compute sizes and chi2 of every crossing between classes
-    ## of both clusterings (intersection classes)
-    cross_groups <- groups_crosstab(groups1, groups2, min_members, min_chi2)
-    ## Add members list to each crossing group
-    cross_groups <- crosstab_add_members(cross_groups, groups1, groups2)
+  if (nrow(cross_groups) < 2) {
+    stop("! Not enough valid classes to continue. You may try a lower min_members value.")
+  }
 
-    if (nrow(cross_groups) < 2) {
-      stop("! Not enough valid classes to continue. You may try a lower min_members value.")
-    }
+  ## Matrix of number of common elements between crossing groups
+  sizes <- cross_sizes(cross_groups)
 
-    ## Matrix of number of common elements between crossing groups
-    sizes <- cross_sizes(cross_groups)
-    p()
+  ## Compute partitions
+  partitions <- list()
+  ## Size 2 partitions : pairs of cross groups with no common elements
+  partitions[[1]] <- which(sizes == 0, arr.ind = TRUE) %>%
+    apply(1, unname, simplify = FALSE)
 
-    ## Compute partitions
-    partitions <- list()
-    partitions[[1]] <- cross_groups$id
-    for (k in 2:max_k) {
-      part <- next_partitions(partitions, sizes)
-      if (!is.null(part)) {
-        partitions[[k]] <- part
-        p()
-      } else {
-        p()
-        message("! No more partitions found, stopping at k=", k - 1)
-        break;
+  ## Compute partitions of size > 2
+  if (max_k > 2) {
+    for (k in 1:(max_k - 1)) {
+      message("  Computing size ", k + 2, " partitions...")
+      next_part <- next_partitions(partitions[[k]], sizes)
+      if (is.null(next_part)) {
+        message("! No more partitions found, stopping at k=", k + 1)
+        break
       }
+      partitions[[k + 1]] <- next_part
     }
+  }
 
-    partitions[[1]] <- NULL
-
-    ## Select optimal partitions and add group membership for each one
-    res <- get_optimal_partitions(partitions, cross_groups, n_tot)
-
-  })
+  ## Select optimal partitions and add group membership for each one
+  res <- get_optimal_partitions(partitions, cross_groups, n_tot)
 
   message("  Done.")
 
