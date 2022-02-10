@@ -30,22 +30,26 @@ get_groups <- function(res) {
 ## Compute size and chi2 for all combinations of two groups from two
 ## clustering results
 
-groups_crosstab <- function(groups1, groups2) {
+groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
+
   # Total number of documents
   n_tot <- nrow(groups1)
+
   # Frequencies of each group in first clustering
   g1_count <- groups1 %>%
     tidyr::pivot_longer(
       everything(), names_to = "level1", values_to = "g1"
     ) %>%
     dplyr::count(level1, g1, name = "n1")
+
   # Frequencies of each group in second clustering
   g2_count <- groups2 %>%
     tidyr::pivot_longer(
       everything(), names_to = "level2", values_to = "g2"
     ) %>%
     dplyr::count(level2, g2, name = "n2")
-  # Compute frequencies of all groups combinations  
+
+  # Compute frequencies of all groups combinations
   res <- purrr::map_dfr(names(groups1), function(level1) {
     purrr::map_dfr(names(groups2), function(level2) {
       df <- dplyr::tibble(
@@ -59,38 +63,37 @@ groups_crosstab <- function(groups1, groups2) {
         dplyr::mutate(level1 = level1, level2 = level2)
     })
   })
-  # Add group count and chi-squared statistic
+
+  # Add group count, chi-squared statistic and members
   res %>%
-    dplyr::right_join(g1_count, by = c("level1", "g1")) %>%
-    dplyr::right_join(g2_count, by = c("level2", "g2")) %>%
+    # Filter on members
+    dplyr::filter(n_both > min_members) %>%
+    dplyr::left_join(g1_count, by = c("level1", "g1")) %>%
+    dplyr::left_join(g2_count, by = c("level2", "g2")) %>%
+    # Compute chi-squared
     dplyr::rowwise() %>%
     dplyr::mutate(
       chi2 = compute_chi2(n_both, n1, n2, n_tot) %>% unname()
     ) %>%
-    ungroup()
+    dplyr::ungroup() %>%
+    # Filter chi-squared
+    dplyr::filter(chi2 > min_chi2) %>%
+    mutate(interclass = paste(g1, g2, sep = "x"))
 }
 
-## Filter intersection classes on size and Khi2 value, and
-## add their members
+# Add members list to each crossing group
 
-filter_groups_crosstab <- function(tab, groups1, groups2, min_members, min_chi2) {
-
-  ## Return members of an intersection class
-  compute_members <- function(level1, g1, level2, g2) {
-    purrr::pmap(list(level1, g1, level2, g2), function(level1, g1, level2, g2) {
-      which(groups1[[level1]] == g1 & groups2[[level2]] == g2)
-    })
-  }
-
-  ## Filter intersection classes on size and Khi2 value, and add members
+crosstab_add_members <- function(tab, groups1, groups2) {
   tab %>%
-    filter(chi2 > min_chi2, n_both > min_members) %>%
-    select(g1, g2, level1, level2, n_both, chi2) %>%
-    mutate(interclass = paste(g1, g2, sep = "x"),
-      members = compute_members(level1, g1, level2, g2)) %>%
-    filter(!duplicated(members))
-
+    rowwise() %>%
+    dplyr::mutate(
+      members = list(which(groups1[[level1]] == g1 & groups2[[level2]] == g2))
+    ) %>%
+    dplyr::ungroup() %>%
+    # Filter groups with same members
+    dplyr::distinct(members, .keep_all = TRUE)
 }
+
 
 ## Compute size of each pairs of intersection classes. Lower triangle
 ## and diagonal at 1 not to be selected as a partition afterward.
@@ -217,7 +220,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 #' - `groups` group membership of each document for this partition (`NA` if not assigned)
 #'
 #' @seealso [rainette()], [cutree_rainette2()], [rainette2_plot()], [rainette2_explor()]
-#'
+#'>
 #' @references
 #'
 #' - Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
@@ -305,24 +308,21 @@ rainette2 <- function(
 
     ## Compute sizes and chi2 of every crossing between classes
     ## of both clusterings (intersection classes)
-    cross_groups <- groups_crosstab(groups1, groups2)
+    cross_groups <- groups_crosstab(groups1, groups2, min_members, min_chi2)
+    ## Add members list to each crossing group
+    cross_groups <- crosstab_add_members(cross_groups, groups1, groups2)
 
-    ## Filter intersection classes on size and Khi2 value, and add members
-    valid <- filter_groups_crosstab(
-      cross_groups, groups1, groups2, min_members, min_chi2
-    )
-
-    if (nrow(valid) < 2) {
+    if (nrow(cross_groups) < 2) {
       stop("! Not enough valid classes to continue. You may try a lower min_members value.")
     }
 
     ## Matrix of sizes of intersection classes crossing
-    sizes <- cross_sizes(valid)
+    sizes <- cross_sizes(cross_groups)
     p()
 
     ## Compute partitions
     partitions <- list()
-    interclasses <- valid$interclass
+    interclasses <- cross_groups$interclass
     partitions[[1]] <- interclasses
     for (k in 2:max_k) {
       part <- next_partitions(partitions, sizes)
@@ -339,7 +339,7 @@ rainette2 <- function(
     partitions[[1]] <- NULL
 
     ## Select opimal partitions and add group membership for each one
-    res <- get_optimal_partitions(partitions, valid, n_tot)
+    res <- get_optimal_partitions(partitions, cross_groups, n_tot)
 
   })
 

@@ -35,34 +35,38 @@ test_that("groups_crosstab is ok", {
   colnames(g1) <- 1:2
   colnames(g2) <- 1:2
   n_tot <- 4
-  tab <- rainette:::groups_crosstab(g1, g2)
+  tab <- rainette:::groups_crosstab(g1, g2, min_members = -Inf, min_chi2 = -Inf)
 
   expect_equal(nrow(tab), 25)
-  expect_equal(colnames(tab), c("g1", "g2", "n_both", "level1", "level2", "n1", "n2", "chi2"))
+  expect_equal(
+    colnames(tab),
+    c("g1", "g2", "n_both", "level1", "level2", "n1", "n2", "chi2", "interclass")
+  )
   tmp <- tab %>% dplyr::filter(level1 == 2, level2 == 2, g1 == 2, g2 == 2)
   expect_equal(tmp$n_both, 1)
   expect_equal(tmp$n1, 1)
   expect_equal(tmp$n2, 1)
   expect_equal(tmp$chi2, unname(rainette:::compute_chi2(tmp$n_both, tmp$n1, tmp$n2, n_tot)))
+  expect_equal(tmp$interclass, "2x2")
 })
 
-test_that("filter_groups_crosstab is ok", {
+test_that("crosstab_add_members and filtering", {
   g1 <- tibble(c(1,1,1,1,2), c(1,1,2,3,3))
   g2 <- tibble(c(1,1,1,1,2), c(3,1,3,1,2))
   colnames(g1) <- 1:2
   colnames(g2) <- 1:2
   n_tot <- 5
-  tab <- rainette:::groups_crosstab(g1, g2)
-  ftab <- rainette:::filter_groups_crosstab(tab, g1, g2, min_members = 2, min_chi2 = 0.5)
+  tab <- rainette:::groups_crosstab(g1, g2, min_members = 2, min_chi2 = 0.5)
+  tab <- rainette:::crosstab_add_members(tab, g1, g2)
 
-  expect_equal(nrow(ftab), 1)
-  expect_equal(ftab$g1, 1)
-  expect_equal(ftab$g2, 1)
-  expect_equal(ftab$n_both, 4)
-  expect_equal(ftab$interclass, "1x1")
-  expect_equal(ftab$chi2,
+  expect_equal(nrow(tab), 1)
+  expect_equal(tab$g1, 1)
+  expect_equal(tab$g2, 1)
+  expect_equal(tab$n_both, 4)
+  expect_equal(tab$interclass, "1x1")
+  expect_equal(tab$chi2,
     suppressWarnings(unname(chisq.test(matrix(c(4,0,0,1), nrow=2))$statistic)))
-  expect_equal(ftab$members, list(1:4))
+  expect_equal(tab$members, list(1:4))
 })
 
 test_that("cross_sizes is ok", {
