@@ -91,7 +91,8 @@ crosstab_add_members <- function(tab, groups1, groups2) {
     ) %>%
     dplyr::ungroup() %>%
     # Filter groups with same members
-    dplyr::distinct(members, .keep_all = TRUE)
+    dplyr::distinct(members, .keep_all = TRUE) %>%
+    dplyr::mutate(id = 1:n())
 }
 
 
@@ -99,11 +100,10 @@ crosstab_add_members <- function(tab, groups1, groups2) {
 ## and diagonal at 1 not to be selected as a partition afterward.
 
 cross_sizes <- function(crosstab) {
-  sizes <- matrix(1, nrow = nrow(crosstab), ncol = nrow(crosstab),
-    dimnames = list(crosstab$interclass, crosstab$interclass))
+  sizes <- matrix(1, nrow = nrow(crosstab), ncol = nrow(crosstab))
   for (i in 1:(nrow(crosstab) - 1)) {
     for (j in (i + 1):nrow(crosstab)) {
-      sizes[i , j] <- length(
+      sizes[i, j] <- length(
         intersect(crosstab$members[[i]], crosstab$members[[j]])
       )
     }
@@ -125,7 +125,7 @@ next_partitions <- function(partitions, sizes) {
       size_inter <- colSums(size_inter)
     }
     ## add new class if intersection is empty
-    classes_ok <- which(size_inter == 0)
+    classes_ok <- size_inter == 0
     lapply(interclasses[classes_ok], function(x) c(partition, x))
   })
   res <- res[lapply(res, length) > 0]
@@ -140,14 +140,14 @@ next_partitions <- function(partitions, sizes) {
 ## From computed partitions, filter out the optimal ones and add group
 ## membership
 
-get_optimal_partitions <- function(partitions, valid, n_tot) {
+get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 
   ## Compute group memberships from a vector of clusters
   compute_groups <- function(clusters) {
     clusters <- unlist(clusters)
     groups <- rep(NA, n_tot)
     for (i in seq_along(clusters)) {
-      members <- unlist(valid$members[valid$interclass == clusters[i]])
+      members <- unlist(cross_groups$members[clusters[i]])
       groups[members] <- i
     }
     groups
@@ -161,8 +161,8 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
     dplyr::tibble(clusters = partitions, k = k + 1) %>%
       ## Compute size and sum of Khi2 for each partition
       mutate(
-        chi2 = purrr::map_dbl(clusters, ~sum(valid$chi2[valid$interclass %in% .x])),
-        n = purrr::map_dbl(clusters, ~sum(valid$n_both[valid$interclass %in% .x]))
+        chi2 = purrr::map_dbl(clusters, ~sum(cross_groups$chi2[.x])),
+        n = purrr::map_dbl(clusters, ~sum(cross_groups$n_both[.x]))
       ) %>%
       ## Filter partitions with max size or max chi2 for each k
       group_by(k) %>%
@@ -170,13 +170,15 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
       group_by(k, n) %>%
       filter(chi2 == max(chi2)) %>%
       group_by(k, chi2) %>%
-      filter(n == max(n))
+      filter(n == max(n)) %>%
+      dplyr::ungroup()
   })
 
-  ## Add group membership for each clustering
   res %>%
-    mutate(groups = purrr::map(clusters, compute_groups)) %>%
-    ungroup
+    # Add group membership for each clustering
+    dplyr::mutate(groups = purrr::map(clusters, compute_groups)) %>%
+    # Replace cross groups ids by their name
+    dplyr::mutate(clusters = purrr::map(clusters, ~{cross_groups$interclass[.x]}))
 }
 
 
@@ -316,14 +318,13 @@ rainette2 <- function(
       stop("! Not enough valid classes to continue. You may try a lower min_members value.")
     }
 
-    ## Matrix of sizes of intersection classes crossing
+    ## Matrix of number of common elements between crossing groups
     sizes <- cross_sizes(cross_groups)
     p()
 
     ## Compute partitions
     partitions <- list()
-    interclasses <- cross_groups$interclass
-    partitions[[1]] <- interclasses
+    partitions[[1]] <- cross_groups$id
     for (k in 2:max_k) {
       part <- next_partitions(partitions, sizes)
       if (!is.null(part)) {
@@ -338,7 +339,7 @@ rainette2 <- function(
 
     partitions[[1]] <- NULL
 
-    ## Select opimal partitions and add group membership for each one
+    ## Select optimal partitions and add group membership for each one
     res <- get_optimal_partitions(partitions, cross_groups, n_tot)
 
   })
