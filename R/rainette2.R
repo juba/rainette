@@ -101,7 +101,7 @@ crosstab_add_members <- function(tab, groups1, groups2) {
 
 cross_sizes <- function(crosstab) {
   sizes <- matrix(1, nrow = nrow(crosstab), ncol = nrow(crosstab))
-  for (i in 1:(nrow (crosstab) - 1)) {
+  for (i in 1:(nrow(crosstab) - 1)) {
     for (j in (i + 1):nrow(crosstab)) {
       sizes[i, j] <- length(
         intersect(crosstab$members[[i]], crosstab$members[[j]])
@@ -118,19 +118,20 @@ next_partitions <- function(partitions, sizes) {
   res <- list()
 
   progressr::with_progress({
-    p <- progressr::progressor(along = seq_along(partitions))
+    p <- progressr::progressor(steps = length(partitions) / 100)
 
     ## for each previous partition
-    for (partition in partitions) {
+    for (i in seq_along(partitions)) {
+      partition <- partitions[[i]]
       size_inter <- colSums(sizes[partition, ])
       classes_ok <- which(size_inter == 0)
       for (classe in classes_ok) {
         res <- c(res, list(c(partition, classe)))
       }
-      p()
+      if (i %% 100 == 0) p()
     }
   })
-
+  
   if (length(res) == 0) {
     return(NULL)
   }
@@ -296,38 +297,47 @@ rainette2 <- function(x, y = NULL, max_k = 5,
   message("  Searching for best partitions...")
   message("  Computing size 2 partitions...")
 
-  ## Compute data frame of groups at each k for both clusterings
-  groups1 <- get_groups(x)
-  groups2 <- get_groups(y)
-  ## Check if both clusterings have same ndoc
-  if (nrow(groups1) != nrow(groups2)) {
-    stop("! Number of documents in both clustering results must be the same")
-  }
-  ## Total number of documents
-  n_tot <- nrow(groups1)
+  progressr::with_progress({
+    p <- progressr::progressor(steps = 5)
 
-  ## Compute sizes and chi2 of every crossing between classes
-  ## of both clusterings (intersection classes)
-  cross_groups <- groups_crosstab(groups1, groups2, min_members, min_chi2)
-  ## Add members list to each crossing group
-  cross_groups <- crosstab_add_members(cross_groups, groups1, groups2)
+    ## Compute data frame of groups at each k for both clusterings
+    groups1 <- get_groups(x)
+    groups2 <- get_groups(y)
+    p()
+    ## Check if both clusterings have same ndoc
+    if (nrow(groups1) != nrow(groups2)) {
+      stop("! Number of documents in both clustering results must be the same")
+    }
+    ## Total number of documents
+    n_tot <- nrow(groups1)
 
-  if (nrow(cross_groups) < 2) {
-    stop("! Not enough valid classes to continue. You may try a lower min_members value.")
-  }
+    ## Compute sizes and chi2 of every crossing between classes
+    ## of both clusterings (intersection classes)
+    cross_groups <- groups_crosstab(groups1, groups2, min_members, min_chi2)
+    p()
+    ## Add members list to each crossing group
+    cross_groups <- crosstab_add_members(cross_groups, groups1, groups2)
+    p()
 
-  ## Matrix of number of common elements between crossing groups
-  sizes <- cross_sizes(cross_groups)
+    if (nrow(cross_groups) < 2) {
+      stop("! Not enough valid classes to continue. You may try a lower min_members value.")
+    }
 
-  ## Compute partitions
-  partitions <- list()
-  ## Size 2 partitions : pairs of cross groups with no common elements
-  partitions[[1]] <- which(sizes == 0, arr.ind = TRUE) %>%
-    apply(1, unname, simplify = FALSE)
+    ## Matrix of number of common elements between crossing groups
+    sizes <- cross_sizes(cross_groups)
+    p()
+
+    ## Compute partitions
+    partitions <- list()
+    ## Size 2 partitions : pairs of cross groups with no common elements
+    partitions[[1]] <- which(sizes == 0, arr.ind = TRUE) %>%
+      apply(1, unname, simplify = FALSE)
+    p()
+  })
 
   ## Compute partitions of size > 2
   if (max_k > 2) {
-    for (k in 1:(max_k - 1)) {
+    for (k in 1:(max_k - 2)) {
       message("  Computing size ", k + 2, " partitions...")
       next_part <- next_partitions(partitions[[k]], sizes)
       if (is.null(next_part)) {
