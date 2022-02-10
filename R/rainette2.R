@@ -14,16 +14,17 @@ compute_chi2 <- function(n_both, n1, n2, n_tot) {
   return(res)
 }
 
-## Compute data frame of groups at each k for a clustering
+## Compute data frame of group membership at each level for a clustering
 
 get_groups <- function(res) {
-  groups <- purrr::imap_dfc(res$uce_groups, ~ {
-    v <- data.frame(paste(.y, .x, sep = "."), stringsAsFactors = FALSE)
-    colnames(v) <- .y
-    v
-  })
-  colnames(groups) <- seq_along(groups)
-  return(groups)
+  groups <- purrr::imap(
+    res$uce_groups,
+    function(group, level) {
+      paste(level, group, sep = ".")
+    }
+  )
+  names(groups) <- seq_along(groups)
+  dplyr::bind_cols(groups)
 }
 
 ## Compute size and chi2 for all combinations of two classes form two
