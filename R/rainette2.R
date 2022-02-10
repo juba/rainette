@@ -3,7 +3,7 @@
 
 compute_chi2 <- function(n_both, n1, n2, n_tot) {
   tab <- matrix(
-    c(n_both, n1 - n_both, n2 - n_both, n_tot - n1 - n2 + n_both), 
+    c(n_both, n1 - n_both, n2 - n_both, n_tot - n1 - n2 + n_both),
     nrow = 2
   )
   suppressWarnings(cs <- stats::chisq.test(tab))
@@ -27,32 +27,53 @@ get_groups <- function(res) {
   dplyr::bind_cols(groups)
 }
 
-## Compute size and chi2 for all combinations of two classes form two
+## Compute size and chi2 for all combinations of two groups from two
 ## clustering results
 
-classes_crosstab <- function(groups1, groups2, n_tot) {
-  purrr::imap_dfr(groups1, function(g1, i1) {
-    purrr::imap_dfr(groups2, function(g2, i2) {
-      df <- dplyr::tibble(g1, g2)
+groups_crosstab <- function(groups1, groups2) {
+  # Total number of documents
+  n_tot <- nrow(groups1)
+  # Frequencies of each group in first clustering
+  g1_count <- groups1 %>%
+    tidyr::pivot_longer(
+      everything(), names_to = "level1", values_to = "g1"
+    ) %>%
+    dplyr::count(g1, name = "n1")
+  # Frequencies of each group in second clustering
+  g2_count <- groups2 %>%
+    tidyr::pivot_longer(
+      everything(), names_to = "level2", values_to = "g2"
+    ) %>%
+    dplyr::count(g2, name = "n2")
+  # Compute frequencies of all groups combinations  
+  res <- purrr::map_dfr(names(groups1), function(level1) {
+    purrr::map_dfr(names(groups2), function(level2) {
+      df <- dplyr::tibble(
+        g1 = groups1[[level1]],
+        g2 = groups2[[level2]]
+      )
       df %>%
-        count(g1, g2) %>%
+        dplyr::count(g1, g2) %>%
         tidyr::complete(g1, g2, fill = list(n = 0)) %>%
-        rename(n_both = n) %>%
-        right_join(df %>% count(g1), by = "g1") %>%
-        rename(n1 = n) %>%
-        right_join(df %>% count(g2), by = "g2") %>%
-        rename(n2 = n) %>%
-        mutate(level1 = i1, level2 = i2,
-          chi2 = purrr::pmap_dbl(list(n_both, n1, n2, n_tot), compute_chi2)) %>%
-        ungroup()
+        dplyr::rename(n_both = n) %>%
+        dplyr::mutate(level1 = level1, level2 = level2)
     })
   })
+  # Add group count and chi-squared statistic
+  res %>%
+    dplyr::right_join(g1_count, by = "g1") %>%
+    dplyr::right_join(g2_count, by = "g2") %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(
+      chi2 = compute_chi2(n_both, n1, n2, n_tot)
+    ) %>%
+    ungroup()
 }
 
 ## Filter intersection classes on size and Khi2 value, and
 ## add their members
 
-filter_crosstab <- function(tab, groups1, groups2, min_members, min_chi2) {
+filter_groups_crosstab <- function(tab, groups1, groups2, min_members, min_chi2) {
 
   ## Return members of an intersection class
   compute_members <- function(level1, g1, level2, g2) {
@@ -275,19 +296,20 @@ rainette2 <- function(
     ## Compute data frame of groups at each k for both clusterings
     groups1 <- get_groups(x)
     groups2 <- get_groups(y)
-    ## Total number of documents
+    ## Check if both clusterings have same ndoc
     if (nrow(groups1) != nrow(groups2)) {
       stop("⚠ Number of documents in both clustering results must be the same")
     }
+    ## Total number of documents
     n_tot <- nrow(groups1)
 
     ## Compute sizes and chi2 of every crossing between classes
     ## of both clusterings (intersection classes)
-    cross_classes <- classes_crosstab(groups1, groups2, n_tot)
+    cross_groups <- groups_crosstab(groups1, groups2)
 
     ## Filter intersection classes on size and Khi2 value, and add members
-    valid <- filter_crosstab(
-      cross_classes, groups1, groups2, min_members, min_chi2
+    valid <- filter_groups_crosstab(
+      cross_groups, groups1, groups2, min_members, min_chi2
     )
 
     if (nrow(valid) < 2) {
