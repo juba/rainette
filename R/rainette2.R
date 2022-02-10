@@ -182,7 +182,7 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 #'
 #' `doc_id` must be provided unless the corpus comes from `split_segments`,
 #' in this case `segment_source` is used by default.
-#' 
+#'
 #' For more details on optimal partitions search algorithm, please see package vignettes.
 #'
 #' @return
@@ -223,21 +223,21 @@ get_optimal_partitions <- function(partitions, valid, n_tot) {
 
 
 rainette2 <- function(
-  x, y = NULL, max_k = 5, 
+  x, y = NULL, max_k = 5,
   min_segment_size1 = 10, min_segment_size2 = 15,
-  doc_id = NULL, min_members = 10, min_chi2 = 3.84, 
+  doc_id = NULL, min_members = 10, min_chi2 = 3.84,
   uc_size1, uc_size2, ...) {
 
   ## Check for deprecated uc_size1 argument
   if (!missing(uc_size1)) {
-    warning("uc_size1 is deprecated. Use min_segment_size1 instead.")
+    warning("⚠ uc_size1 is deprecated. Use min_segment_size1 instead.")
     if (missing(min_segment_size1)) {
       min_segment_size1 <- uc_size1
     }
   }
   ## Check for deprecated uc_size2 argument
   if (!missing(uc_size2)) {
-    warning("uc_size2 is deprecated. Use min_segment_size2 instead.")
+    warning("⚠ uc_size2 is deprecated. Use min_segment_size2 instead.")
     if (missing(min_segment_size2)) {
       min_segment_size2 <- uc_size2
     }
@@ -261,7 +261,7 @@ rainette2 <- function(
   ## max_k should not be higher than the smallest k in both clustering
   max_k_res <- min(max(x$group, na.rm = TRUE), max(y$group, na.rm = TRUE))
   if (max_k_res < max_k) {
-    message("! Setting max_k from ", max_k, " to ", max_k_res)
+    message("⚠ Lowering max_k from ", max_k, " to ", max_k_res)
     max_k <- max_k_res
   }
 
@@ -288,7 +288,7 @@ rainette2 <- function(
     )
 
     if (nrow(valid) < 2) {
-      stop("Not enough valid classes to continue. You may try a lower min_members value.")
+      stop("⚠ Not enough valid classes to continue. You may try a lower min_members value.")
     }
 
     ## Matrix of sizes of intersection classes crossing
@@ -301,12 +301,12 @@ rainette2 <- function(
     partitions[[1]] <- interclasses
     for (k in 2:max_k) {
       part <- next_partitions(partitions, sizes)
-      if(!is.null(part)) {
+      if (!is.null(part)) {
         partitions[[k]] <- part
         p()
       } else {
         p()
-        message("! No more partitions found, stopping at k=", k - 1)
+        message("⚠ No more partitions found, stopping at k=", k - 1)
         break;
       }
     }
@@ -324,4 +324,3 @@ rainette2 <- function(
 
   res
 }
-
