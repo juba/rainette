@@ -158,37 +158,43 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
     groups
   }
 
-  ## Compute data frame of results
-  res <- purrr::imap_dfr(partitions, function(partition, k) {
-    if (is.null(partition)) {
-      return(NULL)
-    }
-    dplyr::tibble(clusters = partition, k = k + 1) %>%
+  progressr::with_progress({
+    p <- progressr::progressor(steps = length(partitions) + 1)
+
+    ## Compute data frame of results
+    res <- purrr::imap_dfr(partitions, function(partition, k) {
+      if (is.null(partition)) {
+        return(NULL)
+      }
+      out <- dplyr::tibble(clusters = partition, k = k + 1) %>%
+        dplyr::rowwise() %>%
+        ## Compute size and sum of Khi2 for each partition
+        dplyr::mutate(
+          chi2 = sum(cross_groups$chi2[clusters]),
+          n = sum(cross_groups$n_both[clusters])
+        ) %>%
+        ## Filter partitions with max size or max chi2 for each k
+        dplyr::group_by(k) %>%
+        dplyr::filter(n == max(n) | chi2 == max(chi2)) %>%
+        ## If several partitions with same n, keep max chi2
+        dplyr::group_by(k, n) %>%
+        dplyr::slice_max(chi2) %>%
+        ## If several partitions with same chi2, keep max n
+        dplyr::group_by(k, chi2) %>%
+        dplyr::slice_max(n) %>%
+        dplyr::ungroup()
+      p()
+      out
+    })
+    res <- res %>%
       dplyr::rowwise() %>%
-      ## Compute size and sum of Khi2 for each partition
-      dplyr::mutate(
-        chi2 = sum(cross_groups$chi2[clusters]),
-        n = sum(cross_groups$n_both[clusters])
-      ) %>%
-      ## Filter partitions with max size or max chi2 for each k
-      dplyr::group_by(k) %>%
-      dplyr::filter(n == max(n) | chi2 == max(chi2)) %>%
-      ## If several partitions with same n, keep max chi2
-      dplyr::group_by(k, n) %>%
-      dplyr::slice_max(chi2) %>%
-      ## If several partitions with same chi2, keep max n
-      dplyr::group_by(k, chi2) %>%
-      dplyr::slice_max(n) %>%
+      # Add group membership for each clustering
+      dplyr::mutate(groups = list(compute_members(clusters))) %>%
+      # Replace cross groups ids by their name
+      dplyr::mutate(clusters = list(cross_groups$interclass[clusters])) %>%
       dplyr::ungroup()
   })
-
-  res %>%
-    dplyr::rowwise() %>%
-    # Add group membership for each clustering
-    dplyr::mutate(groups = list(compute_members(clusters))) %>%
-    # Replace cross groups ids by their name
-    dplyr::mutate(clusters = list(cross_groups$interclass[clusters])) %>%
-    dplyr::ungroup()
+  res
 }
 
 
