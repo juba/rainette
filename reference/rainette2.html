@@ -78,6 +78,7 @@
   doc_id <span class="op">=</span> <span class="cn">NULL</span>,
   min_members <span class="op">=</span> <span class="fl">10</span>,
   min_chi2 <span class="op">=</span> <span class="fl">3.84</span>,
+  parallel <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">uc_size1</span>,
   <span class="va">uc_size2</span>,
   <span class="va">...</span>
@@ -110,6 +111,8 @@ result from same dfm but with different uc size.</p></dd>
 <dt>...</dt>
 <dd><p>if <code>x</code> is a dfm object, parameters passed to <code><a href="rainette.html">rainette()</a></code> for both
 simple clusterings</p></dd>
+<dt>if</dt>
+<dd><p>TRUE, use <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to compute partitions (won't work on Windows)</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
