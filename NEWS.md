@@ -1,7 +1,9 @@
 # rainette (development version)
 
-- Fix warnings in Font Awesome icon names
+- Optimization and speed up of `rainette2` computations
+- New `parallel` argument to `rainette2` to compute partitions with `mclapply` (won't work on Windows)
 - Add `show_na_title`, `cluster_label` and `keyness_plot_xlab` arguments to `rainette_plot` to customize graphics output
+- Fix warnings in Font Awesome icon names
 
 # rainette 0.2.1
 
