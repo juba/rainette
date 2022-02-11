@@ -142,48 +142,53 @@ next_partitions <- function(partitions, sizes) {
   res
 }
 
-## From computed partitions, filter out the optimal ones and add group
+## From computed partitions, select the optimal ones and add group
 ## membership
 
 get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 
-  ## Compute group memberships from a vector of clusters
-  compute_groups <- function(clusters) {
-    clusters <- unlist(clusters)
+  ## Compute group memberships from a vector of groups
+  compute_members <- function(cluster) {
+    cluster <- unlist(cluster)
     groups <- rep(NA, n_tot)
-    for (i in seq_along(clusters)) {
-      members <- unlist(cross_groups$members[clusters[i]])
+    for (i in seq_along(cluster)) {
+      members <- unlist(cross_groups$members[cluster[i]])
       groups[members] <- i
     }
     groups
   }
 
   ## Compute data frame of results
-  res <- purrr::imap_dfr(partitions, function(partitions, k) {
-    if (is.null(partitions)) {
+  res <- purrr::imap_dfr(partitions, function(partition, k) {
+    if (is.null(partition)) {
       return(NULL)
     }
-    dplyr::tibble(clusters = partitions, k = k + 1) %>%
+    dplyr::tibble(clusters = partition, k = k + 1) %>%
+      dplyr::rowwise() %>%
       ## Compute size and sum of Khi2 for each partition
-      mutate(
-        chi2 = purrr::map_dbl(clusters, ~sum(cross_groups$chi2[.x])),
-        n = purrr::map_dbl(clusters, ~sum(cross_groups$n_both[.x]))
+      dplyr::mutate(
+        chi2 = sum(cross_groups$chi2[clusters]),
+        n = sum(cross_groups$n_both[clusters])
       ) %>%
       ## Filter partitions with max size or max chi2 for each k
-      group_by(k) %>%
-      filter(n == max(n) | chi2 == max(chi2)) %>%
-      group_by(k, n) %>%
-      filter(chi2 == max(chi2)) %>%
-      group_by(k, chi2) %>%
-      filter(n == max(n)) %>%
+      dplyr::group_by(k) %>%
+      dplyr::filter(n == max(n) | chi2 == max(chi2)) %>%
+      ## If several partitions with same n, keep max chi2
+      dplyr::group_by(k, n) %>%
+      dplyr::slice_max(chi2) %>%
+      ## If several partitions with same chi2, keep max n
+      dplyr::group_by(k, chi2) %>%
+      dplyr::slice_max(n) %>%
       dplyr::ungroup()
   })
 
   res %>%
+    dplyr::rowwise() %>%
     # Add group membership for each clustering
-    dplyr::mutate(groups = purrr::map(clusters, compute_groups)) %>%
+    dplyr::mutate(groups = list(compute_members(clusters))) %>%
     # Replace cross groups ids by their name
-    dplyr::mutate(clusters = purrr::map(clusters, ~{cross_groups$interclass[.x]}))
+    dplyr::mutate(clusters = list(cross_groups$interclass[clusters])) %>%
+    dplyr::ungroup()
 }
 
 
