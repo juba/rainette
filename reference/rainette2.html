@@ -104,6 +104,8 @@ result from same dfm but with different uc size.</p></dd>
 <dd><p>minimum members of each cluster</p></dd>
 <dt>min_chi2</dt>
 <dd><p>minimum chi2 for each cluster</p></dd>
+<dt>parallel</dt>
+<dd><p>if TRUE, use <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to compute partitions (won't work on Windows)</p></dd>
 <dt>uc_size1</dt>
 <dd><p>deprecated, use min_segment_size1 instead</p></dd>
 <dt>uc_size2</dt>
@@ -111,8 +113,6 @@ result from same dfm but with different uc size.</p></dd>
 <dt>...</dt>
 <dd><p>if <code>x</code> is a dfm object, parameters passed to <code><a href="rainette.html">rainette()</a></code> for both
 simple clusterings</p></dd>
-<dt>if</dt>
-<dd><p>TRUE, use <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to compute partitions (won't work on Windows)</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
