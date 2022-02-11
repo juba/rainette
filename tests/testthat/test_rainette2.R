@@ -82,8 +82,8 @@ test_that("next_partitions is ok", {
     members = list(c(1,2,3), c(4,5,6), c(1,2), 7), id = 1:4)
   sizes <- rainette:::cross_sizes(tab)
   partitions <- list(tab$id)
-  partitions[[2]] <- which(sizes == 0, arr.ind = TRUE) %>%
-      apply(1, unname, simplify = FALSE)
+  partitions[[2]] <- which(sizes == 0, arr.ind = TRUE, useNames = FALSE) %>%
+      asplit(1)
 
   partitions[[3]] <- rainette:::next_partitions(partitions[[2]], sizes)
   expect_equal(partitions[[3]], list(c(1, 2, 4), c(2, 3, 4)))
