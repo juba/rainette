@@ -333,8 +333,8 @@ rainette2 <- function(x, y = NULL, max_k = 5,
     ## Compute partitions
     partitions <- list()
     ## Size 2 partitions : pairs of cross groups with no common elements
-    partitions[[1]] <- which(sizes == 0, arr.ind = TRUE) %>%
-      apply(1, unname, simplify = FALSE)
+    partitions[[1]] <- which(sizes == 0, arr.ind = TRUE, useNames = FALSE) %>%
+      asplit(1)
     p()
   })
 
