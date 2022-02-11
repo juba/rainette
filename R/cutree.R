@@ -55,13 +55,13 @@ cutree_rainette <- function(hres, k = NULL, h = NULL,...) {
 #' A vector with group membership.
 #'
 #' @seealso [rainette2_complete_groups()]
-#'
+#' @importFrom rlang .env
 #' @export
 
 cutree_rainette2 <- function(res, k, criterion = c("chi2", "n"), ...) {
   criterion <- match.arg(criterion)
   line <- res %>%
-    dplyr::filter(k == rlang::.env$k)
+    dplyr::filter(k == .env$k)
   if (criterion == "chi2") {
     line <- line %>%
       dplyr::slice_max(chi2)
