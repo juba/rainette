@@ -125,13 +125,16 @@ next_partitions <- function(partitions, sizes) {
       partition <- partitions[[i]]
       size_inter <- colSums(sizes[partition, ])
       classes_ok <- which(size_inter == 0)
-      for (classe in classes_ok) {
-        res <- c(res, list(c(partition, classe)))
+      res_current <- vector(mode = "list", length = length(classes_ok))
+      for (j in seq_along(classes_ok)) {
+        res_current[[j]] <- c(partition, classes_ok[j])
       }
+      res[[i]] <- res_current
       if (i %% 100 == 0) p()
     }
   })
-  
+  res <- unlist(res, recursive = FALSE)
+
   if (length(res) == 0) {
     return(NULL)
   }
@@ -224,7 +227,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 #' - `groups` group membership of each document for this partition (`NA` if not assigned)
 #'
 #' @seealso [rainette()], [cutree_rainette2()], [rainette2_plot()], [rainette2_explor()]
-#'>
+#'
 #' @references
 #'
 #' - Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
@@ -348,6 +351,7 @@ rainette2 <- function(x, y = NULL, max_k = 5,
     }
   }
 
+  message("  Selecting best partitions...")
   ## Select optimal partitions and add group membership for each one
   res <- get_optimal_partitions(partitions, cross_groups, n_tot)
 
