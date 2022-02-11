@@ -14,7 +14,7 @@ res12 <- rainette2(dtm, max_k = 5, min_segment_size1 = 2, min_segment_size2 = 3,
 
 res <- rainette2(res1, res2, min_members = 2)
 
-test_that("compute_chi2 is ok", {
+test_that("compute_chi2", {
   tab <- matrix(c(45, 121 - 45, 257 - 45, 1213 - 121 - 257 + 45), nrow = 2)
   expect_equal(rainette:::compute_chi2(45, 121, 257, 1213),
     chisq.test(tab)$statistic)
@@ -23,13 +23,13 @@ test_that("compute_chi2 is ok", {
     suppressWarnings(-chisq.test(tab)$statistic))
 })
 
-test_that("get_groups is ok", {
+test_that("get_groups", {
   expect_equal(dim(rainette:::get_groups(res1)), c(316, 4))
   expect_equal(substr(rainette:::get_groups(res1)[[2]],3,3), as.character(res1$uce_groups[[2]]))
   expect_equal(substr(rainette:::get_groups(res1)[[2]],1,2), rep("2.", length(res1$group)))
 })
 
-test_that("groups_crosstab is ok", {
+test_that("groups_crosstab", {
   g1 <- tibble(c(1,1,2,2), c(1,1,2,3))
   g2 <- tibble(c(1,2,1,2), c(3,1,2,1))
   colnames(g1) <- 1:2
@@ -69,7 +69,7 @@ test_that("crosstab_add_members and filtering", {
   expect_equal(tab$members, list(1:4))
 })
 
-test_that("cross_sizes is ok", {
+test_that("cross_sizes", {
   tab <- tibble(interclass = c("1.1x1.1", "1.2x1.1", "2.1x2.2", "2.1x1.1"),
     members = list(c(1,2,3), c(4,5,6), c(1,2), 5), id = 1:4)
   sizes <- rainette:::cross_sizes(tab)
@@ -77,7 +77,7 @@ test_that("cross_sizes is ok", {
     4L)))
 })
 
-test_that("next_partitions is ok", {
+test_that("next_partitions", {
   tab <- tibble(interclass = c("1.1x1.1", "1.2x1.1", "2.1x2.2", "2.1x1.1"),
     members = list(c(1,2,3), c(4,5,6), c(1,2), 7), id = 1:4)
   sizes <- rainette:::cross_sizes(tab)
@@ -85,13 +85,16 @@ test_that("next_partitions is ok", {
   partitions[[2]] <- which(sizes == 0, arr.ind = TRUE, useNames = FALSE) %>%
       asplit(1)
 
-  partitions[[3]] <- rainette:::next_partitions(partitions[[2]], sizes)
+  partitions[[3]] <- rainette:::next_partitions_for(partitions[[2]], sizes)
   expect_equal(partitions[[3]], list(c(1, 2, 4), c(2, 3, 4)))
-  expect_equal(rainette:::next_partitions(partitions[[3]], sizes), NULL)
+  partitions[[3]] <- rainette:::next_partitions_parallel(partitions[[2]], sizes)
+  expect_equal(partitions[[3]], list(c(1, 2, 4), c(2, 3, 4)))
+  expect_equal(rainette:::next_partitions_for(partitions[[3]], sizes), NULL)
+  expect_equal(rainette:::next_partitions_parallel(partitions[[3]], sizes), NULL)
 })
 
 
-test_that("get_optimal_partitions is ok", {
+test_that("get_optimal_partitions", {
   valid <- tibble(interclass = c("1x1", "2x2", "3x3", "4x4"),
                   n_both = c(3, 3, 2, 1),
                   chi2 = c(4, 5, 10, 4),
@@ -120,7 +123,7 @@ test_that("rainette2 gives the same result on dtm and on two clustering results"
   expect_equal(res$clusters, res12$clusters)
 })
 
-test_that("rainette2 is ok when stopping before max_k", {
+test_that("rainette2 when stopping before max_k", {
   res1 <- rainette(dtm, k = 4, min_segment_size = 2, min_split_members = 30)
   res2 <- rainette(dtm, k = 4, min_segment_size = 3, min_split_members = 30)
   expect_message(res <- rainette::rainette2(res1, res2, max_k = 4, min_members = 50),

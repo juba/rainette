@@ -111,9 +111,9 @@ cross_sizes <- function(crosstab) {
   sizes
 }
 
-## Compute next level partitions
+## Compute next level partitions with for loop and progress bar
 
-next_partitions <- function(partitions, sizes) {
+next_partitions_for <- function(partitions, sizes) {
 
   res <- list()
 
@@ -133,6 +133,29 @@ next_partitions <- function(partitions, sizes) {
       if (i %% 100 == 0) p()
     }
   })
+  res <- unlist(res, recursive = FALSE)
+
+  if (length(res) == 0) {
+    return(NULL)
+  }
+
+  res
+}
+
+## Compute next level partitions with mclapply (doesn't work on Windows)
+
+next_partitions_parallel <- function(partitions, sizes) {
+
+    ## for each previous partition
+    res <- parallel::mclapply(partitions, function(partition) {
+      size_inter <- colSums(sizes[partition, ])
+      classes_ok <- which(size_inter == 0)
+      res_current <- vector(mode = "list", length = length(classes_ok))
+      for (j in seq_along(classes_ok)) {
+        res_current[[j]] <- c(partition, classes_ok[j])
+      }
+      res_current
+    })
   res <- unlist(res, recursive = FALSE)
 
   if (length(res) == 0) {
@@ -209,6 +232,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_members minimum members of each cluster
 #' @param min_chi2 minimum chi2 for each cluster
+#' @param if TRUE, use `parallel::mclapply` to compute partitions (won't work on Windows)
 #' @param uc_size1 deprecated, use min_segment_size1 instead
 #' @param uc_size2 deprecated, use min_segment_size2 instead
 #' @param ... if `x` is a dfm object, parameters passed to [rainette()] for both
@@ -267,6 +291,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 rainette2 <- function(x, y = NULL, max_k = 5,
                       min_segment_size1 = 10, min_segment_size2 = 15,
                       doc_id = NULL, min_members = 10, min_chi2 = 3.84,
+                      parallel = FALSE,
                       uc_size1, uc_size2, ...) {
 
   ## Check for deprecated uc_size1 argument
@@ -348,6 +373,13 @@ rainette2 <- function(x, y = NULL, max_k = 5,
       asplit(1)
     p()
   })
+
+  ## Partitions computing method
+  next_partitions <- ifelse(
+    parallel,
+    next_partitions_parallel,
+    next_partitions_for
+  )
 
   ## Compute partitions of size > 2
   if (max_k > 2) {

@@ -13,6 +13,7 @@ rainette2(
   doc_id = NULL,
   min_members = 10,
   min_chi2 = 3.84,
+  parallel = FALSE,
   uc_size1,
   uc_size2,
   ...
@@ -42,6 +43,8 @@ result from same dfm but with different uc size.}
 
 \item{...}{if \code{x} is a dfm object, parameters passed to \code{\link[=rainette]{rainette()}} for both
 simple clusterings}
+
+\item{if}{TRUE, use \code{parallel::mclapply} to compute partitions (won't work on Windows)}
 }
 \value{
 A tibble with optimal partitions found for each available value of \code{k} as rows, and the following
