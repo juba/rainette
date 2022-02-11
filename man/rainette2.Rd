@@ -37,14 +37,14 @@ result from same dfm but with different uc size.}
 
 \item{min_chi2}{minimum chi2 for each cluster}
 
+\item{parallel}{if TRUE, use \code{parallel::mclapply} to compute partitions (won't work on Windows)}
+
 \item{uc_size1}{deprecated, use min_segment_size1 instead}
 
 \item{uc_size2}{deprecated, use min_segment_size2 instead}
 
 \item{...}{if \code{x} is a dfm object, parameters passed to \code{\link[=rainette]{rainette()}} for both
 simple clusterings}
-
-\item{if}{TRUE, use \code{parallel::mclapply} to compute partitions (won't work on Windows)}
 }
 \value{
 A tibble with optimal partitions found for each available value of \code{k} as rows, and the following

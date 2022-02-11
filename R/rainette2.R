@@ -224,7 +224,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 #' Corpus clustering based on the Reinert method - Double clustering
 #'
 #' @param x either a quanteda dfm object or the result of [rainette()]
-#' @param y if `x` is a [rainette()] result, this must be another [rainette()] 
+#' @param y if `x` is a [rainette()] result, this must be another [rainette()]
 #'   result from same dfm but with different uc size.
 #' @param max_k maximum number of clusters to compute
 #' @param min_segment_size1 if `x` is a dfm, minimum uc size for first clustering
@@ -232,7 +232,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_members minimum members of each cluster
 #' @param min_chi2 minimum chi2 for each cluster
-#' @param if TRUE, use `parallel::mclapply` to compute partitions (won't work on Windows)
+#' @param parallel if TRUE, use `parallel::mclapply` to compute partitions (won't work on Windows)
 #' @param uc_size1 deprecated, use min_segment_size1 instead
 #' @param uc_size2 deprecated, use min_segment_size2 instead
 #' @param ... if `x` is a dfm object, parameters passed to [rainette()] for both
