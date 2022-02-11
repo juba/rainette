@@ -60,16 +60,19 @@ cutree_rainette <- function(hres, k = NULL, h = NULL,...) {
 
 cutree_rainette2 <- function(res, k, criterion = c("chi2", "n"), ...) {
   criterion <- match.arg(criterion)
-  line <- res %>% filter(k == !!k)
+  line <- res %>%
+    dplyr::filter(k == .env$k)
   if (criterion == "chi2") {
     line <- line %>%
-      filter(chi2 == max(chi2))
+      dplyr::slice_max(chi2)
   }
   if (criterion == "n") {
     line <- line %>%
-      filter(n == max(n))
+      dplyr::slice_max(n)
   }
-  line %>% pull(groups) %>% unlist
+  line %>%
+    dplyr::pull(groups) %>%
+    unlist()
 }
 
 
