@@ -13,6 +13,7 @@ res2 <- rainette(dtm, k = 5, min_segment_size = 3, min_split_members = 3)
 res12 <- rainette2(dtm, max_k = 5, min_segment_size1 = 2, min_segment_size2 = 3, min_members = 3)
 
 res <- rainette2(res1, res2, min_members = 2)
+res_notfull <- rainette2(res1, res2, min_members = 2, full = FALSE)
 
 test_that("compute_chi2", {
   tab <- matrix(c(45, 121 - 45, 257 - 45, 1213 - 121 - 257 + 45), nrow = 2)
@@ -149,6 +150,16 @@ test_that("rainette2 when stopping before max_k", {
   expect_equal(max(res$k), 2)
 })
 
+test_that("rainette2_plot error if full=FALSE and criterion=n", {
+  expect_error(
+    rainette2_plot(res_notfull, dtm, k = 2, criterion = "n"),
+    "if rainette2 has been computed with full=FALSE, only 'chi2' criterion is available"
+  )
+  expect_error(
+    rainette2_plot(res, dtm, k = 2, criterion = "n"),
+    NA
+  )
+})
 
 test_that("plot functions class checking", {
   expect_error(rainette2_plot(res1, k = 5), "res must be a rainette2 result object")

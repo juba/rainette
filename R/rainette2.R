@@ -421,6 +421,7 @@ rainette2 <- function(x, y = NULL, max_k = 5,
   message("  Done.")
 
   class(res) <- c("rainette2", class(res))
+  attr(res, "full") <- full
 
   res
 }

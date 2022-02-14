@@ -331,6 +331,11 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   criterion <- match.arg(criterion)
   stat_col <- stat_col(measure)
 
+  ## Stop if not full and criterion == "n"
+  if ((is.null(attr(res, "full")) || !attr(res, "full")) && criterion != "chi2") {
+    stop("if rainette2 has been computed with full=FALSE, only 'chi2' criterion is available")
+  }
+
   ## Maximum number of clusters
   max_k <- max(res$k, na.rm = TRUE)
 
@@ -359,9 +364,9 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   }
   ## Graph layout
   if (k <= 5) {
-    lay <- matrix(1:(k+1), nrow = 1, byrow = TRUE)
+    lay <- matrix(1:(k + 1), nrow = 1, byrow = TRUE)
   } else {
-    index <- 1:(k+1)
+    index <- 1:(k + 1)
     if (k %% 2 == 0) {
       index <- c(index, NA)
     }
@@ -370,7 +375,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   plots <- list()
 
   ## Frequency barplot
-  freq <- data.frame(table(groups, exclude=NULL))
+  freq <- data.frame(table(groups, exclude = NULL))
   n_na <- sum(is.na(groups))
   title <- paste0("Clusters size\n(NA = ", n_na, ")")
   colnames(freq) <- c("Group", "n")
@@ -381,7 +386,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
     ggtitle(title) +
     theme(
       plot.title = element_text(size = 10, face = "bold", hjust = 0.5),
-      plot.margin = grid::unit(c(0.05,0.05,0,0), "npc"),
+      plot.margin = grid::unit(c(0.05, 0.05, 0, 0), "npc"),
       axis.title.x = element_text(size = text_size * 0.8),
       axis.title.y = element_text(size = text_size * 0.8))
   plots[[1]] <- g

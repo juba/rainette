@@ -26,6 +26,16 @@ rainette2_explor <- function(res, dtm = NULL, corpus_src = NULL) {
     stop("trying to run rainette2_explor on a rainette result object.")
   }
 
+  ## If rainette2 has been called with full=FALSE, only chi2 criterion is available
+  criterion_choices <- c(
+    "Sum of chi-squared" = "chi2"
+  )
+  if (!is.null(attr(res, "full")) && attr(res, "full")) {
+    criterion_choices <- c(
+      criterion_choices,
+      "Sum of sizes" = "n"
+    )
+  }
   res_name <- deparse(substitute(res))
   dtm_name <- deparse(substitute(dtm))
   max_n_groups <- max(res$k, na.rm = TRUE)
@@ -51,10 +61,7 @@ rainette2_explor <- function(res, dtm = NULL, corpus_src = NULL) {
                   min = 2, max = max_n_groups, step = 1
                 ),
                 selectInput("criterion", "Partition criterion",
-                  choices = c(
-                    "Partition sum of chi-squared" = "chi2",
-                    "Partition sum of sizes" = "n"
-                  )
+                  choices = criterion_choices
                 ),
                 checkboxInput("complete_km", label = "Complete with k-nearest neighbours", value = FALSE),
                 selectInput("measure", "Statistics",
