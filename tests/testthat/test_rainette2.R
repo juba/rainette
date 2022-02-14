@@ -123,12 +123,27 @@ test_that("get_optimal_partitions", {
     list(c(1, 2), c(2, 3), c(1, 4)),
     list(c(1, 2, 4)))
   n_tot <- 7
-  res <- rainette:::get_optimal_partitions(partitions, valid, n_tot)
+
+  # With full = TRUE
+  res <- rainette:::get_optimal_partitions(partitions, valid, n_tot, full = TRUE)
   tmp <- res[res$k == 2,]
-  expect_equal(tmp$clusters, list(c("1x1", "2x2"), c("2x2","3x3")))
+  expect_equal(tmp$clusters, list(c("1x1", "2x2"), c("2x2", "3x3")))
   expect_equal(tmp$chi2, c(9, 15))
   expect_equal(tmp$n, c(6, 5))
   expect_equal(tmp$groups, list(c(1,1,1,2,2,2,NA),c(2,2,NA,1,1,1,NA)))
+  tmp <- res[res$k == 3,]
+  expect_equal(tmp$clusters, list(c("1x1", "2x2", "4x4")))
+  expect_equal(tmp$chi2, 13)
+  expect_equal(tmp$n, 7)
+  expect_equal(tmp$groups, list(c(1,1,1,2,2,2,3)))
+
+  # With full = FALSE
+  res <- rainette:::get_optimal_partitions(partitions, valid, n_tot, full = FALSE)
+  tmp <- res[res$k == 2,]
+  expect_equal(tmp$clusters, list(c("2x2", "3x3")))
+  expect_equal(tmp$chi2, 15)
+  expect_equal(tmp$n, 5)
+  expect_equal(tmp$groups, list(c(2,2,NA,1,1,1,NA)))
   tmp <- res[res$k == 3,]
   expect_equal(tmp$clusters, list(c("1x1", "2x2", "4x4")))
   expect_equal(tmp$chi2, 13)
@@ -142,7 +157,7 @@ test_that("rainette2 gives the same result on dtm and on two clustering results"
   expect_equal(res$clusters, res12$clusters)
 })
 
-test_that("rainette2 when stopping before max_k", {
+test_that("rainette2 display message when stopping before max_k", {
   res1 <- rainette(dtm, k = 4, min_segment_size = 2, min_split_members = 30)
   res2 <- rainette(dtm, k = 4, min_segment_size = 3, min_split_members = 30)
   expect_message(res <- rainette::rainette2(res1, res2, max_k = 4, min_members = 50),

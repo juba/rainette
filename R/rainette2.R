@@ -38,14 +38,16 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
   # Frequencies of each group in first clustering
   g1_count <- groups1 %>%
     tidyr::pivot_longer(
-      everything(), names_to = "level1", values_to = "g1"
+      everything(),
+      names_to = "level1", values_to = "g1"
     ) %>%
     dplyr::count(level1, g1, name = "n1")
 
   # Frequencies of each group in second clustering
   g2_count <- groups2 %>%
     tidyr::pivot_longer(
-      everything(), names_to = "level2", values_to = "g2"
+      everything(),
+      names_to = "level2", values_to = "g2"
     ) %>%
     dplyr::count(level2, g2, name = "n2")
 
@@ -79,7 +81,6 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
     # Filter chi-squared
     dplyr::filter(chi2 > min_chi2) %>%
     mutate(interclass = paste(g1, g2, sep = "x"))
-
 }
 
 # Add members list to each crossing group
@@ -131,7 +132,6 @@ cross_sizes <- function(crosstab) {
 ## Compute next level partitions with for loop and progress bar
 
 next_partitions_for <- function(partitions, sizes) {
-
   res <- list()
 
   progressr::with_progress({
@@ -163,16 +163,16 @@ next_partitions_for <- function(partitions, sizes) {
 
 next_partitions_parallel <- function(partitions, sizes) {
 
-    ## for each previous partition
-    res <- parallel::mclapply(partitions, function(partition) {
-      size_inter <- colSums(sizes[partition, ])
-      classes_ok <- which(size_inter == 0)
-      res_current <- vector(mode = "list", length = length(classes_ok))
-      for (j in seq_along(classes_ok)) {
-        res_current[[j]] <- c(partition, classes_ok[j])
-      }
-      res_current
-    })
+  ## for each previous partition
+  res <- parallel::mclapply(partitions, function(partition) {
+    size_inter <- colSums(sizes[partition, ])
+    classes_ok <- which(size_inter == 0)
+    res_current <- vector(mode = "list", length = length(classes_ok))
+    for (j in seq_along(classes_ok)) {
+      res_current[[j]] <- c(partition, classes_ok[j])
+    }
+    res_current
+  })
   res <- unlist(res, recursive = FALSE)
 
   if (length(res) == 0) {
@@ -185,7 +185,7 @@ next_partitions_parallel <- function(partitions, sizes) {
 ## From computed partitions, select the optimal ones and add group
 ## membership
 
-get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
+get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 
   ## Compute group memberships from a vector of groups
   compute_members <- function(cluster) {
@@ -212,17 +212,32 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
         dplyr::mutate(
           chi2 = sum(cross_groups$chi2[clusters]),
           n = sum(cross_groups$n_both[clusters])
-        ) %>%
-        ## Filter partitions with max size or max chi2 for each k
-        dplyr::group_by(k) %>%
-        dplyr::filter(n == max(n) | chi2 == max(chi2)) %>%
-        ## If several partitions with same n, keep max chi2
-        dplyr::group_by(k, n) %>%
-        dplyr::slice_max(chi2) %>%
-        ## If several partitions with same chi2, keep max n
-        dplyr::group_by(k, chi2) %>%
-        dplyr::slice_max(n) %>%
-        dplyr::ungroup()
+        )
+      ## If full computation, keep both max chi2 and max size
+      if (full) {
+        out <- out %>%
+          ## Filter partitions with max size or max chi2 for each k
+          dplyr::group_by(k) %>%
+          dplyr::filter(n == max(n) | chi2 == max(chi2)) %>%
+          ## If several partitions with same n, keep max chi2
+          dplyr::group_by(k, n) %>%
+          dplyr::slice_max(chi2) %>%
+          ## If several partitions with same chi2, keep max n
+          dplyr::group_by(k, chi2) %>%
+          dplyr::slice_max(n) %>%
+          dplyr::ungroup()
+      } 
+      ## If not full computation, only keep max chi2
+      else {
+        out <- out %>%
+          ## Filter partitions with max chi2 for each k
+          dplyr::group_by(k) %>%
+          dplyr::slice_max(chi2) %>%
+          ## If several partitions with same chi2, keep max n
+          dplyr::group_by(k, chi2) %>%
+          dplyr::slice_max(n) %>%
+          dplyr::ungroup()
+      }
       p()
       out
     })
@@ -303,8 +318,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 #'
 #' res <- rainette2(res1, res2, max_k = 4)
 #' }
-
-
+#'
 rainette2 <- function(x, y = NULL, max_k = 5,
                       min_segment_size1 = 10, min_segment_size2 = 15,
                       doc_id = NULL, min_members = 10, min_chi2 = 3.84,
@@ -416,7 +430,7 @@ rainette2 <- function(x, y = NULL, max_k = 5,
 
   message("  Selecting best partitions...")
   ## Select optimal partitions and add group membership for each one
-  res <- get_optimal_partitions(partitions, cross_groups, n_tot)
+  res <- get_optimal_partitions(partitions, cross_groups, n_tot, full)
 
   message("  Done.")
 
