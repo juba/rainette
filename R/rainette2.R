@@ -104,11 +104,11 @@ crosstab_keep_max <- function(tab) {
   # the highest chi2 association with the first, and the first member is the
   # group with the highest chi2 association with the second
   res <- tab %>%
-    dplyr::group_by(g1) %>%
-    dplyr::mutate(max_g2 = g2[which.max(chi2)]) %>%
-    dplyr::group_by(g2) %>%
-    dplyr::mutate(max_g1 = g1[which.max(chi2)]) %>%
-    dplyr::filter(max_g1 == g1 & max_g2 == g2) %>%
+    dplyr::group_by(.data$g1) %>%
+    dplyr::mutate(max_g2 = .data$g2[which.max(.data$chi2)]) %>%
+    dplyr::group_by(.data$g2) %>%
+    dplyr::mutate(max_g1 = .data$g1[which.max(.data$chi2)]) %>%
+    dplyr::filter(.data$max_g1 == .data$g1 & .data$max_g2 == .data$g2) %>%
     dplyr::ungroup()
 
   res
@@ -261,6 +261,8 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 #' @param max_k maximum number of clusters to compute
 #' @param min_segment_size1 if `x` is a dfm, minimum uc size for first clustering
 #' @param min_segment_size2 if `x` is a dfm, minimum uc size for second clustering
+#' @param full if TRUE, all crossed groups are kept to compute optimal partitions, otherwise 
+#'   only the most mutually associated groups are kept.
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_members minimum members of each cluster
 #' @param min_chi2 minimum chi2 for each cluster
@@ -280,6 +282,9 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 #'
 #' `doc_id` must be provided unless the corpus comes from `split_segments`,
 #' in this case `segment_source` is used by default.
+#'
+#' If `full = FALSE`, computation may be much faster, but the chi2 criterion will be the only
+#' one available for best partition detection. 
 #'
 #' For more details on optimal partitions search algorithm, please see package vignettes.
 #'

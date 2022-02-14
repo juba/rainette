@@ -14,6 +14,7 @@ rainette2(
   min_members = 10,
   min_chi2 = 3.84,
   parallel = FALSE,
+  full = TRUE,
   uc_size1,
   uc_size2,
   ...
@@ -38,6 +39,9 @@ result from same dfm but with different uc size.}
 \item{min_chi2}{minimum chi2 for each cluster}
 
 \item{parallel}{if TRUE, use \code{parallel::mclapply} to compute partitions (won't work on Windows)}
+
+\item{full}{if TRUE, all crossed groups are kept to compute optimal partitions, otherwise
+only the most mutually associated groups are kept.}
 
 \item{uc_size1}{deprecated, use min_segment_size1 instead}
 
@@ -71,6 +75,9 @@ and the function will only look for optimal partitions.
 \code{doc_id} must be provided unless the corpus comes from \code{split_segments},
 in this case \code{segment_source} is used by default.
 
+If \code{full = FALSE}, computation may be much faster, but the chi2 criterion will be the only
+one available for best partition detection.
+
 For more details on optimal partitions search algorithm, please see package vignettes.
 }
 \examples{
@@ -89,6 +96,7 @@ res2 <- rainette(dtm, k = 5, min_segment_size = 15)
 
 res <- rainette2(res1, res2, max_k = 4)
 }
+
 }
 \references{
 \itemize{
