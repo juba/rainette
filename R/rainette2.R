@@ -79,6 +79,7 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
     # Filter chi-squared
     dplyr::filter(chi2 > min_chi2) %>%
     mutate(interclass = paste(g1, g2, sep = "x"))
+
 }
 
 # Add members list to each crossing group
@@ -95,6 +96,21 @@ crosstab_add_members <- function(tab, groups1, groups2) {
     dplyr::mutate(id = 1:n())
 }
 
+# Only keep most associated pairs of crossing group
+
+crosstab_keep_max <- function(tab) {
+  # We only keep crossing group where the second member is the group with
+  # the highest chi2 association with the first, and the first member is the
+  # group with the highest chi2 association with the second
+  res <- tab %>%
+    dplyr::group_by(g1) %>%
+    dplyr::mutate(max_g2 = g2[which.max(chi2)]) %>%
+    dplyr::group_by(g2) %>%
+    dplyr::mutate(max_g1 = g1[which.max(chi2)]) %>%
+    dplyr::filter(max_g1 == g1 & max_g2 == g2)
+
+  res
+}
 
 ## Compute size of each pairs of intersection classes. Lower triangle
 ## and diagonal at 1 not to be selected as a partition afterward.
@@ -291,7 +307,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot) {
 rainette2 <- function(x, y = NULL, max_k = 5,
                       min_segment_size1 = 10, min_segment_size2 = 15,
                       doc_id = NULL, min_members = 10, min_chi2 = 3.84,
-                      parallel = FALSE,
+                      parallel = FALSE, full = TRUE,
                       uc_size1, uc_size2, ...) {
 
   ## Check for deprecated uc_size1 argument
@@ -361,12 +377,15 @@ rainette2 <- function(x, y = NULL, max_k = 5,
     if (nrow(cross_groups) < 2) {
       stop("! Not enough valid classes to continue. You may try a lower min_members value.")
     }
+    if (!full) {
+      cross_groups <- crosstab_keep_max(cross_groups)
+    }
 
     ## Matrix of number of common elements between crossing groups
     sizes <- cross_sizes(cross_groups)
     p()
 
-    ## Compute partitions
+    ## Compute size 2 partitions
     partitions <- list()
     ## Size 2 partitions : pairs of cross groups with no common elements
     partitions[[1]] <- which(sizes == 0, arr.ind = TRUE, useNames = FALSE) %>%
