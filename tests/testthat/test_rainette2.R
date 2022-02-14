@@ -148,3 +148,9 @@ test_that("rainette2 when stopping before max_k", {
     "^! No more partitions found, stopping at k=2")
   expect_equal(max(res$k), 2)
 })
+
+
+test_that("plot functions class checking", {
+  expect_error(rainette2_plot(res1, k = 5), "res must be a rainette2 result object")
+  expect_error(rainette_plot(res12, k = 5), "res must be a rainette result object")
+})
