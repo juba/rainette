@@ -107,7 +107,8 @@ crosstab_keep_max <- function(tab) {
     dplyr::mutate(max_g2 = g2[which.max(chi2)]) %>%
     dplyr::group_by(g2) %>%
     dplyr::mutate(max_g1 = g1[which.max(chi2)]) %>%
-    dplyr::filter(max_g1 == g1 & max_g2 == g2)
+    dplyr::filter(max_g1 == g1 & max_g2 == g2) %>%
+    dplyr::ungroup()
 
   res
 }
