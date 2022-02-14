@@ -65,11 +65,19 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="rainette-development-version">rainette (development version)<a class="anchor" aria-label="anchor" href="#rainette-development-version"></a></h2>
-<ul><li>Optimization and speed up of <code>rainette2</code> computations</li>
-<li>New <code>parallel</code> argument to <code>rainette2</code> to compute partitions with <code>mclapply</code> (won’t work on Windows)</li>
-<li>Add <code>show_na_title</code>, <code>cluster_label</code> and <code>keyness_plot_xlab</code> arguments to <code>rainette_plot</code> to customize graphics output</li>
+<div class="section level3">
+<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<p>Rework of the double classification computation :</p>
+<ul><li>New <code>full</code> argument to <code>rainette2</code>. If <code>TRUE</code> (default, same behavior as previous versions), all crossings between groups of the two single classifications are taken into account to find the best partition. If <code>FALSE</code>, only the crossings with maximal associations are kept.</li>
+<li>New <code>parallel</code> argument to <code>rainette2</code> to compute partitions with <code>mclapply</code> (<code>FALSE</code> by default, won’t work on Windows)</li>
+<li>Global optimization and speed up of <code>rainette2</code> computations, with added progress bars to better estimate long runs</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-development-version">Other<a class="anchor" aria-label="anchor" href="#other-development-version"></a></h3>
+<ul><li>Add <code>show_na_title</code>, <code>cluster_label</code> and <code>keyness_plot_xlab</code> arguments to <code>rainette_plot</code> to customize graphics output</li>
 <li>Fix warnings in Font Awesome icon names</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.1" id="rainette-021">rainette 0.2.1<small>2021-10-06</small><a class="anchor" aria-label="anchor" href="#rainette-021"></a></h2>
 <ul><li>Add option to show merged segments in document browser</li>
