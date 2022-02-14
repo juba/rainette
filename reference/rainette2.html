@@ -79,6 +79,7 @@
   min_members <span class="op">=</span> <span class="fl">10</span>,
   min_chi2 <span class="op">=</span> <span class="fl">3.84</span>,
   parallel <span class="op">=</span> <span class="cn">FALSE</span>,
+  full <span class="op">=</span> <span class="cn">TRUE</span>,
   <span class="va">uc_size1</span>,
   <span class="va">uc_size2</span>,
   <span class="va">...</span>
@@ -106,6 +107,9 @@ result from same dfm but with different uc size.</p></dd>
 <dd><p>minimum chi2 for each cluster</p></dd>
 <dt>parallel</dt>
 <dd><p>if TRUE, use <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to compute partitions (won't work on Windows)</p></dd>
+<dt>full</dt>
+<dd><p>if TRUE, all crossed groups are kept to compute optimal partitions, otherwise
+only the most mutually associated groups are kept.</p></dd>
 <dt>uc_size1</dt>
 <dd><p>deprecated, use min_segment_size1 instead</p></dd>
 <dt>uc_size2</dt>
@@ -132,6 +136,8 @@ based on the results of both clusterings.</p>
 and the function will only look for optimal partitions.</p>
 <p><code>doc_id</code> must be provided unless the corpus comes from <code>split_segments</code>,
 in this case <code>segment_source</code> is used by default.</p>
+<p>If <code>full = FALSE</code>, computation may be much faster, but the chi2 criterion will be the only
+one available for best partition detection.</p>
 <p>For more details on optimal partitions search algorithm, please see package vignettes.</p>
     </div>
     <div id="references">
@@ -176,6 +182,7 @@ in this case <code>segment_source</code> is used by default.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   Selecting best partitions...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   Done.</span>
 <span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"></span>
 </code></pre></div>
     </div>
   </div>
