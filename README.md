@@ -114,10 +114,12 @@ Three vignettes are available :
 
 ## Credits
 
-This classification method has been created by Max Reinert, and is described in several articles. Here are two references :
+This classification method has been created by Max Reinert, and is described in several articles :
 
 - Reinert M, Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte, Cahiers de l'analyse des données, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
 - Reinert M., Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
+- Reinert M., Une méthode de classification des énoncés d’un
+corpus présentée à l’aide d’une application, Les cahiers de l’analyse des données, tome 15, no 1 (1990), p. 21-36. <http://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
 
 Thanks to Pierre Ratineau, the author of [Iramuteq](http://www.iramuteq.org/), for providing it as free software and open source. Even if the R code has been almost entirely rewritten, it has been a precious resource to understand the algorithms.
 
