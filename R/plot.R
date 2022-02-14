@@ -195,6 +195,9 @@ rainette_plot <- function(res, dtm, k = NULL,
                           cluster_label = NULL,
                           keyness_plot_xlab = NULL) {
 
+  if (!inherits(res, "rainette"))
+    stop("res must be a rainette result object")
+
   type <- match.arg(type)
   measure <- match.arg(measure)
   stat_col <- stat_col(measure)
@@ -319,6 +322,9 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   free_scales = FALSE, measure = c("chi2", "lr", "frequency", "docprop"),
   show_negative = FALSE,
   text_size = 10) {
+
+  if (!inherits(res, "rainette2")) 
+    stop("res must be a rainette2 result object")
 
   type <- match.arg(type)
   measure <- match.arg(measure)
