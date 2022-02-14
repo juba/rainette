@@ -69,6 +69,24 @@ test_that("crosstab_add_members and filtering", {
   expect_equal(tab$members, list(1:4))
 })
 
+test_that("crosstab_keep_max", {
+  df <- tribble(
+    ~ g1, ~ g2, ~chi2,
+      11,   21,   10,
+      11,   22,   5,
+      11,   23,   8,
+      12,   21,   9, 
+      12,   22,   8,
+      12,   23,   10,
+      13,   21,   8,
+      13,   22,   2,
+      13,   23,   2
+  )
+  res <- crosstab_keep_max(df)
+  expect_equal(res$g1, c(11, 12))
+  expect_equal(res$g2, c(21, 23))
+})
+
 test_that("cross_sizes", {
   tab <- tibble(interclass = c("1.1x1.1", "1.2x1.1", "2.1x2.2", "2.1x1.1"),
     members = list(c(1,2,3), c(4,5,6), c(1,2), 5), id = 1:4)
@@ -98,7 +116,7 @@ test_that("get_optimal_partitions", {
   valid <- tibble(interclass = c("1x1", "2x2", "3x3", "4x4"),
                   n_both = c(3, 3, 2, 1),
                   chi2 = c(4, 5, 10, 4),
-                  members = list(c(1,2,3), c(4,5,6), c(1,2), 7), 
+                  members = list(c(1,2,3), c(4,5,6), c(1,2), 7),
                   id = 1:4)
   partitions <- list(
     list(c(1, 2), c(2, 3), c(1, 4)),
