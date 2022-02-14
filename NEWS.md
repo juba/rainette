@@ -1,7 +1,15 @@
 # rainette (development version)
 
-- Optimization and speed up of `rainette2` computations
-- New `parallel` argument to `rainette2` to compute partitions with `mclapply` (won't work on Windows)
+## New features
+
+Rework of the double classification computation :
+
+- New `full` argument to `rainette2`. If `TRUE` (default, same behavior as previous versions), all crossings between groups of the two single classifications are taken into account to find the best partition. If `FALSE`, only the crossings with maximal associations are kept.
+- New `parallel` argument to `rainette2` to compute partitions with `mclapply` (`FALSE` by default, won't work on Windows)
+- Global optimization and speed up of `rainette2` computations, with added progress bars to better estimate long runs
+
+## Other
+
 - Add `show_na_title`, `cluster_label` and `keyness_plot_xlab` arguments to `rainette_plot` to customize graphics output
 - Fix warnings in Font Awesome icon names
 
