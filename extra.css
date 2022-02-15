@@ -1,0 +1,124 @@
+:root {
+    --bs-font-monospace: "Fira Code", Hack, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    --bs-font-sans-serif: "Segoe UI", Roboto, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+p img {
+    margin: 1.5rem 0;
+}
+
+div.figure {
+    margin: 1.5rem 0;
+}
+
+div.figure img {
+    box-shadow: 1px 1px 8px #666;
+}
+
+div.figure p.caption {
+    margin-top: .8rem;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* Headings */
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin-bottom: 1rem;
+    font-family: "Roboto Slab", var(--bs-font-sans-serif);
+}
+
+.level2 {
+    margin-top: 2.5rem;
+}
+
+.level3 {
+    margin-top: 2rem;
+}
+
+
+/* Code */
+
+code {
+    background-color: #f9f2f4;
+    color: #c7254e;
+}
+
+pre {
+    padding: .8rem 1rem;
+    margin: 1.5rem 0;
+}
+
+pre code a {
+    text-decoration: none;
+}
+
+
+/* TOC */
+
+.row>aside {
+    margin-top: 80px;
+    margin-left: 1rem;
+}
+
+#toc {
+    font-size: .95rem;
+}
+
+#toc>.nav a.nav-link.active {
+    border-left: 2px solid #c7254e;
+    border-radius: 0;
+    color: #c7254e;
+    background-color: transparent;
+}
+
+#toc>.nav a.nav-link {
+    color: #555
+}
+
+#toc>.nav a.nav-link:hover,
+#toc>.nav a.nav-link:focus {
+    background-color: #f9e9e4;
+    color: #000;
+}
+
+#toc > .nav .nav a.nav-link {
+    margin-left: 1.5rem;
+    font-size: .9rem;
+}
+
+/* Cross groups */
+
+.cross span {
+    display: inline-block;
+    text-align: center;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid;
+    color: white;
+    font-weight: 400;
+}
+
+.cross span:first-child {
+    background-color: #6A00FF99;
+    border-color: #3700CC;
+    margin-left: .2rem;
+}
+
+.cross span:last-child {
+    background-color: #D8007399;
+    border-color: #A50040;
+    margin-left: -.45rem;
+    margin-right: .2rem;
+}

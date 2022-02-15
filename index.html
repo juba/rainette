@@ -4,7 +4,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="An R implementation of the Reinert text clustering method. For more 
+    details about the algorithm see the included vignettes or Reinert (1990) 
+    &lt;doi:10.1177/075910639002600103&gt;.">
 <title>The Reinert Method for Textual Data Clustering • rainette</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -12,12 +15,12 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="The Reinert Method for Textual Data Clustering">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="The Reinert Method for Textual Data Clustering">
 <meta property="og:description" content="An R implementation of the Reinert text clustering method. For more 
     details about the algorithm see the included vignettes or Reinert (1990) 
     &lt;doi:10.1177/075910639002600103&gt;.">
@@ -27,143 +30,127 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">rainette</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9000</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="index.html">rainette</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="reference/index.html">Reference</a>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/introduction_en.html">[en] Introduction to rainette</a>
-    </li>
-    <li>
-      <a href="articles/introduction_usage.html">[fr] Utilisation de rainette</a>
-    </li>
-    <li>
-      <a href="articles/algorithmes.html">[fr] Description des algorithmes</a>
-    </li>
-  </ul>
-</li>
-<li>
-  <a href="news/index.html">Changelog</a>
-</li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/juba/rainette/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
-</div>
-<!--/.nav-collapse -->
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/introduction_en.html">[en] Introduction to rainette</a>
+    <a class="dropdown-item" href="articles/introduction_usage.html">[fr] Utilisation de rainette</a>
+    <a class="dropdown-item" href="articles/algorithmes.html">[fr] Description des algorithmes</a>
   </div>
-<!--/.container -->
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
+</li>
+      </ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/juba/rainette/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
-<!--/.navbar -->
 
-      
+    
+  </div>
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="rainette">Rainette<a class="anchor" aria-label="anchor" href="#rainette"></a>
+</h1>
+</div>
 
-      </header><div class="row">
-  <div class="contents col-md-9">
-<div class="section level1">
-<div class="page-header"><h1 id="rainette">Rainette<a class="anchor" aria-label="anchor" href="#rainette"></a>
-</h1></div>
-
-<p><img src="reference/figures/logo.png" width="200" align="right"></p>
-<p>The package website can be found at : <a href="https://juba.github.io/rainette/">https://juba.github.io/rainette/</a>.</p>
 <p>Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other software such as <a href="http://www.iramuteq.org/" class="external-link">Iramuteq</a> (free software) or <a href="https://www.image-zafar.com/Logiciel.html" class="external-link">Alceste</a> (commercial, closed source).</p>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
 <ul>
-<li>Simple or double clustering algorithms</li>
-<li>Plot functions and shiny gadgets to visualise and explore clustering results</li>
+<li>Simple and double clustering algorithms</li>
+<li>Plot functions and shiny interfaces to visualise and explore clustering results</li>
 <li>Utility functions to split a corpus into segments or import a corpus in Iramuteq format</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The package is installable from CRAN :</p>
+<p>The package is installable from CRAN.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">install_packages</span><span class="op">(</span><span class="st">"rainette"</span><span class="op">)</span></code></pre></div>
-<p>The development version is installable from <a href="https://r-universe.dev" class="external-link">R-universe</a> :</p>
+<p>The development version is installable from <a href="https://r-universe.dev" class="external-link">R-universe</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rainette"</span>, repos <span class="op">=</span> <span class="st">"https://juba.r-universe.dev"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>Let’s start with an example corpus provided by the excellent <a href="https://quanteda.io" class="external-link">quanteda</a> package :</p>
+<p>Let’s start with an example corpus provided by the excellent <a href="https://quanteda.io" class="external-link">quanteda</a> package.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io" class="external-link">quanteda</a></span><span class="op">)</span>
 <span class="va">data_corpus_inaugural</span></code></pre></div>
-<p>First, we’ll use <code>split_segments</code> to split each document into segments of about 40 words (punctuation is taken into account) :</p>
+<p>First, we’ll use <code><a href="reference/split_segments.html">split_segments()</a></code> to split each document into segments of about 40 words (punctuation is taken into account).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">data_corpus_inaugural</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
-<p>Next, we’ll apply some preprocessing and compute a document-term matrix with <code>quanteda</code> functions :</p>
+<p>Next, we’ll apply some preprocessing and compute a document-term matrix with <code>quanteda</code> functions.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html" class="external-link">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm</a></span><span class="op">(</span><span class="va">tok</span>, tolower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_trim.html" class="external-link">dfm_trim</a></span><span class="op">(</span><span class="va">dtm</span>, min_docfreq <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p>We can then apply a simple clustering on this matrix with the <code>rainette</code> function. We specify the number of clusters (<code>k</code>), and the minimum number of forms in each segment (<code>min_segment_size</code>). Segments which do not include enough forms will be merged with the following or previous one when possible.</p>
+<p>We can then apply a simple clustering on this matrix with the <code><a href="reference/rainette.html">rainette()</a></code> function. We specify the number of clusters (<code>k</code>), and the minimum number of forms in each segment (<code>min_segment_size</code>). Segments which do not include enough forms will be merged with the following or previous one when possible.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">6</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
-<p>We can use the <code>rainette_explor</code> shiny interface to visualise and explore the different clusterings at each <code>k</code> :</p>
+<p>We can use the <code><a href="reference/rainette_explor.html">rainette_explor()</a></code> shiny interface to visualise and explore the different clusterings at each <code>k</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
 <div class="figure">
-<img src="reference/figures/rainette_explor_plot_en.png" alt=""><p class="caption">rainette_explor_plot</p>
+<img src="reference/figures/rainette_explor_plot_en.png" alt=""><p class="caption">rainette_explor() interface</p>
 </div>
-<p>The <em>Cluster documents</em> tab allows to browse and filter the documents in each cluster :</p>
+<p>The <em>Cluster documents</em> tab allows to browse and filter the documents in each cluster.</p>
 <div class="figure">
-<img src="reference/figures/rainette_explor_docs_en.png" alt=""><p class="caption">rainette_explor_docs</p>
+<img src="reference/figures/rainette_explor_docs_en.png" alt=""><p class="caption">rainette_explor() documents tab</p>
 </div>
-<p>We can then use the generated R code to reproduce the displayed clustering visualisation plot :</p>
+<p>We can also directly generate the clusters description plot for a given <code>k</code> with <code><a href="reference/rainette_plot.html">rainette_plot()</a></code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/rainette_plot.html">rainette_plot</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"bar"</span>, n_terms <span class="op">=</span> <span class="fl">20</span>, free_scales <span class="op">=</span> <span class="cn">FALSE</span>,
-    measure <span class="op">=</span> <span class="st">"chi2"</span>, show_negative <span class="op">=</span> <span class="st">"TRUE"</span>, text_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p>Or cut the tree at chosen <code>k</code> and add a group membership variable to our corpus metadata :</p>
+<code class="sourceCode R"><span class="fu"><a href="reference/rainette_plot.html">rainette_plot</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<p>Or cut the tree at chosen <code>k</code> and add a group membership variable to our corpus metadata.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
-<p>In addition to this, we can also perform a double clustering, <em>ie</em> two simple clusterings produced with different <code>min_segment_size</code> which are then “crossed” to generate more robust clusters. To do this, we use <code>rainette2</code> on two <code>rainette</code> results :</p>
+<p>In addition to this, we can also perform a double clustering, <em>ie</em> two simple clusterings produced with different <code>min_segment_size</code> which are then “crossed” to generate more robust clusters. To do this, we use <code><a href="reference/rainette2.html">rainette2()</a></code> on two <code><a href="reference/rainette.html">rainette()</a></code> results :</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span>, min_split_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">5</span>, min_members <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p>We can then use <code>rainette2_explor</code> to explore and visualise the results.</p>
+<code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+<span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<p>We can then use <code><a href="reference/rainette2_explor.html">rainette2_explor()</a></code> to explore and visualise the results.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
 <div class="figure">
-<img src="reference/figures/rainette2_explor_en.png" alt=""><p class="caption">rainette2_explor</p>
+<img src="reference/figures/rainette2_explor_en.png" alt=""><p class="caption">rainette2_explor() interface</p>
 </div>
 </div>
 <div class="section level2">
@@ -182,24 +169,21 @@
 <div class="section level2">
 <h2 id="credits">Credits<a class="anchor" aria-label="anchor" href="#credits"></a>
 </h2>
-<p>This classification method has been created by Max Reinert, and is described in several articles :</p>
+<p>This clustering method has been created by Max Reinert, and is described in several articles, notably :</p>
 <ul>
-<li>Reinert M, Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte, Cahiers de l’analyse des données, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
+<li>Reinert M., “Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte”, <em>Cahiers de l’analyse des données</em>, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
 </li>
-<li>Reinert M., Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="external-link uri">https://doi.org/10.1177/075910639002600103</a>
+<li>Reinert M., “Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval”, <em>Bulletin de Méthodologie Sociologique</em>, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="external-link uri">https://doi.org/10.1177/075910639002600103</a>
 </li>
-<li>Reinert M., Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application, Les cahiers de l’analyse des données, tome 15, no 1 (1990), p. 21-36. <a href="http://www.numdam.org/item/?id=CAD_1990__15_1_21_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1990__15_1_21_0</a>
+<li>Reinert M., “Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application”, <em>Les cahiers de l’analyse des données</em>, Tome 15, Numéro 1, 1990. <a href="http://www.numdam.org/item/?id=CAD_1990__15_1_21_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1990__15_1_21_0</a>
 </li>
 </ul>
 <p>Thanks to Pierre Ratineau, the author of <a href="http://www.iramuteq.org/" class="external-link">Iramuteq</a>, for providing it as free software and open source. Even if the R code has been almost entirely rewritten, it has been a precious resource to understand the algorithms.</p>
 <p>Many thanks to <a href="https://github.com/statnmap" class="external-link">Sébastien Rochette</a> for the creation of the hex logo.</p>
-<p>Many thanks to <a href="https://github.com/privefl/" class="external-link">Florian Privé</a> for his work on rewriting and optimizing Rcpp code.</p>
+<p>Many thanks to <a href="https://github.com/privefl/" class="external-link">Florian Privé</a> for his work on rewriting and optimizing the Rcpp code.</p>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="links">
+  </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=rainette" class="external-link">View on CRAN</a></li>
@@ -241,25 +225,24 @@
 </ul>
 </div>
 
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
 <p>Developed by Julien Barnier.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
 <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 
