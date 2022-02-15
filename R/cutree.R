@@ -35,7 +35,7 @@ cutree <- function(tree, ...) {
 #'
 #' @export
 
-cutree_rainette <- function(hres, k = NULL, h = NULL,...) {
+cutree_rainette <- function(hres, k = NULL, h = NULL, ...) {
   if (!is.null(h)) {
     stop("cutree_rainette only works with k argument")
   }
