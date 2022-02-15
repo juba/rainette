@@ -13,7 +13,7 @@ vignette: >
 
 ## Importation
 
-La première étape consiste à importer votre corpus dans R. Vous pouvez utiliser un corpus au format `tm` ou `quanteda` par exemple, ou bien utiliser la fonction `import_corpus_iramuteq` pour importer directement un corpus depuis un fichier texte [au format Iramuteq](http://www.iramuteq.org/documentation/formatage-des-corpus-texte). Dans ce cas vous obtiendrez un objet de type corpus du package [quanteda](https://quanteda.io). Les métadonnées éventuelles présentes dans le fichier (*variables étoilées*) sont importées en tant que métadonnées du corpus (variables de `docvars(corpus)`).
+La première étape consiste à importer votre corpus dans R. Vous pouvez utiliser un corpus au format `tm` ou `quanteda`, ou bien utiliser la fonction `import_corpus_iramuteq` pour importer directement un corpus depuis un fichier texte [au format Iramuteq](http://www.iramuteq.org/documentation/formatage-des-corpus-texte). Dans ce cas vous obtiendrez un objet de type `corpus` du package [quanteda](https://quanteda.io). Les métadonnées éventuelles présentes dans le fichier (*variables étoilées*) sont importées en tant que métadonnées du corpus (variables de `docvars(corpus)`).
 
 Pour ce document, on va importer le texte du *Manifeste du parti communiste* (Karl Marx et Friedrich Engels, 1848, source [wikisource](https://fr.wikisource.org/wiki/Manifeste_du_parti_communiste/Lafargue)). Celui-ci est placé dans un fichier texte au format Iramuteq fourni avec `rainette`. Le corpus est composé de quatre documents, un document par partie de l'ouvrage.
 
@@ -40,7 +40,7 @@ docvars(corpus)
 
 ## Découpage en segments
 
-La méthode Reinert de classification s'applique plutôt à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction `split_segments`. Ici on découpe en segments d'environ 40 mots (l'algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d'une virgule).
+La méthode Reinert de classification s'applique à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction `split_segments`. Ici on découpe en segments d'environ 40 mots (l'algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d'une virgule).
 
 ```{r message=FALSE}
 corpus <- split_segments(corpus, segment_size = 40)
@@ -67,19 +67,20 @@ as.character(corpus)[1:2]
 
 ## Calcul et traitement de la matrice termes-documents
 
-L'étape suivante est de calculer la matrice termes-documents (*dtm*), grand tableau numérique avec les documents en lignes, les mots en colonnes, et comme valeurs le nombre d'occurrences de chaque mot dans chaque document.
+L'étape suivante est de calculer la matrice termes-documents (*dtm*), grand tableau numérique comportant les documents en lignes, les termes en colonnes, et comme valeurs le nombre d'occurrences de chaque terme dans chaque document.
 
 Notre corpus étant au format `quanteda`, on va utiliser les fonctions de cette extension.
 
-D'abord on calcule la *dtm* en convertissant le texte en minuscules, et en supprimant ponctuation, nombres, et les mots-outils français les plus courants :
+On commence par tokeniser le corpus en supprimant nombre et ponctuations, on supprime les mots outils les plus courants et on convertit tous les termes en minuscules, puis on calule la matrice termes-documents avec la fonction `dfm`.
 
 ```{r}
 tok <- tokens(corpus, remove_punct = TRUE, remove_numbers = TRUE)
 tok <- tokens_remove(tok, stopwords("fr"))
-dtm <- dfm(tok, tolower = TRUE)
+tok <- tokens_tolower(tok)
+dtm <- dfm(tok)
 ```
 
-On va ensuite supprimer les termes apparaissant dans moins de 3 segments :
+On supprime ensuite de la matrice les termes apparaissant dans moins de 3 segments.
 
 ```{r}
 dtm <- dfm_trim(dtm, min_docfreq = 3)
@@ -90,9 +91,13 @@ De nombreux autres traitements seraient possibles, mais on se contentera de cett
 
 # Classification simple
 
-Une fois notre matrice prête, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction `rainette`. On va lui passer plusiurs arguments : le nombre maximal de classes souhaitées (`k = 5`) et le nombre minimal de termes pour qu'une classe soit découpée en deux à l'étape suivante de la classification (`min_split_members = 10`).
+Une fois notre matrice calculée, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction `rainette`. 
 
-L'argument `min_segment_size`, lui, indique le nombre minimal de mots par segment. En effet, lors du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de mots encore présents). Avec `min_segment_size = 10`, les segments comportant moins de 10 formes sont regroupés avec le segment suivant ou précédent (si possible) jusqu'à atteindre la taille minimale souhaitée.
+On peut lui passer plusieurs arguments, notamment :
+
+- `k` : le nombre maximal de classes souhaitées.
+- `min_split_members` : le nombre minimal de documents pour qu'une classe soit scindée en deux à l'étape suivante de la classification.
+- `min_segment_size` : le nombre minimal de termes par segment. En effet, lors de la tokenisation et du calcul de la dtm, certaines formes (mots-outils, mots trop peu fréquents) ont été supprimées, nos segments peuvent donc varier en taille (entendue comme le nombre de termes encore présents). Avec `min_segment_size = 10`, les segments comportant moins de 10 formes sont regroupés avec le segment suivant ou précédent du même document (si possible) jusqu'à atteindre la taille minimale souhaitée.
 
 ```{r message=FALSE}
 res <- rainette(dtm, k = 5, min_segment_size = 10, min_split_members = 10)
@@ -161,28 +166,29 @@ docs_by_cluster_table(corpus, clust_var = "groupe")
 
 # Classification double
 
-Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on "croise" les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes.
+Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on "croise" les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes. Pour plus de détails sur la classifcation double, se référer à la [vignette de description des algorithmes](https://juba.github.io/rainette/articles/algorithmes.html).
 
-Une classification double utilise la fonction `rainette2`. Celle-ci peut se faire de deux manières. On peut d'abord effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :
+Une classification double utilise la fonction `rainette2`. On commence par effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :
 
 ```{r message=FALSE, warning=FALSE}
-res1 <- rainette(dtm, k = 7, min_segment_size = 10, min_split_members = 10)
-res2 <- rainette(dtm, k = 7, min_segment_size = 15, min_split_members = 10)
+res1 <- rainette(dtm, k = 7, min_segment_size = 10)
+res2 <- rainette(dtm, k = 7, min_segment_size = 15)
 ```
 
-Puis on utilise `rainette2` sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument `max_k`) et le nombre minimal de segments par classe (argument `min_members`) :
+Puis on utilise `rainette2` sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument `max_k`).
 
 ```{r message=FALSE}
-res <- rainette2(res1, res2, max_k = 7, min_members = 10)
+res <- rainette2(res1, res2, max_k = 7)
 ```
 
-L'autre manière est d'appeler directement `rainette2` sur notre matrice dtm, en lui indiquant avec les arguments `min_segment_size1` et `min_segment_size2` les deux tailles de segments souhaitées :
+Un paramètre important de `rainette2` est le paramètre `full` :
 
-```{r eval=FALSE}
-res <- rainette2(dtm, min_segment_size1 = 10, min_segment_size2 = 15, max_k = 7, min_members = 10)
-```
+- Si `full = TRUE` (valeur par défaut), la sélection des partitions optimales de classes croisées se fait en conservant toutes les classes croisées non nulles. Ceci permet une recherche "exhaustive" et permet de sélectionner les partitions ayant l'effectif total le plus élevé ou bien le χ² d'association le plus fort. Les temps de calcul peuvent cependant être longs si le nombre de classes de départ est important.
+- Si `full = FALSE`, seules les classes croisées dont les deux memebres sont les plus associés mutuellement au sens du χ² sont conservées. Les calculs sont beaucoup plus rapides, mais le *k* maximal risque d'être moins élevé, et seules les partitions avec le χ² d'association le plus élevé sont conservées.
 
-L'objet résultat est contient, pour chaque valeur de `k`, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction `rainette2_explor` :
+À noter que pour `full = TRUE`, si le temps d'exécution est trop long il est possible d'utiliser également `parallel = TRUE` qui permet de paralléliser une partie des calculs (ne fonctionne pas sous Windows).
+
+Dans tous les cas l'objet résultat contient, pour chaque valeur de `k`, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction `rainette2_explor` :
 
 ```{r eval=FALSE}
 rainette2_explor(res, dtm, corpus)
@@ -192,7 +198,7 @@ rainette2_explor(res, dtm, corpus)
 
 L'interface est très semblable à la précédente, sauf qu'il n'y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux `NA`, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent ici être assez nombreux.
 
-Si certains segments n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups` pour les assigner au groupe le plus proche selon une méthode _k-nearest neighbors_  (avec k=1) :
+Si certains segments n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups` pour les assigner au groupe le plus proche selon une méthode _k-nearest neighbors_  (avec k=1). Ceci n'est cependant pas forcément conseillé car les classes perdont du coup une partie de la "robustesse" acquise par la classification double.
 
 ```{r}
 groupes <- cutree(res, k = 5)
