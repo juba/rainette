@@ -164,9 +164,9 @@ split_segments.tokens <- function(
 
   new_corpus <- docvars(obj) %>%
     dplyr::mutate(text = texts) %>%
-    tidyr::unnest(text) %>%
-    dplyr::group_by(segment_source) %>%
-    dplyr::mutate(segment_id = paste0(segment_source, "_", 1:dplyr::n())) %>%
+    tidyr::unnest(.data$text) %>%
+    dplyr::group_by(.data$segment_source) %>%
+    dplyr::mutate(segment_id = paste0(.data$segment_source, "_", 1:dplyr::n())) %>%
     quanteda::corpus(
       docid_field = "segment_id",
       text_field = "text"

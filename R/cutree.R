@@ -64,14 +64,14 @@ cutree_rainette2 <- function(res, k, criterion = c("chi2", "n"), ...) {
     dplyr::filter(k == .env$k)
   if (criterion == "chi2") {
     line <- line %>%
-      dplyr::slice_max(chi2)
+      dplyr::slice_max(.data$chi2)
   }
   if (criterion == "n") {
     line <- line %>%
-      dplyr::slice_max(n)
+      dplyr::slice_max(.data$n)
   }
   line %>%
-    dplyr::pull(groups) %>%
+    dplyr::pull(.data$groups) %>%
     unlist()
 }
 

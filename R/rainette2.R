@@ -41,7 +41,7 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
       everything(),
       names_to = "level1", values_to = "g1"
     ) %>%
-    dplyr::count(level1, g1, name = "n1")
+    dplyr::count(.data$level1, .data$g1, name = "n1")
 
   # Frequencies of each group in second clustering
   g2_count <- groups2 %>%
@@ -49,7 +49,7 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
       everything(),
       names_to = "level2", values_to = "g2"
     ) %>%
-    dplyr::count(level2, g2, name = "n2")
+    dplyr::count(.data$level2, .data$g2, name = "n2")
 
   # Compute frequencies of all groups combinations
   res <- purrr::map_dfr(names(groups1), function(level1) {
@@ -59,28 +59,28 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
         g2 = groups2[[level2]]
       )
       df %>%
-        dplyr::count(g1, g2) %>%
-        tidyr::complete(g1, g2, fill = list(n = 0)) %>%
+        dplyr::count(.data$g1, .data$g2) %>%
+        tidyr::complete(.data$g1, .data$g2, fill = list(n = 0)) %>%
         dplyr::rename(n_both = n) %>%
-        dplyr::mutate(level1 = level1, level2 = level2)
+        dplyr::mutate(level1 = .env$level1, level2 = .env$level2)
     })
   })
 
   # Add group count, chi-squared statistic and members
   res %>%
     # Filter on members
-    dplyr::filter(n_both > min_members) %>%
+    dplyr::filter(.data$n_both > .env$min_members) %>%
     dplyr::left_join(g1_count, by = c("level1", "g1")) %>%
     dplyr::left_join(g2_count, by = c("level2", "g2")) %>%
     # Compute chi-squared
     dplyr::rowwise() %>%
     dplyr::mutate(
-      chi2 = compute_chi2(n_both, n1, n2, n_tot) %>% unname()
+      chi2 = compute_chi2(.data$n_both, .data$n1, .data$n2, .env$n_tot) %>% unname()
     ) %>%
     dplyr::ungroup() %>%
     # Filter chi-squared
-    dplyr::filter(chi2 > min_chi2) %>%
-    mutate(interclass = paste(g1, g2, sep = "x"))
+    dplyr::filter(.data$chi2 > .env$min_chi2) %>%
+    dplyr::mutate(interclass = paste(.data$g1, .data$g2, sep = "x"))
 }
 
 # Add members list to each crossing group
@@ -89,11 +89,13 @@ crosstab_add_members <- function(tab, groups1, groups2) {
   tab %>%
     rowwise() %>%
     dplyr::mutate(
-      members = list(which(groups1[[level1]] == g1 & groups2[[level2]] == g2))
+      members = list(
+        which(groups1[[.data$level1]] == .data$g1 & groups2[[.data$level2]] == .data$g2)
+      )
     ) %>%
     dplyr::ungroup() %>%
     # Filter groups with same members
-    dplyr::distinct(members, .keep_all = TRUE) %>%
+    dplyr::distinct(.data$members, .keep_all = TRUE) %>%
     dplyr::mutate(id = 1:n())
 }
 
@@ -210,32 +212,32 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
         dplyr::rowwise() %>%
         ## Compute size and sum of Khi2 for each partition
         dplyr::mutate(
-          chi2 = sum(cross_groups$chi2[clusters]),
-          n = sum(cross_groups$n_both[clusters])
+          chi2 = sum(cross_groups$chi2[.data$clusters]),
+          n = sum(cross_groups$n_both[.data$clusters])
         )
       ## If full computation, keep both max chi2 and max size
       if (full) {
         out <- out %>%
           ## Filter partitions with max size or max chi2 for each k
-          dplyr::group_by(k) %>%
-          dplyr::filter(n == max(n) | chi2 == max(chi2)) %>%
+          dplyr::group_by(.data$k) %>%
+          dplyr::filter(.data$n == max(.data$n) | .data$chi2 == max(.data$chi2)) %>%
           ## If several partitions with same n, keep max chi2
-          dplyr::group_by(k, n) %>%
-          dplyr::slice_max(chi2) %>%
+          dplyr::group_by(.data$k, .data$n) %>%
+          dplyr::slice_max(.data$chi2) %>%
           ## If several partitions with same chi2, keep max n
-          dplyr::group_by(k, chi2) %>%
-          dplyr::slice_max(n) %>%
+          dplyr::group_by(.data$k, .data$chi2) %>%
+          dplyr::slice_max(.data$n) %>%
           dplyr::ungroup()
       } 
       ## If not full computation, only keep max chi2
       else {
         out <- out %>%
           ## Filter partitions with max chi2 for each k
-          dplyr::group_by(k) %>%
-          dplyr::slice_max(chi2) %>%
+          dplyr::group_by(.data$k) %>%
+          dplyr::slice_max(.data$chi2) %>%
           ## If several partitions with same chi2, keep max n
-          dplyr::group_by(k, chi2) %>%
-          dplyr::slice_max(n) %>%
+          dplyr::group_by(.data$k, .data$chi2) %>%
+          dplyr::slice_max(.data$n) %>%
           dplyr::ungroup()
       }
       p()
@@ -244,9 +246,9 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
     res <- res %>%
       dplyr::rowwise() %>%
       # Add group membership for each clustering
-      dplyr::mutate(groups = list(compute_members(clusters))) %>%
+      dplyr::mutate(groups = list(compute_members(.data$clusters))) %>%
       # Replace cross groups ids by their name
-      dplyr::mutate(clusters = list(cross_groups$interclass[clusters])) %>%
+      dplyr::mutate(clusters = list(cross_groups$interclass[.data$clusters])) %>%
       dplyr::ungroup()
   })
   res

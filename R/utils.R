@@ -1,9 +1,3 @@
-if (getRversion() >= "2.15.1")
-  utils::globalVariables(c("Dim1", "distance", "index", "segment", "segment_source", "weight", "p",
-    "chi2", "n_both", "n1", "n2", "g1", "g2", "level1", "level2", "members", "clusters", "feature",
-    "Group", "rainette_group", "text"))
-
-
 #' Merges uces into uc according to minimum uc size
 #'
 #' `rainette_uc_index` docvar
@@ -160,7 +154,7 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
   if (prop) {
     res <- res %>%
       dplyr::group_by(.data$doc_id) %>%
-      dplyr::mutate(n = n / sum(n) * 100) %>%
+      dplyr::mutate(n = .data$n / sum(.data$n) * 100) %>%
       dplyr::ungroup()
   }
 
@@ -169,7 +163,7 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
     tidyr::pivot_wider(
       id_cols = .data$doc_id,
       names_from = .data$cluster,
-      values_from = n,
+      values_from = .data$n,
       names_prefix = names_prefix,
       values_fill = 0
     ) %>%
@@ -177,7 +171,7 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 
   cols <- sort(colnames(res))
   cols <- cols[cols != "doc_id"]
-  dplyr::relocate(res, .data$doc_id, cols)
+  dplyr::relocate(res, doc_id, cols)
 }
 
 
@@ -221,8 +215,8 @@ docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL, threshol
     dplyr::select(-.data$doc_id) %>%
     dplyr::mutate(dplyr::across(.fns = function(v) v >= threshold)) %>%
     dplyr::summarise(dplyr::across(.fns = sum)) %>%
-    tidyr::pivot_longer(cols = everything(), names_to = "cluster", values_to = "n") %>%
-    dplyr::mutate(`%` = .data$n / n_docs * 100)
+    tidyr::pivot_longer(cols = dplyr::everything(), names_to = "cluster", values_to = "n") %>%
+    dplyr::mutate(`%` = .data$n / .env$n_docs * 100)
 
 }
 

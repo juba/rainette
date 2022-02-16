@@ -74,11 +74,11 @@ rainette_stats <- function(
       tmp_dtm <- quanteda::dfm_subset(dtm, select)
       if (all(colSums(tmp_dtm) == 0)) return(empty_tab)
       tab <- quanteda.textstats::textstat_frequency(tmp_dtm) %>%
-          as_tibble() %>%
-          mutate(docprop = .data$docfreq / ndoc(tmp_dtm)) %>%
-          arrange(desc(!!stat_col)) %>%
-          slice(1:n_terms) %>%
-          mutate(sign = "positive")
+          dplyr::as_tibble() %>%
+          dplyr::mutate(docprop = .data$docfreq / ndoc(tmp_dtm)) %>%
+          dplyr::arrange(desc(!!stat_col)) %>%
+          dplyr::slice(1:n_terms) %>%
+          dplyr::mutate(sign = "positive")
     }
     return(tab)
   })

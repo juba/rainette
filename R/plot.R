@@ -16,9 +16,9 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
     stat_max <- max(tab[[stat_col]], na.rm = TRUE)
   }
   ## Plot
-  g <- ggplot(data = tab, aes(x = stats::reorder(feature, !!stat_col_tidy), y = abs(!!stat_col_tidy))) +
-    geom_col(aes(fill = sign), color = "white", width = 1) +
-    geom_text(y = stat_max / 15, aes(label = stats::reorder(feature, !!stat_col_tidy)), hjust = 0, size = text_size / 2.5) +
+  g <- ggplot(data = tab, aes(x = stats::reorder(.data$feature, !!stat_col_tidy), y = abs(!!stat_col_tidy))) +
+    geom_col(aes(fill = .data$sign), color = "white", width = 1) +
+    geom_text(y = stat_max / 15, aes(label = stats::reorder(.data$feature, !!stat_col_tidy)), hjust = 0, size = text_size / 2.5) +
     coord_flip() +
     scale_fill_manual("", values = c("positive" = "#a1d8ff", "negative" = "#ff7d7e")) +
     guides(fill = "none") +
@@ -66,7 +66,7 @@ keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "fireb
   ## Plot
   g <- ggplot(data = tab) +
     #geom_hline(yintercept = 0, color = "grey70") +
-    ggwordcloud::geom_text_wordcloud(aes(label = feature, size = !!stat_col_tidy), color = title_color) +
+    ggwordcloud::geom_text_wordcloud(aes(label = .data$feature, size = !!stat_col_tidy), color = title_color) +
     labs(title = title) +
     scale_x_continuous(stat_col) +
     theme_minimal() +
@@ -380,7 +380,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   title <- paste0("Clusters size\n(NA = ", n_na, ")")
   colnames(freq) <- c("Group", "n")
   g <- ggplot(freq) +
-    geom_col(aes(x = Group, y = n, fill = Group)) +
+    geom_col(aes(x = .data$Group, y = .data$n, fill = .data$Group)) +
     scale_fill_manual(values = c(groups_colors(k)), na.value = "grey20") +
     guides(fill = "none") +
     ggtitle(title) +
@@ -399,6 +399,3 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   gridExtra::grid.arrange(grobs = plots, layout_matrix = lay)
 
 }
-
-
-
