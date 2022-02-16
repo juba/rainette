@@ -17,4 +17,4 @@ essai*.R
 *.o
 *.so
 docs/
-testthat/_snaps/
+tests/testthat/_snaps/
