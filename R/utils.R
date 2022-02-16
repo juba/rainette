@@ -1,14 +1,14 @@
-#' Merges uces into uc according to minimum uc size
+#' Merges segments according to minimum segment size
 #'
 #' `rainette_uc_index` docvar
 #'
-#' @param dtm dtm of uces, with a `rainette_uce_id` docvar
-#' @param min_segment_size minimum number of forms by uc
+#' @param dtm dtm of segments
+#' @param min_segment_size minimum number of forms by segment
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #'
 #' @details
-#' If `min_segment_size == 0`, different uc ids are added to the dtm docvars
-#' (ie no uce are merged together). If `min_segment_size > 0` then `doc_id` must be provided
+#' If `min_segment_size == 0`, no segments are merged together.
+#' If `min_segment_size > 0` then `doc_id` must be provided
 #' unless the corpus comes from `split_segments`, in this case
 #' `segment_source` is used by default.
 #'
@@ -93,9 +93,9 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
 #' @param prop if TRUE, returns the percentage of each cluster by document
 #'
 #' @details
-#' This function is only useful for previously segmented corpus. If `doc_id` 
+#' This function is only useful for previously segmented corpus. If `doc_id`
 #' is NULL and there is a `sement_source` docvar, it will be used instead.
-#' 
+#'
 #' @seealso [docs_by_cluster_table()]
 #'
 #' @examples
