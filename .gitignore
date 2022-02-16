@@ -17,3 +17,4 @@ essai*.R
 *.o
 *.so
 docs/
+testthat/_snaps/
