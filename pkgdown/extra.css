@@ -101,9 +101,9 @@ pre code a {
 .cross span {
     display: inline-block;
     text-align: center;
-    height: 1.5rem;
-    width: 1.5rem;
-    border-radius: 1.5rem;
+    height: 1.8rem;
+    width: 1.8rem;
+    border-radius: 1.8rem;
     border: 1px solid;
     color: white;
     font-weight: 400;
