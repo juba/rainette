@@ -9,16 +9,19 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
   }
 
   ## Column with statistic values
-  stat_col_tidy <- rlang::sym(stat_col)
   if (!is.null(range)) {
     stat_max <- max(range)
   } else {
     stat_max <- max(tab[[stat_col]], na.rm = TRUE)
   }
   ## Plot
-  g <- ggplot(data = tab, aes(x = stats::reorder(.data$feature, !!stat_col_tidy), y = abs(!!stat_col_tidy))) +
+  g <- ggplot(data = tab, aes(x = stats::reorder(.data$feature, .data[[stat_col]]), y = abs(.data[[stat_col]]))) +
     geom_col(aes(fill = .data$sign), color = "white", width = 1) +
-    geom_text(y = stat_max / 15, aes(label = stats::reorder(.data$feature, !!stat_col_tidy)), hjust = 0, size = text_size / 2.5) +
+    geom_text(
+      y = stat_max / 15, 
+      aes(label = stats::reorder(.data$feature, .data[[stat_col]])), 
+      hjust = 0, size = text_size / 2.5
+    ) +
     coord_flip() +
     scale_fill_manual("", values = c("positive" = "#a1d8ff", "negative" = "#ff7d7e")) +
     guides(fill = "none") +
@@ -61,12 +64,12 @@ keyness_barplot <- function(tab, range = NULL, title = "", title_color = "firebr
 keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "firebrick3",
   stat_col = "chi2", max_size = 15, top_margin = 0) {
 
-  ## Column with statistic values
-  stat_col_tidy <- rlang::sym(stat_col)
   ## Plot
   g <- ggplot(data = tab) +
     #geom_hline(yintercept = 0, color = "grey70") +
-    ggwordcloud::geom_text_wordcloud(aes(label = .data$feature, size = !!stat_col_tidy), color = title_color) +
+    ggwordcloud::geom_text_wordcloud(
+      aes(label = .data$feature, size = .data[[stat_col]]), color = title_color
+    ) +
     labs(title = title) +
     scale_x_continuous(stat_col) +
     theme_minimal() +
@@ -231,7 +234,7 @@ rainette_plot <- function(res, dtm, k = NULL,
     range <- NULL
     if (!free_scales) {
       max_stat <- max(purrr::map_dbl(tabs, function(tab) {
-         v <- dplyr::pull(tab, !!stat_col)
+         v <- dplyr::pull(tab, .data[[stat_col]])
          if (length(v) == 0) return(0)
          max(v)
       }))
@@ -355,7 +358,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
     range <- NULL
     if (!free_scales) {
       max_stat <- max(purrr::map_dbl(tabs, function(tab) {
-         v <- dplyr::pull(tab, !!stat_col)
+         v <- dplyr::pull(tab, .data[[stat_col]])
          if (length(v) == 0) return(0)
          max(v)
       }))

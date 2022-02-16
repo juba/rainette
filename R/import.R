@@ -111,10 +111,9 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
       metadata <- data.frame(metadata, thematics = thems, stringsAsFactors = FALSE)
       ## Generate id by thematic if necessary
       if (!is.null(id_var)) {
-        id_var_tidy <- rlang::sym(id_var)
         metadata <- metadata %>%
-          dplyr::group_by(!!id_var_tidy) %>%
-          dplyr::mutate(rainette_split_id = paste(!!id_var_tidy, 1:n(), sep = "_"))
+          dplyr::group_by(.data[[id_var]]) %>%
+          dplyr::mutate(rainette_split_id = paste(.data[[id_var]], 1:n(), sep = "_"))
       }
       id_var <- "rainette_split_id"
     } else {

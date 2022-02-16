@@ -148,7 +148,7 @@ test_that("docs_by_cluster_table results", {
 
 # stat_col
 
-test_that("stat_col is ok", {
-  expect_equal(stat_col("chi2"), rlang::sym("chi2"))
-  expect_equal(stat_col("lr"), rlang::sym("G2"))
+test_that("stat_col", {
+  expect_equal(stat_col("chi2"), "chi2")
+  expect_equal(stat_col("lr"), "G2")
 })

@@ -225,12 +225,11 @@ docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL, threshol
 
 stat_col <- function(measure) {
 
-  stat_col <- switch(measure,
+  switch(measure,
     "chi2" = "chi2",
     "lr" = "G2",
     "frequency" = "frequency",
     "docprop" = "docprop"
   )
-  rlang::sym(stat_col)
-
+  
 }
