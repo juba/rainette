@@ -30,7 +30,6 @@ Imports:
     rlang,
     shiny,
     miniUI,
-    formatR,
     highr,
     progressr,
     Rcpp (>= 1.0.3)
