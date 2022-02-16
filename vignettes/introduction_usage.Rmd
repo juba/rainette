@@ -17,9 +17,10 @@ La première étape consiste à importer votre corpus dans R. Vous pouvez utilis
 
 Pour ce document, on va importer le texte du *Manifeste du parti communiste* (Karl Marx et Friedrich Engels, 1848, source [wikisource](https://fr.wikisource.org/wiki/Manifeste_du_parti_communiste/Lafargue)). Celui-ci est placé dans un fichier texte au format Iramuteq fourni avec `rainette`. Le corpus est composé de quatre documents, un document par partie de l'ouvrage.
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(rainette)
 library(quanteda)
+
 ## Import du corpus
 fichier <- system.file("extdata", "manifeste_pc.txt", package = "rainette")
 corpus <- import_corpus_iramuteq(fichier)
@@ -117,7 +118,7 @@ rainette_explor(res, dtm, corpus)
 
 L'interface devrait ressembler à quelque chose comme ça :
 
-![](rainette_explor_plot_fr.png)
+![Interface de rainette_explor()](img/rainette_explor_plot_fr.png)
 
 Il est possible de modifier le nombre de classes, la statistique utilisée dans les graphiques (spécificité, termes les plus fréquents), etc. Par défaut, les graphiques sous chaque classe indiquent les termes les plus caractéristiques du groupe positivement (en bleu) ou négativement (en rouge et si vous avez coché la case *Show negative values*).
 
@@ -125,7 +126,7 @@ Cette interface vous permet d'expérimenter librement sur le nombre de classes e
 
 L'onglet *Cluster documents* permet à tout moment de visualiser les documents d'une classe. Vous pouvez également filtrer ces documents en saisissant un mot ou une expression régulière dans le champ *Filter by term* :
 
-![](rainette_explor_docs_fr.png)
+![Onglet "Cluster documents" de rainette_explor()](img/rainette_explor_docs_fr.png)
 
 Dans l'onglet *Summary*, vous pouvez également cliquer sur *Get R code* pour obtenir le code R correspondant au graphique actuellement affiché, ainsi que la commande `cutree` qui vous permet de récupérer les groupes d'appartenance de chaque document du corpus, là aussi selon le nombre de groupes actuellement affichés.
 
@@ -133,7 +134,7 @@ Dans l'onglet *Summary*, vous pouvez également cliquer sur *Get R code* pour ob
 ## Clustering description plot
 rainette_plot(res, dtm, k = 5, type = "bar", n_terms = 20, free_scales = FALSE,
     measure = "chi2", show_negative = "TRUE", text_size = 11)
-## Groups
+## Groups 
 cutree(res, k = 5)
 ```
 
@@ -194,7 +195,7 @@ Dans tous les cas l'objet résultat contient, pour chaque valeur de `k`, les par
 rainette2_explor(res, dtm, corpus)
 ```
 
-![](rainette2_explor_fr.png)
+![Interface de rainette2_explor()](img/rainette2_explor_fr.png)
 
 L'interface est très semblable à la précédente, sauf qu'il n'y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux `NA`, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent ici être assez nombreux.
 

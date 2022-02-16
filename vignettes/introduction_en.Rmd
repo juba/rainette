@@ -24,7 +24,7 @@ This is not a new algorithm, as the first articles describing it date back
 to 1983. Here are some characteristics of the method :
 
 - each text is only assigned to one cluster, unlike methods like LDA.
-- it is then better suited for small "homogeneous" documents : for long texts the
+- it is better suited for small "homogeneous" documents : for long texts the
   good practice is first to split them into segments.
 - as the algorithm uses a singular value decomposition of a document-term
   matrix, it is relatively fast but may not work on very large corpus. In this case, 
@@ -115,7 +115,7 @@ The `split_segments` function does just that, and can be applied on a `tm` or
 On this article we will apply it to the sample `data_corpus_inaugural`
 `quanteda` corpus :
 
-```{r warnings = FALSE, message  = FALSE}
+```{r warning=FALSE, message=FALSE}
 library(quanteda)
 library(rainette)
 corpus <- split_segments(data_corpus_inaugural, segment_size = 40)
@@ -184,7 +184,7 @@ rainette_explor(res, dtm, corpus)
 
 The interactive interface should look something like this :
 
-![](rainette_explor_plot_en.png)
+![rainette_explor() interface](img/rainette_explor_plot_en.png)
 
 You can change the number of clusters, the displayed statistic, etc., and
 see the result in real time. By default the most specific terms are displayed with
@@ -267,7 +267,7 @@ available to explore the results. It is launched with `rainette2_explor` :
 rainette2_explor(res, dtm, corpus)
 ```
 
-![](rainette2_explor_en.png)
+![rainette2_explor() interface](img/rainette2_explor_en.png)
 
 The interface is very similar to the previous one, except there is no
 dendrogram anymore, but a single barplot with each cluster size instead. Be
