@@ -326,7 +326,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   show_negative = FALSE,
   text_size = 10) {
 
-  if (!inherits(res, "rainette2")) 
+  if (!inherits(res, "rainette2"))
     stop("res must be a rainette2 result object")
 
   type <- match.arg(type)
@@ -342,7 +342,7 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   ## Maximum number of clusters
   max_k <- max(res$k, na.rm = TRUE)
 
-  if (k < 2 || k > max_k) stop("k must be between 2 and ", max_k)
+  if (is.null(k) || k < 2 || k > max_k) stop("k must be between 2 and ", max_k)
   groups <- rainette::cutree_rainette2(res, k, criterion)
   if (complete_groups) {
     groups <- rainette::rainette2_complete_groups(dtm, groups)
