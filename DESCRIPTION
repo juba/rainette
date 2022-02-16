@@ -39,7 +39,8 @@ Suggests:
     rmarkdown,
     tm,
     FNN,
-    quanteda.textmodels
+    quanteda.textmodels,
+    vdiffr
 Roxygen: list(markdown = TRUE)    
 RoxygenNote: 7.1.2
 LinkingTo: Rcpp
