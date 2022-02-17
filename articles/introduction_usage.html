@@ -134,7 +134,7 @@
 <div class="section level3">
 <h3 id="découpage-en-segments">Découpage en segments<a class="anchor" aria-label="anchor" href="#d%C3%A9coupage-en-segments"></a>
 </h3>
-<p>La méthode Reinert de classification s’applique à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction <code>split_segments</code>. Ici on découpe en segments d’environ 40 mots (l’algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d’une virgule).</p>
+<p>La méthode Reinert de classification s’applique à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction <code><a href="../reference/split_segments.html">split_segments()</a></code>. Ici on découpe en segments d’environ 40 mots (l’algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d’une virgule).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corpus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_segments.html">split_segments</a></span><span class="op">(</span><span class="va">corpus</span>, segment_size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></code></pre></div>
 <p>Notre corpus est désormais constitué de 278 segments et 2 variables de métadonnées :</p>
@@ -183,7 +183,7 @@
 </h3>
 <p>L’étape suivante est de calculer la matrice termes-documents (<em>dtm</em>), grand tableau numérique comportant les documents en lignes, les termes en colonnes, et comme valeurs le nombre d’occurrences de chaque terme dans chaque document.</p>
 <p>Notre corpus étant au format <code>quanteda</code>, on va utiliser les fonctions de cette extension.</p>
-<p>On commence par tokeniser le corpus en supprimant nombre et ponctuations, on supprime les mots outils les plus courants et on convertit tous les termes en minuscules, puis on calule la matrice termes-documents avec la fonction <code>dfm</code>.</p>
+<p>On commence par tokeniser le corpus en supprimant nombre et ponctuations, on supprime les mots outils les plus courants et on convertit tous les termes en minuscules, puis on calule la matrice termes-documents avec la fonction <code><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm()</a></code>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corpus</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span>, remove_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">tok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens_select.html" class="external-link">tokens_remove</a></span><span class="op">(</span><span class="va">tok</span>, <span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span><span class="st">"fr"</span><span class="op">)</span><span class="op">)</span>
@@ -198,7 +198,7 @@
 <div class="section level2">
 <h2 id="classification-simple">Classification simple<a class="anchor" aria-label="anchor" href="#classification-simple"></a>
 </h2>
-<p>Une fois notre matrice calculée, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction <code>rainette</code>.</p>
+<p>Une fois notre matrice calculée, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction <code><a href="../reference/rainette.html">rainette()</a></code>.</p>
 <p>On peut lui passer plusieurs arguments, notamment :</p>
 <ul>
 <li>
@@ -219,7 +219,7 @@
 <span class="co">## </span>
 <span class="co">## Cluster method   : reinert </span>
 <span class="co">## Number of objects: 5</span></code></pre>
-<p>Pour faciliter l’exploration des résultats, <code>rainette</code> propose une interface interactive qui peut être lancée avec la fonction <code>rainette_explor</code> :</p>
+<p>Pour faciliter l’exploration des résultats, <code>rainette</code> propose une interface interactive qui peut être lancée avec la fonction <code><a href="../reference/rainette_explor.html">rainette_explor()</a></code> :</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette_explor.html">rainette_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
 <p>L’interface devrait ressembler à quelque chose comme ça :</p>
@@ -250,7 +250,7 @@
 <span class="co">## 4      I          text2      1</span>
 <span class="co">## 5      I          text2      1</span>
 <span class="co">## 6      I          text2      1</span></code></pre>
-<p>Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction <code>clusters_by_doc_table</code> permet d’afficher, pour chaque document (ici chacune des quatre parties du texte), le nombre de segments de chaque groupe :</p>
+<p>Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction <code><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table()</a></code> permet d’afficher, pour chaque document (ici chacune des quatre parties du texte), le nombre de segments de chaque groupe :</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 4 × 6</span></span>
@@ -270,7 +270,7 @@
 <span class="co">## <span style="color: #BCBCBC;">2</span> text2     13.6    27.2    4.85   35.0    19.4 </span>
 <span class="co">## <span style="color: #BCBCBC;">3</span> text3     10.7    13.3    8       9.33   58.7 </span>
 <span class="co">## <span style="color: #BCBCBC;">4</span> text4     23.7    33.0   29.9     5.15    8.25</span></code></pre>
-<p>À l’inverse, <code>docs_by_cluster_table</code> permet de visualiser, pour chaque groupe, le nombre et la proportion de documents d’origine comportant au moins un segment de ce groupe :</p>
+<p>À l’inverse, <code><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table()</a></code> permet de visualiser, pour chaque groupe, le nombre et la proportion de documents d’origine comportant au moins un segment de ce groupe :</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 5 × 3</span></span>
@@ -285,28 +285,28 @@
 <div class="section level2">
 <h2 id="classification-double">Classification double<a class="anchor" aria-label="anchor" href="#classification-double"></a>
 </h2>
-<p>Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on “croise” les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes. Pour plus de détails sur la classifcation double, se référer à la <a href="https://juba.github.io/rainette/articles/algorithmes.html">vignette de description des algorithmes</a>.</p>
-<p>Une classification double utilise la fonction <code>rainette2</code>. On commence par effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :</p>
+<p>Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on “croise” les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes. Pour plus de détails sur la classifcation double, se référer à la <a href="algorithmes.html">vignette de description des algorithmes</a>.</p>
+<p>Une classification double utilise la fonction <code><a href="../reference/rainette2.html">rainette2()</a></code>. On commence par effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
-<p>Puis on utilise <code>rainette2</code> sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument <code>max_k</code>).</p>
+<p>Puis on utilise <code><a href="../reference/rainette2.html">rainette2()</a></code> sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument <code>max_k</code>).</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></code></pre></div>
-<p>Un paramètre important de <code>rainette2</code> est le paramètre <code>full</code> :</p>
+<p>Un paramètre important de <code><a href="../reference/rainette2.html">rainette2()</a></code> est le paramètre <code>full</code> :</p>
 <ul>
 <li>Si <code>full = TRUE</code> (valeur par défaut), la sélection des partitions optimales de classes croisées se fait en conservant toutes les classes croisées non nulles. Ceci permet une recherche “exhaustive” et permet de sélectionner les partitions ayant l’effectif total le plus élevé ou bien le χ² d’association le plus fort. Les temps de calcul peuvent cependant être longs si le nombre de classes de départ est important.</li>
 <li>Si <code>full = FALSE</code>, seules les classes croisées dont les deux memebres sont les plus associés mutuellement au sens du χ² sont conservées. Les calculs sont beaucoup plus rapides, mais le <em>k</em> maximal risque d’être moins élevé, et seules les partitions avec le χ² d’association le plus élevé sont conservées.</li>
 </ul>
 <p>À noter que pour <code>full = TRUE</code>, si le temps d’exécution est trop long il est possible d’utiliser également <code>parallel = TRUE</code> qui permet de paralléliser une partie des calculs (ne fonctionne pas sous Windows).</p>
-<p>Dans tous les cas l’objet résultat contient, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code>rainette2_explor</code> :</p>
+<p>Dans tous les cas l’objet résultat contient, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code><a href="../reference/rainette2_explor.html">rainette2_explor()</a></code> :</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="img/rainette2_explor_fr.png" alt=""><p class="caption">Interface de rainette2_explor()</p>
 </div>
 <p>L’interface est très semblable à la précédente, sauf qu’il n’y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux <code>NA</code>, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent ici être assez nombreux.</p>
-<p>Si certains segments n’ont pas été affecté à un groupe, vous pouvez utiliser <code>rainette2_complete_groups</code> pour les assigner au groupe le plus proche selon une méthode <em>k-nearest neighbors</em> (avec k=1). Ceci n’est cependant pas forcément conseillé car les classes perdont du coup une partie de la “robustesse” acquise par la classification double.</p>
+<p>Si certains segments n’ont pas été affecté à un groupe, vous pouvez utiliser <code><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups()</a></code> pour les assigner au groupe le plus proche selon une méthode <em>k-nearest neighbors</em> (avec k=1). Ceci n’est cependant pas forcément conseillé car les classes perdont du coup une partie de la “robustesse” acquise par la classification double.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">groupes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="va">groupes_complets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span><span class="op">(</span><span class="va">dtm</span>, <span class="va">groupes</span><span class="op">)</span></code></pre></div>
