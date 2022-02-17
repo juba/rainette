@@ -46,5 +46,6 @@ articles:
   navbar: ~
   contents:
   - introduction_en
+  - algorithms_en
   - introduction_usage
   - algorithmes

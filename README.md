@@ -7,7 +7,7 @@
 [![R build status](https://github.com/juba/rainette/workflows/R-CMD-check/badge.svg)](https://github.com/juba/rainette/actions?query=workflow%3AR-CMD-check)
 <!-- [![Coverage status](https://codecov.io/gh/juba/rainette/branch/master/graph/badge.svg)](https://codecov.io/github/juba/rainette?branch=master) -->
 
-Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other software such as [Iramuteq](http://www.iramuteq.org/) (free software) or [Alceste](https://www.image-zafar.com/Logiciel.html) (commercial, closed source).
+Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other softwares such as [Iramuteq](http://www.iramuteq.org/) (free software) or [Alceste](https://www.image-zafar.com/Logiciel.html) (commercial, closed source).
 
 ## Features
 
@@ -101,11 +101,10 @@ rainette2_explor(res, dtm, corpus)
 
 ## Tell me more
 
-Three vignettes are available :
+Two vignettes are available :
 
-- An introduction in english : [Introduction to rainette](https://juba.github.io/rainette/articles/introduction_en.html)
-- An introduction in french : [Introduction à rainette](https://juba.github.io/rainette/articles/introduction_usage.html)
-- An algorithm description in french : [Description des algorithmes](https://juba.github.io/rainette/articles/algorithmes.html)
+- Introduction and usage vignette : [english](https://juba.github.io/rainette/articles/introduction_en.html), [french](https://juba.github.io/rainette/articles/introduction_usage.html)
+- Algorithms description vignette : [english](https://juba.github.io/rainette/articles/algorithms_en.html), [french](https://juba.github.io/rainette/articles/algorithmes.html)
 
 ## Credits
 
