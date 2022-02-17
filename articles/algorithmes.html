@@ -50,6 +50,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/introduction_en.html">[en] Introduction to rainette</a>
+    <a class="dropdown-item" href="../articles/algorithms_en.html">[en] Algorithms description</a>
     <a class="dropdown-item" href="../articles/introduction_usage.html">[fr] Utilisation de rainette</a>
     <a class="dropdown-item" href="../articles/algorithmes.html">[fr] Description des algorithmes</a>
   </div>
@@ -83,7 +84,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>[fr] Description des algorithmes</h1>
                         <h4 data-toc-skip class="author">Julien Barnier</h4>
             
-            <h4 data-toc-skip class="date">2022-02-16</h4>
+            <h4 data-toc-skip class="date">2022-02-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/algorithmes.Rmd" class="external-link"><code>vignettes/algorithmes.Rmd</code></a></small>
       <div class="d-none name"><code>algorithmes.Rmd</code></div>
@@ -91,12 +92,11 @@
 
     
     
-<p>L’objectif de ce document est de décrire les algorithmes utilisés pour les classifications dans <code>rainette</code>, et de comparer notamment avec l’implémentation d’Iramuteq (dans sa version <code>0.7-alpha2</code>). Aucune comparaison n’a pu être faite avec Alceste car il s’agit d’un logiciel commercial et propriétaire.</p>
-<p>À noter que l’implémentation de <code>rainette</code> repose sur deux éléments principaux :</p>
+<p>L’objectif de ce document est de décrire les algorithmes utilisés pour les classifications dans <code>rainette</code> et leur implémentation. À noter que cette implémentation s’est appuyée sur deux éléments principaux :</p>
 <ul>
-<li>les deux articles de Max Reinert cités dans les <a href="#r%C3%A9f%C3%A9rences">références</a>
+<li>les trois articles de Max Reinert cités dans les <a href="#r%C3%A9f%C3%A9rences">références</a>
 </li>
-<li>le code source d’Iramuteq, notamment les fichiers <code>CHD.R</code> et <code>chdtxt.R</code>. Le code R a cependant été quasiment entièrement réécrit, et certaines portions ont été implémentées en C++ via <a href="http://rcpp.org/" class="external-link">Rcpp</a>.</li>
+<li>le code source d’Iramuteq, notamment les fichiers <code>CHD.R</code> et <code>chdtxt.R</code>. Le code a cependant été quasiment entièrement réécrit, et certaines portions ont été implémentées en C++ via <a href="http://rcpp.org/" class="external-link">Rcpp</a>.</li>
 </ul>
 <div class="section level2">
 <h2 id="algorithme-de-classification-simple">Algorithme de classification simple<a class="anchor" aria-label="anchor" href="#algorithme-de-classification-simple"></a>
@@ -105,119 +105,572 @@
 <h3 id="matrice-de-départ">Matrice de départ<a class="anchor" aria-label="anchor" href="#matrice-de-d%C3%A9part"></a>
 </h3>
 <p>La classification simple est une classification descendante hiérarchique (CDH).</p>
-<p>Le tableau de départ est la matrice termes-documents croisant les segments de texte (unités de contexte élémentaires, <em>uce</em>), éventuellement regroupés en unités de contexte (<em>uc</em>) s’ils ne comportent pas suffisamment de formes différentes (selon la valeur de l’argument <code>min_segment_size</code> passé à <code>rainette</code>), et les termes. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d’effectifs.</p>
+<p>Le tableau de départ est la matrice termes-documents croisant les documents du corpus et les termes qui les composent. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d’occurrences.</p>
 <p>On a donc un tableau de ce type :</p>
-<pre><code><span class="co">##     partir un jour sans retour</span>
-<span class="co">## uc1      1  1    0    1      0</span>
-<span class="co">## uc2      0  1    1    0      1</span>
-<span class="co">## uc3      1  1    1    0      1</span>
-<span class="co">## uc4      0  1    0    1      1</span></code></pre>
+<pre><code><span class="co">##      partir un jour sans retour</span>
+<span class="co">## doc1      1  1    0    1      0</span>
+<span class="co">## doc2      0  1    1    0      1</span>
+<span class="co">## doc3      1  1    1    0      1</span>
+<span class="co">## doc4      0  1    0    1      1</span></code></pre>
+<p>À noter que si les documents sont des segments obtenus avec <code><a href="../reference/split_segments.html">split_segments()</a></code>, les segments trop courts d’un même document peuvent être regroupés entre eux au moment de la classification pour atteindre la taille minimale indiquée par l’argument <code>min_segment_size</code> de <code><a href="../reference/rainette.html">rainette()</a></code>.</p>
 </div>
 <div class="section level3">
 <h3 id="division-maximisant-le-khi2">Division maximisant le Khi2<a class="anchor" aria-label="anchor" href="#division-maximisant-le-khi2"></a>
 </h3>
-<p>On souhaite diviser ce tableau de départ en maximisant la valeur du Khi2 obtenue lorsqu’on regroupe les lignes en deux classes. Par exemple, dans le tableau ci-dessus, si on regroupe <code>uc1</code> avec <code>uc2</code> et <code>uc3</code> avec <code>uc4</code>, on obtient le tableau suivant :</p>
-<pre><code><span class="co">##      partir un jour sans retour</span>
-<span class="co">## [1,]      1  2    1    1      1</span>
-<span class="co">## [2,]      1  2    1    1      2</span></code></pre>
-<p>On peut calculer le Khi2 de ce tableau (qui vaut en l’occurrence 0.2579365). Dans un cas aussi simple, on peut effectuer tous les regroupements d’<code>uc</code> possible et déterminer lequel correspond au Khi2 maximal, mais avec des données réelles cela prendrait trop de temps.</p>
+<p>On souhaite diviser cette matrice termes-documents en deux groupes de documents aussi “différents” que possible. La méthode Reinert consiste à sélectionner le regroupement qui maximise la statistique du χ² du tableau regroupé.</p>
+<p>Par exemple, dans le tableau ci-dessus, si on regroupe <code>doc1</code> avec <code>doc2</code> et <code>doc3</code> avec <code>doc4</code>, on obtient le tableau suivant :</p>
+<pre><code><span class="co">##             partir un jour sans retour</span>
+<span class="co">## doc1 + doc2      1  2    1    1      1</span>
+<span class="co">## doc3 + doc4      1  2    1    1      2</span></code></pre>
+<p>On peut calculer la valeur du χ² de ce tableau. Cette statistique est un indicateur de la “distance” entre les deux groupes de documents en ce qui concerne la distribution des termes : plus la valeur du χ² du tableau regroupé est élevée et plus les deux groupes sont différents, plus elle est faible et plus ils se ressemblent.</p>
+<p>Dans un cas aussi simple, on peut effectuer tous les regroupements de documents possibles et déterminer lequel correspond au χ² maximal, mais avec des données réelles la complexité augmente trop rapidement.</p>
 <p>On opère donc de la manière suivante :</p>
 <ul>
 <li>on effectue une analyse factorielle des correspondances de la matrice termes-documents, et on ordonne les documents selon leur coordonnée sur le premier axe de cette AFC.</li>
-<li>on regroupe tour à tour les points entre eux selon cet ordre : d’abord le point avec la coordonnée la plus basse <em>vs</em> tous les autres, puis les deux points avec les coordonnées les plus basses <em>vs</em> tous les autres, etc. On calcule le Khi2 correspondant à chaque fois et on conserve le regroupement qui le maximise.</li>
-<li>enfin, à partir de ce premier regroupement, on effectue une réaffectation des points : on change tour à tour chaque point de classe, et on regarde si cela fait augmenter le Khi2. Dans ce cas on garde cette nouvelle affectation.</li>
-<li>on recommence cette opération de réaffectation jusqu’à ce qu’elle ne permette plus d’augmenter la valeur du Khi2.</li>
+<li>on regroupe tour à tour les documents entre eux selon cet ordonnancement : d’abord le point avec la coordonnée la plus basse <em>vs</em> tous les autres, puis les deux points avec les coordonnées les plus basses <em>vs</em> tous les autres, etc. On calcule à chaque fois le χ² correspondant et on conserve au final le regroupement qui le maximise.</li>
+<li>à partir de ce regroupement, on effectue une réaffectation des documents : on change tour à tour chaque document de classe, et on regarde si cela fait augmenter le χ². Si c’est le cas on conserve cette nouvelle affectation.</li>
+<li>on recommence cette opération de réaffectation jusqu’à ce qu’elle ne permette plus d’augmenter la valeur du χ².</li>
 </ul>
-<p>On obtient donc deux nouveaux tableaux correspondant au regroupement des lignes en vue de la maximisation du Khi2 du tableau regroupé.</p>
+<p>On obtient donc au final deux groupes de documents et deux matrices termes-documents correspondantes.</p>
 </div>
 <div class="section level3">
 <h3 id="sélection-des-termes">Sélection des termes<a class="anchor" aria-label="anchor" href="#s%C3%A9lection-des-termes"></a>
 </h3>
 <p>L’étape suivante consiste en une sélection des termes dans chacun des deux tableaux pour les prochaines itérations :</p>
 <ul>
-<li>dans chaque tableau, on regarde la fréquence de chaque terme. On supprime les termes qui apparaissent moins de <code>tsj</code> fois (3 par défaut).</li>
-<li>on compare également cet effectif avec l’effectif attendu sous l’hypothèse d’indépendance de la répartition du terme entre les deux groupes et on en déduit un Khi2 et un coefficient de contingence pour ce terme. Si ce coefficient de contingence est supérieur à <code>cc</code> (0.3 par défaut), on ne conserve le terme que dans le tableau dans lequel il est surreprésenté.</li>
+<li>on regarde la fréquence de chaque terme, et on supprime les termes qui apparaissent moins de 3 fois (cette valeur est modifiable via l’argument <code>tsj</code> de <code><a href="../reference/rainette.html">rainette()</a></code>).</li>
+<li>on compare également l’effectif observé de chaque terme avec l’effectif attendu sous l’hypothèse d’indépendance de la répartition du terme entre les deux groupes, et on en déduit un coefficient de contingence pour ce terme. Si ce coefficient de contingence est supérieur à 0.3, on ne conserve le terme que dans le tableau dans lequel il est surreprésenté (le seuil de 0.3 est modifiable via l’argument <code>cc_test</code> de <code><a href="../reference/rainette.html">rainette()</a></code>).</li>
 </ul>
-<p>Parmi les deux tableaux finaux obtenus après séparation et sélection des termes, on recommence l’algorithme sur le tableau le plus gros, celui comportant le plus de documents (sauf si le tableau en question est trop petit pour calculer une AFC, ou si son effectif est inférieur à l’argument <code>min_members</code>).</p>
-<p>En procédant de cette manière <code>k</code> fois, on obtient une CDH en <code>k</code> groupes, et un dendrogramme correspondant (la hauteur du dendrogramme étant la valeur maximale du Khi2 trouvée au moment du split).</p>
 </div>
 <div class="section level3">
-<h3 id="différences-avec-iramuteq">Différences avec Iramuteq<a class="anchor" aria-label="anchor" href="#diff%C3%A9rences-avec-iramuteq"></a>
+<h3 id="classification-descendante-hiérarchique">Classification descendante hiérarchique<a class="anchor" aria-label="anchor" href="#classification-descendante-hi%C3%A9rarchique"></a>
 </h3>
-<p>L’implémentation de l’algorithme dans <code>rainette</code> se différencie de celle d’Iramuteq surtout dans la gestion du paramètre <code>min_members</code> (le nombre minimal de documents dans une classe).</p>
-<p>Dans <code>rainette</code>, <code>min_members</code> est uniquement utilisé au moment du choix du tableau suivant à splitter : si aucun tableau n’a un effectif supérieur à ce paramètre, l’algorithme s’arrête même si on n’a pas atteint la valeur souhaitée de <code>k</code>.</p>
-<p>Dans Iramuteq, l’algorithme se répète <code>k</code> fois dans tous les cas, et il procède à la fin à un regroupement des classes dont l’effectif est inférieur à l’effectif minimal souhaité. Ce regroupement s’effectue en fusionnant ces classes en “remontant” le dendrogramme.</p>
-<p>L’avantage de l’implémentation dans <code>rainette</code> est qu’on ne “casse” pas la logique du dendrogramme, et qu’on obtient donc comme résultat un arbre complet, qu’on peut couper à la hauteur souhaitée : on peut donc explorer la classification en 2, 3 … <code>k</code> groupes. L’inconvénient est qu’on n’a pas d’assurance de n’avoir aucune classe avec un effectif inférieur à <code>min_members</code> : on doit procéder à des regroupements manuels si nécessaire.</p>
+<p>Les étapes précédentes permettent de scinder un corpus en deux groupes. Pour obtenir une hiérarchie de classes, on commence par scinder le corpus entier, puis on recommence de la même manière avec le groupe obtenu comportant le plus de documents (sauf si le tableau en question est trop petit pour calculer une AFC, ou si son effectif est inférieur à l’argument <code>min_split_members</code> de <code><a href="../reference/rainette.html">rainette()</a></code>).</p>
+<p>En procédant de cette manière <code>k - 1</code> fois, on obtient une classification descendante hiérarchique (CDH) en <code>k</code> groupes, et le dendrogramme correspondant (la hauteur des branches du dendrogramme étant la valeur maximale du χ² trouvée au moment du split).</p>
+<p><img src="img/dendro5.png"></p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="algorithme-de-double-classification">Algorithme de double classification<a class="anchor" aria-label="anchor" href="#algorithme-de-double-classification"></a>
+<h2 id="algorithme-de-classification-double">Algorithme de classification double<a class="anchor" aria-label="anchor" href="#algorithme-de-classification-double"></a>
 </h2>
-<p>La double classification consiste à effectuer deux classifications simples, mais avec des tailles d’<em>uc</em> différentes (valeurs distinctes de <code>min_segment_size</code>). L’idée est alors de “croiser” les résultats de ces deux CDH pour déterminer des classes plus “robustes”.</p>
+<p>La classification double s’applique à un corpus découpé en segments. L’objectif est d’obtenir des classes plus robustes en croisant les résultats de deux classifications simples calculées avec des tailles minimales de segments différentes.</p>
+<p>La classification double consiste donc à effectuer deux classifications simples avec des valeurs distinctes de <code>min_segment_size</code>. On obtient donc deux dendrogrammes différents qui déterminent des classes ici numérotées de 1 à 6 :</p>
+<p><img src="img/double_cdh1.png"></p>
 <div class="section level3">
 <h3 id="calcul-des-classes-croisées">Calcul des classes croisées<a class="anchor" aria-label="anchor" href="#calcul-des-classes-crois%C3%A9es"></a>
 </h3>
-<p>Dans ce qui suit on considère, pour les deux CDH, toutes les classes obtenues pour chaque niveau de <code>k</code>. Pour une CDH avec <code>k = 5</code>, on a donc un total de 14 classes dans chaque CDH.</p>
 <p>La première étape consiste à croiser les classes des deux CDH :</p>
+<p><img src="img/double_cdh_full.png"></p>
+<p>On prend chaque classe de la première CDH, et on la croise avec chaque classe de la seconde (y compris si les classes ne sont pas de même niveau <code>k</code>). On appelle la nouvelle classe obtenue une “classe croisée” :</p>
 <ul>
-<li>on prend chaque classe de la CDH1, et on la croise avec chaque classe de la CDH2 (y compris si les classes ne sont pas de même niveau <code>k</code>). On appelle la nouvelle classe obtenue une “classe croisée”.</li>
-<li>pour chaque classe croisée, on calcule l’effectif du croisement (le nombre de documents présents dans les deux classes).</li>
-<li>à partir de cet effectif, de l’effectif de chaque classe et du nombre total de documents, on peut créer un tableau croisé d’appartenance aux deux classes : on calcule alors le Khi2 de ce tableau, qui représente une mesure de “l’association” entre les deux classes.</li>
+<li>pour chaque classe croisée, on calcule l’effectif du croisement, c’est à dire le nombre de documents présents dans les deux classes.</li>
+<li>à partir de cet effectif, de l’effectif de chaque classe et du nombre total de documents, on peut créer un tableau croisé d’appartenance aux deux classes : on calcule alors le χ² de ce tableau, qui représente une mesure de “l’association” entre les deux classes.</li>
+<li>si deux classes croisées différentes comportent les mêmes documents, on ne conserve que l’une d’entre elles.</li>
+<li>si une classe croisée comporte un effectif inférieur à la valeur de l’argument <code>min_members</code> de <code><a href="../reference/rainette2.html">rainette2()</a></code>, elle n’est pas conservée.</li>
+<li>si une classe croisée comporte un χ² d’association inférieur à la valeur de l’argument <code>min_chi2</code> de <code><a href="../reference/rainette2.html">rainette2()</a></code>, elle n’est pas conservée.</li>
 </ul>
-<p>À noter que le croisement systématique de toutes les classes entraîne beaucoup de “doublons”, c’est-à-dire de classes croisées avec exactement les mêmes membres. Ceux-ci ne sont évidemment pas conservés.</p>
-<p>L’étape suivante consiste à sélectionner les ensembles de classes croisées correspondant à la meilleure partition de l’ensemble des documents, c’est-à-dire qu’on va considérer tous les ensembles de classes croisées n’ayant aucun document en commun, et qu’on va chercher parmi toutes ces partitions la partition “optimale”.</p>
-<p>La procédure à suivre décrite dans les articles cités dans les <a href="#r%C3%A9f%C3%A9rences">références</a> n’est pas très claire, on s’est donc pour la suite surtout inspiré du code d’Iramuteq.</p>
+<table class="table">
+<thead><tr>
+<th align="center">
+Classe croisée
+</th>
+<th align="right">
+Effectif
+</th>
+<th align="right">
+χ² d’association
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>1</span></span>
+</td>
+<td align="right">
+25
+</td>
+<td align="right">
+41.2
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>2</span></span>
+</td>
+<td align="right">
+102
+</td>
+<td align="right">
+30.1
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>3</span></span>
+</td>
+<td align="right">
+59
+</td>
+<td align="right">
+87.3
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>4</span></span>
+</td>
+<td align="right">
+41
+</td>
+<td align="right">
+94.0
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>5</span></span>
+</td>
+<td align="right">
+0
+</td>
+<td align="right">
+-
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>6</span></span>
+</td>
+<td align="right">
+13
+</td>
+<td align="right">
+6.2
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>2</span><span>1</span></span>
+</td>
+<td align="right">
+0
+</td>
+<td align="right">
+-
+</td>
+</tr>
+<tr>
+<td align="center">
+…
+</td>
+<td align="right">
+…
+</td>
+<td align="right">
+…
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>6</span><span>6</span></span>
+</td>
+<td align="right">
+5
+</td>
+<td align="right">
+3.1
+</td>
+</tr>
+</tbody>
+</table>
+<p>Une fois ces classes croisées définies, deux type d’analyse sont possibles.</p>
+<div class="section level4">
+<h4 id="analyse-full">Analyse “full”<a class="anchor" aria-label="anchor" href="#analyse-full"></a>
+</h4>
+<p>La première, dite analyse “full” (argument <code>full = TRUE</code> de <code><a href="../reference/rainette2.html">rainette2()</a></code>), conserve pour la suite toutes les classes croisées dont l’effectif est supérieur à zéro (si celles-ci n’ont pas déjà été filtrées à l’étape précédente). Dans l’exemple ci-dessus, on conserverait donc :</p>
+<table class="table">
+<thead><tr>
+<th align="center">
+Classe croisée
+</th>
+<th align="right">
+Effectif
+</th>
+<th align="right">
+χ² d’association
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>1</span></span>
+</td>
+<td align="right">
+25
+</td>
+<td align="right">
+41.2
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>2</span></span>
+</td>
+<td align="right">
+102
+</td>
+<td align="right">
+30.1
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>3</span></span>
+</td>
+<td align="right">
+59
+</td>
+<td align="right">
+87.3
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>4</span></span>
+</td>
+<td align="right">
+41
+</td>
+<td align="right">
+94.0
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>6</span></span>
+</td>
+<td align="right">
+13
+</td>
+<td align="right">
+6.2
+</td>
+</tr>
+<tr>
+<td align="center">
+…
+</td>
+<td align="right">
+…
+</td>
+<td align="right">
+…
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>6</span><span>6</span></span>
+</td>
+<td align="right">
+5
+</td>
+<td align="right">
+3.1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="analyse-classique">Analyse “classique”<a class="anchor" aria-label="anchor" href="#analyse-classique"></a>
+</h4>
+<p>La seconde, dite analyse “classique” (argument <code>full = FALSE</code> de <code><a href="../reference/rainette2.html">rainette2()</a></code>) ne conserve une classes croisée que si les deux groupes croisés sont mutuellement les plus associés. Ainsi, si on considère la classe croisée issue du croisement du groupe <em>x</em> et du groupe <em>y</em>, on ne conserve cette classe que si <em>y</em> est le groupe ayant le χ² d’association maximal avec <em>x</em>, et si en même temps <em>x</em> est le groupe ayant le χ² d’association maximal avec <em>y</em>.</p>
+<p>Dans ce cas le nombre de classes croisées considérées est beaucoup plus réduit :</p>
+<table class="table">
+<thead><tr>
+<th align="center">
+Classe croisée
+</th>
+<th align="right">
+Effectif
+</th>
+<th align="right">
+χ² d’association
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>4</span></span>
+</td>
+<td align="right">
+41
+</td>
+<td align="right">
+94.0
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>3</span><span>3</span></span>
+</td>
+<td align="right">
+18
+</td>
+<td align="right">
+70.1
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>4</span><span>6</span></span>
+</td>
+<td align="right">
+21
+</td>
+<td align="right">
+58.2
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>6</span><span>5</span></span>
+</td>
+<td align="right">
+25
+</td>
+<td align="right">
+61.0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section level3">
-<h3 id="sélection-des-classes-croisées">Sélection des classes croisées<a class="anchor" aria-label="anchor" href="#s%C3%A9lection-des-classes-crois%C3%A9es"></a>
+<h3 id="calcul-et-sélection-des-partitions-optimales">Calcul et sélection des partitions optimales<a class="anchor" aria-label="anchor" href="#calcul-et-s%C3%A9lection-des-partitions-optimales"></a>
 </h3>
-<p>Pour diminuer le nombre de partitions à examiner, on commence par sélectionner certaines classes croisées :</p>
+<p>L’étape suivante consiste à déterminer, à partir des classes croisées calculées précédemment, toutes les partitions possibles de nos documents en 2, 3, 4… classes croisées. Plus précisément, on essaie de déterminer tous les groupes de 2, 3, 4… classes croisées qui n’ont aucun élément en commun.</p>
+<p>On commence par déterminer les partitions de taille 2, c’est-à-dire tous les ensembles de deux classes croisées n’ayant aucun élément commun. On calcule pour chaque partition son effectif total et la somme de ses χ² d’association.</p>
+<table class="table">
+<thead><tr>
+<th align="center">
+Partition
+</th>
+<th align="right">
+Effectif total
+</th>
+<th align="right">
+Somme des χ² d’association
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>1</span></span> <span class="cross"><span>2</span><span>3</span></span>
+</td>
+<td align="right">
+47
+</td>
+<td align="right">
+62.3
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>4</span></span> <span class="cross"><span>3</span><span>5</span></span>
+</td>
+<td align="right">
+36
+</td>
+<td align="right">
+51.0
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>2</span><span>4</span></span> <span class="cross"><span>1</span><span>6</span></span>
+</td>
+<td align="right">
+29
+</td>
+<td align="right">
+38.2
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>2</span></span> <span class="cross"><span>5</span><span>3</span></span>
+</td>
+<td align="right">
+143
+</td>
+<td align="right">
+68.7
+</td>
+</tr>
+<tr>
+<td align="center">
+…
+</td>
+<td align="right">
+…
+</td>
+<td align="right">
+…
+</td>
+</tr>
+</tbody>
+</table>
+<p>On sélectionne parmi ces partitions celles qui sont considérées comme les “meilleures”, c’est-à-dire :</p>
 <ul>
-<li>on supprime toutes les classes croisées dont l’effectif (le nombre de documents) est inférieur à <code>min_members</code>
-</li>
-<li>on supprime toutes les classes croisées dont le Khi2 d’association est inférieur à <code>min_chi2</code> (par défaut 3.84, c’est-à-dire la valeur du quantile à 95% pour un degré de liberté)</li>
+<li>si on fait une analyse “full” (<code>full = TRUE</code>), on sélectionne celle ayant la somme de χ² d’association la plus forte, et celle ayant l’effectif total le plus élevé.</li>
+<li>si on fait une analyse “classique” (<code>full = FALSE</code>), on sélectionne uniquement celle ayant la somme de χ² d’association la plus forte (on ne peut pas utiliser l’effectif total comme critère de sélection dans ce cas-là).</li>
 </ul>
+<table class="table">
+<thead><tr>
+<th align="center">
+Partition
+</th>
+<th align="right">
+Effectif total
+</th>
+<th align="right">
+Somme des χ² d’association
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>2</span></span> <span class="cross"><span>5</span><span>3</span></span>
+</td>
+<td align="right">
+143
+</td>
+<td align="right">
+68.7
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>3</span><span>4</span></span> <span class="cross"><span>2</span><span>6</span></span>
+</td>
+<td align="right">
+86
+</td>
+<td align="right">
+98.0
+</td>
+</tr>
+</tbody>
+</table>
+<p>On fait de même pour les partitions de taille 3 : on détermine les différentes partitions possibles et on conserve les meilleures.</p>
+<table class="table">
+<thead><tr>
+<th align="center" style="width: 50%;">
+Partition
+</th>
+<th align="right">
+Effectif total
+</th>
+<th align="right">
+Somme des χ² d’association
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="center">
+<span class="cross"><span>1</span><span>2</span></span> <span class="cross"><span>5</span><span>3</span></span> <span class="cross"><span>2</span><span>5</span></span><br>
+</td>
+<td align="right">
+189
+</td>
+<td align="right">
+91.3
+</td>
+</tr>
+<tr>
+<td align="center">
+<span class="cross"><span>3</span><span>4</span></span> <span class="cross"><span>2</span><span>6</span></span> <span class="cross"><span>5</span><span>3</span></span>
+</td>
+<td align="right">
+113
+</td>
+<td align="right">
+108.1
+</td>
+</tr>
+</tbody>
+</table>
+<p>Et on continue pour les partitions de 4 classes croisées, etc.</p>
+<table style="margin-top: 2em;" class="table">
+<thead><tr>
+<th align="center" style="width: 50%;">
+Partition
+</th>
+<th align="right">
+Effectif total
+</th>
+<th align="right">
+Somme des χ² d’association
+</th>
+</tr></thead>
+<tbody><tr>
+<td align="center">
+<span class="cross"><span>3</span><span>4</span></span><span class="cross"><span>2</span><span>6</span></span><span class="cross"><span>5</span><span>3</span></span><span class="cross"><span>1</span><span>5</span></span><br>
+</td>
+<td align="right">
+223
+</td>
+<td align="right">
+114.7
+</td>
+</tr></tbody>
+</table>
+<p>On répète l’opération jusqu’à atteindre la valeur de l’argument <code>max_k</code> de <code><a href="../reference/rainette2.html">rainette2()</a></code>, ou bien lorsqu’il n’y a aucune partition possible au niveau considéré.</p>
 </div>
 <div class="section level3">
-<h3 id="calcul-des-partitions">Calcul des partitions<a class="anchor" aria-label="anchor" href="#calcul-des-partitions"></a>
+<h3 id="résultat">Résultat<a class="anchor" aria-label="anchor" href="#r%C3%A9sultat"></a>
 </h3>
-<p>Le calcul des partitions s’effectue de manière récursive à partir des classes croisées conservées à l’étape précédente :</p>
-<ul>
-<li>pour <code>k = 2</code>, on croise toutes les classes croisées deux à deux et on ne conserve que les paires n’ayant aucun élément en commun.</li>
-<li>pour <code>k = 3</code>, on part de toutes les paires sélectionnées précédemment, on les croise avec les autres classes croisées et on ne garde que les ensembles n’ayant aucun élément en commun.</li>
-<li>on recommence pour les autres valeurs de <code>k</code>, jusqu’à avoir atteint <code>max_k</code> ou jusqu’à ce qu’il n’y ait plus de nouvelle partition.</li>
-</ul>
+<p>On obtient donc au final, pour chaque valeur de <code>k</code> de 2 à <code>max_k</code>, une sélection de partitions de classes croisées considérées comme “optimales”, soit selon le critère de la somme de leur χ² d’association, soit selon celui de leur effectif total. Ces classes croisées constituent de nouveaux groupes potentiellement plus “robustes” que ceux mis en évidence par les deux CDH simples.</p>
+<p>À noter que cette opération peut faire qu’un grand nombre de documents n’appartiennent à aucun des nouveaux groupes. <code>rainette</code> propose de réaffecter ces documents aux nouveaux groupes via une méthode rapide de type <em>k-nearest neighbours</em>, mais ceci n’est pas forcément conseillé dans la mesure où on perdrait la “robustesse” qui est justement l’objectif de la double classification.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="différences-avec-iramuteq">Différences avec Iramuteq<a class="anchor" aria-label="anchor" href="#diff%C3%A9rences-avec-iramuteq"></a>
+</h2>
+<div class="section level3">
+<h3 id="classification-simple">Classification simple<a class="anchor" aria-label="anchor" href="#classification-simple"></a>
+</h3>
+<p>L’implémentation de l’algorithme dans <code>rainette</code> se différencie de celle d’Iramuteq surtout dans la gestion du paramètre <code>min_split_members</code> (le nombre minimal de documents dans une classe).</p>
+<p>Dans <code>rainette</code>, <code>min_split_members</code> est uniquement utilisé au moment du choix du tableau suivant à splitter : si aucun tableau n’a un effectif supérieur à ce paramètre, l’algorithme s’arrête même si on n’a pas atteint la valeur souhaitée de <code>k</code>.</p>
+<p>Dans Iramuteq, l’algorithme se répète <code>k</code> fois dans tous les cas, et il procède à la fin à un regroupement des classes dont l’effectif est inférieur à l’effectif minimal souhaité. Ce regroupement s’effectue en fusionnant ces classes en “remontant” le dendrogramme.</p>
+<p>L’avantage de l’implémentation dans <code>rainette</code> est qu’on ne “casse” pas la logique du dendrogramme, et qu’on obtient donc comme résultat un arbre complet, qu’on peut couper à la hauteur souhaitée : on peut donc explorer la classification en 2, 3 … <code>k</code> groupes. L’inconvénient est qu’on n’a pas d’assurance de n’avoir aucune classe avec un effectif inférieur à <code>min_split_members</code> : on doit procéder à des regroupements manuels si nécessaire.</p>
 </div>
 <div class="section level3">
-<h3 id="sélection-des-partitions-optimales">Sélection des partitions optimales<a class="anchor" aria-label="anchor" href="#s%C3%A9lection-des-partitions-optimales"></a>
+<h3 id="classification-double">Classification double<a class="anchor" aria-label="anchor" href="#classification-double"></a>
 </h3>
-<p>Une fois toutes les partitions déterminées, on calcule pour chacune d’elle deux critères :</p>
-<ul>
-<li>la taille totale, c’est-à-dire le nombre total de documents appartenant aux classes croisées de la partition</li>
-<li>le Khi2 total, c’est-à-dire la somme des Khi2 d’association de chaque classe croisée de la partition</li>
-</ul>
-<p>Au final, on conserve pour chaque valeur de <code>k</code> (donc pour les partitions en 2, 3…<code>max_k</code> classes) les partitions ayant soit la taille totale maximale, soit le Khi2 total maximal (on a donc une ou deux partitions pour chaque <code>k</code>).</p>
+<p>La méthode proposée par Iramuteq correspond plutôt à la méthode “full” de ce document : après avoir déterminé les classes croisées, on conserve toutes celles ayant un effectif et une valeur de χ² d’association suffisants.</p>
+<p>L’algorithme reste très proche de celui d’Iramuteq jusqu’à l’étape de la sélection de partition optimale. Ici on procède à une recherche exhaustive des partitions à partir des classes croisées sélectionnées (ce qui peut occasionner des calculs potentiellement très longs si <code>min_members</code> est faible et <code>max_k</code> élevé), tandis qu’Iramuteq procède autrement.</p>
+<p>Au niveau des résultats, Iramuteq ne renvoie qu’une seule partition qu’il juge optimale, tandis que <code>rainette</code> retourne pour chaque valeur de <code>k</code> les meilleures partitions selon les critères de la taille ou du χ² maximum.</p>
 </div>
-<div class="section level3">
-<h3 id="différences-avec-iramuteq-1">Différences avec Iramuteq<a class="anchor" aria-label="anchor" href="#diff%C3%A9rences-avec-iramuteq-1"></a>
-</h3>
-<p>L’algorithme reste très proche de celui d’Iramuteq jusqu’à l’étape de la sélection de partition optimale. Ici on procède à une recherche exhaustive des partitions à partir des classes croisées sélectionnées (ce qui peut occasionner des calculs potentiellement longs si <code>min_members</code> est faible et <code>max_k</code> élevé), tandis qu’Iramuteq procède autrement.</p>
-<p>Au niveau des résultats, Iramuteq ne renvoie qu’une seule partition qu’il juge optimale, tandis que <code>rainette</code> retourne pour chaque valeur de <code>k</code> les deux meilleures partitions selon les critères de la taille ou du Khi2 maximum.</p>
 </div>
-<div class="section level3">
-<h3 id="différences-avec-la-méthode-reinert">Différences avec la “méthode Reinert”<a class="anchor" aria-label="anchor" href="#diff%C3%A9rences-avec-la-m%C3%A9thode-reinert"></a>
-</h3>
-<p>Le mode de détermination des partitions optimales ne nous a pas semblé très détaillé dans les articles cités en <a href="#r%C3%A9f%C3%A9rences">références</a>, il ne nous est donc pas vraiment possible de comparer avec l’implémentation de <code>rainette</code>. Une différence majeure réside dans le fait que dans les articles cités, une fois la partition optimale déterminée, celle-ci est utilisée comme point de départ pour une affectation des documents aux classes via une méthode de type “centres mobiles”. Ceci permet notamment de réaffecter des points qui ne feraient pas partie des classes croisées de la partition retenue.</p>
-<p>Cette réaffectation par centre mobile n’est pas implémentée dans <code>rainette</code> (et elle ne semble pas l’être non plus dans Iramuteq). Il faut donc être vigilant au nombre et à la proportion de documents non affectés (valeur de classe à <code>NA</code>) à l’issue d’une classification double, car celui-ci peut être élevé. Une fonction <code>rainette2_complete_groups</code> est cependant disponible pour rattacher les points non affectés à une des classes via une méthode du type <em>k-nearest neighbours</em>.</p>
-</div>
+<div class="section level2">
+<h2 id="différences-avec-la-méthode-reinert">Différences avec la “méthode Reinert”<a class="anchor" aria-label="anchor" href="#diff%C3%A9rences-avec-la-m%C3%A9thode-reinert"></a>
+</h2>
+<p>Le mode de détermination des partitions optimales ne nous a pas semblé très détaillé dans les articles cités en <a href="#r%C3%A9f%C3%A9rences">références</a>, il ne nous est donc pas vraiment possible de comparer avec l’implémentation de <code>rainette</code>. A priori la méthode présentée par Max Reinert correspond à la méthode dite “classique” présentée dans ce document : après le calcul des classes croisées on ne conserve que celles dont les deux groupes croisés sont les plus associés mutuellement.</p>
+<p>Une différence importante réside dans le fait que dans les articles cités, une fois la partition optimale déterminée, celle-ci est utilisée comme point de départ pour une affectation des documents aux classes via une méthode de type “nuées dynamiques”. Ceci permet notamment de réaffecter des points qui ne feraient pas partie des classes croisées de la partition retenue.</p>
+<p>Cette réaffectation par centre mobile n’est pas implémentée dans <code>rainette</code> (et elle ne semble pas l’être non plus dans Iramuteq). Il faut donc être vigilant au nombre et à la proportion de documents non affectés (valeur de classe à <code>NA</code>) à l’issue d’une classification double, car celui-ci peut être élevé. Une fonction <code><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups()</a></code> est disponible pour rattacher les points non affectés à une des classes via une méthode du type <em>k-nearest neighbours</em>, mais son utilisation n’est pas forcément conseillée.</p>
 </div>
 <div class="section level2">
 <h2 id="références">Références<a class="anchor" aria-label="anchor" href="#r%C3%A9f%C3%A9rences"></a>
 </h2>
 <ul>
-<li>Reinert M, Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte, Cahiers de l’analyse des données, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
+<li>Reinert M., “Une méthode de classification descendante hiérarchique : application à l’analyse lexicale par contexte”, <em>Cahiers de l’analyse des données</em>, Volume 8, Numéro 2, 1983. <a href="http://www.numdam.org/item/?id=CAD_1983__8_2_187_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1983__8_2_187_0</a>
 </li>
-<li>Reinert M., Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval, Bulletin de Méthodologie Sociologique, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="external-link uri">https://doi.org/10.1177/075910639002600103</a>
+<li>Reinert M., “Alceste une méthodologie d’analyse des données textuelles et une application: Aurelia De Gerard De Nerval”, <em>Bulletin de Méthodologie Sociologique</em>, Volume 26, Numéro 1, 1990. <a href="https://doi.org/10.1177/075910639002600103" class="external-link uri">https://doi.org/10.1177/075910639002600103</a>
+</li>
+<li>Reinert M., “Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application”, <em>Les cahiers de l’analyse des données</em>, Tome 15, Numéro 1, 1990. <a href="http://www.numdam.org/item/?id=CAD_1990__15_1_21_0" class="external-link uri">http://www.numdam.org/item/?id=CAD_1990__15_1_21_0</a>
 </li>
 </ul>
 </div>
