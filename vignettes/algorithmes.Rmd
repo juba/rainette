@@ -124,6 +124,8 @@ On prend chaque classe de la première CDH, et on la croise avec chaque classe d
 
 Une fois ces classes croisées définies, deux type d'analyse sont possibles.
 
+#### Analyse "full"
+
 La première, dite analyse "full" (argument `full = TRUE` de `rainette2()`), conserve pour la suite toutes les classes croisées dont l'effectif est supérieur à zéro (si celles-ci n'ont pas déjà été filtrées à l'étape précédente). Dans l'exemple ci-dessus, on conserverait donc :
 
 <table>
@@ -145,6 +147,8 @@ La première, dite analyse "full" (argument `full = TRUE` de `rainette2()`), con
     
   </tbody>
 </table>
+
+#### Analyse "classique"
 
 La seconde, dite analyse "classique" (argument `full = FALSE` de `rainette2()`) ne conserve une classes croisée que si les deux groupes croisés sont mutuellement les plus associés. Ainsi, si on considère la classe croisée issue du croisement du groupe *x* et du groupe *y*, on ne conserve cette classe que si *y* est le groupe ayant le χ² d'association maximal avec *x*, et si en même temps *x* est le groupe ayant le χ² d'association maximal avec *y*.
 
