@@ -176,6 +176,20 @@ test_that("rainette2_plot error if full=FALSE and criterion=n", {
   )
 })
 
+test_that("same results with different values of full and parallel", {
+  res_f <- rainette2(res1, res2, max_k = 5, min_members = 2, full = TRUE)
+  res_fp <- rainette2(res1, res2, max_k = 5, min_members = 2, full = TRUE, parallel = TRUE)
+  expect_equal(res_f, res_fp)
+  expect_equal(attr(res_f, "full"), TRUE)
+  expect_equal(attr(res_fp, "full"), TRUE)
+
+  res_c <- rainette2(res1, res2, max_k = 5, min_members = 2, full = FALSE)
+  res_cp <- rainette2(res1, res2, max_k = 5, min_members = 2, full = FALSE, parallel = TRUE)
+  expect_equal(res_c, res_cp)
+  expect_equal(attr(res_c, "full"), FALSE)
+  expect_equal(attr(res_cp, "full"), FALSE)
+})
+
 test_that("plot functions class checking", {
   expect_error(rainette2_plot(res1, k = 5), "res must be a rainette2 result object")
   expect_error(rainette_plot(res12, k = 5), "res must be a rainette result object")
