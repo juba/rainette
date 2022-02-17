@@ -41,7 +41,7 @@ docvars(corpus)
 
 ## Découpage en segments
 
-La méthode Reinert de classification s'applique à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction `split_segments`. Ici on découpe en segments d'environ 40 mots (l'algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d'une virgule).
+La méthode Reinert de classification s'applique à des segments de texte relativement courts, et non à des textes longs. Une première étape consiste donc à découper chaque texte du corpus en segments via la fonction `split_segments()`. Ici on découpe en segments d'environ 40 mots (l'algorithme essaie de tenir compte de la ponctuation pour, par exemple, placer les césures entre des phrases ou au niveau d'une virgule).
 
 ```{r message=FALSE}
 corpus <- split_segments(corpus, segment_size = 40)
@@ -72,7 +72,7 @@ L'étape suivante est de calculer la matrice termes-documents (*dtm*), grand tab
 
 Notre corpus étant au format `quanteda`, on va utiliser les fonctions de cette extension.
 
-On commence par tokeniser le corpus en supprimant nombre et ponctuations, on supprime les mots outils les plus courants et on convertit tous les termes en minuscules, puis on calule la matrice termes-documents avec la fonction `dfm`.
+On commence par tokeniser le corpus en supprimant nombre et ponctuations, on supprime les mots outils les plus courants et on convertit tous les termes en minuscules, puis on calule la matrice termes-documents avec la fonction `dfm()`.
 
 ```{r}
 tok <- tokens(corpus, remove_punct = TRUE, remove_numbers = TRUE)
@@ -92,7 +92,7 @@ De nombreux autres traitements seraient possibles, mais on se contentera de cett
 
 # Classification simple
 
-Une fois notre matrice calculée, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction `rainette`. 
+Une fois notre matrice calculée, on peut procéder à une première forme de classification : une classification descendante hiérarchique simple, calculée avec la fonction `rainette()`. 
 
 On peut lui passer plusieurs arguments, notamment :
 
@@ -110,7 +110,7 @@ L'objet résultat ne nous dit pas grand chose en lui-même :
 res
 ```
 
-Pour faciliter l'exploration des résultats, `rainette` propose une interface interactive qui peut être lancée avec la fonction `rainette_explor` :
+Pour faciliter l'exploration des résultats, `rainette` propose une interface interactive qui peut être lancée avec la fonction `rainette_explor()` :
 
 ```{r eval = FALSE}
 rainette_explor(res, dtm, corpus)
@@ -145,7 +145,7 @@ corpus$groupe <- cutree(res, k = 5)
 head(docvars(corpus))
 ```
 
-Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction `clusters_by_doc_table` permet d'afficher, pour chaque document (ici chacune des quatre parties du texte), le nombre de segments de chaque groupe :
+Ici les classes ont attribuées aux segments, et non aux documents dans leur ensemble. La fonction `clusters_by_doc_table()` permet d'afficher, pour chaque document (ici chacune des quatre parties du texte), le nombre de segments de chaque groupe :
 
 ```{r}
 clusters_by_doc_table(corpus, clust_var = "groupe")
@@ -157,7 +157,7 @@ En ajoutant `prop = TRUE`, cette répartition peut être visualisée en pourcent
 clusters_by_doc_table(corpus, clust_var = "groupe", prop = TRUE)
 ```
 
-À l'inverse, `docs_by_cluster_table` permet de visualiser, pour chaque groupe, le nombre et la proportion de documents d'origine comportant au moins un segment de ce groupe :
+À l'inverse, `docs_by_cluster_table()` permet de visualiser, pour chaque groupe, le nombre et la proportion de documents d'origine comportant au moins un segment de ce groupe :
 
 ```{r}
 docs_by_cluster_table(corpus, clust_var = "groupe")
@@ -167,29 +167,29 @@ docs_by_cluster_table(corpus, clust_var = "groupe")
 
 # Classification double
 
-Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on "croise" les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes. Pour plus de détails sur la classifcation double, se référer à la [vignette de description des algorithmes](https://juba.github.io/rainette/articles/algorithmes.html).
+Le deuxième type de classification proposé est une classification double : selon la méthode proposée par Max Reinert, on effectue deux classifications simples en faisant varier la taille minimale des segments, puis on "croise" les résultats de ces deux classifications pour déterminer de nouvelles classes, potentiellement plus robustes. Pour plus de détails sur la classifcation double, se référer à la [vignette de description des algorithmes](algorithmes.html).
 
-Une classification double utilise la fonction `rainette2`. On commence par effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :
+Une classification double utilise la fonction `rainette2()`. On commence par effectuer les deux classifications simples, ici une avec une taille de segment minimale à 10, et une autre à 15 :
 
 ```{r message=FALSE, warning=FALSE}
 res1 <- rainette(dtm, k = 7, min_segment_size = 10)
 res2 <- rainette(dtm, k = 7, min_segment_size = 15)
 ```
 
-Puis on utilise `rainette2` sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument `max_k`).
+Puis on utilise `rainette2()` sur ces deux objets résultats, en lui indiquant le nombre maximal de classes à calculer (argument `max_k`).
 
 ```{r message=FALSE}
 res <- rainette2(res1, res2, max_k = 7)
 ```
 
-Un paramètre important de `rainette2` est le paramètre `full` :
+Un paramètre important de `rainette2()` est le paramètre `full` :
 
 - Si `full = TRUE` (valeur par défaut), la sélection des partitions optimales de classes croisées se fait en conservant toutes les classes croisées non nulles. Ceci permet une recherche "exhaustive" et permet de sélectionner les partitions ayant l'effectif total le plus élevé ou bien le χ² d'association le plus fort. Les temps de calcul peuvent cependant être longs si le nombre de classes de départ est important.
 - Si `full = FALSE`, seules les classes croisées dont les deux memebres sont les plus associés mutuellement au sens du χ² sont conservées. Les calculs sont beaucoup plus rapides, mais le *k* maximal risque d'être moins élevé, et seules les partitions avec le χ² d'association le plus élevé sont conservées.
 
 À noter que pour `full = TRUE`, si le temps d'exécution est trop long il est possible d'utiliser également `parallel = TRUE` qui permet de paralléliser une partie des calculs (ne fonctionne pas sous Windows).
 
-Dans tous les cas l'objet résultat contient, pour chaque valeur de `k`, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction `rainette2_explor` :
+Dans tous les cas l'objet résultat contient, pour chaque valeur de `k`, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction `rainette2_explor()` :
 
 ```{r eval=FALSE}
 rainette2_explor(res, dtm, corpus)
@@ -199,7 +199,7 @@ rainette2_explor(res, dtm, corpus)
 
 L'interface est très semblable à la précédente, sauf qu'il n'y a plus de dendrogramme mais à la place un diagramme en barre des effectifs des groupes. Soyez attentifs aux `NA`, qui représentent les segments non classés : contrairement à la classification simple, ils peuvent ici être assez nombreux.
 
-Si certains segments n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups` pour les assigner au groupe le plus proche selon une méthode _k-nearest neighbors_  (avec k=1). Ceci n'est cependant pas forcément conseillé car les classes perdont du coup une partie de la "robustesse" acquise par la classification double.
+Si certains segments n'ont pas été affecté à un groupe, vous pouvez utiliser `rainette2_complete_groups()` pour les assigner au groupe le plus proche selon une méthode *k-nearest neighbors*  (avec k=1). Ceci n'est cependant pas forcément conseillé car les classes perdont du coup une partie de la "robustesse" acquise par la classification double.
 
 ```{r}
 groupes <- cutree(res, k = 5)
