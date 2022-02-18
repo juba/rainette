@@ -250,7 +250,7 @@ switch_docs <- function(m, indices, max_index, max_chisq) {
     tab1 <- m[group1, , drop = FALSE]
     tab2 <- m[group2, , drop = FALSE]
 
-    chisq_values <- rainette::cpp_switch_docs(tab1, tab2)
+    chisq_values <- cpp_switch_docs(tab1, tab2)
     current_max <- max(chisq_values, na.rm = TRUE)
 
     if (current_max > max_chisq) {
@@ -366,7 +366,7 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3) {
   ## First step : CA partition
 
   indices <- order_docs(m)
-  res <- rainette::cpp_split_tab(m, indices)
+  res <- cpp_split_tab(m, indices)
   max_index <- res$max_index
   max_chisq <- res$max_chisq
 

@@ -394,12 +394,12 @@ rainette2_plot <- function(res, dtm, k = NULL, criterion = c("chi2", "n"),
   plots <- list()
 
   ## Barplot of clusters size
-  plots[[1]] <- rainette::frequency_barplot(groups, k, text_size)
+  plots[[1]] <- frequency_barplot(groups, k, text_size)
 
   ## Add terms plots
   plots <- c(
     plots,
-    rainette::keyness_plots(
+    keyness_plots(
       tabs, groups, type, free_scales,
       stat_col, n_terms, text_size, top_margin = 0.05
     )

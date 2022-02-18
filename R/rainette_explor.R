@@ -165,7 +165,7 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
     })
 
     current_k <- shiny::reactive(input$k)
-    rainette::docs_sample_server("rainette1", res, corpus_src, current_k)
+    docs_sample_server("rainette1", res, corpus_src, current_k)
 
     # Handle the Done button being pressed.
     observeEvent(input$done, {
