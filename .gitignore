@@ -18,3 +18,6 @@ essai*.R
 *.so
 docs/
 tests/testthat/_snaps/
+examples/
+examples.R
+cave/

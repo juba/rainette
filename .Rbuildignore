@@ -4,12 +4,6 @@
 ^example_.*\.R
 resources
 ^\.travis\.yml$
-essai.*\.R
-essai/
-Rscript_iramuteq/
-NOTES.Rmd
-tests_iramuteq.R
-.*.udpipe
 _pkgdown.yml
 docs/
 pkgdown/
@@ -18,3 +12,5 @@ src/*.INACTIVE
 ^\.github$
 \.lintr
 .markdownlint.json
+cave/
+examples/
