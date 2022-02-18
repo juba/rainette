@@ -23,11 +23,10 @@ extract_metadata <- function(docs) {
 
     # No metadata for this doc
     if (identical(vars_line[[1]], NA_character_)) {
-      # FIXME : doesn't work !
       return(data.frame(rainette_nometa = NA))
     }
 
-     res <- purrr::map(vars_line, function(vars) {
+    res <- purrr::map(vars_line, function(vars) {
       vars <- stringr::str_replace(vars, "^\\*", "")
       vars <- stringr::str_trim(vars)
       vars <- stringr::str_split_fixed(vars, "_", n = 2)
