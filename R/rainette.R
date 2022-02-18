@@ -16,8 +16,8 @@
 #' quite a bit, see the package vignettes for more details.
 #'
 #' The dtm object is automatically converted to boolean.
-#' 
-#' If `min_segment_size > 0` then `doc_id` must be provided unless the corpus comes from `split_segments`, 
+#'
+#' If `min_segment_size > 0` then `doc_id` must be provided unless the corpus comes from `split_segments`,
 #' in this case `segment_source` is used by default.
 #'
 #' @return
@@ -155,7 +155,7 @@ rainette <- function(
     split <- res[[i]]$splitted
     merge <- rbind(merge, -groups[split])
     groups <- groups[-split[2]]
-    groups[split[1]] <- -(k - i)
+    groups[split[1]] <- - (k - i)
   }
 
   ## Compute groups by uce at each k
@@ -206,12 +206,12 @@ order_docs <- function(m) {
 
   ## Compute first factor of CA on DTM
   ## Code taken from getAnywhere(textmodel_ca.dfm)
-  P <- m / sum(m)
-  rm <- rowSums(P)
-  cm <- colSums(P)
-  eP <- tcrossprod(rm, cm)
-  S <- (P - eP) / sqrt(eP)
-  dec <- RSpectra::svds(S, k = 1, nv = 0)
+  p <- m / sum(m)
+  rm <- rowSums(p)
+  cm <- colSums(p)
+  ep <- tcrossprod(rm, cm)
+  s <- (p - ep) / sqrt(ep)
+  dec <- RSpectra::svds(s, k = 1, nv = 0)
   coord <- dec$u[, 1] / sqrt(rm)
 
   ## Order documents by their first factor coordinates
@@ -250,7 +250,7 @@ switch_docs <- function(m, indices, max_index, max_chisq) {
     tab1 <- m[group1, , drop = FALSE]
     tab2 <- m[group2, , drop = FALSE]
 
-    chisq_values <- cpp_switch_docs(tab1, tab2)
+    chisq_values <- rainette::cpp_switch_docs(tab1, tab2)
     current_max <- max(chisq_values, na.rm = TRUE)
 
     if (current_max > max_chisq) {
@@ -366,7 +366,7 @@ cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3) {
   ## First step : CA partition
 
   indices <- order_docs(m)
-  res <- cpp_split_tab(m, indices)
+  res <- rainette::cpp_split_tab(m, indices)
   max_index <- res$max_index
   max_chisq <- res$max_chisq
 

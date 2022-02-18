@@ -113,4 +113,3 @@ rainette2_complete_groups <- function(dfm, groups, k = 1, ...) {
   groups
 
 }
-

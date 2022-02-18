@@ -60,7 +60,7 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
       } else {
         ## If new index is out of bounds or in another document
         ## replace current uc index with the previous one, if any
-        current_doc_id <- doc_ids[grouping_index ]
+        current_doc_id <- doc_ids[grouping_index]
         current_uc_id <- uc_id[grouping_index]
         other_uc_ids <- uc_id[doc_ids == current_doc_id & uc_id < current_uc_id]
         if (length(other_uc_ids) > 0) {
@@ -189,7 +189,7 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' and there is a `sement_source` docvar, it will be used instead.
 #'
 #' @seealso [clusters_by_doc_table()]
-#' 
+#'
 #' @examples
 #' \donttest{
 #' require(quanteda)
@@ -209,14 +209,13 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL, threshold = 1) {
 
   count <- clusters_by_doc_table(obj, clust_var = clust_var, doc_id = doc_id, prop = FALSE)
-  n_docs <- nrow(count)
 
   count %>%
     dplyr::select(-.data$doc_id) %>%
     dplyr::mutate(dplyr::across(.fns = function(v) v >= threshold)) %>%
     dplyr::summarise(dplyr::across(.fns = sum)) %>%
     tidyr::pivot_longer(cols = dplyr::everything(), names_to = "cluster", values_to = "n") %>%
-    dplyr::mutate(`%` = .data$n / .env$n_docs * 100)
+    dplyr::mutate(`%` = .data$n / nrow(.env$count) * 100)
 
 }
 
@@ -231,5 +230,5 @@ stat_col <- function(measure) {
     "frequency" = "frequency",
     "docprop" = "docprop"
   )
-  
+
 }

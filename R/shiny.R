@@ -91,7 +91,7 @@ docs_sample_ui <- function(id, res) {
                     value = ""
                 ),
                 if (show_merged_segments) {
-                    checkboxInput(ns("show_merged"), "Show merged segments", value = FALSE)
+                    shiny::checkboxInput(ns("show_merged"), "Show merged segments", value = FALSE)
                 }
             )
         ),

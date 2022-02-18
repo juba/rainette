@@ -32,9 +32,6 @@ get_groups <- function(res) {
 
 groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
 
-  # Total number of documents
-  n_tot <- nrow(groups1)
-
   # Frequencies of each group in first clustering
   g1_count <- groups1 %>%
     tidyr::pivot_longer(
@@ -75,7 +72,7 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
     # Compute chi-squared
     dplyr::rowwise() %>%
     dplyr::mutate(
-      chi2 = compute_chi2(.data$n_both, .data$n1, .data$n2, .env$n_tot) %>% unname()
+      chi2 = compute_chi2(.data$n_both, .data$n1, .data$n2, nrow(groups1)) %>% unname()
     ) %>%
     dplyr::ungroup() %>%
     # Filter chi-squared
@@ -228,7 +225,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
           dplyr::group_by(.data$k, .data$chi2) %>%
           dplyr::slice_max(.data$n) %>%
           dplyr::ungroup()
-      } 
+      }
       ## If not full computation, only keep max chi2
       else {
         out <- out %>%
@@ -263,7 +260,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 #' @param max_k maximum number of clusters to compute
 #' @param min_segment_size1 if `x` is a dfm, minimum uc size for first clustering
 #' @param min_segment_size2 if `x` is a dfm, minimum uc size for second clustering
-#' @param full if TRUE, all crossed groups are kept to compute optimal partitions, otherwise 
+#' @param full if TRUE, all crossed groups are kept to compute optimal partitions, otherwise
 #'   only the most mutually associated groups are kept.
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_members minimum members of each cluster
@@ -286,7 +283,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 #' in this case `segment_source` is used by default.
 #'
 #' If `full = FALSE`, computation may be much faster, but the chi2 criterion will be the only
-#' one available for best partition detection. 
+#' one available for best partition detection.
 #'
 #' For more details on optimal partitions search algorithm, please see package vignettes.
 #'
