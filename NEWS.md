@@ -14,11 +14,14 @@ Rework of the double classification computation :
 - New english vignette "algorithms description"
 - Reworked french and english introduction vignettes
 
+## Deprecated features
+
+- The wordcloud plots will be deprecated in a near future. A warning has been added to `rainette_plot()` and `rainette2_plot()` if they are called with `type = "cloud"`.
+
 ## Other
 
 - Add `show_na_title`, `cluster_label` and `keyness_plot_xlab` arguments to `rainette_plot()` to customize graphics output
 - Fix warnings in Font Awesome icon names
-
 
 # rainette 0.2.1
 
