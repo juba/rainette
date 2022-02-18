@@ -201,8 +201,27 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                 fun
             })
 
+            ## Maximum number of documents to display
+            n_doc <- reactive({
+                n_doc <- input$ndoc
+                if (is.null(n_doc) || is.na(n_doc) || n_doc < 1) {
+                    n_doc <- 1
+                }
+                n_doc
+            })
+
+            ## Maximum number of characters per document
+            n_char <- reactive({
+                n_char <- input$nchar
+                if (is.null(n_char) || is.na(n_char) || n_char < 1) {
+                    n_char <- 1
+                }
+                n_char
+            })
+
             ## Sample cluster documents introducation phrase
             output$docs_sample_intro <- renderUI({
+
                 if (is.null(corpus_src)) {
                     return(
                         HTML("<p>Can't display documents : <tt>corpus_src</tt> is null.</p><p>Please rerun <tt>rainette_explor</tt> with your quanteda corpus object as third parameter : something like <tt>rainette_explor(res, dtm, corpus)</tt>.</p>")
@@ -212,7 +231,7 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                 nb_docs_cluster <- quanteda::ndoc(corpus_filtered())
                 out <- paste0(
                     "Displayed : <strong>",
-                    min(input$ndoc, nb_docs_cluster),
+                    min(n_doc(), nb_docs_cluster),
                     "</strong>"
                 )
                 if (quanteda::ndoc(corpus_cluster()) != quanteda::ndoc(corpus_filtered())) {
@@ -239,7 +258,7 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                 }
 
                 ## Sample docs
-                size <- min(quanteda::ndoc(corpus_filtered()), input$ndoc)
+                size <- min(quanteda::ndoc(corpus_filtered()), n_doc())
                 if (input$random_sample) {
                     corp <- quanteda::corpus_sample(corpus_filtered(), size = size)
                 } else {
@@ -249,9 +268,9 @@ docs_sample_server <- function(id, res, corpus_src, current_k) {
                 ## Truncate texts
                 txt <- as.character(corp)
                 txt <- ifelse(
-                    nchar(txt) <= input$nchar,
+                    nchar(txt) <= n_char(),
                     txt,
-                    paste(stringr::str_sub(txt, 1, input$nchar), "(...)")
+                    paste(stringr::str_sub(txt, 1, n_char()), "(...)")
                 )
 
                 ## Highlight texts
