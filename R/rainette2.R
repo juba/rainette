@@ -265,7 +265,8 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_members minimum members of each cluster
 #' @param min_chi2 minimum chi2 for each cluster
-#' @param parallel if TRUE, use `parallel::mclapply` to compute partitions (won't work on Windows)
+#' @param parallel if TRUE, use `parallel::mclapply` to compute partitions 
+#'   (won't work on Windows, uses more RAM)
 #' @param uc_size1 deprecated, use min_segment_size1 instead
 #' @param uc_size2 deprecated, use min_segment_size2 instead
 #' @param ... if `x` is a dfm object, parameters passed to [rainette()] for both
@@ -283,7 +284,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 #' in this case `segment_source` is used by default.
 #'
 #' If `full = FALSE`, computation may be much faster, but the chi2 criterion will be the only
-#' one available for best partition detection.
+#' one available for best partition detection, and the result may not be optimal.
 #'
 #' For more details on optimal partitions search algorithm, please see package vignettes.
 #'

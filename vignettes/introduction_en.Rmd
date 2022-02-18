@@ -168,7 +168,7 @@ One important argument of `rainette2()` is the `full` argument :
 - If `full = TRUE` (the default), the best crossed clusters partition selection is made by keeping all non empty crossed clusters. This allows an exhaustive search and to identify the partition either with the highest sum of association χ², or the one with the highest total size. However, computation times can rise rapidly with the number of clusters.
 - If `full = FALSE`, only the crossed clusters whose clusters are the most mutually associated are kept. Computations are much faster, but the highest *k* level with available partitions may be lower, and only the partitions with the highest association χ² values can be identified.
 
-To be noted : with `full = TRUE`, if runtime is too high you can add the `parallel = TRUE` argument to paralellise some computations (won't work on Windows, though).
+To be noted : with `full = TRUE`, if runtime is too high you can add the `parallel = TRUE` argument to paralellise some computations (won't work on Windows, though, and may use much more RAM).
 
 In both cases, the resulting object is a *tibble* with, for each level *k*, the optimal
 partitions and their characteristics. Another interactive interface is

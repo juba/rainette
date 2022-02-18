@@ -187,7 +187,7 @@ Un paramètre important de `rainette2()` est le paramètre `full` :
 - Si `full = TRUE` (valeur par défaut), la sélection des partitions optimales de classes croisées se fait en conservant toutes les classes croisées non nulles. Ceci permet une recherche "exhaustive" et permet de sélectionner les partitions ayant l'effectif total le plus élevé ou bien le χ² d'association le plus fort. Les temps de calcul peuvent cependant être longs si le nombre de classes de départ est important.
 - Si `full = FALSE`, seules les classes croisées dont les deux memebres sont les plus associés mutuellement au sens du χ² sont conservées. Les calculs sont beaucoup plus rapides, mais le *k* maximal risque d'être moins élevé, et seules les partitions avec le χ² d'association le plus élevé sont conservées.
 
-À noter que pour `full = TRUE`, si le temps d'exécution est trop long il est possible d'utiliser également `parallel = TRUE` qui permet de paralléliser une partie des calculs (ne fonctionne pas sous Windows).
+À noter que pour `full = TRUE`, si le temps d'exécution est trop long il est possible d'utiliser également `parallel = TRUE` qui permet de paralléliser une partie des calculs (attention cette option ne fonctionne pas sous Windows, et elle utilise davantage de RAM).
 
 Dans tous les cas l'objet résultat contient, pour chaque valeur de `k`, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction `rainette2_explor()` :
 

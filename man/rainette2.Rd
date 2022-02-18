@@ -38,7 +38,8 @@ result from same dfm but with different uc size.}
 
 \item{min_chi2}{minimum chi2 for each cluster}
 
-\item{parallel}{if TRUE, use \code{parallel::mclapply} to compute partitions (won't work on Windows)}
+\item{parallel}{if TRUE, use \code{parallel::mclapply} to compute partitions
+(won't work on Windows, uses more RAM)}
 
 \item{full}{if TRUE, all crossed groups are kept to compute optimal partitions, otherwise
 only the most mutually associated groups are kept.}
@@ -76,7 +77,7 @@ and the function will only look for optimal partitions.
 in this case \code{segment_source} is used by default.
 
 If \code{full = FALSE}, computation may be much faster, but the chi2 criterion will be the only
-one available for best partition detection.
+one available for best partition detection, and the result may not be optimal.
 
 For more details on optimal partitions search algorithm, please see package vignettes.
 }
