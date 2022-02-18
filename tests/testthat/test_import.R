@@ -111,4 +111,3 @@ test_that("corpus with partial meta is ok", {
   expect_equal(docvars(corpus_with_partial_meta, "foo"), c(NA, "1", NA, NA))
   expect_equal(docvars(corpus_with_partial_meta, "bar"), c(NA, NA, NA, "bar"))
 })
-
