@@ -2,6 +2,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^example_.*\.R
+examples.R
 resources
 ^\.travis\.yml$
 _pkgdown.yml
