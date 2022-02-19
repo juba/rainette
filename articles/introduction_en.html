@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rainette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>[en] Introduction to rainette</h1>
                         <h4 data-toc-skip class="author">Julien Barnier</h4>
             
-            <h4 data-toc-skip class="date">2022-02-18</h4>
+            <h4 data-toc-skip class="date">2022-02-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_en.Rmd" class="external-link"><code>vignettes/introduction_en.Rmd</code></a></small>
       <div class="d-none name"><code>introduction_en.Rmd</code></div>
@@ -264,7 +264,7 @@
 <li>If <code>full = TRUE</code> (the default), the best crossed clusters partition selection is made by keeping all non empty crossed clusters. This allows an exhaustive search and to identify the partition either with the highest sum of association χ², or the one with the highest total size. However, computation times can rise rapidly with the number of clusters.</li>
 <li>If <code>full = FALSE</code>, only the crossed clusters whose clusters are the most mutually associated are kept. Computations are much faster, but the highest <em>k</em> level with available partitions may be lower, and only the partitions with the highest association χ² values can be identified.</li>
 </ul>
-<p>To be noted : with <code>full = TRUE</code>, if runtime is too high you can add the <code>parallel = TRUE</code> argument to paralellise some computations (won’t work on Windows, though).</p>
+<p>To be noted : with <code>full = TRUE</code>, if runtime is too high you can add the <code>parallel = TRUE</code> argument to paralellise some computations (won’t work on Windows, though, and may use much more RAM).</p>
 <p>In both cases, the resulting object is a <em>tibble</em> with, for each level <em>k</em>, the optimal partitions and their characteristics. Another interactive interface is available to explore the results. It is launched with <code><a href="../reference/rainette2_explor.html">rainette2_explor()</a></code>.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>

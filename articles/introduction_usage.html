@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rainette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>[fr] Utilisation de rainette</h1>
                         <h4 data-toc-skip class="author">Julien Barnier</h4>
             
-            <h4 data-toc-skip class="date">2022-02-18</h4>
+            <h4 data-toc-skip class="date">2022-02-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_usage.Rmd" class="external-link"><code>vignettes/introduction_usage.Rmd</code></a></small>
       <div class="d-none name"><code>introduction_usage.Rmd</code></div>
@@ -298,7 +298,7 @@
 <li>Si <code>full = TRUE</code> (valeur par défaut), la sélection des partitions optimales de classes croisées se fait en conservant toutes les classes croisées non nulles. Ceci permet une recherche “exhaustive” et permet de sélectionner les partitions ayant l’effectif total le plus élevé ou bien le χ² d’association le plus fort. Les temps de calcul peuvent cependant être longs si le nombre de classes de départ est important.</li>
 <li>Si <code>full = FALSE</code>, seules les classes croisées dont les deux memebres sont les plus associés mutuellement au sens du χ² sont conservées. Les calculs sont beaucoup plus rapides, mais le <em>k</em> maximal risque d’être moins élevé, et seules les partitions avec le χ² d’association le plus élevé sont conservées.</li>
 </ul>
-<p>À noter que pour <code>full = TRUE</code>, si le temps d’exécution est trop long il est possible d’utiliser également <code>parallel = TRUE</code> qui permet de paralléliser une partie des calculs (ne fonctionne pas sous Windows).</p>
+<p>À noter que pour <code>full = TRUE</code>, si le temps d’exécution est trop long il est possible d’utiliser également <code>parallel = TRUE</code> qui permet de paralléliser une partie des calculs (attention cette option ne fonctionne pas sous Windows, et elle utilise davantage de RAM).</p>
 <p>Dans tous les cas l’objet résultat contient, pour chaque valeur de <code>k</code>, les partitions optimales trouvées et leurs caractéristiques. Là encore, une interface interactive est proposée pour visualiser et explorer ces résultats. Elle se lance via la fonction <code><a href="../reference/rainette2_explor.html">rainette2_explor()</a></code> :</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></code></pre></div>

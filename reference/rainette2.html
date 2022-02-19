@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rainette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,8 @@ result from same dfm but with different uc size.</p></dd>
 <dt>min_chi2</dt>
 <dd><p>minimum chi2 for each cluster</p></dd>
 <dt>parallel</dt>
-<dd><p>if TRUE, use <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to compute partitions (won't work on Windows)</p></dd>
+<dd><p>if TRUE, use <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to compute partitions
+(won't work on Windows, uses more RAM)</p></dd>
 <dt>full</dt>
 <dd><p>if TRUE, all crossed groups are kept to compute optimal partitions, otherwise
 only the most mutually associated groups are kept.</p></dd>
@@ -128,7 +129,7 @@ and the function will only look for optimal partitions.</p>
 <p><code>doc_id</code> must be provided unless the corpus comes from <code>split_segments</code>,
 in this case <code>segment_source</code> is used by default.</p>
 <p>If <code>full = FALSE</code>, computation may be much faster, but the chi2 criterion will be the only
-one available for best partition detection.</p>
+one available for best partition detection, and the result may not be optimal.</p>
 <p>For more details on optimal partitions search algorithm, please see package vignettes.</p>
     </div>
     <div class="section level2">
