@@ -99,7 +99,13 @@ keyness_worcloud <- function(tab, range = NULL, title = "", title_color = "fireb
 
 groups_colors <- function(k, i = NULL) {
   ## Groups colors
-  col <- grDevices::palette.colors(n = 10, palette = "Tableau 10")
+  ## This is the result of the following call, put manually here
+  ## for compatibility with R 3.6
+  ## col <- grDevices::palette.colors(n = 10, palette = "Tableau 10")
+  col <- c(
+    "#4E79A7", "#F28E2B", "#E15759", "#76B7B2", "#59A14F",
+    "#EDC948", "#B07AA1", "#FF9DA7", "#9C755F", "#BAB0AC"
+  )
   col <- rep_len(col, k)
 
   if (!is.null(i)) {
