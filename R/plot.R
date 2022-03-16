@@ -205,6 +205,8 @@ dendrogram_plot <- function(res, k, groups, text_size, show_na_title) {
     g <- g +
         ggtitle(paste0("NA : ", na_n, " (", na_prop, "%)"))
   }
+
+  g
 }
 
 

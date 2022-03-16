@@ -1,6 +1,7 @@
 # rainette (development version)
 
 - Replace call to `palette.colors()` with manual colors vector to ensure compatibility with R 3.6 (#11)
+- Fix dendrogram not displayed when show_na_title = FALSE
 
 # rainette 0.3.0
 
