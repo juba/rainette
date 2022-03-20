@@ -9,6 +9,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+Pour une présentation en français des principes de la méthode et de son utilisation dans `rainette`, vous pouvez aussi consulter la vidéo d'une intervention réalisée dans le cadre d'[un tuto](https://mate-shs.cnrs.fr/actions/tutomate/tuto42-rainette-julien-barnier/) du réseau métier [Mate-shs](https://mate-shs.cnrs.fr/).
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/T9r8T5WZYHY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 # Préparation du corpus
 
 ## Importation
