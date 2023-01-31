@@ -1,12 +1,12 @@
-pandoc: 2.7.3
-pkgdown: 2.0.3
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   algorithmes: algorithmes.html
   algorithms_en: algorithms_en.html
   introduction_en: introduction_en.html
   introduction_usage: introduction_usage.html
-last_built: 2022-05-10T10:39Z
+last_built: 2023-01-31T11:48Z
 urls:
   reference: https://juba.github.io/rainette/reference
   article: https://juba.github.io/rainette/articles
