@@ -95,10 +95,10 @@ cutree_rainette2 <- function(res, k, criterion = c("chi2", "n"), ...) {
 #' @export
 
 rainette2_complete_groups <- function(dfm, groups, k = 1, ...) {
-
   if (!requireNamespace("FNN", quietly = TRUE)) {
     stop("Package \"FNN\" needed for this function to work. Please install it.",
-      call. = FALSE)
+      call. = FALSE
+    )
   }
 
   m <- quanteda::convert(dfm, to = "matrix")
@@ -111,5 +111,4 @@ rainette2_complete_groups <- function(dfm, groups, k = 1, ...) {
   groups[is.na(groups)] <- new_groups
 
   groups
-
 }

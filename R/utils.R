@@ -16,7 +16,6 @@
 #' @export
 
 merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
-
   ## Add id to documents
   quanteda::docvars(dtm, field = "rainette_uce_id") <- seq_len(nrow(dtm))
 
@@ -28,8 +27,11 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
 
   ## Check for min_segment_size and doc_id values
   if (is.null(doc_id)) {
-    if ("segment_source" %in% names(docvars(dtm))) doc_id <- "segment_source"
-    else stop("If min_segment_size > 0, you must provide a doc_id value.")
+    if ("segment_source" %in% names(docvars(dtm))) {
+      doc_id <- "segment_source"
+    } else {
+      stop("If min_segment_size > 0, you must provide a doc_id value.")
+    }
   }
 
   ## Size of each uce
@@ -51,12 +53,12 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
     ## While current uc size is smaller than min, regroup with following uce
     while (current_size < min_segment_size) {
       if (
-          (grouping_index + 1) <= length(terms_by_uce) &&
+        (grouping_index + 1) <= length(terms_by_uce) &&
           doc_ids[grouping_index] == doc_ids[grouping_index + 1]
-        ) {
-          grouping_index <- grouping_index + 1
-          current_size <- current_size + terms_by_uce[grouping_index]
-          uc_id[grouping_index] <- index
+      ) {
+        grouping_index <- grouping_index + 1
+        current_size <- current_size + terms_by_uce[grouping_index]
+        uc_id[grouping_index] <- index
       } else {
         ## If new index is out of bounds or in another document
         ## replace current uc index with the previous one, if any
@@ -115,7 +117,6 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
 #' @export
 
 clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = FALSE) {
-
   if (!inherits(obj, "corpus") && !inherits(obj, "dfm") && !inherits(obj, "tokens")) {
     stop("obj must be a corpus, a tokens or a dfm object.")
   }
@@ -161,9 +162,9 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
   ## Pivoting
   res <- res %>%
     tidyr::pivot_wider(
-      id_cols = .data$doc_id,
-      names_from = .data$cluster,
-      values_from = .data$n,
+      id_cols = "doc_id",
+      names_from = "cluster",
+      values_from = "n",
       names_prefix = names_prefix,
       values_fill = 0
     ) %>%
@@ -171,7 +172,7 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 
   cols <- sort(colnames(res))
   cols <- cols[cols != "doc_id"]
-  dplyr::relocate(res, doc_id, cols)
+  dplyr::relocate(res, doc_id, all_of(cols))
 }
 
 
@@ -207,28 +208,24 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' @export
 
 docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL, threshold = 1) {
-
   count <- clusters_by_doc_table(obj, clust_var = clust_var, doc_id = doc_id, prop = FALSE)
 
   count %>%
-    dplyr::select(-.data$doc_id) %>%
+    dplyr::select(-"doc_id") %>%
     dplyr::mutate(dplyr::across(.fns = function(v) v >= threshold)) %>%
-    dplyr::summarise(dplyr::across(.fns = sum)) %>%
+    dplyr::summarise(dplyr::across(everything(), .fns = sum)) %>%
     tidyr::pivot_longer(cols = dplyr::everything(), names_to = "cluster", values_to = "n") %>%
     dplyr::mutate(`%` = .data$n / nrow(.env$count) * 100)
-
 }
 
 
 #' @importFrom rlang sym
 
 stat_col <- function(measure) {
-
   switch(measure,
     "chi2" = "chi2",
     "lr" = "G2",
     "frequency" = "frequency",
     "docprop" = "docprop"
   )
-
 }

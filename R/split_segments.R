@@ -16,9 +16,7 @@
 ##' split_segments(data_corpus_inaugural)
 ##' }
 
-split_segments <- function(
-  obj, segment_size = 40, segment_size_window = NULL
-) {
+split_segments <- function(obj, segment_size = 40, segment_size_window = NULL) {
   UseMethod("split_segments")
 }
 
@@ -32,21 +30,16 @@ split_segments <- function(
 ##' @importFrom purrr map_chr
 
 
-split_segments.character <- function(
-  obj, segment_size = 40, segment_size_window = NULL
-) {
-
+split_segments.character <- function(obj, segment_size = 40, segment_size_window = NULL) {
   ## Tokenize into words
   words <- as.character(quanteda::tokens(obj, what = "fastestword"))
 
-  split_segments_words(words,  segment_size,  segment_size_window)
-
+  split_segments_words(words, segment_size, segment_size_window)
 }
 
 
 ## Split a single tokenized document
 split_segments_words <- function(words, segment_size = 40, segment_size_window = NULL) {
-
   if (inherits(words, "tokens") && length(words) == 1) {
     words <- as.character(words)
   }
@@ -85,13 +78,12 @@ split_segments_words <- function(words, segment_size = 40, segment_size_window =
   split_indices <- append(split_indices, length(words) - sum(split_indices) + 1)
   split_indices <- cumsum(split_indices)
 
-  segments <- purrr::map_chr(seq_len(length(split_indices) - 1), ~{
+  segments <- purrr::map_chr(seq_len(length(split_indices) - 1), ~ {
     w <- words[split_indices[.x]:(split_indices[.x + 1] - 1)]
     paste0(w, collapse = " ")
   })
 
   segments
-
 }
 
 
@@ -101,17 +93,13 @@ split_segments_words <- function(words, segment_size = 40, segment_size_window =
 ##' @export
 
 
-split_segments.Corpus <- function(
-  obj, segment_size = 40, segment_size_window = NULL
-) {
-
+split_segments.Corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
   corpus <- obj
 
   if (!inherits(corpus, "Corpus")) stop("corpus must be of class Corpus")
 
   corpus <- quanteda::corpus(corpus)
   split_segments(corpus, segment_size, segment_size_window)
-
 }
 
 
@@ -121,16 +109,12 @@ split_segments.Corpus <- function(
 ##' @importFrom purrr map_int
 
 
-split_segments.corpus <- function(
-  obj, segment_size = 40, segment_size_window = NULL
-) {
-
+split_segments.corpus <- function(obj, segment_size = 40, segment_size_window = NULL) {
   if (!inherits(obj, "corpus")) stop("obj must be of class corpus")
 
   tokens <- quanteda::tokens(obj, what = "fastestword")
 
   split_segments(tokens, segment_size, segment_size_window)
-
 }
 
 
@@ -140,10 +124,7 @@ split_segments.corpus <- function(
 ##' @importFrom purrr map_int
 
 
-split_segments.tokens <- function(
-  obj, segment_size = 40, segment_size_window = NULL
-) {
-
+split_segments.tokens <- function(obj, segment_size = 40, segment_size_window = NULL) {
   if (!inherits(obj, "tokens")) stop("obj must be of class tokens")
 
   quanteda::docvars(obj, "segment_source") <- quanteda::docnames(obj)
@@ -164,9 +145,9 @@ split_segments.tokens <- function(
 
   new_corpus <- docvars(obj) %>%
     dplyr::mutate(text = texts) %>%
-    tidyr::unnest(.data$text) %>%
-    dplyr::group_by(.data$segment_source) %>%
-    dplyr::mutate(segment_id = paste0(.data$segment_source, "_", 1:dplyr::n())) %>%
+    tidyr::unnest("text") %>%
+    dplyr::group_by("segment_source") %>%
+    dplyr::mutate(segment_id = paste0("segment_source", "_", 1:dplyr::n())) %>%
     quanteda::corpus(
       docid_field = "segment_id",
       text_field = "text"
@@ -175,5 +156,4 @@ split_segments.tokens <- function(
   message("  Done.")
 
   new_corpus
-
 }
