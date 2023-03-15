@@ -18,7 +18,7 @@ Encoding: UTF-8
 Depends:
     R (>= 3.6.0)
 Imports: 
-    dplyr (>= 1.0.0),
+    dplyr (>= 1.1.0),
     tidyr,
     purrr,
     ggplot2,
