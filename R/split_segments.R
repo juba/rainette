@@ -55,7 +55,7 @@ split_segments_words <- function(words, segment_size = 40, segment_size_window =
   }
 
   ## Compute "weight" for each word
-  last_char <- stringr::str_sub(words, -1)
+  last_char <- stringr::str_sub(words, -1) # nolint
   weights <- dplyr::case_when(
     last_char %in% c(".", "?", "!", "\u2026") ~ 6,
     last_char == ":" ~ 5,
@@ -146,8 +146,8 @@ split_segments.tokens <- function(obj, segment_size = 40, segment_size_window = 
   new_corpus <- docvars(obj) %>%
     dplyr::mutate(text = texts) %>%
     tidyr::unnest("text") %>%
-    dplyr::group_by("segment_source") %>%
-    dplyr::mutate(segment_id = paste0("segment_source", "_", 1:dplyr::n())) %>%
+    dplyr::group_by(.data$segment_source) %>%
+    dplyr::mutate(segment_id = paste0(.data$segment_source, "_", seq_len(dplyr::n()))) %>%
     quanteda::corpus(
       docid_field = "segment_id",
       text_field = "text"
