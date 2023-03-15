@@ -13,7 +13,7 @@ vignette: >
 L'objectif de ce document est de décrire les algorithmes utilisés pour les classifications dans `rainette` et leur implémentation. À noter que cette implémentation s'est appuyée sur deux éléments principaux :
 
 - les trois articles de Max Reinert cités dans les [références]
-- le code source d'Iramuteq, notamment les fichiers `CHD.R` et `chdtxt.R`. Le code a cependant été quasiment entièrement réécrit, et certaines portions ont été implémentées en C++ via [Rcpp](http://rcpp.org/).
+- le code source d'Iramuteq, notamment les fichiers `CHD.R` et `chdtxt.R`. Le code a cependant été quasiment entièrement réécrit, et certaines portions ont été implémentées en C++ via [Rcpp](https://www.rcpp.org/).
 
 ## Algorithme de classification simple
 

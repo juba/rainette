@@ -12,7 +12,7 @@ vignette: >
 The goal of this document is to describe the algorithms used in the `rainette` package and their implementation. This implementation has been based upon two main resources :
 
 - the three papers from Max Reinert cited in [references] (in french)
-- the source code of [Iramuteq](http://www.iramuteq.org/), especially the `CHD.R` and `chdtxt.R` files. Note however that the code has been almost entirely rewritten (in part in C++ via [Rcpp](http://rcpp.org/)).
+- the source code of [Iramuteq](http://www.iramuteq.org/), especially the `CHD.R` and `chdtxt.R` files. Note however that the code has been almost entirely rewritten (in part in C++ via [Rcpp](https://www.rcpp.org/)).
 
 
 ## Simple clustering algorithm
