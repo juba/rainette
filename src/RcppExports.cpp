@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // cpp_chisq
 double cpp_chisq(const IntegerVector& T1, const IntegerVector& T2, const IntegerVector& Tsum);
 RcppExport SEXP _rainette_cpp_chisq(SEXP T1SEXP, SEXP T2SEXP, SEXP TsumSEXP) {
