@@ -21,12 +21,11 @@ mini_dfm <- as.dfm(m)
 
 indices <- rainette:::order_docs(mini_dfm)
 
-if (requireNamespace("quanteda.textmodels", quietly = TRUE)) {
-  test_that("order_docs", {
-    ca_values <- quanteda.textmodels::textmodel_ca(mini_dfm)$rowcoord[, 1]
-    expect_equal(order(ca_values), indices)
-  })
-}
+test_that("order_docs", {
+  skip_if_not_installed("quanteda.textmodels")
+  ca_values <- quanteda.textmodels::textmodel_ca(mini_dfm)$rowcoord[, 1]
+  expect_equal(order(ca_values), indices)
+})
 
 ## split_tab_by_chisq
 

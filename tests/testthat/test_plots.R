@@ -1,9 +1,11 @@
 library(quanteda)
 context("plot functions")
 
-#skip("Skipping plots")
+# skip("Skipping plots")
 skip_on_ci()
 skip_on_cran()
+skip_if_not_installed("vdiffr")
+
 
 mini_corpus <- head(data_corpus_inaugural, n = 10)
 mini_corpus <- split_segments(mini_corpus)
