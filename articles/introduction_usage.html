@@ -86,7 +86,7 @@
                         <h4 data-toc-skip class="author">Julien
 Barnier</h4>
             
-            <h4 data-toc-skip class="date">2023-01-31</h4>
+            <h4 data-toc-skip class="date">2023-03-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_usage.Rmd" class="external-link"><code>vignettes/introduction_usage.Rmd</code></a></small>
       <div class="d-none name"><code>introduction_usage.Rmd</code></div>
@@ -171,23 +171,23 @@ d’une virgule).</p>
 de métadonnées :</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corpus</span></span></code></pre></div>
-<pre><code><span><span class="co">## Corpus consisting of 278 documents and 2 docvars.</span></span>
-<span><span class="co">## text1_1 :</span></span>
+<pre><code><span><span class="co">## Corpus consisting of 278 documents and 3 docvars.</span></span>
+<span><span class="co">## segment_source_1 :</span></span>
 <span><span class="co">## "Un spectre hante l'Europe, le spectre du communisme. Toutes ..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## text1_2 :</span></span>
+<span><span class="co">## segment_source_2 :</span></span>
 <span><span class="co">## "Quelle est l'opposition qui, à son tour, n'a pas relancé à s..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## text1_3 :</span></span>
+<span><span class="co">## segment_source_3 :</span></span>
 <span><span class="co">## "à la face du monde entier, leur manière de voir, leurs buts ..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## text2_1 :</span></span>
+<span><span class="co">## segment_source_4 :</span></span>
 <span><span class="co">## "L'histoire de toute société jusqu'à nos jours n'a été que l'..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## text2_2 :</span></span>
+<span><span class="co">## segment_source_5 :</span></span>
 <span><span class="co">## "une guerre qui finissait toujours, ou par une transformation..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## text2_3 :</span></span>
+<span><span class="co">## segment_source_6 :</span></span>
 <span><span class="co">## "Dans la Rome antique, nous trouvons des patriciens, des chev..."</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [ reached max_ndoc ... 272 more documents ]</span></span></code></pre>
@@ -197,20 +197,20 @@ et une nouvelle variable <code>segment_source</code> indique le document
 d’origine du segment.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   partie segment_source</span></span>
-<span><span class="co">## 1  intro          text1</span></span>
-<span><span class="co">## 2  intro          text1</span></span>
-<span><span class="co">## 3  intro          text1</span></span>
-<span><span class="co">## 4      I          text2</span></span>
-<span><span class="co">## 5      I          text2</span></span>
-<span><span class="co">## 6      I          text2</span></span></code></pre>
+<pre><code><span><span class="co">##   partie segment_source "segment_source"</span></span>
+<span><span class="co">## 1  intro          text1   segment_source</span></span>
+<span><span class="co">## 2  intro          text1   segment_source</span></span>
+<span><span class="co">## 3  intro          text1   segment_source</span></span>
+<span><span class="co">## 4      I          text2   segment_source</span></span>
+<span><span class="co">## 5      I          text2   segment_source</span></span>
+<span><span class="co">## 6      I          text2   segment_source</span></span></code></pre>
 <p>On peut aussi visualiser les premiers segments de texte
 calculés :</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_1 </span></span>
+<pre><code><span><span class="co">##                                                                                                                                                                                                                                                                                                                                          segment_source_1 </span></span>
 <span><span class="co">## "Un spectre hante l'Europe, le spectre du communisme. Toutes les puissances de la vieille Europe se sont unies en une Sainte-Alliance pour traquer ce spectre : le Pape et le Czar, Metternich et Guizot, les radicaux de France et les policiers d'Allemagne.\nQuelle est l'opposition que n'ont pas accusée de communisme ses adversaires au pouvoir ?" </span></span>
-<span><span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_2 </span></span>
+<span><span class="co">##                                                                                                                                                                                                                                                                                                                                          segment_source_2 </span></span>
 <span><span class="co">##                       "Quelle est l'opposition qui, à son tour, n'a pas relancé à ses adversaires de droite ou de gauche l'épithète flétrissante de communiste ?\nDeux choses ressortent de ces faits :\n1° Déjà le communisme est reconnu par toutes les puissances d'Europe comme une puissance ;\n2° Il est grand temps que les communistes exposent,"</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -316,13 +316,13 @@ chaque segment pour la classification en 5 classes :</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corpus</span><span class="op">$</span><span class="va">groupe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   partie segment_source groupe</span></span>
-<span><span class="co">## 1  intro          text1      3</span></span>
-<span><span class="co">## 2  intro          text1      3</span></span>
-<span><span class="co">## 3  intro          text1      3</span></span>
-<span><span class="co">## 4      I          text2      1</span></span>
-<span><span class="co">## 5      I          text2      1</span></span>
-<span><span class="co">## 6      I          text2      1</span></span></code></pre>
+<pre><code><span><span class="co">##   partie segment_source "segment_source" groupe</span></span>
+<span><span class="co">## 1  intro          text1   segment_source      3</span></span>
+<span><span class="co">## 2  intro          text1   segment_source      3</span></span>
+<span><span class="co">## 3  intro          text1   segment_source      3</span></span>
+<span><span class="co">## 4      I          text2   segment_source      1</span></span>
+<span><span class="co">## 5      I          text2   segment_source      1</span></span>
+<span><span class="co">## 6      I          text2   segment_source      1</span></span></code></pre>
 <p>Ici les classes ont attribuées aux segments, et non aux documents
 dans leur ensemble. La fonction <code><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table()</a></code>
 permet d’afficher, pour chaque document (ici chacune des quatre parties
@@ -352,11 +352,6 @@ visualiser, pour chaque groupe, le nombre et la proportion de documents
 d’origine comportant au moins un segment de ce groupe :</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"groupe"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> In argument: `dplyr::across(.fns = function(v) v &gt;= threshold)`.</span></span>
-<span><span class="co">## Caused by warning:</span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Using `across()` without supplying `.cols` was deprecated in dplyr 1.1.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please supply `.cols` instead.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
 <span><span class="co">##   cluster     n   `%`</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -379,13 +374,13 @@ Pour plus de détails sur la classifcation double, se référer à la <a href="a
 <code><a href="../reference/rainette2.html">rainette2()</a></code>. On commence par effectuer les deux
 classifications simples, ici une avec une taille de segment minimale à
 10, et une autre à 15 :</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">7</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span></code></pre></div>
 <p>Puis on utilise <code><a href="../reference/rainette2.html">rainette2()</a></code> sur ces deux objets
 résultats, en lui indiquant le nombre maximal de classes à calculer
 (argument <code>max_k</code>).</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span></code></pre></div>
 <p>Un paramètre important de <code><a href="../reference/rainette2.html">rainette2()</a></code> est le paramètre
 <code>full</code> :</p>
@@ -413,7 +408,7 @@ utilise davantage de RAM).</p>
 caractéristiques. Là encore, une interface interactive est proposée pour
 visualiser et explorer ces résultats. Elle se lance via la fonction
 <code><a href="../reference/rainette2_explor.html">rainette2_explor()</a></code> :</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="img/rainette2_explor_fr.png" alt=""><p class="caption">Interface de rainette2_explor()</p>
@@ -429,7 +424,7 @@ groupe le plus proche selon une méthode <em>k-nearest neighbors</em>
 (avec k=1). Ceci n’est cependant pas forcément conseillé car les classes
 perdont du coup une partie de la “robustesse” acquise par la
 classification double.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">groupes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">groupes_complets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span><span class="op">(</span><span class="va">dtm</span>, <span class="va">groupes</span><span class="op">)</span></span></code></pre></div>
 </div>

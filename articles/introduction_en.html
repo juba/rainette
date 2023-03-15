@@ -86,7 +86,7 @@
                         <h4 data-toc-skip class="author">Julien
 Barnier</h4>
             
-            <h4 data-toc-skip class="date">2023-01-31</h4>
+            <h4 data-toc-skip class="date">2023-03-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_en.Rmd" class="external-link"><code>vignettes/introduction_en.Rmd</code></a></small>
       <div class="d-none name"><code>introduction_en.Rmd</code></div>
@@ -137,35 +137,35 @@ keeps the original corpus metadata and adds an additional
 belongs to which document.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corpus</span></span></code></pre></div>
-<pre><code><span><span class="co">## Corpus consisting of 3,584 documents and 5 docvars.</span></span>
-<span><span class="co">## 1789-Washington_1 :</span></span>
+<pre><code><span><span class="co">## Corpus consisting of 3,584 documents and 6 docvars.</span></span>
+<span><span class="co">## segment_source_1 :</span></span>
 <span><span class="co">## "Fellow-Citizens of the Senate and of the House of Representa..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## 1789-Washington_2 :</span></span>
+<span><span class="co">## segment_source_2 :</span></span>
 <span><span class="co">## "On the one hand, I was summoned by my Country, whose voice I..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## 1789-Washington_3 :</span></span>
+<span><span class="co">## segment_source_3 :</span></span>
 <span><span class="co">## "as the asylum of my declining years - a retreat which was re..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## 1789-Washington_4 :</span></span>
+<span><span class="co">## segment_source_4 :</span></span>
 <span><span class="co">## "On the other hand, the magnitude and difficulty of the trust..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## 1789-Washington_5 :</span></span>
+<span><span class="co">## segment_source_5 :</span></span>
 <span><span class="co">## "could not but overwhelm with despondence one who (inheriting..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## 1789-Washington_6 :</span></span>
+<span><span class="co">## segment_source_6 :</span></span>
 <span><span class="co">## "In this conflict of emotions all I dare aver is that it has ..."</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [ reached max_ndoc ... 3,578 more documents ]</span></span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   Year  President FirstName Party  segment_source</span></span>
-<span><span class="co">## 1 1789 Washington    George  none 1789-Washington</span></span>
-<span><span class="co">## 2 1789 Washington    George  none 1789-Washington</span></span>
-<span><span class="co">## 3 1789 Washington    George  none 1789-Washington</span></span>
-<span><span class="co">## 4 1789 Washington    George  none 1789-Washington</span></span>
-<span><span class="co">## 5 1789 Washington    George  none 1789-Washington</span></span>
-<span><span class="co">## 6 1789 Washington    George  none 1789-Washington</span></span></code></pre>
+<pre><code><span><span class="co">##   Year  President FirstName Party  segment_source "segment_source"</span></span>
+<span><span class="co">## 1 1789 Washington    George  none 1789-Washington   segment_source</span></span>
+<span><span class="co">## 2 1789 Washington    George  none 1789-Washington   segment_source</span></span>
+<span><span class="co">## 3 1789 Washington    George  none 1789-Washington   segment_source</span></span>
+<span><span class="co">## 4 1789 Washington    George  none 1789-Washington   segment_source</span></span>
+<span><span class="co">## 5 1789 Washington    George  none 1789-Washington   segment_source</span></span>
+<span><span class="co">## 6 1789 Washington    George  none 1789-Washington   segment_source</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="dfm-computation">dfm computation<a class="anchor" aria-label="anchor" href="#dfm-computation"></a>
@@ -237,13 +237,13 @@ variable :</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corpus</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   Year  President FirstName Party  segment_source cluster</span></span>
-<span><span class="co">## 1 1789 Washington    George  none 1789-Washington       4</span></span>
-<span><span class="co">## 2 1789 Washington    George  none 1789-Washington       4</span></span>
-<span><span class="co">## 3 1789 Washington    George  none 1789-Washington       3</span></span>
-<span><span class="co">## 4 1789 Washington    George  none 1789-Washington       3</span></span>
-<span><span class="co">## 5 1789 Washington    George  none 1789-Washington       5</span></span>
-<span><span class="co">## 6 1789 Washington    George  none 1789-Washington       5</span></span></code></pre>
+<pre><code><span><span class="co">##   Year  President FirstName Party  segment_source "segment_source" cluster</span></span>
+<span><span class="co">## 1 1789 Washington    George  none 1789-Washington   segment_source       4</span></span>
+<span><span class="co">## 2 1789 Washington    George  none 1789-Washington   segment_source       4</span></span>
+<span><span class="co">## 3 1789 Washington    George  none 1789-Washington   segment_source       3</span></span>
+<span><span class="co">## 4 1789 Washington    George  none 1789-Washington   segment_source       3</span></span>
+<span><span class="co">## 5 1789 Washington    George  none 1789-Washington   segment_source       5</span></span>
+<span><span class="co">## 6 1789 Washington    George  none 1789-Washington   segment_source       5</span></span></code></pre>
 <p>Here, the clusters have been assigned to the segments, not to the
 original documents as a whole. The <code>clusters_by_doc_table</code>
 allows to display, for each original document, the number of segment
@@ -287,11 +287,6 @@ for each cluster, the number and proportion of original document
 including at least one segment of this cluster :</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table</a></span><span class="op">(</span><span class="va">corpus</span>, clust_var <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> In argument: `dplyr::across(.fns = function(v) v &gt;= threshold)`.</span></span>
-<span><span class="co">## Caused by warning:</span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Using `across()` without supplying `.cols` was deprecated in dplyr 1.1.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please supply `.cols` instead.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
 <span><span class="co">##   cluster     n   `%`</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -312,13 +307,13 @@ together to get more robust clusters.</p>
 <p>This can be done with the <code><a href="../reference/rainette2.html">rainette2()</a></code> function, which
 can be applied to two already computed simple clusterings. Here, we
 compute them with <code>min_segment_size</code> at 10 and 15.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette.html">rainette</a></span><span class="op">(</span><span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, min_segment_size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span></code></pre></div>
 <p>We then use <code><a href="../reference/rainette2.html">rainette2()</a></code> to combine them. The
 <code>max_k</code> argument is used to specify the maximum number of
 clusters.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2.html">rainette2</a></span><span class="op">(</span><span class="va">res1</span>, <span class="va">res2</span>, max_k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>One important argument of <code><a href="../reference/rainette2.html">rainette2()</a></code> is the
 <code>full</code> argument :</p>
@@ -343,7 +338,7 @@ RAM).</p>
 each level <em>k</em>, the optimal partitions and their characteristics.
 Another interactive interface is available to explore the results. It is
 launched with <code><a href="../reference/rainette2_explor.html">rainette2_explor()</a></code>.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rainette2_explor.html">rainette2_explor</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, <span class="va">corpus</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="img/rainette2_explor_en.png" alt=""><p class="caption">rainette2_explor() interface</p>
@@ -358,7 +353,7 @@ one by using a <em>k-nearest-neighbors</em> algorithm (with k=1).
 However this may not be recommended as you would then loose the
 “robustness” of the new clusters computed by
 <code><a href="../reference/rainette2.html">rainette2()</a></code>.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">clusters_completed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rainette2_complete_groups.html">rainette2_complete_groups</a></span><span class="op">(</span><span class="va">dtm</span>, <span class="va">clusters</span><span class="op">)</span></span></code></pre></div>
 </div>
