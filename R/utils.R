@@ -212,7 +212,7 @@ docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL, threshol
 
   count %>%
     dplyr::select(-"doc_id") %>%
-    dplyr::mutate(dplyr::across(.fns = function(v) v >= threshold)) %>%
+    dplyr::mutate(dplyr::across(everything(), .fns = function(v) v >= threshold)) %>%
     dplyr::summarise(dplyr::across(everything(), .fns = sum)) %>%
     tidyr::pivot_longer(cols = dplyr::everything(), names_to = "cluster", values_to = "n") %>%
     dplyr::mutate(`%` = .data$n / nrow(.env$count) * 100)
