@@ -2,14 +2,15 @@ library(quanteda)
 context("simple reinert classification")
 
 m <- matrix(
-  c(1L,1L,1L,0L,0L,
-    0L,0L,1L,1L,0L,
-    1L,0L,0L,0L,0L,
-    1L,1L,1L,1L,0L,
-    1L,1L,1L,1L,1L,
-    1L,0L,0L,0L,0L,
-    1L,1L,1L,0L,0L
-    ),
+  c(
+    1L, 1L, 1L, 0L, 0L,
+    0L, 0L, 1L, 1L, 0L,
+    1L, 0L, 0L, 0L, 0L,
+    1L, 1L, 1L, 1L, 0L,
+    1L, 1L, 1L, 1L, 1L,
+    1L, 0L, 0L, 0L, 0L,
+    1L, 1L, 1L, 0L, 0L
+  ),
   ncol = 5,
   byrow = TRUE,
 )
@@ -20,14 +21,12 @@ mini_dfm <- as.dfm(m)
 
 indices <- rainette:::order_docs(mini_dfm)
 
-test_that("order_docs", {
-  ca_values <- if(utils::packageVersion("quanteda") < "2.0.0") {
-    quanteda::textmodel_ca(mini_dfm)$rowcoord[,1]
-  } else {
-    quanteda.textmodels::textmodel_ca(mini_dfm)$rowcoord[,1]
-  }
-  expect_equal(order(ca_values), indices)
-})
+if (requireNamespace("quanteda.textmodels", quietly = TRUE)) {
+  test_that("order_docs", {
+    ca_values <- quanteda.textmodels::textmodel_ca(mini_dfm)$rowcoord[, 1]
+    expect_equal(order(ca_values), indices)
+  })
+}
 
 ## split_tab_by_chisq
 
@@ -38,8 +37,8 @@ res_split <- rainette:::cpp_split_tab(m, indices)
 test_that("split_tab", {
   manual_res <- data.frame(index = -1, chisq = -1)
   for (i in 1:6) {
-    tab1 <- m[indices[1:i],,drop=FALSE]
-    tab2 <- m[indices[(i + 1):7],,drop=FALSE]
+    tab1 <- m[indices[1:i], , drop = FALSE]
+    tab2 <- m[indices[(i + 1):7], , drop = FALSE]
     expect_warning(chisq <- chisq.test(rbind(colSums(tab1), colSums(tab2)))$statistic)
     manual_res <- rbind(manual_res, c(index = indices[i], chisq = chisq))
   }
@@ -95,17 +94,23 @@ dtm <- dfm_wordstem(dtm, language = "english")
 dtm <- dfm_trim(dtm, min_termfreq = 3)
 
 test_that("Stopping if tab too small", {
-  expect_message(res <- rainette(dtm, k = 12, min_segment_size = 10, min_split_members = 3),
-    "! Tab to be splitted is not big enough. Stopping after iteration")
+  expect_message(
+    res <- rainette(dtm, k = 12, min_segment_size = 10, min_split_members = 3),
+    "! Tab to be splitted is not big enough. Stopping after iteration"
+  )
   expect_equal(max(res$group), 9)
 })
 
 test_that("Stopping if no more group > min_split_members", {
-  expect_message(res <- rainette(dtm, k = 3, min_segment_size = 10, min_split_members = 12),
-    "^! No more group bigger than min_split_members. Stopping after iteration")
+  expect_message(
+    res <- rainette(dtm, k = 3, min_segment_size = 10, min_split_members = 12),
+    "^! No more group bigger than min_split_members. Stopping after iteration"
+  )
   expect_equal(max(res$group), 2)
-  expect_message(res <- rainette(dtm, k = 3, min_segment_size = 10, min_split_members = 15),
-    "! No computed clusters. Returning NULL.")
+  expect_message(
+    res <- rainette(dtm, k = 3, min_segment_size = 10, min_split_members = 15),
+    "! No computed clusters. Returning NULL."
+  )
   expect_null(res)
 })
 
@@ -125,9 +130,9 @@ dtm <- dfm_trim(dtm, min_termfreq = 3)
 test_that("groups correspondance is ok", {
   res <- rainette(dtm, k = 6, min_segment_size = 5)
   df <- data.frame(res$uce_groups)
-  tab <- table(df[,4], df[,5])
+  tab <- table(df[, 4], df[, 5])
   expect_equal(sum(tab > 0), 6)
-  tab <- table(df[,3], df[,4])
+  tab <- table(df[, 3], df[, 4])
   expect_equal(sum(tab > 0), 5)
 })
 
