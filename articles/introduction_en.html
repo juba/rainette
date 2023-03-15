@@ -137,35 +137,35 @@ keeps the original corpus metadata and adds an additional
 belongs to which document.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corpus</span></span></code></pre></div>
-<pre><code><span><span class="co">## Corpus consisting of 3,584 documents and 6 docvars.</span></span>
-<span><span class="co">## segment_source_1 :</span></span>
+<pre><code><span><span class="co">## Corpus consisting of 3,584 documents and 5 docvars.</span></span>
+<span><span class="co">## 1789-Washington_1 :</span></span>
 <span><span class="co">## "Fellow-Citizens of the Senate and of the House of Representa..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_2 :</span></span>
+<span><span class="co">## 1789-Washington_2 :</span></span>
 <span><span class="co">## "On the one hand, I was summoned by my Country, whose voice I..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_3 :</span></span>
+<span><span class="co">## 1789-Washington_3 :</span></span>
 <span><span class="co">## "as the asylum of my declining years - a retreat which was re..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_4 :</span></span>
+<span><span class="co">## 1789-Washington_4 :</span></span>
 <span><span class="co">## "On the other hand, the magnitude and difficulty of the trust..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_5 :</span></span>
+<span><span class="co">## 1789-Washington_5 :</span></span>
 <span><span class="co">## "could not but overwhelm with despondence one who (inheriting..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_6 :</span></span>
+<span><span class="co">## 1789-Washington_6 :</span></span>
 <span><span class="co">## "In this conflict of emotions all I dare aver is that it has ..."</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [ reached max_ndoc ... 3,578 more documents ]</span></span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   Year  President FirstName Party  segment_source "segment_source"</span></span>
-<span><span class="co">## 1 1789 Washington    George  none 1789-Washington   segment_source</span></span>
-<span><span class="co">## 2 1789 Washington    George  none 1789-Washington   segment_source</span></span>
-<span><span class="co">## 3 1789 Washington    George  none 1789-Washington   segment_source</span></span>
-<span><span class="co">## 4 1789 Washington    George  none 1789-Washington   segment_source</span></span>
-<span><span class="co">## 5 1789 Washington    George  none 1789-Washington   segment_source</span></span>
-<span><span class="co">## 6 1789 Washington    George  none 1789-Washington   segment_source</span></span></code></pre>
+<pre><code><span><span class="co">##   Year  President FirstName Party  segment_source</span></span>
+<span><span class="co">## 1 1789 Washington    George  none 1789-Washington</span></span>
+<span><span class="co">## 2 1789 Washington    George  none 1789-Washington</span></span>
+<span><span class="co">## 3 1789 Washington    George  none 1789-Washington</span></span>
+<span><span class="co">## 4 1789 Washington    George  none 1789-Washington</span></span>
+<span><span class="co">## 5 1789 Washington    George  none 1789-Washington</span></span>
+<span><span class="co">## 6 1789 Washington    George  none 1789-Washington</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="dfm-computation">dfm computation<a class="anchor" aria-label="anchor" href="#dfm-computation"></a>
@@ -237,13 +237,13 @@ variable :</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corpus</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   Year  President FirstName Party  segment_source "segment_source" cluster</span></span>
-<span><span class="co">## 1 1789 Washington    George  none 1789-Washington   segment_source       4</span></span>
-<span><span class="co">## 2 1789 Washington    George  none 1789-Washington   segment_source       4</span></span>
-<span><span class="co">## 3 1789 Washington    George  none 1789-Washington   segment_source       3</span></span>
-<span><span class="co">## 4 1789 Washington    George  none 1789-Washington   segment_source       3</span></span>
-<span><span class="co">## 5 1789 Washington    George  none 1789-Washington   segment_source       5</span></span>
-<span><span class="co">## 6 1789 Washington    George  none 1789-Washington   segment_source       5</span></span></code></pre>
+<pre><code><span><span class="co">##   Year  President FirstName Party  segment_source cluster</span></span>
+<span><span class="co">## 1 1789 Washington    George  none 1789-Washington       4</span></span>
+<span><span class="co">## 2 1789 Washington    George  none 1789-Washington       4</span></span>
+<span><span class="co">## 3 1789 Washington    George  none 1789-Washington       3</span></span>
+<span><span class="co">## 4 1789 Washington    George  none 1789-Washington       3</span></span>
+<span><span class="co">## 5 1789 Washington    George  none 1789-Washington       5</span></span>
+<span><span class="co">## 6 1789 Washington    George  none 1789-Washington       5</span></span></code></pre>
 <p>Here, the clusters have been assigned to the segments, not to the
 original documents as a whole. The <code>clusters_by_doc_table</code>
 allows to display, for each original document, the number of segment

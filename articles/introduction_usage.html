@@ -171,23 +171,23 @@ d’une virgule).</p>
 de métadonnées :</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corpus</span></span></code></pre></div>
-<pre><code><span><span class="co">## Corpus consisting of 278 documents and 3 docvars.</span></span>
-<span><span class="co">## segment_source_1 :</span></span>
+<pre><code><span><span class="co">## Corpus consisting of 278 documents and 2 docvars.</span></span>
+<span><span class="co">## text1_1 :</span></span>
 <span><span class="co">## "Un spectre hante l'Europe, le spectre du communisme. Toutes ..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_2 :</span></span>
+<span><span class="co">## text1_2 :</span></span>
 <span><span class="co">## "Quelle est l'opposition qui, à son tour, n'a pas relancé à s..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_3 :</span></span>
+<span><span class="co">## text1_3 :</span></span>
 <span><span class="co">## "à la face du monde entier, leur manière de voir, leurs buts ..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_4 :</span></span>
+<span><span class="co">## text2_1 :</span></span>
 <span><span class="co">## "L'histoire de toute société jusqu'à nos jours n'a été que l'..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_5 :</span></span>
+<span><span class="co">## text2_2 :</span></span>
 <span><span class="co">## "une guerre qui finissait toujours, ou par une transformation..."</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## segment_source_6 :</span></span>
+<span><span class="co">## text2_3 :</span></span>
 <span><span class="co">## "Dans la Rome antique, nous trouvons des patriciens, des chev..."</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [ reached max_ndoc ... 272 more documents ]</span></span></code></pre>
@@ -197,20 +197,20 @@ et une nouvelle variable <code>segment_source</code> indique le document
 d’origine du segment.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   partie segment_source "segment_source"</span></span>
-<span><span class="co">## 1  intro          text1   segment_source</span></span>
-<span><span class="co">## 2  intro          text1   segment_source</span></span>
-<span><span class="co">## 3  intro          text1   segment_source</span></span>
-<span><span class="co">## 4      I          text2   segment_source</span></span>
-<span><span class="co">## 5      I          text2   segment_source</span></span>
-<span><span class="co">## 6      I          text2   segment_source</span></span></code></pre>
+<pre><code><span><span class="co">##   partie segment_source</span></span>
+<span><span class="co">## 1  intro          text1</span></span>
+<span><span class="co">## 2  intro          text1</span></span>
+<span><span class="co">## 3  intro          text1</span></span>
+<span><span class="co">## 4      I          text2</span></span>
+<span><span class="co">## 5      I          text2</span></span>
+<span><span class="co">## 6      I          text2</span></span></code></pre>
 <p>On peut aussi visualiser les premiers segments de texte
 calculés :</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                                                                                                                                                                                                                                                                                                          segment_source_1 </span></span>
+<pre><code><span><span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_1 </span></span>
 <span><span class="co">## "Un spectre hante l'Europe, le spectre du communisme. Toutes les puissances de la vieille Europe se sont unies en une Sainte-Alliance pour traquer ce spectre : le Pape et le Czar, Metternich et Guizot, les radicaux de France et les policiers d'Allemagne.\nQuelle est l'opposition que n'ont pas accusée de communisme ses adversaires au pouvoir ?" </span></span>
-<span><span class="co">##                                                                                                                                                                                                                                                                                                                                          segment_source_2 </span></span>
+<span><span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_2 </span></span>
 <span><span class="co">##                       "Quelle est l'opposition qui, à son tour, n'a pas relancé à ses adversaires de droite ou de gauche l'épithète flétrissante de communiste ?\nDeux choses ressortent de ces faits :\n1° Déjà le communisme est reconnu par toutes les puissances d'Europe comme une puissance ;\n2° Il est grand temps que les communistes exposent,"</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -316,13 +316,13 @@ chaque segment pour la classification en 5 classes :</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corpus</span><span class="op">$</span><span class="va">groupe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   partie segment_source "segment_source" groupe</span></span>
-<span><span class="co">## 1  intro          text1   segment_source      3</span></span>
-<span><span class="co">## 2  intro          text1   segment_source      3</span></span>
-<span><span class="co">## 3  intro          text1   segment_source      3</span></span>
-<span><span class="co">## 4      I          text2   segment_source      1</span></span>
-<span><span class="co">## 5      I          text2   segment_source      1</span></span>
-<span><span class="co">## 6      I          text2   segment_source      1</span></span></code></pre>
+<pre><code><span><span class="co">##   partie segment_source groupe</span></span>
+<span><span class="co">## 1  intro          text1      3</span></span>
+<span><span class="co">## 2  intro          text1      3</span></span>
+<span><span class="co">## 3  intro          text1      3</span></span>
+<span><span class="co">## 4      I          text2      1</span></span>
+<span><span class="co">## 5      I          text2      1</span></span>
+<span><span class="co">## 6      I          text2      1</span></span></code></pre>
 <p>Ici les classes ont attribuées aux segments, et non aux documents
 dans leur ensemble. La fonction <code><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table()</a></code>
 permet d’afficher, pour chaque document (ici chacune des quatre parties
