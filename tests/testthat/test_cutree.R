@@ -18,12 +18,15 @@ test_that("generic cutree still works", {
 
 test_that("cutree_rainette is ok", {
   expect_error(cutree(res, h = 200))
-  expect_equal(cutree(res, k = 3), c(3L, 3L, 3L, 3L, 3L, 3L, 3L, 2L, 2L, 2L, 2L, 3L, 3L, 2L, 2L,
+  expect_equal(cutree(res, k = 3), c(
+    3L, 3L, 3L, 3L, 3L, 3L, 3L, 2L, 2L, 2L, 2L, 3L, 3L, 2L, 2L,
     2L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L,
-    2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 1L, 1L))
+    2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 1L, 1L
+  ))
 })
 
 test_that("rainette2_complete_groups", {
+  skip_if_not_installed("FNN")
   res1 <- rainette(dtm, k = 5, min_segment_size = 2, min_split_members = 3)
   res2 <- rainette(dtm, k = 5, min_segment_size = 3, min_split_members = 3)
   res_double <- rainette2(res1, res2, min_members = 2)

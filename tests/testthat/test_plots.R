@@ -5,6 +5,7 @@ context("plot functions")
 skip_on_ci()
 skip_on_cran()
 skip_if_not_installed("vdiffr")
+skip_if_not_installed("FNN")
 
 
 mini_corpus <- head(data_corpus_inaugural, n = 10)

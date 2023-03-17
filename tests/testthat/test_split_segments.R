@@ -1,14 +1,14 @@
 library(quanteda)
-library(tm)
+
 context("split_segments")
 
-data(acq)
+
 data(data_corpus_inaugural)
 corpus <- head(data_corpus_inaugural)
 text <- as.character(corpus)[[1]]
 
 split_char <- split_segments(text)
-split_tm <- split_segments(acq)
+
 split_quanteda <- split_segments(corpus)
 
 test_that("split_segments.character is ok", {
@@ -39,10 +39,15 @@ test_that("split_segments.character is ok", {
 })
 
 test_that("split_segments.Corpus is ok", {
-  expect_equal(ndoc(split_tm), 188)
-  skip_if(utils::packageVersion("quanteda") < "2.0.0")
-  expect_equal(docvars(split_tm, "segment_source")[1], "reut-00001.xml")
-  expect_equal(docnames(split_tm)[1], "reut-00001.xml_1")
+  skip_if_not_installed("tm")
+  if (requireNamespace("tm", quietly=TRUE)) {
+    data(acq)
+    split_tm <- split_segments(acq)
+    expect_equal(ndoc(split_tm), 188)
+    skip_if(utils::packageVersion("quanteda") < "2.0.0")
+    expect_equal(docvars(split_tm, "segment_source")[1], "reut-00001.xml")
+    expect_equal(docnames(split_tm)[1], "reut-00001.xml_1")
+  }
 })
 
 test_that("split_segments.corpus is ok", {
