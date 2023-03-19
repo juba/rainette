@@ -1,3 +1,6 @@
+# rainette (development version)
+
+
 # rainette 0.3.1
 
 - Replace call to `palette.colors()` with manual colors vector to ensure compatibility with R 3.6 (#11)
