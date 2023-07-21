@@ -86,7 +86,7 @@
                         <h4 data-toc-skip class="author">Julien
 Barnier</h4>
             
-            <h4 data-toc-skip class="date">2023-03-28</h4>
+            <h4 data-toc-skip class="date">2023-07-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/juba/rainette/blob/HEAD/vignettes/introduction_usage.Rmd" class="external-link"><code>vignettes/introduction_usage.Rmd</code></a></small>
       <div class="d-none name"><code>introduction_usage.Rmd</code></div>
@@ -173,16 +173,16 @@ de métadonnées :</p>
 <code class="sourceCode R"><span><span class="va">corpus</span></span></code></pre></div>
 <pre><code><span><span class="co">## Corpus consisting of 278 documents and 2 docvars.</span></span>
 <span><span class="co">## text1_1 :</span></span>
-<span><span class="co">## "Un spectre hante l'Europe, le spectre du communisme. Toutes ..."</span></span>
+<span><span class="co">## "Un spectre hante l’Europe, le spectre du communisme. Toutes ..."</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## text1_2 :</span></span>
-<span><span class="co">## "Quelle est l'opposition qui, à son tour, n'a pas relancé à s..."</span></span>
+<span><span class="co">## "Quelle est l’opposition qui, à son tour, n’a pas relancé à s..."</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## text1_3 :</span></span>
 <span><span class="co">## "à la face du monde entier, leur manière de voir, leurs buts ..."</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## text2_1 :</span></span>
-<span><span class="co">## "L'histoire de toute société jusqu'à nos jours n'a été que l'..."</span></span>
+<span><span class="co">## "L’histoire de toute société jusqu’à nos jours n’a été que l’..."</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## text2_2 :</span></span>
 <span><span class="co">## "une guerre qui finissait toujours, ou par une transformation..."</span></span>
@@ -209,9 +209,9 @@ calculés :</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_1 </span></span>
-<span><span class="co">## "Un spectre hante l'Europe, le spectre du communisme. Toutes les puissances de la vieille Europe se sont unies en une Sainte-Alliance pour traquer ce spectre : le Pape et le Czar, Metternich et Guizot, les radicaux de France et les policiers d'Allemagne.\nQuelle est l'opposition que n'ont pas accusée de communisme ses adversaires au pouvoir ?" </span></span>
+<span><span class="co">## "Un spectre hante l’Europe, le spectre du communisme. Toutes les puissances de la vieille Europe se sont unies en une Sainte-Alliance pour traquer ce spectre : le Pape et le Czar, Metternich et Guizot, les radicaux de France et les policiers d’Allemagne.\nQuelle est l’opposition que n’ont pas accusée de communisme ses adversaires au pouvoir ?" </span></span>
 <span><span class="co">##                                                                                                                                                                                                                                                                                                                                                   text1_2 </span></span>
-<span><span class="co">##                       "Quelle est l'opposition qui, à son tour, n'a pas relancé à ses adversaires de droite ou de gauche l'épithète flétrissante de communiste ?\nDeux choses ressortent de ces faits :\n1° Déjà le communisme est reconnu par toutes les puissances d'Europe comme une puissance ;\n2° Il est grand temps que les communistes exposent,"</span></span></code></pre>
+<span><span class="co">##                       "Quelle est l’opposition qui, à son tour, n’a pas relancé à ses adversaires de droite ou de gauche l’épithète flétrissante de communiste ?\nDeux choses ressortent de ces faits :\n1° Déjà le communisme est reconnu par toutes les puissances d'Europe comme une puissance ;\n2° Il est grand temps que les communistes exposent,"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="calcul-et-traitement-de-la-matrice-termes-documents">Calcul et traitement de la matrice termes-documents<a class="anchor" aria-label="anchor" href="#calcul-et-traitement-de-la-matrice-termes-documents"></a>
@@ -317,12 +317,12 @@ chaque segment pour la classification en 5 classes :</p>
 <code class="sourceCode R"><span><span class="va">corpus</span><span class="op">$</span><span class="va">groupe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corpus</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   partie segment_source groupe</span></span>
-<span><span class="co">## 1  intro          text1      3</span></span>
-<span><span class="co">## 2  intro          text1      3</span></span>
-<span><span class="co">## 3  intro          text1      3</span></span>
-<span><span class="co">## 4      I          text2      1</span></span>
-<span><span class="co">## 5      I          text2      1</span></span>
-<span><span class="co">## 6      I          text2      1</span></span></code></pre>
+<span><span class="co">## 1  intro          text1      4</span></span>
+<span><span class="co">## 2  intro          text1      4</span></span>
+<span><span class="co">## 3  intro          text1      4</span></span>
+<span><span class="co">## 4      I          text2      5</span></span>
+<span><span class="co">## 5      I          text2      5</span></span>
+<span><span class="co">## 6      I          text2      5</span></span></code></pre>
 <p>Ici les classes ont attribuées aux segments, et non aux documents
 dans leur ensemble. La fonction <code><a href="../reference/clusters_by_doc_table.html">clusters_by_doc_table()</a></code>
 permet d’afficher, pour chaque document (ici chacune des quatre parties
@@ -332,10 +332,10 @@ du texte), le nombre de segments de chaque groupe :</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
 <span><span class="co">##   doc_id clust_1 clust_2 clust_3 clust_4 clust_5</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> text1        0       0       3       0       0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> text2       14      28       5      36      20</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> text3        8      10       6       7      44</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> text4       23      32      29       5       8</span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> text1        0       0       0       3       0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> text2       22      35       5      26      15</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> text3       44       6       7      11       7</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> text4        8       5      27      35      22</span></span></code></pre>
 <p>En ajoutant <code>prop = TRUE</code>, cette répartition peut être
 visualisée en pourcentages :</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
@@ -343,10 +343,10 @@ visualisée en pourcentages :</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
 <span><span class="co">##   doc_id clust_1 clust_2 clust_3 clust_4 clust_5</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> text1      0       0    100       0       0   </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> text2     13.6    27.2    4.85   35.0    19.4 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> text3     10.7    13.3    8       9.33   58.7 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> text4     23.7    33.0   29.9     5.15    8.25</span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> text1     0       0       0      100      0   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> text2    21.4    34.0     4.85    25.2   14.6 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> text3    58.7     8       9.33    14.7    9.33</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> text4     8.25    5.15   27.8     36.1   22.7</span></span></code></pre>
 <p>À l’inverse, <code><a href="../reference/docs_by_cluster_table.html">docs_by_cluster_table()</a></code> permet de
 visualiser, pour chaque groupe, le nombre et la proportion de documents
 d’origine comportant au moins un segment de ce groupe :</p>
@@ -357,8 +357,8 @@ d’origine comportant au moins un segment de ce groupe :</p>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">1</span> clust_1     3    75</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">2</span> clust_2     3    75</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> clust_3     4   100</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> clust_4     3    75</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> clust_3     3    75</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> clust_4     4   100</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span> clust_5     3    75</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -438,7 +438,7 @@ projetant les classes obtenues sur des résultats d’analyses
 factorielles.</p>
 <p>On trouvera une explication et un exemple d’application, ainsi qu’un
 aperçu des fondements théoriques de la méthode dans l’article de Claire
-Tissot : <a href="https://fr937137372.wordpress.com/2022/05/06/analyse-textuelle-du-roman-sarrasine-dhonore-de-balzac-de-la-recherche-de-themes-a-la-semiotique/" class="external-link">Analyse
+Tissot : <a href="https://clairetissotsemiotique.wordpress.com/2022/05/06/analyse-textuelle-du-roman-sarrasine-dhonore-de-balzac-de-la-recherche-de-themes-a-la-semiotique/" class="external-link">Analyse
 textuelle du roman « Sarrasine » d’Honoré de Balzac : de la recherche de
 thèmes à la sémiotique</a>.</p>
 </div>
