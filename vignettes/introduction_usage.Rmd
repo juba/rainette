@@ -216,5 +216,5 @@ groupes_complets <- rainette2_complete_groups(dtm, groupes)
 
 Dans sa version originale, la méthode Reinert de classification est souvent suivie par une analyse complémentaire centrée sur les mots-outils et par différentes représentations graphiques, notamment en projetant les classes obtenues sur des résultats d'analyses factorielles.
 
-On trouvera une explication et un exemple d'application, ainsi qu'un aperçu des fondements théoriques de la méthode dans l'article de Claire Tissot : [Analyse textuelle du roman « Sarrasine » d’Honoré de Balzac : de la recherche de thèmes à la sémiotique](https://fr937137372.wordpress.com/2022/05/06/analyse-textuelle-du-roman-sarrasine-dhonore-de-balzac-de-la-recherche-de-themes-a-la-semiotique/).
+On trouvera une explication et un exemple d'application, ainsi qu'un aperçu des fondements théoriques de la méthode dans l'article de Claire Tissot : [Analyse textuelle du roman « Sarrasine » d’Honoré de Balzac : de la recherche de thèmes à la sémiotique](https://clairetissotsemiotique.wordpress.com/2022/05/06/analyse-textuelle-du-roman-sarrasine-dhonore-de-balzac-de-la-recherche-de-themes-a-la-semiotique/).
 
