@@ -16,7 +16,8 @@ rainette_plot(
   text_size = NULL,
   show_na_title = TRUE,
   cluster_label = NULL,
-  keyness_plot_xlab = NULL
+  keyness_plot_xlab = NULL,
+  colors = NULL
 )
 }
 \arguments{
@@ -44,6 +45,8 @@ rainette_plot(
 Default is "Cluster" or "Cl." depending on the number of groups.}
 
 \item{keyness_plot_xlab}{define a specific x label for keyness plots.}
+
+\item{colors}{vector of custom colors for cluster titles and branches (in the order of the clusters)}
 }
 \value{
 A gtable object.
