@@ -267,7 +267,12 @@ dendrogram_plot <- function(res, k, groups, text_size, show_na_title, colors = N
 #' dtm <- dfm_trim(dtm, min_docfreq = 3)
 #' res <- rainette(dtm, k = 3, min_segment_size = 15)
 #' rainette_plot(res, dtm)
-#' rainette_plot(res, dtm, cluster_label = c("Assets", "Future", "Values"), colors = c("red", "slateblue", "forestgreen"))
+#' rainette_plot(
+#'   res,
+#'   dtm,
+#'   cluster_label = c("Assets", "Future", "Values"),
+#'   colors = c("red", "slateblue", "forestgreen")
+#' )
 #' }
 #'
 #' @import ggplot2
