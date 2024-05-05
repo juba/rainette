@@ -42,7 +42,8 @@ rainette_plot(
 \item{show_na_title}{if TRUE, show number of NA as plot title}
 
 \item{cluster_label}{define a specific term for clusters identification in keyness plots.
-Default is "Cluster" or "Cl." depending on the number of groups.}
+Default is "Cluster" or "Cl." depending on the number of groups. If a vector of length > 1,
+define the cluster labels manually.}
 
 \item{keyness_plot_xlab}{define a specific x label for keyness plots.}
 
