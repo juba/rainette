@@ -29,13 +29,12 @@
 #' @import miniUI
 
 rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
-
   ## Check for res, dtm and corpus_src values and consistency
   if (is.null(dtm)) {
     stop("rainette_explor must be called with a result object and its associated dtm.")
   }
   if (!is.null(corpus_src) && ndoc(corpus_src) != ndoc(dtm)) {
-      stop("corpus_src and dtm must have the same number of documents.")
+    stop("corpus_src and dtm must have the same number of documents.")
   }
 
   ## If res is a rainette2 result, launch rainette2_explor
@@ -56,7 +55,8 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
     tags$head(tags$style(rainette_explor_css())),
     miniTabstripPanel(
       miniTabPanel(
-        "Summary", icon = shiny::icon("chart-bar"),
+        "Summary",
+        icon = shiny::icon("chart-bar"),
         miniContentPanel(
           fillRow(
             flex = c(1, 3),
@@ -105,7 +105,8 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
         )
       ),
       miniTabPanel(
-        "Cluster documents", icon = shiny::icon("file-alt"),
+        "Cluster documents",
+        icon = shiny::icon("file-alt"),
         miniContentPanel(
           docs_sample_ui("rainette1", res)
         )
@@ -116,15 +117,15 @@ rainette_explor <- function(res, dtm = NULL, corpus_src = NULL) {
   server <- function(input, output, session) {
     plot_code <- reactive({
       code <- paste0(
-          "rainette_plot(\n  ", res_name, ", ", dtm_name, ", k = ", input$k,
-          ",\n  n_terms = ", input$n_terms,
-          ",\n  free_scales = ", !input$same_scales,
-          ",\n  measure = \"", input$measure, "\"",
-          ",\n  show_negative = ", input$show_negative,
-          ifelse(input$text_size != "10",
-            paste0(",\n  text_size = ", input$text_size),
-            ""
-          ),
+        "rainette_plot(\n  ", res_name, ", ", dtm_name, ", k = ", input$k,
+        ",\n  n_terms = ", input$n_terms,
+        ",\n  free_scales = ", !input$same_scales,
+        ",\n  measure = \"", input$measure, "\"",
+        ",\n  show_negative = ", input$show_negative,
+        ifelse(input$text_size != "10",
+          paste0(",\n  text_size = ", input$text_size),
+          ""
+        ),
         "\n)"
       )
       code
