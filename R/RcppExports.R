@@ -2,14 +2,13 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 cpp_chisq <- function(T1, T2, Tsum) {
-    .Call('_rainette_cpp_chisq', PACKAGE = 'rainette', T1, T2, Tsum)
+  .Call('_rainette_cpp_chisq', PACKAGE = 'rainette', T1, T2, Tsum)
 }
 
 cpp_split_tab <- function(tab, indices) {
-    .Call('_rainette_cpp_split_tab', PACKAGE = 'rainette', tab, indices)
+  .Call('_rainette_cpp_split_tab', PACKAGE = 'rainette', tab, indices)
 }
 
 cpp_switch_docs <- function(tab1, tab2) {
-    .Call('_rainette_cpp_switch_docs', PACKAGE = 'rainette', tab1, tab2)
+  .Call('_rainette_cpp_switch_docs', PACKAGE = 'rainette', tab1, tab2)
 }
-

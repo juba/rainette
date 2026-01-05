@@ -21,7 +21,10 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
 
   if (min_segment_size <= 1) {
     ## Do nothing
-    quanteda::docvars(dtm, field = "rainette_uc_id") <- quanteda::docvars(dtm, "rainette_uce_id")
+    quanteda::docvars(dtm, field = "rainette_uc_id") <- quanteda::docvars(
+      dtm,
+      "rainette_uce_id"
+    )
     return(dtm)
   }
 
@@ -40,7 +43,10 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
 
   ## If all uce are already above the minimum size
   if (all(terms_by_uce >= min_segment_size)) {
-    quanteda::docvars(dtm, "rainette_uc_id") <- quanteda::docvars(dtm, "rainette_uce_id")
+    quanteda::docvars(dtm, "rainette_uc_id") <- quanteda::docvars(
+      dtm,
+      "rainette_uce_id"
+    )
     return(dtm)
   }
 
@@ -78,7 +84,10 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
   quanteda::docvars(dtm, "rainette_uc_id") <- uc_id
 
   ## Test if any uc is below min_segment_size
-  dtm_uc_size <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
+  dtm_uc_size <- quanteda::dfm_group(
+    dtm,
+    quanteda::docvars(dtm, "rainette_uc_id")
+  )
   if (any(rowSums(dtm_uc_size) < min_segment_size)) {
     warning("some segments will have a size < min_segment_size")
   }
@@ -116,15 +125,23 @@ merge_segments <- function(dtm, min_segment_size = 10, doc_id = NULL) {
 #' }
 #' @export
 
-clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = FALSE) {
-  if (!inherits(obj, "corpus") && !inherits(obj, "dfm") && !inherits(obj, "tokens")) {
+clusters_by_doc_table <- function(
+  obj,
+  clust_var = NULL,
+  doc_id = NULL,
+  prop = FALSE
+) {
+  if (
+    !inherits(obj, "corpus") &&
+      !inherits(obj, "dfm") &&
+      !inherits(obj, "tokens")
+  ) {
     stop("obj must be a corpus, a tokens or a dfm object.")
   }
 
   if (is.null(doc_id) && "segment_source" %in% names(docvars(obj))) {
     doc_id <- "segment_source"
   }
-
 
   ids <- quanteda::docvars(obj, doc_id)
   res <- dplyr::tibble(
@@ -207,14 +224,30 @@ clusters_by_doc_table <- function(obj, clust_var = NULL, doc_id = NULL, prop = F
 #' }
 #' @export
 
-docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL, threshold = 1) {
-  count <- clusters_by_doc_table(obj, clust_var = clust_var, doc_id = doc_id, prop = FALSE)
+docs_by_cluster_table <- function(
+  obj,
+  clust_var = NULL,
+  doc_id = NULL,
+  threshold = 1
+) {
+  count <- clusters_by_doc_table(
+    obj,
+    clust_var = clust_var,
+    doc_id = doc_id,
+    prop = FALSE
+  )
 
   count %>%
     dplyr::select(-"doc_id") %>%
-    dplyr::mutate(dplyr::across(everything(), .fns = function(v) v >= threshold)) %>%
+    dplyr::mutate(dplyr::across(everything(), .fns = function(v) {
+      v >= threshold
+    })) %>%
     dplyr::summarise(dplyr::across(everything(), .fns = sum)) %>%
-    tidyr::pivot_longer(cols = dplyr::everything(), names_to = "cluster", values_to = "n") %>%
+    tidyr::pivot_longer(
+      cols = dplyr::everything(),
+      names_to = "cluster",
+      values_to = "n"
+    ) %>%
     dplyr::mutate(`%` = .data$n / nrow(.env$count) * 100)
 }
 
@@ -222,7 +255,8 @@ docs_by_cluster_table <- function(obj, clust_var = NULL, doc_id = NULL, threshol
 #' @importFrom rlang sym
 
 stat_col <- function(measure) {
-  switch(measure,
+  switch(
+    measure,
     "chi2" = "chi2",
     "lr" = "G2",
     "frequency" = "frequency",

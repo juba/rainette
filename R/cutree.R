@@ -22,7 +22,6 @@ cutree <- function(tree, ...) {
 }
 
 
-
 #' Cut a rainette result tree into groups of documents
 #'
 #' @param hres the `rainette` result object to be cut
@@ -96,7 +95,8 @@ cutree_rainette2 <- function(res, k, criterion = c("chi2", "n"), ...) {
 
 rainette2_complete_groups <- function(dfm, groups, k = 1, ...) {
   if (!requireNamespace("FNN", quietly = TRUE)) {
-    stop("Package \"FNN\" needed for this function to work. Please install it.",
+    stop(
+      "Package \"FNN\" needed for this function to work. Please install it.",
       call. = FALSE
     )
   }

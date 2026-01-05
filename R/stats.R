@@ -30,12 +30,13 @@
 #' }
 
 rainette_stats <- function(
-  groups, dtm,
+  groups,
+  dtm,
   measure = c("chi2", "lr", "frequency", "docprop"),
   n_terms = 15,
   show_negative = TRUE,
-  max_p = 0.05) {
-
+  max_p = 0.05
+) {
   measure <- match.arg(measure)
   stat_col <- stat_col(measure)
 
@@ -53,10 +54,16 @@ rainette_stats <- function(
 
     ## Keyness
     if (measure %in% c("chi2", "lr")) {
-      tab <- quanteda.textstats::textstat_keyness(dtm, select, measure = measure) %>%
+      tab <- quanteda.textstats::textstat_keyness(
+        dtm,
+        select,
+        measure = measure
+      ) %>%
         dplyr::as_tibble() %>%
         dplyr::arrange(desc(abs(.data[[stat_col]])))
-      if (all(is.nan(tab$p))) return(empty_tab)
+      if (all(is.nan(tab$p))) {
+        return(empty_tab)
+      }
       if (show_negative) {
         tab <- tab %>%
           dplyr::filter(p <= max_p) %>%
@@ -74,17 +81,18 @@ rainette_stats <- function(
     }
     if (measure %in% c("frequency", "docprop")) {
       tmp_dtm <- quanteda::dfm_subset(dtm, select)
-      if (all(colSums(tmp_dtm) == 0)) return(empty_tab)
+      if (all(colSums(tmp_dtm) == 0)) {
+        return(empty_tab)
+      }
       tab <- quanteda.textstats::textstat_frequency(tmp_dtm) %>%
-          dplyr::as_tibble() %>%
-          dplyr::mutate(docprop = .data$docfreq / ndoc(tmp_dtm)) %>%
-          dplyr::arrange(desc(.data[[stat_col]])) %>%
-          dplyr::slice(1:.env$n_terms) %>%
-          dplyr::mutate(sign = "positive")
+        dplyr::as_tibble() %>%
+        dplyr::mutate(docprop = .data$docfreq / ndoc(tmp_dtm)) %>%
+        dplyr::arrange(desc(.data[[stat_col]])) %>%
+        dplyr::slice(1:.env$n_terms) %>%
+        dplyr::mutate(sign = "positive")
     }
     return(tab)
   })
 
   tabs
-
 }

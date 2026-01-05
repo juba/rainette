@@ -1,4 +1,3 @@
-
 ## Compute signed Khi2 statistic from different sizes
 
 compute_chi2 <- function(n_both, n1, n2, n_tot) {
@@ -31,12 +30,12 @@ get_groups <- function(res) {
 ## clustering results
 
 groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
-
   # Frequencies of each group in first clustering
   g1_count <- groups1 %>%
     tidyr::pivot_longer(
       everything(),
-      names_to = "level1", values_to = "g1"
+      names_to = "level1",
+      values_to = "g1"
     ) %>%
     dplyr::count(.data$level1, .data$g1, name = "n1")
 
@@ -44,7 +43,8 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
   g2_count <- groups2 %>%
     tidyr::pivot_longer(
       everything(),
-      names_to = "level2", values_to = "g2"
+      names_to = "level2",
+      values_to = "g2"
     ) %>%
     dplyr::count(.data$level2, .data$g2, name = "n2")
 
@@ -72,7 +72,8 @@ groups_crosstab <- function(groups1, groups2, min_members, min_chi2) {
     # Compute chi-squared
     dplyr::rowwise() %>%
     dplyr::mutate(
-      chi2 = compute_chi2(.data$n_both, .data$n1, .data$n2, nrow(groups1)) %>% unname()
+      chi2 = compute_chi2(.data$n_both, .data$n1, .data$n2, nrow(groups1)) %>%
+        unname()
     ) %>%
     dplyr::ungroup() %>%
     # Filter chi-squared
@@ -87,7 +88,10 @@ crosstab_add_members <- function(tab, groups1, groups2) {
     rowwise() %>%
     dplyr::mutate(
       members = list(
-        which(groups1[[.data$level1]] == .data$g1 & groups2[[.data$level2]] == .data$g2)
+        which(
+          groups1[[.data$level1]] == .data$g1 &
+            groups2[[.data$level2]] == .data$g2
+        )
       )
     ) %>%
     dplyr::ungroup() %>%
@@ -161,7 +165,6 @@ next_partitions_for <- function(partitions, sizes) {
 ## Compute next level partitions with mclapply (doesn't work on Windows)
 
 next_partitions_parallel <- function(partitions, sizes) {
-
   ## for each previous partition
   res <- parallel::mclapply(partitions, function(partition) {
     size_inter <- colSums(sizes[partition, ])
@@ -185,7 +188,6 @@ next_partitions_parallel <- function(partitions, sizes) {
 ## membership
 
 get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
-
   ## Compute group memberships from a vector of groups
   compute_members <- function(cluster) {
     cluster <- unlist(cluster)
@@ -218,7 +220,9 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
         out <- out %>%
           ## Filter partitions with max size or max chi2 for each k
           dplyr::group_by(.data$k) %>%
-          dplyr::filter(.data$n == max(.data$n) | .data$chi2 == max(.data$chi2)) %>%
+          dplyr::filter(
+            .data$n == max(.data$n) | .data$chi2 == max(.data$chi2)
+          ) %>%
           ## If several partitions with same n, keep max chi2
           dplyr::group_by(.data$k, .data$n) %>%
           dplyr::slice_max(.data$chi2) %>%
@@ -226,9 +230,8 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
           dplyr::group_by(.data$k, .data$chi2) %>%
           dplyr::slice_max(.data$n) %>%
           dplyr::ungroup()
-      }
-      ## If not full computation, only keep max chi2
-      else {
+      } else {
+        ## If not full computation, only keep max chi2
         out <- out %>%
           ## Filter partitions with max chi2 for each k
           dplyr::group_by(.data$k) %>%
@@ -246,7 +249,9 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
       # Add group membership for each clustering
       dplyr::mutate(groups = list(compute_members(.data$clusters))) %>%
       # Replace cross groups ids by their name
-      dplyr::mutate(clusters = list(cross_groups$interclass[.data$clusters])) %>%
+      dplyr::mutate(
+        clusters = list(cross_groups$interclass[.data$clusters])
+      ) %>%
       dplyr::ungroup()
   })
   res
@@ -266,7 +271,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 #' @param doc_id character name of a dtm docvar which identifies source documents.
 #' @param min_members minimum members of each cluster
 #' @param min_chi2 minimum chi2 for each cluster
-#' @param parallel if TRUE, use `parallel::mclapply` to compute partitions 
+#' @param parallel if TRUE, use `parallel::mclapply` to compute partitions
 #'   (won't work on Windows, uses more RAM)
 #' @param uc_size1 deprecated, use min_segment_size1 instead
 #' @param uc_size2 deprecated, use min_segment_size2 instead
@@ -325,12 +330,21 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
 #' res <- rainette2(res1, res2, max_k = 4)
 #' }
 #'
-rainette2 <- function(x, y = NULL, max_k = 5,
-                      min_segment_size1 = 10, min_segment_size2 = 15,
-                      doc_id = NULL, min_members = 10, min_chi2 = 3.84,
-                      parallel = FALSE, full = TRUE,
-                      uc_size1, uc_size2, ...) {
-
+rainette2 <- function(
+  x,
+  y = NULL,
+  max_k = 5,
+  min_segment_size1 = 10,
+  min_segment_size2 = 15,
+  doc_id = NULL,
+  min_members = 10,
+  min_chi2 = 3.84,
+  parallel = FALSE,
+  full = TRUE,
+  uc_size1,
+  uc_size2,
+  ...
+) {
   ## Check for deprecated uc_size1 argument
   if (!missing(uc_size1)) {
     warning("! uc_size1 is deprecated. Use min_segment_size1 instead.")
@@ -349,17 +363,29 @@ rainette2 <- function(x, y = NULL, max_k = 5,
   ## If passed a dfm, compute both clustering
   if (inherits(x, "dfm")) {
     dtm <- x
-    message("  Computing first clustering with min_segment_size1 = ", min_segment_size1)
+    message(
+      "  Computing first clustering with min_segment_size1 = ",
+      min_segment_size1
+    )
     x <- rainette::rainette(
       dtm,
-      k = max_k, min_segment_size = min_segment_size1, doc_id = doc_id,
-      min_split_members = min_members, ...
+      k = max_k,
+      min_segment_size = min_segment_size1,
+      doc_id = doc_id,
+      min_split_members = min_members,
+      ...
     )
-    message("  Computing second clustering with min_segment_size2 = ", min_segment_size2)
+    message(
+      "  Computing second clustering with min_segment_size2 = ",
+      min_segment_size2
+    )
     y <- rainette::rainette(
       dtm,
-      k = max_k, min_segment_size = min_segment_size2, doc_id = doc_id,
-      min_split_members = min_members, ...
+      k = max_k,
+      min_segment_size = min_segment_size2,
+      doc_id = doc_id,
+      min_split_members = min_members,
+      ...
     )
   }
 
@@ -396,7 +422,9 @@ rainette2 <- function(x, y = NULL, max_k = 5,
     p()
 
     if (nrow(cross_groups) < 2) {
-      stop("! Not enough valid classes to continue. You may try a lower min_members value.")
+      stop(
+        "! Not enough valid classes to continue. You may try a lower min_members value."
+      )
     }
     if (!full) {
       cross_groups <- crosstab_keep_max(cross_groups)

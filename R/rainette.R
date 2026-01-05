@@ -50,12 +50,16 @@
 #' @export
 
 rainette <- function(
-  dtm, k = 10, min_segment_size = 0,
-  doc_id = NULL, min_split_members = 5,
-  cc_test = 0.3, tsj = 3,
-  min_members, min_uc_size
-  ) {
-
+  dtm,
+  k = 10,
+  min_segment_size = 0,
+  doc_id = NULL,
+  min_split_members = 5,
+  cc_test = 0.3,
+  tsj = 3,
+  min_members,
+  min_uc_size
+) {
   ## Check for deprecated min_members argument
   if (!missing(min_members)) {
     warning("min_members is deprecated. Use min_split_members instead.")
@@ -84,7 +88,11 @@ rainette <- function(
     ## Compute uc from uces based on minimum size
     message("  Merging segments to comply with min_segment_size...")
   }
-  dtm <- rainette::merge_segments(dtm, min_segment_size = min_segment_size, doc_id = doc_id)
+  dtm <- rainette::merge_segments(
+    dtm,
+    min_segment_size = min_segment_size,
+    doc_id = doc_id
+  )
 
   ## Correspondance table between uce and uc
   corresp_uce_uc <- data.frame(
@@ -95,7 +103,9 @@ rainette <- function(
   dtm <- quanteda::dfm_group(dtm, quanteda::docvars(dtm, "rainette_uc_id"))
   dtm <- quanteda::dfm_weight(dtm, scheme = "boolean", force = TRUE)
   if (any(rowSums(dtm) == 0)) {
-    warning("some documents don't have any term, they won't be assigned to any cluster.")
+    warning(
+      "some documents don't have any term, they won't be assigned to any cluster."
+    )
   }
 
   message("  Clustering...")
@@ -107,18 +117,25 @@ rainette <- function(
     p <- progressr::progressor(along = seq_len(k - 1))
 
     for (i in 1:(k - 1)) {
-
       ## Split the biggest group
       biggest_group <- which.max(purrr::map(res[[i]]$tabs, nrow))
       if (nrow(res[[i]]$tabs[[biggest_group]]) < min_split_members) {
-        message("! No more group bigger than min_split_members. Stopping after iteration ", i, ".")
+        message(
+          "! No more group bigger than min_split_members. Stopping after iteration ",
+          i,
+          "."
+        )
         k <- i
         break
       }
       tab <- res[[i]]$tabs[[biggest_group]]
       ## textmodel_ca only works if nrow >= 3 and ncol >= 3
       if (nrow(tab) < 3 || ncol(tab) < 3) {
-        message("! Tab to be splitted is not big enough. Stopping after iteration ", i, ".")
+        message(
+          "! Tab to be splitted is not big enough. Stopping after iteration ",
+          i,
+          "."
+        )
         k <- i
         break
       }
@@ -130,11 +147,13 @@ rainette <- function(
       res[[i + 1]] <- list()
       res[[i + 1]]$height <- clusters$height
       res[[i + 1]]$splitted <- c(biggest_group, biggest_group + 1)
-      res[[i + 1]]$tabs <- append(res[[i]]$tabs[-biggest_group],
+      res[[i + 1]]$tabs <- append(
+        res[[i]]$tabs[-biggest_group],
         clusters$tabs,
         after = biggest_group - 1
       )
-      res[[i + 1]]$groups <- append(res[[i]]$groups[-biggest_group],
+      res[[i + 1]]$groups <- append(
+        res[[i]]$groups[-biggest_group],
         clusters$groups,
         after = biggest_group - 1
       )
@@ -155,7 +174,7 @@ rainette <- function(
     split <- res[[i]]$splitted
     merge <- rbind(merge, -groups[split])
     groups <- groups[-split[2]]
-    groups[split[1]] <- - (k - i)
+    groups[split[1]] <- -(k - i)
   }
 
   ## Compute groups by uce at each k
@@ -203,7 +222,6 @@ rainette <- function(
 #' @return ordered list of document indices
 
 order_docs <- function(m) {
-
   ## Compute first factor of CA on DTM
   ## Code taken from getAnywhere(textmodel_ca.dfm)
   p <- m / sum(m)
@@ -236,7 +254,6 @@ order_docs <- function(m) {
 #' the new corresponding chi-square value after switching
 
 switch_docs <- function(m, indices, max_index, max_chisq) {
-
   ## Group indices and tabs
   group1 <- indices[1:which(indices == max_index)]
   group2 <- indices[(which(indices == max_index) + 1):length(indices)]
@@ -291,7 +308,6 @@ switch_docs <- function(m, indices, max_index, max_chisq) {
 #' keep in group 1, `cols2` the name of features to keep in group 2
 
 select_features <- function(m, indices1, indices2, cc_test = 0.3, tsj = 3) {
-
   ## features count for each group
   tab1 <- colSums(m[indices1, , drop = FALSE])
   tab2 <- colSums(m[indices2, , drop = FALSE])
@@ -354,9 +370,7 @@ select_features <- function(m, indices1, indices2, cc_test = 0.3, tsj = 3) {
 #' @return
 #' An object of class `hclust` and `rainette`
 
-
 cluster_tab <- function(dtm, cc_test = 0.3, tsj = 3) {
-
   ## Remove documents and features with zero occurrences
   dtm <- dtm[rowSums(dtm) > 0, colSums(dtm) > 0]
   ## Remove features with zero
