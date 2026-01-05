@@ -19,9 +19,9 @@ L'objectif de ce document est de décrire les algorithmes utilisés pour les cla
 
 ### Matrice de départ
 
-La classification simple est une classification descendante hiérarchique (CDH). 
+La classification simple est une classification descendante hiérarchique (CDH).
 
-Le tableau de départ est la matrice termes-documents croisant les documents du corpus et les termes qui les composent. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d'occurrences. 
+Le tableau de départ est la matrice termes-documents croisant les documents du corpus et les termes qui les composent. Cette matrice est une matrice binaire de présence/absence du terme dans le document, et non une matrice d'occurrences.
 
 On a donc un tableau de ce type :
 
@@ -64,7 +64,7 @@ On obtient donc au final deux groupes de documents et deux matrices termes-docum
 
 L'étape suivante consiste en une sélection des termes dans chacun des deux tableaux pour les prochaines itérations :
 
-- on regarde la fréquence de chaque terme, et on supprime les termes qui apparaissent moins de 3 fois (cette valeur est modifiable via l'argument `tsj` de `rainette()`). 
+- on regarde la fréquence de chaque terme, et on supprime les termes qui apparaissent moins de 3 fois (cette valeur est modifiable via l'argument `tsj` de `rainette()`).
 - on compare également l'effectif observé de chaque terme avec l'effectif attendu sous l'hypothèse d'indépendance de la répartition du terme entre les deux groupes, et on en déduit un coefficient de contingence pour ce terme. Si ce coefficient de contingence est supérieur à 0.3, on ne conserve le terme que dans le tableau dans lequel il est surreprésenté (le seuil de 0.3 est modifiable via l'argument `cc_test` de `rainette()`).
 
 
@@ -118,7 +118,7 @@ On prend chaque classe de la première CDH, et on la croise avec chaque classe d
     <tr><td align="center"><span class="cross"><span>2</span><span>1</span></span></td><td align="right">0</td><td align="right">-</td></tr>
     <tr><td align="center">...</td><td align="right">...</td><td align="right">...</td></tr>
     <tr><td align="center"><span class="cross"><span>6</span><span>6</span></span></td><td align="right">5</td><td align="right">3.1</td></tr>
-    
+
   </tbody>
 </table>
 
@@ -144,7 +144,7 @@ La première, dite analyse "full" (argument `full = TRUE` de `rainette2()`), con
     <tr><td align="center"><span class="cross"><span>1</span><span>6</span></span></td><td align="right">13</td><td align="right">6.2</td></tr>
     <tr><td align="center">...</td><td align="right">...</td><td align="right">...</td></tr>
     <tr><td align="center"><span class="cross"><span>6</span><span>6</span></span></td><td align="right">5</td><td align="right">3.1</td></tr>
-    
+
   </tbody>
 </table>
 
@@ -224,7 +224,7 @@ On commence par déterminer les partitions de taille 2, c'est-à-dire tous les e
 
 On sélectionne parmi ces partitions celles qui sont considérées comme les "meilleures", c'est-à-dire :
 
-- si on fait une analyse "full" (`full = TRUE`), on sélectionne celle ayant la somme de χ² d'association la plus forte, et celle ayant l'effectif total le plus élevé. 
+- si on fait une analyse "full" (`full = TRUE`), on sélectionne celle ayant la somme de χ² d'association la plus forte, et celle ayant l'effectif total le plus élevé.
 - si on fait une analyse "classique" (`full = FALSE`), on sélectionne uniquement celle ayant la somme de χ² d'association la plus forte (on ne peut pas utiliser l'effectif total comme critère de sélection dans ce cas-là).
 
 <table>
@@ -270,7 +270,7 @@ On fait de même pour les partitions de taille 3 : on détermine les différente
       <td align="center">
         <span class="cross"><span>1</span><span>2</span></span>
         <span class="cross"><span>5</span><span>3</span></span>
-        <span class="cross"><span>2</span><span>5</span></span>        
+        <span class="cross"><span>2</span><span>5</span></span>
       </td>
       <td align="right">189</td>
       <td align="right">91.3</td>
@@ -300,7 +300,7 @@ Et on continue pour les partitions de 4 classes croisées, etc.
   <tbody>
     <tr>
       <td align="center">
-        <span class="cross"><span>3</span><span>4</span></span><span class="cross"><span>2</span><span>6</span></span><span class="cross"><span>5</span><span>3</span></span><span class="cross"><span>1</span><span>5</span></span>        
+        <span class="cross"><span>3</span><span>4</span></span><span class="cross"><span>2</span><span>6</span></span><span class="cross"><span>5</span><span>3</span></span><span class="cross"><span>1</span><span>5</span></span>
       </td>
       <td align="right">223</td>
       <td align="right">114.7</td>
@@ -333,7 +333,7 @@ L'avantage de l'implémentation dans `rainette` est qu'on ne "casse" pas la logi
 
 La méthode proposée par Iramuteq correspond plutôt à la méthode "full" de ce document : après avoir déterminé les classes croisées, on conserve toutes celles ayant un effectif et une valeur de χ² d'association suffisants.
 
-L'algorithme reste très proche de celui d'Iramuteq jusqu'à l'étape de la sélection de partition optimale. Ici on procède à une recherche exhaustive des partitions à partir des classes croisées sélectionnées (ce qui peut occasionner des calculs potentiellement très longs si `min_members` est faible et `max_k` élevé), tandis qu'Iramuteq procède autrement. 
+L'algorithme reste très proche de celui d'Iramuteq jusqu'à l'étape de la sélection de partition optimale. Ici on procède à une recherche exhaustive des partitions à partir des classes croisées sélectionnées (ce qui peut occasionner des calculs potentiellement très longs si `min_members` est faible et `max_k` élevé), tandis qu'Iramuteq procède autrement.
 
 Au niveau des résultats, Iramuteq ne renvoie qu'une seule partition qu'il juge optimale, tandis que `rainette` retourne pour chaque valeur de `k` les meilleures partitions selon les critères de la taille ou du χ² maximum.
 
@@ -350,6 +350,6 @@ Cette réaffectation par centre mobile n'est pas implémentée dans `rainette` (
 
 ## Références
 
-- Reinert M., "Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte", *Cahiers de l'analyse des données*, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+- Reinert M., "Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte", *Cahiers de l'analyse des données*, Volume 8, Numéro 2, 1983. <https://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
 - Reinert M., "Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval", *Bulletin de Méthodologie Sociologique*, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
-- Reinert M., "Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application", *Les cahiers de l’analyse des données*, Tome 15, Numéro 1, 1990. <http://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
+- Reinert M., "Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application", *Les cahiers de l’analyse des données*, Tome 15, Numéro 1, 1990. <https://www.numdam.org/item/?id=CAD_1990__15_1_21_0>

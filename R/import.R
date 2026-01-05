@@ -48,9 +48,6 @@ extract_metadata <- function(docs) {
 #' @param thematics if "remove", thematics lines are removed. If "split", texts as splitted at each thematic, and metadata duplicated accordingly
 #' @param ... arguments passed to \code{\link[base:connections]{file}} if `f` is a file name.
 #'
-#' @details
-#' A description of the Iramuteq corpus format can be found here : \url{http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages}
-#'
 #' @return
 #' A quanteda corpus object. Note that metadata variables in docvars are all imported as characters.
 #'
@@ -58,8 +55,12 @@ extract_metadata <- function(docs) {
 #' @import stringr
 #' @importFrom rlang sym
 
-import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "split"), ...) {
-
+import_corpus_iramuteq <- function(
+  f,
+  id_var = NULL,
+  thematics = c("remove", "split"),
+  ...
+) {
   thematics <- match.arg(thematics)
 
   ## Open as a filename or a connection
@@ -98,7 +99,10 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
 
   ## Split by thematics
   if (has_thematic && thematics == "split") {
-    thems <- purrr::map(stringr::str_match_all(docs, "(^|\n)-\\*(.+)\n"), ~.x[, 3])
+    thems <- purrr::map(
+      stringr::str_match_all(docs, "(^|\n)-\\*(.+)\n"),
+      ~ .x[, 3]
+    )
     thems <- purrr::flatten_chr(thems)
     texts <- stringr::str_split(texts, "(^|\n)-\\*(.+)\n")
     texts <- purrr::imap_dfr(texts, function(text, i) {
@@ -107,12 +111,18 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
     ## Duplicate metadata and add thematics variable
     if (has_metadata) {
       metadata <- metadata[texts$id, ]
-      metadata <- data.frame(metadata, thematics = thems, stringsAsFactors = FALSE)
+      metadata <- data.frame(
+        metadata,
+        thematics = thems,
+        stringsAsFactors = FALSE
+      )
       ## Generate id by thematic if necessary
       if (!is.null(id_var)) {
         metadata <- metadata %>%
           dplyr::group_by(.data[[id_var]]) %>%
-          dplyr::mutate(rainette_split_id = paste(.data[[id_var]], 1:n(), sep = "_"))
+          dplyr::mutate(
+            rainette_split_id = paste(.data[[id_var]], 1:n(), sep = "_")
+          )
       }
       id_var <- "rainette_split_id"
     } else {
@@ -134,5 +144,4 @@ import_corpus_iramuteq <- function(f, id_var = NULL, thematics = c("remove", "sp
   }
 
   quanteda::corpus(corpus, text_field = "text")
-
 }

@@ -12,14 +12,14 @@ vignette: >
 The goal of this document is to describe the algorithms used in the `rainette` package and their implementation. This implementation has been based upon two main resources :
 
 - the three papers from Max Reinert cited in [references] (in french)
-- the source code of [Iramuteq](http://www.iramuteq.org/), especially the `CHD.R` and `chdtxt.R` files. Note however that the code has been almost entirely rewritten (in part in C++ via [Rcpp](https://www.rcpp.org/)).
+- the source code of [Iramuteq](https://pratinaud.gitpages.huma-num.fr/iramuteq-website/), especially the `CHD.R` and `chdtxt.R` files. Note however that the code has been almost entirely rewritten (in part in C++ via [Rcpp](https://www.rcpp.org/)).
 
 
 ## Simple clustering algorithm
 
 ### Document-term matrix
 
-The simple clustering method is a divisive hierarchical clustering applied to a document-term matrix. This matrix is binary weighted, so only the absence or presence of a term in a document is taken into account. 
+The simple clustering method is a divisive hierarchical clustering applied to a document-term matrix. This matrix is binary weighted, so only the absence or presence of a term in a document is taken into account.
 
 Here is a sample matrix :
 
@@ -113,7 +113,7 @@ Each cluster of the first simple clustering is crossed with each cluster of the 
     <tr><td align="center"><span class="cross"><span>2</span><span>1</span></span></td><td align="right">0</td><td align="right">-</td></tr>
     <tr><td align="center">...</td><td align="right">...</td><td align="right">...</td></tr>
     <tr><td align="center"><span class="cross"><span>6</span><span>6</span></span></td><td align="right">5</td><td align="right">3.1</td></tr>
-    
+
   </tbody>
 </table>
 
@@ -139,7 +139,7 @@ The first type, called a "full" analysis (`full = TRUE` argument of `rainette2()
     <tr><td align="center"><span class="cross"><span>1</span><span>6</span></span></td><td align="right">13</td><td align="right">6.2</td></tr>
     <tr><td align="center">...</td><td align="right">...</td><td align="right">...</td></tr>
     <tr><td align="center"><span class="cross"><span>6</span><span>6</span></span></td><td align="right">5</td><td align="right">3.1</td></tr>
-    
+
   </tbody>
 </table>
 
@@ -265,7 +265,7 @@ We do the same for the size 3 partitions : we identify every set of 3 non overla
       <td align="center">
         <span class="cross"><span>1</span><span>2</span></span>
         <span class="cross"><span>5</span><span>3</span></span>
-        <span class="cross"><span>2</span><span>5</span></span>        
+        <span class="cross"><span>2</span><span>5</span></span>
       </td>
       <td align="right">189</td>
       <td align="right">91.3</td>
@@ -295,7 +295,7 @@ And we repeat the operation for 4 crossed clusters, etc.
   <tbody>
     <tr>
       <td align="center">
-        <span class="cross"><span>3</span><span>4</span></span><span class="cross"><span>2</span><span>6</span></span><span class="cross"><span>5</span><span>3</span></span><span class="cross"><span>1</span><span>5</span></span>        
+        <span class="cross"><span>3</span><span>4</span></span><span class="cross"><span>2</span><span>6</span></span><span class="cross"><span>5</span><span>3</span></span><span class="cross"><span>1</span><span>5</span></span>
       </td>
       <td align="right">223</td>
       <td align="right">114.7</td>
@@ -310,7 +310,7 @@ The operation is repeated until we reach the value of the `max_k` argument passe
 
 At the end we get, for each `k` value from 2 to `max_k`, a selection of the "best" crossed clusters partitions, either according to the association χ² criterion or according to the total size criterion. These crossed clusters form a new set of clusters which are potentially more "robust" than the ones computed from the two simple clusterings.
 
-After this operation, a potentially high number of segments may not belong to any cluster anymore. `rainette` allows to reassign them to the new clusters with a fast *k-nearest neighbours* method, but this may not be recommended as we would then loose the clusters robustness acquired with the double clustering. 
+After this operation, a potentially high number of segments may not belong to any cluster anymore. `rainette` allows to reassign them to the new clusters with a fast *k-nearest neighbours* method, but this may not be recommended as we would then loose the clusters robustness acquired with the double clustering.
 
 
 
@@ -323,6 +323,6 @@ One important difference is the fact that once the best partition of crossed clu
 
 ## References
 
-- Reinert M., "Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte", *Cahiers de l'analyse des données*, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+- Reinert M., "Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte", *Cahiers de l'analyse des données*, Volume 8, Numéro 2, 1983. <https://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
 - Reinert M., "Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval", *Bulletin de Méthodologie Sociologique*, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
-- Reinert M., "Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application", *Les cahiers de l’analyse des données*, Tome 15, Numéro 1, 1990. <http://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
+- Reinert M., "Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application", *Les cahiers de l’analyse des données*, Tome 15, Numéro 1, 1990. <https://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
