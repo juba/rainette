@@ -12,13 +12,13 @@ Source:
 [`DESCRIPTION`](https://github.com/juba/rainette/blob/main/DESCRIPTION)
 
 Barnier J (2026). *rainette: The Reinert Method for Textual Data
-Clustering*. R package version 0.3.1.9000,
+Clustering*. R package version 0.3.2,
 <https://juba.github.io/rainette/>.
 
     @Manual{,
       title = {rainette: The Reinert Method for Textual Data Clustering},
       author = {Julien Barnier},
       year = {2026},
-      note = {R package version 0.3.1.9000},
+      note = {R package version 0.3.2},
       url = {https://juba.github.io/rainette/},
     }

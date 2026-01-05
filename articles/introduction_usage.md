@@ -4,7 +4,7 @@ Pour une présentation en français des principes de la méthode et de son
 utilisation dans `rainette`, vous pouvez aussi consulter la vidéo d’une
 intervention réalisée dans le cadre d’[un
 tuto](https://mate-shs.cnrs.fr/actions/tutomate/tuto42-rainette-julien-barnier/)
-du réseau métier [Mate-shs](https://mate-shs.cnrs.fr/).
+du réseau métier Mate-shs.
 
 ## Préparation du corpus
 
@@ -13,12 +13,11 @@ du réseau métier [Mate-shs](https://mate-shs.cnrs.fr/).
 La première étape consiste à importer votre corpus dans R. Vous pouvez
 utiliser un corpus au format `tm` ou `quanteda`, ou bien utiliser la
 fonction `import_corpus_iramuteq` pour importer directement un corpus
-depuis un fichier texte [au format
-Iramuteq](http://www.iramuteq.org/documentation/formatage-des-corpus-texte).
-Dans ce cas vous obtiendrez un objet de type `corpus` du package
-[quanteda](https://quanteda.io). Les métadonnées éventuelles présentes
-dans le fichier (*variables étoilées*) sont importées en tant que
-métadonnées du corpus (variables de `docvars(corpus)`).
+depuis un fichier texte au format Iramuteq. Dans ce cas vous obtiendrez
+un objet de type `corpus` du package [quanteda](https://quanteda.io).
+Les métadonnées éventuelles présentes dans le fichier (*variables
+étoilées*) sont importées en tant que métadonnées du corpus (variables
+de `docvars(corpus)`).
 
 Pour ce document, on va importer le texte du *Manifeste du parti
 communiste* (Karl Marx et Friedrich Engels, 1848, source
@@ -256,7 +255,7 @@ groupes actuellement affichés.
 ## Clustering description plot
 rainette_plot(res, dtm, k = 5, type = "bar", n_terms = 20, free_scales = FALSE,
     measure = "chi2", show_negative = "TRUE", text_size = 11)
-## Groups 
+## Groups
 cutree(res, k = 5)
 ```
 

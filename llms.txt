@@ -12,9 +12,10 @@ status](https://github.com/juba/rainette/workflows/R-CMD-check/badge.svg)](https
 
 Rainette is an R package which implements a variant of the Reinert
 textual clustering method. This method is available in other softwares
-such as [Iramuteq](http://www.iramuteq.org/) (free software) or
-[Alceste](https://www.image-zafar.com/Logiciel.html) (commercial, closed
-source).
+such as
+[Iramuteq](https://pratinaud.gitpages.huma-num.fr/iramuteq-website/)
+(free software) or [Alceste](https://www.image-zafar.com/Logiciel.html)
+(commercial, closed source).
 
 ## Features
 
@@ -162,7 +163,7 @@ in several articles, notably :
 - Reinert M., “Une méthode de classification descendante hiérarchique :
   application à l’analyse lexicale par contexte”, *Cahiers de l’analyse
   des données*, Volume 8, Numéro 2, 1983.
-  <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+  <https://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
 - Reinert M., “Alceste une méthodologie d’analyse des données textuelles
   et une application: Aurelia De Gerard De Nerval”, *Bulletin de
   Méthodologie Sociologique*, Volume 26, Numéro 1, 1990.
@@ -170,12 +171,13 @@ in several articles, notably :
 - Reinert M., “Une méthode de classification des énoncés d’un corpus
   présentée à l’aide d’une application”, *Les cahiers de l’analyse des
   données*, Tome 15, Numéro 1, 1990.
-  <http://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
+  <https://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
 
 Thanks to Pierre Ratineau, the author of
-[Iramuteq](http://www.iramuteq.org/), for providing it as free software
-and open source. Even if the R code has been almost entirely rewritten,
-it has been a precious resource to understand the algorithms.
+[Iramuteq](https://pratinaud.gitpages.huma-num.fr/iramuteq-website/),
+for providing it as free software and open source. Even if the R code
+has been almost entirely rewritten, it has been a precious resource to
+understand the algorithms.
 
 Many thanks to [Sébastien Rochette](https://github.com/statnmap) for the
 creation of the hex logo.

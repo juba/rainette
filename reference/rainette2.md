@@ -127,7 +127,7 @@ package vignettes.
 - Reinert M, Une méthode de classification descendante hiérarchique :
   application à l'analyse lexicale par contexte, Cahiers de l'analyse
   des données, Volume 8, Numéro 2, 1983.
-  <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+  <https://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
 
 - Reinert M., Alceste une méthodologie d'analyse des données textuelles
   et une application: Aurelia De Gerard De Nerval, Bulletin de

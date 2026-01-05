@@ -6,9 +6,10 @@ been based upon two main resources :
 
 - the three papers from Max Reinert cited in [references](#references)
   (in french)
-- the source code of [Iramuteq](http://www.iramuteq.org/), especially
-  the `CHD.R` and `chdtxt.R` files. Note however that the code has been
-  almost entirely rewritten (in part in C++ via
+- the source code of
+  [Iramuteq](https://pratinaud.gitpages.huma-num.fr/iramuteq-website/),
+  especially the `CHD.R` and `chdtxt.R` files. Note however that the
+  code has been almost entirely rewritten (in part in C++ via
   [Rcpp](https://www.rcpp.org/)).
 
 ## Simple clustering algorithm
@@ -243,11 +244,16 @@ We only keep among these partitions the ones that are considered the
 We do the same for the size 3 partitions : we identify every set of 3
 non overlapping crossed clusters, and keep the “best” ones.
 
-[TABLE]
+| Partition | Total size | Sum of association χ² |
+|:---------:|-----------:|----------------------:|
+| 12 53 25  |        189 |                  91.3 |
+| 34 26 53  |        113 |                 108.1 |
 
 And we repeat the operation for 4 crossed clusters, etc.
 
-[TABLE]
+| Partition | Total size | Sum of association χ² |
+|:---------:|-----------:|----------------------:|
+| 34265315  |        223 |                 114.7 |
 
 The operation is repeated until we reach the value of the `max_k`
 argument passed to
@@ -292,7 +298,7 @@ the “robustness” of the clusters computed with the double clustering.
 - Reinert M., “Une méthode de classification descendante hiérarchique :
   application à l’analyse lexicale par contexte”, *Cahiers de l’analyse
   des données*, Volume 8, Numéro 2, 1983.
-  <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+  <https://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
 - Reinert M., “Alceste une méthodologie d’analyse des données textuelles
   et une application: Aurelia De Gerard De Nerval”, *Bulletin de
   Méthodologie Sociologique*, Volume 26, Numéro 1, 1990.
@@ -300,4 +306,4 @@ the “robustness” of the clusters computed with the double clustering.
 - Reinert M., “Une méthode de classification des énoncés d’un corpus
   présentée à l’aide d’une application”, *Les cahiers de l’analyse des
   données*, Tome 15, Numéro 1, 1990.
-  <http://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
+  <https://www.numdam.org/item/?id=CAD_1990__15_1_21_0>

@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rainette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@ Barnier</h4>
 <p>Pour une présentation en français des principes de la méthode et de
 son utilisation dans <code>rainette</code>, vous pouvez aussi consulter
 la vidéo d’une intervention réalisée dans le cadre d’<a href="https://mate-shs.cnrs.fr/actions/tutomate/tuto42-rainette-julien-barnier/" class="external-link">un
-tuto</a> du réseau métier <a href="https://mate-shs.cnrs.fr/" class="external-link">Mate-shs</a>.</p>
+tuto</a> du réseau métier Mate-shs.</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/T9r8T5WZYHY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 <div class="section level2">
@@ -92,9 +92,8 @@ tuto</a> du réseau métier <a href="https://mate-shs.cnrs.fr/" class="external-
 pouvez utiliser un corpus au format <code>tm</code> ou
 <code>quanteda</code>, ou bien utiliser la fonction
 <code>import_corpus_iramuteq</code> pour importer directement un corpus
-depuis un fichier texte <a href="http://www.iramuteq.org/documentation/formatage-des-corpus-texte" class="external-link">au
-format Iramuteq</a>. Dans ce cas vous obtiendrez un objet de type
-<code>corpus</code> du package <a href="https://quanteda.io" class="external-link">quanteda</a>. Les métadonnées éventuelles
+depuis un fichier texte au format Iramuteq. Dans ce cas vous obtiendrez
+un objet de type <code>corpus</code> du package <a href="https://quanteda.io" class="external-link">quanteda</a>. Les métadonnées éventuelles
 présentes dans le fichier (<em>variables étoilées</em>) sont importées
 en tant que métadonnées du corpus (variables de
 <code>docvars(corpus)</code>).</p>
@@ -291,7 +290,7 @@ corpus, là aussi selon le nombre de groupes actuellement affichés.</p>
 <code class="sourceCode R"><span><span class="co">## Clustering description plot</span></span>
 <span><span class="fu"><a href="../reference/rainette_plot.html">rainette_plot</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">dtm</span>, k <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"bar"</span>, n_terms <span class="op">=</span> <span class="fl">20</span>, free_scales <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    measure <span class="op">=</span> <span class="st">"chi2"</span>, show_negative <span class="op">=</span> <span class="st">"TRUE"</span>, text_size <span class="op">=</span> <span class="fl">11</span><span class="op">)</span></span>
-<span><span class="co">## Groups </span></span>
+<span><span class="co">## Groups</span></span>
 <span><span class="fu"><a href="../reference/cutree.html">cutree</a></span><span class="op">(</span><span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>Vous pouvez par exemple utiliser l’appel de <code>cutree</code> pour
 ajouter comme nouvelle métadonnée du corpus le groupe d’appartenance de

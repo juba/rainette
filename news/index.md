@@ -1,7 +1,8 @@
 # Changelog
 
-## rainette (development version)
+## rainette 0.3.2
 
+- Fix compatibility with new `vctrs` version
 - Add `colors` argument to
   [`rainette_plot()`](https://juba.github.io/rainette/reference/rainette_plot.md)
   to allow to specify custom colors for clusters

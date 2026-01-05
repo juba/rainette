@@ -32,8 +32,3 @@ import_corpus_iramuteq(f, id_var = NULL, thematics = c("remove", "split"), ...)
 
 A quanteda corpus object. Note that metadata variables in docvars are
 all imported as characters.
-
-## Details
-
-A description of the Iramuteq corpus format can be found here :
-<http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages>

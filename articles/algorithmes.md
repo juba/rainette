@@ -253,11 +253,16 @@ les “meilleures”, c’est-à-dire :
 On fait de même pour les partitions de taille 3 : on détermine les
 différentes partitions possibles et on conserve les meilleures.
 
-[TABLE]
+| Partition | Effectif total | Somme des χ² d’association |
+|:---------:|---------------:|---------------------------:|
+| 12 53 25  |            189 |                       91.3 |
+| 34 26 53  |            113 |                      108.1 |
 
 Et on continue pour les partitions de 4 classes croisées, etc.
 
-[TABLE]
+| Partition | Effectif total | Somme des χ² d’association |
+|:---------:|---------------:|---------------------------:|
+| 34265315  |            223 |                      114.7 |
 
 On répète l’opération jusqu’à atteindre la valeur de l’argument `max_k`
 de
@@ -358,7 +363,7 @@ n’est pas forcément conseillée.
 - Reinert M., “Une méthode de classification descendante hiérarchique :
   application à l’analyse lexicale par contexte”, *Cahiers de l’analyse
   des données*, Volume 8, Numéro 2, 1983.
-  <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+  <https://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
 - Reinert M., “Alceste une méthodologie d’analyse des données textuelles
   et une application: Aurelia De Gerard De Nerval”, *Bulletin de
   Méthodologie Sociologique*, Volume 26, Numéro 1, 1990.
@@ -366,4 +371,4 @@ n’est pas forcément conseillée.
 - Reinert M., “Une méthode de classification des énoncés d’un corpus
   présentée à l’aide d’une application”, *Les cahiers de l’analyse des
   données*, Tome 15, Numéro 1, 1990.
-  <http://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
+  <https://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
