@@ -205,6 +205,7 @@ get_optimal_partitions <- function(partitions, cross_groups, n_tot, full) {
       if (is.null(partition)) {
         return(NULL)
       }
+      dim(partition) <- NULL
       out <- dplyr::tibble(clusters = partition, k = k + 1) %>%
         dplyr::rowwise() %>%
         ## Compute size and sum of Khi2 for each partition
