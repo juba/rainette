@@ -4,7 +4,7 @@
 status](https://www.r-pkg.org/badges/version-ago/rainette)](https://cran.r-project.org/package=rainette)
 [![rainette status
 badge](https://juba.r-universe.dev/badges/rainette)](https://juba.r-universe.dev)
-[![DOI](https://zenodo.org/badge/153594739.svg)](https://zenodo.org/badge/latestdoi/153594739)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6047058.svg)](https://doi.org/10.5281/zenodo.6047058)
 ![CRAN
 Downloads](https://cranlogs.r-pkg.org/badges/last-month/rainette)[![R
 build
