@@ -330,14 +330,26 @@ rainette_plot <- function(res, dtm, k = NULL,
   plots <- list()
 
   ## Dendrogram
-  plots[[1]] <- rainette:::dendrogram_plot(res, k, groups, text_size, show_na_title, colors = colors)
+  plots[[1]] <- dendrogram_plot(
+    res,
+    k,
+    groups,
+    text_size,
+    show_na_title,
+    colors = colors
+  )
 
   ## Add terms plots
   plots <- c(
     plots,
-    rainette:::keyness_plots(
-      tabs, groups, type, free_scales,
-      stat_col, n_terms, text_size,
+    keyness_plots(
+      tabs,
+      groups,
+      type,
+      free_scales,
+      stat_col,
+      n_terms,
+      text_size,
       cluster_label = cluster_label,
       keyness_plot_xlab = keyness_plot_xlab,
       colors = colors
