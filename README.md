@@ -1,10 +1,11 @@
-# Rainette  
+# Rainette
 
 [![CRAN status](https://www.r-pkg.org/badges/version-ago/rainette)](https://cran.r-project.org/package=rainette)
 [![rainette status badge](https://juba.r-universe.dev/badges/rainette)](https://juba.r-universe.dev)
-[![DOI](https://zenodo.org/badge/153594739.svg)](https://zenodo.org/badge/latestdoi/153594739)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6047058.svg)](https://doi.org/10.5281/zenodo.6047058)
 ![CRAN Downloads](https://cranlogs.r-pkg.org/badges/last-month/rainette)
 [![R build status](https://github.com/juba/rainette/workflows/R-CMD-check/badge.svg)](https://github.com/juba/rainette/actions?query=workflow%3AR-CMD-check)
+
 <!-- [![Coverage status](https://codecov.io/gh/juba/rainette/branch/master/graph/badge.svg)](https://codecov.io/github/juba/rainette?branch=master) -->
 
 Rainette is an R package which implements a variant of the Reinert textual clustering method. This method is available in other softwares such as [Iramuteq](http://www.iramuteq.org/) (free software) or [Alceste](https://www.image-zafar.com/Logiciel.html) (commercial, closed source).
@@ -67,7 +68,7 @@ rainette_explor(res, dtm, corpus)
 
 ![rainette_explor() interface](man/figures/rainette_explor_plot_en.png)
 
-The *Cluster documents* tab allows to browse and filter the documents in each cluster.
+The _Cluster documents_ tab allows to browse and filter the documents in each cluster.
 
 ![rainette_explor() documents tab](man/figures/rainette_explor_docs_en.png)
 
@@ -83,7 +84,7 @@ Or cut the tree at chosen `k` and add a group membership variable to our corpus 
 docvars(corpus)$cluster <- cutree(res, k = 5)
 ```
 
-In addition to this, we can also perform a double clustering, *ie* two simple clusterings produced with different `min_segment_size` which are then "crossed" to generate more robust clusters. To do this, we use `rainette2()` on two `rainette()` results :
+In addition to this, we can also perform a double clustering, _ie_ two simple clusterings produced with different `min_segment_size` which are then "crossed" to generate more robust clusters. To do this, we use `rainette2()` on two `rainette()` results :
 
 ```r
 res1 <- rainette(dtm, k = 5, min_segment_size = 10)
@@ -110,9 +111,9 @@ Two vignettes are available :
 
 This clustering method has been created by Max Reinert, and is described in several articles, notably :
 
-- Reinert M., "Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte", *Cahiers de l'analyse des données*, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
-- Reinert M., "Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval", *Bulletin de Méthodologie Sociologique*, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
-- Reinert M., "Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application", *Les cahiers de l’analyse des données*, Tome 15, Numéro 1, 1990. <http://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
+- Reinert M., "Une méthode de classification descendante hiérarchique : application à l'analyse lexicale par contexte", _Cahiers de l'analyse des données_, Volume 8, Numéro 2, 1983. <http://www.numdam.org/item/?id=CAD_1983__8_2_187_0>
+- Reinert M., "Alceste une méthodologie d'analyse des données textuelles et une application: Aurelia De Gerard De Nerval", _Bulletin de Méthodologie Sociologique_, Volume 26, Numéro 1, 1990. <https://doi.org/10.1177/075910639002600103>
+- Reinert M., "Une méthode de classification des énoncés d’un corpus présentée à l’aide d’une application", _Les cahiers de l’analyse des données_, Tome 15, Numéro 1, 1990. <http://www.numdam.org/item/?id=CAD_1990__15_1_21_0>
 
 Thanks to Pierre Ratineau, the author of [Iramuteq](http://www.iramuteq.org/), for providing it as free software and open source. Even if the R code has been almost entirely rewritten, it has been a precious resource to understand the algorithms.
 
