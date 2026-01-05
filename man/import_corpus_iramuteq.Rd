@@ -21,6 +21,3 @@ A quanteda corpus object. Note that metadata variables in docvars are all import
 \description{
 Import a corpus in Iramuteq format
 }
-\details{
-A description of the Iramuteq corpus format can be found here : \url{http://www.iramuteq.org/documentation/html/2-2-2-les-regles-de-formatages}
-}
