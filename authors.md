@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/juba/rainette/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/juba/rainette/blob/0.3.2/DESCRIPTION)
 
 Barnier J (2026). *rainette: The Reinert Method for Textual Data
 Clustering*. R package version 0.3.2,
