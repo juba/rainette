@@ -42,7 +42,7 @@ instead.
 # \donttest{
 require(quanteda)
 #> Loading required package: quanteda
-#> Package version: 4.3.1
+#> Package version: 4.4
 #> Unicode version: 15.1
 #> ICU version: 74.2
 #> Parallel computing: disabled

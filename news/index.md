@@ -4,6 +4,8 @@
 
 ## rainette 0.3.2
 
+CRAN release: 2026-01-08
+
 - Fix compatibility with new `vctrs` version
 - Add `colors` argument to
   [`rainette_plot()`](https://juba.github.io/rainette/reference/rainette_plot.md)

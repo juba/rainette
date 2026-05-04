@@ -22,6 +22,7 @@ function for that, and it can be applied directly on a `tm` or
 `data_corpus_inaugural` corpus provided by `quanteda`.
 
 ``` r
+
 library(quanteda)
 library(rainette)
 
@@ -42,6 +43,7 @@ original corpus metadata and adds an additional `segment_source`
 variable, which keeps track of which segment belongs to which document.
 
 ``` r
+
 corpus
 ```
 
@@ -67,6 +69,7 @@ corpus
     ## [ reached max_ndoc ... 3,652 more documents ]
 
 ``` r
+
 head(docvars(corpus))
 ```
 
@@ -85,6 +88,7 @@ object is a `quanteda` corpus, we can tokenize it and then use the
 [`dfm()`](https://quanteda.io/reference/dfm.html) function.
 
 ``` r
+
 tok <- tokens(corpus, remove_punct = TRUE)
 tok <- tokens_tolower(tok)
 tok <- tokens_remove(tok, stopwords("en"))
@@ -95,6 +99,7 @@ We also filter out terms that appear in less than 10 segments by using
 `dfm_trim`.
 
 ``` r
+
 dtm <- dfm_trim(dtm, min_docfreq = 10)
 ```
 
@@ -115,6 +120,7 @@ function. Its main arguments are :
 Here we will compute 5 clusters with a `min_segment_size` of 15 :
 
 ``` r
+
 res <- rainette(dtm, k = 5, min_segment_size = 15)
 ```
 
@@ -124,6 +130,7 @@ interactive interface which can be launched with
 :
 
 ``` r
+
 rainette_explor(res, dtm, corpus)
 ```
 
@@ -151,6 +158,7 @@ rainette_explor() cluster documents tab
 You can use `cutree` to get each document cluster at level `k` :
 
 ``` r
+
 cluster <- cutree(res, k = 5)
 ```
 
@@ -158,6 +166,7 @@ This vector can be used, for example, as a new corpus metadata variable
 :
 
 ``` r
+
 corpus$cluster <- cutree(res, k = 5)
 head(docvars(corpus))
 ```
@@ -176,6 +185,7 @@ display, for each original document, the number of segment belonging to
 each cluster :
 
 ``` r
+
 clusters_by_doc_table(corpus, clust_var = "cluster")
 ```
 
@@ -198,6 +208,7 @@ By adding `prop = TRUE`, the same table is displayed with row
 percentages :
 
 ``` r
+
 clusters_by_doc_table(corpus, clust_var = "cluster", prop = TRUE)
 ```
 
@@ -221,6 +232,7 @@ cluster, the number and proportion of original document including at
 least one segment of this cluster :
 
 ``` r
+
 docs_by_cluster_table(corpus, clust_var = "cluster")
 ```
 
@@ -248,6 +260,7 @@ function, which can be applied to two already computed simple
 clusterings. Here, we compute them with `min_segment_size` at 10 and 15.
 
 ``` r
+
 res1 <- rainette(dtm, k = 5, min_segment_size = 10)
 res2 <- rainette(dtm, k = 5, min_segment_size = 15)
 ```
@@ -258,6 +271,7 @@ to combine them. The `max_k` argument is used to specify the maximum
 number of clusters.
 
 ``` r
+
 res <- rainette2(res1, res2, max_k = 5)
 ```
 
@@ -288,6 +302,7 @@ launched with
 [`rainette2_explor()`](https://juba.github.io/rainette/reference/rainette2_explor.md).
 
 ``` r
+
 rainette2_explor(res, dtm, corpus)
 ```
 
@@ -308,6 +323,7 @@ then loose the “robustness” of the new clusters computed by
 [`rainette2()`](https://juba.github.io/rainette/reference/rainette2.md).
 
 ``` r
+
 clusters <- cutree(res, k = 5)
 clusters_completed <- rainette2_complete_groups(dtm, clusters)
 ```

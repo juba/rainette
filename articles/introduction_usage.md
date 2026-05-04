@@ -6,6 +6,10 @@ intervention réalisée dans le cadre d’[un
 tuto](https://mate-shs.cnrs.fr/actions/tutomate/tuto42-rainette-julien-barnier/)
 du réseau métier Mate-shs.
 
+# An error occurred.
+
+Unable to execute JavaScript.
+
 ## Préparation du corpus
 
 ### Importation
@@ -27,6 +31,7 @@ Celui-ci est placé dans un fichier texte au format Iramuteq fourni avec
 partie de l’ouvrage.
 
 ``` r
+
 library(rainette)
 library(quanteda)
 
@@ -40,6 +45,7 @@ On peut vérifier que notre corpus est bien constitué de quatre documents
 métadonnée :
 
 ``` r
+
 corpus
 ```
 
@@ -60,6 +66,7 @@ Cette variable de métadonnée est justement la partie correspondant au
 texte :
 
 ``` r
+
 docvars(corpus)
 ```
 
@@ -81,6 +88,7 @@ tenir compte de la ponctuation pour, par exemple, placer les césures
 entre des phrases ou au niveau d’une virgule).
 
 ``` r
+
 corpus <- split_segments(corpus, segment_size = 40)
 ```
 
@@ -88,6 +96,7 @@ Notre corpus est désormais constitué de 278 segments et 2 variables de
 métadonnées :
 
 ``` r
+
 corpus
 ```
 
@@ -118,6 +127,7 @@ nouvelle variable `segment_source` indique le document d’origine du
 segment.
 
 ``` r
+
 head(docvars(corpus))
 ```
 
@@ -132,6 +142,7 @@ head(docvars(corpus))
 On peut aussi visualiser les premiers segments de texte calculés :
 
 ``` r
+
 as.character(corpus)[1:2]
 ```
 
@@ -157,6 +168,7 @@ termes-documents avec la fonction
 [`dfm()`](https://quanteda.io/reference/dfm.html).
 
 ``` r
+
 tok <- tokens(corpus, remove_punct = TRUE, remove_numbers = TRUE)
 tok <- tokens_remove(tok, stopwords("fr"))
 tok <- tokens_tolower(tok)
@@ -167,6 +179,7 @@ On supprime ensuite de la matrice les termes apparaissant dans moins de
 3 segments.
 
 ``` r
+
 dtm <- dfm_trim(dtm, min_docfreq = 3)
 ```
 
@@ -195,12 +208,14 @@ On peut lui passer plusieurs arguments, notamment :
   taille minimale souhaitée.
 
 ``` r
+
 res <- rainette(dtm, k = 5, min_segment_size = 10, min_split_members = 10)
 ```
 
 L’objet résultat ne nous dit pas grand chose en lui-même :
 
 ``` r
+
 res
 ```
 
@@ -216,6 +231,7 @@ interface interactive qui peut être lancée avec la fonction
 [`rainette_explor()`](https://juba.github.io/rainette/reference/rainette_explor.md) :
 
 ``` r
+
 rainette_explor(res, dtm, corpus)
 ```
 
@@ -252,6 +268,7 @@ d’appartenance de chaque document du corpus, là aussi selon le nombre de
 groupes actuellement affichés.
 
 ``` r
+
 ## Clustering description plot
 rainette_plot(res, dtm, k = 5, type = "bar", n_terms = 20, free_scales = FALSE,
     measure = "chi2", show_negative = "TRUE", text_size = 11)
@@ -264,6 +281,7 @@ nouvelle métadonnée du corpus le groupe d’appartenance de chaque segment
 pour la classification en 5 classes :
 
 ``` r
+
 corpus$groupe <- cutree(res, k = 5)
 head(docvars(corpus))
 ```
@@ -283,6 +301,7 @@ permet d’afficher, pour chaque document (ici chacune des quatre parties
 du texte), le nombre de segments de chaque groupe :
 
 ``` r
+
 clusters_by_doc_table(corpus, clust_var = "groupe")
 ```
 
@@ -298,6 +317,7 @@ En ajoutant `prop = TRUE`, cette répartition peut être visualisée en
 pourcentages :
 
 ``` r
+
 clusters_by_doc_table(corpus, clust_var = "groupe", prop = TRUE)
 ```
 
@@ -315,6 +335,7 @@ permet de visualiser, pour chaque groupe, le nombre et la proportion de
 documents d’origine comportant au moins un segment de ce groupe :
 
 ``` r
+
 docs_by_cluster_table(corpus, clust_var = "groupe")
 ```
 
@@ -344,6 +365,7 @@ On commence par effectuer les deux classifications simples, ici une avec
 une taille de segment minimale à 10, et une autre à 15 :
 
 ``` r
+
 res1 <- rainette(dtm, k = 7, min_segment_size = 10)
 res2 <- rainette(dtm, k = 7, min_segment_size = 15)
 ```
@@ -354,6 +376,7 @@ sur ces deux objets résultats, en lui indiquant le nombre maximal de
 classes à calculer (argument `max_k`).
 
 ``` r
+
 res <- rainette2(res1, res2, max_k = 7)
 ```
 
@@ -385,6 +408,7 @@ résultats. Elle se lance via la fonction
 [`rainette2_explor()`](https://juba.github.io/rainette/reference/rainette2_explor.md) :
 
 ``` r
+
 rainette2_explor(res, dtm, corpus)
 ```
 
@@ -407,6 +431,7 @@ les classes perdont du coup une partie de la “robustesse” acquise par la
 classification double.
 
 ``` r
+
 groupes <- cutree(res, k = 5)
 groupes_complets <- rainette2_complete_groups(dtm, groupes)
 ```

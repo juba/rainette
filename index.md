@@ -30,6 +30,7 @@ such as
 The package is installable from CRAN.
 
 ``` r
+
 install_packages("rainette")
 ```
 
@@ -37,6 +38,7 @@ The development version is installable from
 [R-universe](https://r-universe.dev).
 
 ``` r
+
 install.packages("rainette", repos = "https://juba.r-universe.dev")
 ```
 
@@ -46,6 +48,7 @@ Let’s start with an example corpus provided by the excellent
 [quanteda](https://quanteda.io) package.
 
 ``` r
+
 library(quanteda)
 data_corpus_inaugural
 ```
@@ -56,6 +59,7 @@ to split each document into segments of about 40 words (punctuation is
 taken into account).
 
 ``` r
+
 corpus <- split_segments(data_corpus_inaugural, segment_size = 40)
 ```
 
@@ -63,6 +67,7 @@ Next, we’ll apply some preprocessing and compute a document-term matrix
 with `quanteda` functions.
 
 ``` r
+
 tok <- tokens(corpus, remove_punct = TRUE)
 tok <- tokens_remove(tok, stopwords("en"))
 dtm <- dfm(tok, tolower = TRUE)
@@ -77,6 +82,7 @@ not include enough forms will be merged with the following or previous
 one when possible.
 
 ``` r
+
 res <- rainette(dtm, k = 6, min_segment_size = 15)
 ```
 
@@ -86,6 +92,7 @@ shiny interface to visualise and explore the different clusterings at
 each `k`.
 
 ``` r
+
 rainette_explor(res, dtm, corpus)
 ```
 
@@ -107,6 +114,7 @@ We can also directly generate the clusters description plot for a given
 [`rainette_plot()`](https://juba.github.io/rainette/reference/rainette_plot.md).
 
 ``` r
+
 rainette_plot(res, dtm, k = 5)
 ```
 
@@ -114,6 +122,7 @@ Or cut the tree at chosen `k` and add a group membership variable to our
 corpus metadata.
 
 ``` r
+
 docvars(corpus)$cluster <- cutree(res, k = 5)
 ```
 
@@ -126,6 +135,7 @@ on two
 results :
 
 ``` r
+
 res1 <- rainette(dtm, k = 5, min_segment_size = 10)
 res2 <- rainette(dtm, k = 5, min_segment_size = 15)
 res <- rainette2(res1, res2, max_k = 5)
@@ -136,6 +146,7 @@ We can then use
 to explore and visualise the results.
 
 ``` r
+
 rainette2_explor(res, dtm, corpus)
 ```
 
