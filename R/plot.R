@@ -466,10 +466,15 @@ frequency_barplot <- function(groups, k, text_size, colors = NULL) {
   }
 
   # Compute cluster sizes and number of NA
-  freq <- data.frame(table(groups, exclude = NULL))
+  tab <- table(groups, exclude = NULL)
+  # Replace NA with placeholder to avoid error in R 4.7
+  names(tab)[is.na(names(tab))] <- "<rainette_NA>"
+  freq <- data.frame(tab)
   n_na <- sum(is.na(groups))
   title <- paste0("Clusters size\n(NA = ", n_na, ")")
   colnames(freq) <- c("Group", "n")
+  # Transform back placeholder to NA
+  freq$Group[freq$Group == "<rainette_NA>"] <- NA
 
   # Generate barplot
   g <- ggplot(freq) +
