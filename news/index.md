@@ -1,6 +1,10 @@
 # Changelog
 
+## rainette 0.3.3.9000 (development version)
+
 ## rainette 0.3.3
+
+CRAN release: 2026-05-04
 
 - Fix incompatibility with upcoming R 4.7
 
